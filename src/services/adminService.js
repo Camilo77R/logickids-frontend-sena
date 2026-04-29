@@ -3,7 +3,7 @@ import { request } from "./httpClient";
 const adminService = {
   async listUsers() {
     const payload = await request("/admin/tutores");
-    return payload?.data ?? [];
+    return payload?.data || (Array.isArray(payload) ? payload : []);
   },
 
   async getUser(userId) {
@@ -22,7 +22,7 @@ const adminService = {
 
   async listInstitutions() {
     const payload = await request("/admin/instituciones");
-    return payload?.data ?? [];
+    return payload?.data || (Array.isArray(payload) ? payload : []);
   },
 
   async createInstitution(institutionData) {
