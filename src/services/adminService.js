@@ -41,20 +41,6 @@ const adminService = {
 
     return payload?.data ?? { eliminada: true };
   },
-
-  async listMinigames() {
-    const payload = await request("/admin/minijuegos");
-    return payload?.data ?? [];
-  },
-
-  async toggleMinigame(minigameId, activo) {
-    const payload = await request(`/admin/minijuegos/${minigameId}/toggle`, {
-      method: "PATCH",
-      body: { activo },
-    });
-
-    return payload?.data ?? null;
-  },
 };
 
 export default adminService;
