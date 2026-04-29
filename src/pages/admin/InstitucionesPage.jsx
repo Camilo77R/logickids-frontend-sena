@@ -27,6 +27,12 @@ export default function InstitucionesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredInstitutions = institutions.filter(inst =>
+    inst.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    inst.ciudad?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const loadInstitutions = async () => {
     setIsLoading(true);
@@ -176,14 +182,38 @@ export default function InstitucionesPage() {
             <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
           ) : null}
 
-          {!isLoading && !institutions.length ? (
-            <EmptyState
-              title="Aún no hay instituciones"
-              description="Registra la primera desde el formulario lateral."
+          <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <input
+              type="text"
+              placeholder="🔍 Search by name or city..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                padding: "0.5rem 1rem",
+                borderRadius: "0.5rem",
+                border: "1px solid #ccc",
+                width: "280px",
+                fontSize: "0.9rem"
+              }}
             />
+            <span className="lk-muted">{filteredInstitutions.length} of {institutions.length} institutions</span>
+          </div>
+
+          {!isLoading && !filteredInstitutions.length ? (
+            searchTerm ? (
+              <EmptyState
+                title="No results found"
+                description={`No institutions match "${searchTerm}"`}
+              />
+            ) : (
+              <EmptyState
+                title="Aún no hay instituciones"
+                description="Registra la primera desde el formulario lateral."
+              />
+            )
           ) : null}
 
-          {!!institutions.length ? (
+          {!!filteredInstitutions.length ? (
             <div className="lk-table-wrap">
               <table className="lk-table">
                 <thead>
@@ -196,7 +226,7 @@ export default function InstitucionesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {institutions.map((institution) => (
+                  {filteredInstitutions.map((institution) => (
                     <tr key={institution.id}>
                       <td>
                         <strong>{institution.nombre}</strong>
