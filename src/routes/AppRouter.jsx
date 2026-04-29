@@ -6,23 +6,12 @@ import MinijuegosPage from "../pages/admin/MinijuegosPage";
 import UsuariosPage from "../pages/admin/UsuariosPage";
 import LoginPage from "../pages/auth/LoginPage";
 import RegistroPage from "../pages/auth/RegistroPage";
+import TutorDashboardPage from "../pages/tutor/TutorDashboardPage";
+import TutorProfilePage from "../pages/tutor/TutorProfilePage";
+import TutorGroupsPage from "../pages/tutor/TutorGroupsPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
-
-// Pantalla temporal para evitar loops de redirección cuando el usuario ya está logueado en Tutor
-const DummyDashboard = () => (
-  <div style={{ padding: "40px", textAlign: "center", fontFamily: "sans-serif" }}>
-    <h2>Has iniciado sesión como Tutor 🎉</h2>
-    <p>El dashboard del tutor está en la otra rama. Para volver al login, cierra tu sesión:</p>
-    <button 
-      onClick={() => { sessionStorage.clear(); window.location.href = '/login'; }}
-      style={{ padding: "10px 20px", background: "#7C6FFF", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", marginTop: "20px" }}
-    >
-      Cerrar Sesión
-    </button>
-  </div>
-);
 
 export default function AppRouter() {
   return (
@@ -90,10 +79,40 @@ export default function AppRouter() {
           }
         />
 
-        {/* Ruta temporal atrapada para el Tutor (la hace el otro desarrollador en su rama) */}
+        {/* Ruta oficial para el dashboard del Tutor */}
         <Route
           path="/tutor/dashboard"
-          element={<ProtectedRoute><DummyDashboard /></ProtectedRoute>}
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={[USER_ROLES.TUTOR]}>
+                <TutorDashboardPage />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta para el perfil del Tutor */}
+        <Route
+          path="/tutor/perfil"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={[USER_ROLES.TUTOR]}>
+                <TutorProfilePage />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta para grupos del Tutor */}
+        <Route
+          path="/tutor/grupos"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={[USER_ROLES.TUTOR]}>
+                <TutorGroupsPage />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
         />
 
         <Route path="*" element={<Navigate to="/login" replace />} />

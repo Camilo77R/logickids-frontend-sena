@@ -43,7 +43,7 @@ export default function AppShell({
             <div className="lk-shell-profile-copy">
               <strong>{user?.nombre || "Usuario"}</strong>
               <span>{user?.email}</span>
-              <span className="lk-role-badge">Administrador</span>
+              <span className="lk-role-badge">{user?.rol === 'tutor' ? 'Tutor' : 'Administrador'}</span>
             </div>
           </section>
 

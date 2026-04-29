@@ -58,6 +58,14 @@ export function AuthProvider({ children }) {
     setSession(null);
   };
 
+  const updateUser = (updatedProfile) => {
+    if (session) {
+      const nextSession = { ...session, user: updatedProfile };
+      saveStoredSession(nextSession);
+      setSession(nextSession);
+    }
+  };
+
   const value = useMemo(
     () => ({
       user: session?.user ?? null,
@@ -67,6 +75,7 @@ export function AuthProvider({ children }) {
       homePath: getHomePathByRole(session?.user?.rol),
       signIn,
       signOut,
+      updateUser,
     }),
     [isBootstrapping, session]
   );
