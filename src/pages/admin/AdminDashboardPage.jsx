@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Activity, Building2, Database, Gamepad2, Users, UsersRound } from "lucide-react";
 import StatCard from "../../components/common/StatCard";
 import AppShell from "../../components/layout/AppShell";
 import adminService from "../../services/adminService";
@@ -76,7 +77,9 @@ export default function AdminDashboardPage() {
                 Revisa el flujo de usuarios, administra instituciones y controla el catálogo de minijuegos.
               </p>
             </div>
-            <div style={{ fontSize: "3rem" }}>🚀</div>
+            <div style={{ color: "rgba(23, 150, 237, 0.8)" }}>
+              <Activity size={48} strokeWidth={1.5} />
+            </div>
           </div>
         </section>
 
@@ -133,7 +136,9 @@ export default function AdminDashboardPage() {
               onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-primary)")}
               onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
             >
-              <div style={{ fontSize: "2rem", padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)" }}>👥</div>
+              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-primary)" }}>
+                <UsersRound size={32} strokeWidth={1.5} />
+              </div>
               <div>
                 <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Gestión de Usuarios</strong>
                 <span className="lk-muted">Controla cuentas, roles y estados.</span>
@@ -157,7 +162,9 @@ export default function AdminDashboardPage() {
               onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-secondary)")}
               onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
             >
-              <div style={{ fontSize: "2rem", padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)" }}>🏫</div>
+              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-secondary)" }}>
+                <Building2 size={32} strokeWidth={1.5} />
+              </div>
               <div>
                 <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Directorio Institucional</strong>
                 <span className="lk-muted">Añade o elimina colegios.</span>
@@ -182,7 +189,9 @@ export default function AdminDashboardPage() {
               onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-success)")}
               onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
             >
-              <div style={{ fontSize: "2rem", padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)" }}>🎮</div>
+              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-success)" }}>
+                <Gamepad2 size={32} strokeWidth={1.5} />
+              </div>
               <div>
                 <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Catálogo de Minijuegos</strong>
                 <span className="lk-muted">Activa o pausa los juegos para los estudiantes.</span>
@@ -191,20 +200,44 @@ export default function AdminDashboardPage() {
           </div>
         </section>
 
-        <section className="lk-card lk-span-4">
-          <h2>Estado del sistema</h2>
-          <ul className="lk-list">
-            <li className="lk-list-item" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{ width: "10px", height: "10px", background: "var(--lk-color-success)", borderRadius: "50%" }}></span>
-              Conexión DB estable
+        <section className="lk-card lk-span-4" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+              <Database size={20} color="var(--lk-color-text-muted)" strokeWidth={1.5} />
+              <h2 style={{ margin: 0 }}>Salud del Servidor</h2>
+            </div>
+            <p className="lk-muted" style={{ marginBottom: "1.5rem" }}>Métricas operativas en tiempo real.</p>
+          </div>
+          
+          <ul className="lk-list" style={{ marginTop: 0 }}>
+            <li className="lk-list-item" style={{ display: "flex", alignItems: "center", gap: "0.75rem", background: "transparent", border: "none", padding: "0.5rem 0" }}>
+              <span className="lk-status-dot lk-status-dot--pulse"></span>
+              <strong>PostgreSQL 13 Conectado</strong>
             </li>
-            <li className="lk-list-item" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{ width: "10px", height: "10px", background: "var(--lk-color-success)", borderRadius: "50%" }}></span>
-              {summary.institutions} Instituciones en línea
+            
+            <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "1rem 0" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem" }}>
+                <strong>Instituciones en línea</strong>
+                <span>{summary.institutions} activas</span>
+              </div>
+              <div className="lk-progress-bar">
+                <div className="lk-progress-bar-fill lk-progress-bar-fill--success" style={{ width: summary.institutions > 0 ? "100%" : "0%" }}></div>
+              </div>
             </li>
-            <li className="lk-list-item" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{ width: "10px", height: "10px", background: "var(--lk-color-warning)", borderRadius: "50%" }}></span>
-              {minigames.length - summary.activeMinigames} Minijuegos pausados
+            
+            <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "0.5rem 0" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem" }}>
+                <strong>Disponibilidad Minijuegos</strong>
+                <span>{summary.activeMinigames} de {minigames.length}</span>
+              </div>
+              <div className="lk-progress-bar">
+                <div className="lk-progress-bar-fill lk-progress-bar-fill--success" style={{ width: `${minigames.length > 0 ? (summary.activeMinigames / minigames.length) * 100 : 0}%` }}></div>
+              </div>
+              {minigames.length > summary.activeMinigames && (
+                 <small style={{ display: "block", color: "var(--lk-color-warning)", marginTop: "0.5rem", fontWeight: "bold" }}>
+                   ⚠️ {minigames.length - summary.activeMinigames} minijuegos pausados
+                 </small>
+              )}
             </li>
           </ul>
         </section>
