@@ -29,6 +29,27 @@ const authService = {
     });
     return payload?.data ?? null;
   },
+
+  // ✅ Actualizar perfil
+  async updateProfile(profileData) {
+    const payload = await request("/auth/perfil", {
+      method: "PUT",
+      body: profileData,
+    });
+    return payload?.data ?? null;
+  },
+
+  // ✅ CAMBIAR CONTRASEÑA - AGREGAR ESTO
+  async cambiarContrasena(data) {
+    const payload = await request("/auth/cambiar-contrasena", {
+      method: "PUT",
+      body: {
+        contrasena_actual: data.contrasenaActual,
+        contrasena_nueva: data.contrasenaNueva,
+      },
+    });
+    return payload?.data ?? null;
+  },
 };
 
 export default authService;
