@@ -18,6 +18,7 @@ import TutorEstadisticasPage from "../pages/tutor/TutorEstadisticasPage";
 import TutorRecomendacionesPage from "../pages/tutor/TutorRecomendacionesPage";
 import TutorLogrosPage from "../pages/tutor/TutorLogrosPage";
 import Tutorsesiones from "../pages/tutor/Tutorsesiones.page";
+import TutorProfilePage from "../pages/tutor/TutorProfilePage"; // ✅ IMPORTAR PERFIL
 
 export default function AppRouter() {
   return (
@@ -99,8 +100,9 @@ export default function AppRouter() {
                     <Route path="estadisticas" element={<TutorEstadisticasPage />} />
                     <Route path="recomendaciones" element={<TutorRecomendacionesPage />} />
                     <Route path="logros" element={<TutorLogrosPage />} />
-                    <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="sesiones" element={<Tutorsesiones />} />
+                    <Route path="perfil" element={<TutorProfilePage />} /> {/* ✅ RUTA DEL PERFIL */}
+                    <Route index element={<Navigate to="dashboard" replace />} />
                   </Routes>
                 </TutorLayout>
               </RoleRoute>

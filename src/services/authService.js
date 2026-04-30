@@ -1,11 +1,11 @@
 import { request } from "./httpClient";
 
-const mapLoginSession = (payload) => ({
-  token: payload?.data?.token ?? null,
-  user: payload?.data?.usuario ?? null,
-});
-
 const authService = {
+  async getProfile() {
+    const payload = await request("/auth/perfil");
+    return payload?.data ?? null;
+  },
+
   async login(credentials) {
     const payload = await request("/auth/login", {
       method: "POST",
@@ -15,8 +15,10 @@ const authService = {
         contrasena: credentials.contrasena,
       },
     });
-
-    return mapLoginSession(payload);
+    return {
+      token: payload?.data?.token ?? null,
+      user: payload?.data?.usuario ?? null,
+    };
   },
 
   async register(data) {
@@ -25,11 +27,6 @@ const authService = {
       auth: false,
       body: data,
     });
-    return payload?.data ?? null;
-  },
-
-  async getProfile() {
-    const payload = await request("/auth/perfil");
     return payload?.data ?? null;
   },
 };
