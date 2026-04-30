@@ -58,6 +58,19 @@ export function AuthProvider({ children }) {
     setSession(null);
   };
 
+  // ✅ AGREGAR ESTA FUNCIÓN
+  const updateUser = (updatedUserData) => {
+    setSession(prev => {
+      if (!prev) return prev;
+      const updatedSession = {
+        ...prev,
+        user: { ...prev.user, ...updatedUserData }
+      };
+      saveStoredSession(updatedSession);
+      return updatedSession;
+    });
+  };
+
   const value = useMemo(
     () => ({
       user: session?.user ?? null,
@@ -67,6 +80,7 @@ export function AuthProvider({ children }) {
       homePath: getHomePathByRole(session?.user?.rol),
       signIn,
       signOut,
+      updateUser, // ✅ EXPORTAR LA FUNCIÓN
     }),
     [isBootstrapping, session]
   );

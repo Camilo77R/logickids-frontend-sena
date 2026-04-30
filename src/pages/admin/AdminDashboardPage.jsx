@@ -4,6 +4,7 @@ import { Activity, Building2, Database, Gamepad2, Users, UsersRound } from "luci
 import StatCard from "../../components/common/StatCard";
 import AppShell from "../../components/layout/AppShell";
 import adminService from "../../services/adminService";
+import Notifications from "../../components/Notifications";
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -240,6 +241,10 @@ export default function AdminDashboardPage() {
               )}
             </li>
           </ul>
+        </section>
+
+        <section className="lk-panel-card lk-span-12" style={{ marginTop: "1rem" }}>
+          <Notifications />
         </section>
       </div>
     </AppShell>

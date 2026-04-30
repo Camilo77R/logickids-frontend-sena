@@ -1,11 +1,11 @@
 import { request } from "./httpClient";
 
-const mapLoginSession = (payload) => ({
-  token: payload?.data?.token ?? null,
-  user: payload?.data?.usuario ?? null,
-});
-
 const authService = {
+  async getProfile() {
+    const payload = await request("/auth/perfil");
+    return payload?.data ?? null;
+  },
+
   async login(credentials) {
     const payload = await request("/auth/login", {
       method: "POST",
@@ -15,8 +15,10 @@ const authService = {
         contrasena: credentials.contrasena,
       },
     });
-
-    return mapLoginSession(payload);
+    return {
+      token: payload?.data?.token ?? null,
+      user: payload?.data?.usuario ?? null,
+    };
   },
 
   async register(data) {
@@ -28,8 +30,24 @@ const authService = {
     return payload?.data ?? null;
   },
 
-  async getProfile() {
-    const payload = await request("/auth/perfil");
+  // ✅ Actualizar perfil
+  async updateProfile(profileData) {
+    const payload = await request("/auth/perfil", {
+      method: "PUT",
+      body: profileData,
+    });
+    return payload?.data ?? null;
+  },
+
+  // ✅ CAMBIAR CONTRASEÑA - AGREGAR ESTO
+  async cambiarContrasena(data) {
+    const payload = await request("/auth/cambiar-contrasena", {
+      method: "PUT",
+      body: {
+        contrasena_actual: data.contrasenaActual,
+        contrasena_nueva: data.contrasenaNueva,
+      },
+    });
     return payload?.data ?? null;
   },
 };

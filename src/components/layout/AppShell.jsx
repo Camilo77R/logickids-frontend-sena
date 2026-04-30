@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import LogicKidsLogo from "../branding/LogicKidsLogo";
 import { NAVIGATION_BY_ROLE } from "../../constants/navigation";
 import { useAuth } from "../../hooks/useAuth";
+import NotificationBell from "../../components/NotificationBell";
 
 export default function AppShell({
   eyebrow,
@@ -71,7 +72,7 @@ export default function AppShell({
           <header className="lk-topbar">
             <div className="lk-topbar-title">Administración</div>
             <div className="lk-topbar-tools" aria-hidden="true">
-              <span className="lk-topbar-icon">🔔</span>
+              <NotificationBell />
               <span className="lk-topbar-icon">⚙</span>
               <span className="lk-topbar-icon">{initials}</span>
             </div>
