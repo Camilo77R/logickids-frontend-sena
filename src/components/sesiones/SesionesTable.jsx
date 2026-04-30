@@ -1,26 +1,49 @@
 export default function SesionesTable({ data }) {
   return (
-    <table border="1" style={{ width: "100%", marginTop: "20px" }}>
+    <table
+      style={{
+        width: "100%",
+        borderCollapse: "collapse",
+        textAlign: "center",
+        fontSize: "18px" 
+      }}
+    >
       <thead>
-        <tr>
-          <th>Fecha</th>
-          <th>Minijuego</th>
-          <th>Puntaje</th>
-          <th>Aciertos</th>
-          <th>Errores</th>
+        <tr style={{ background: "#f3f4f6" }}>
+          <th style={th}>Fecha</th>
+          <th style={th}>Minijuego</th>
+          <th style={th}>Puntaje</th>
+          <th style={th}>Aciertos</th>
+          <th style={th}>Errores</th>
         </tr>
       </thead>
+
       <tbody>
-        {data.map(s => (
+        {data.map((s) => (
           <tr key={s.id}>
-            <td>{s.iniciada_en}</td>
-            <td>{s.minijuego}</td>
-            <td>{s.puntaje}</td>
-            <td>{s.aciertos}</td>
-            <td>{s.errores}</td>
+            <td style={td}>
+              {new Date(s.iniciada_en).toLocaleDateString()}
+            </td>
+            <td style={td}>{s.minijuego}</td>
+            <td style={td}>{s.puntaje}</td>
+            <td style={td}>{s.aciertos}</td>
+            <td style={td}>{s.errores}</td>
           </tr>
         ))}
       </tbody>
     </table>
   );
 }
+
+const th = {
+  border: "1px solid #ddd",
+  padding: "16px", 
+  fontWeight: "bold",
+  fontSize: "18px"
+};
+
+const td = {
+  border: "1px solid #ddd",
+  padding: "14px", 
+  fontSize: "17px"
+};

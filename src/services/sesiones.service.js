@@ -1,19 +1,31 @@
-const API = "http://localhost:3000/api/sesiones";
+import { request } from "./httpClient";
 
-//  POR NIÑO
+const API = "/sesiones";
+
+//  POR ESTUDIANTE
 export const getSesionesByEstudiante = async (id) => {
-  const res = await fetch(`${API}/estudiante/${id}`);
-  const data = await res.json();
-  return data.data || data; 
+  try {
+    const res = await request(`${API}/estudiante/${id}`);
+
+    return Array.isArray(res.data) ? res.data : [];
+  } catch (error) {
+    console.error("Error sesiones:", error);
+    return [];
+  }
 };
 
-// POR GRUPO 
+//  POR GRUPO
 export const getSesionesPorGrupo = async (estudiantes) => {
-  const promesas = estudiantes.map(e =>
-    getSesionesByEstudiante(e.id)
-  );
+  try {
+    const promesas = estudiantes.map((e) =>
+      getSesionesByEstudiante(e.id)
+    );
 
-  const resultados = await Promise.all(promesas);
+    const resultados = await Promise.all(promesas);
 
-  return resultados.flat();
+    return resultados.flat();
+  } catch (error) {
+    console.error("Error grupo:", error);
+    return [];
+  }
 };
