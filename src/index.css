@@ -999,3 +999,15 @@ a {
     align-self: flex-end;
   }
 }
+
+.estadisticas-container {
+  max-width: 1000px;
+  margin: 0 auto; 
+}
+
+.graficas {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}

@@ -17,6 +17,7 @@ import TutorEstudiantesPage from "../pages/tutor/TutorEstudiantesPage";
 import TutorEstadisticasPage from "../pages/tutor/TutorEstadisticasPage";
 import TutorRecomendacionesPage from "../pages/tutor/TutorRecomendacionesPage";
 import TutorLogrosPage from "../pages/tutor/TutorLogrosPage";
+import Tutorsesiones from "../pages/tutor/Tutorsesiones.page";
 
 export default function AppRouter() {
   return (
@@ -99,6 +100,7 @@ export default function AppRouter() {
                     <Route path="recomendaciones" element={<TutorRecomendacionesPage />} />
                     <Route path="logros" element={<TutorLogrosPage />} />
                     <Route index element={<Navigate to="dashboard" replace />} />
+                    <Route path="sesiones" element={<Tutorsesiones />} />
                   </Routes>
                 </TutorLayout>
               </RoleRoute>
