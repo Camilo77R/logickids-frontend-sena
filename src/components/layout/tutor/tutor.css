@@ -824,7 +824,7 @@
 }
 
 @media (max-width: 768px) {
-    .tutor-page-header {
+    .tutor-page-header { 
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
@@ -838,3 +838,4 @@
         padding: 16px;
     }
 }
+

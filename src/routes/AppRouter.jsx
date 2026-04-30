@@ -10,19 +10,14 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
 
-// Pantalla temporal para evitar loops de redirección cuando el usuario ya está logueado en Tutor
-const DummyDashboard = () => (
-  <div style={{ padding: "40px", textAlign: "center", fontFamily: "sans-serif" }}>
-    <h2>Has iniciado sesión como Tutor 🎉</h2>
-    <p>El dashboard del tutor está en la otra rama. Para volver al login, cierra tu sesión:</p>
-    <button 
-      onClick={() => { sessionStorage.clear(); window.location.href = '/login'; }}
-      style={{ padding: "10px 20px", background: "#7C6FFF", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", marginTop: "20px" }}
-    >
-      Cerrar Sesión
-    </button>
-  </div>
-);
+import TutorLayout from "../components/layout/tutor/TutorLayout";
+import TutorDashboardOverview from "../pages/tutor/TutorDashboardOverview";
+import TutorGruposPage from "../pages/tutor/TutorGruposPage";
+import TutorEstudiantesPage from "../pages/tutor/TutorEstudiantesPage";
+import TutorEstadisticasPage from "../pages/tutor/TutorEstadisticasPage";
+import TutorRecomendacionesPage from "../pages/tutor/TutorRecomendacionesPage";
+import TutorLogrosPage from "../pages/tutor/TutorLogrosPage";
+import Tutorsesiones from "../pages/tutor/Tutorsesiones.page";
 
 export default function AppRouter() {
   return (
@@ -90,10 +85,27 @@ export default function AppRouter() {
           }
         />
 
-        {/* Ruta temporal atrapada para el Tutor (la hace el otro desarrollador en su rama) */}
+        {/* Rutas del Tutor */}
         <Route
-          path="/tutor/dashboard"
-          element={<ProtectedRoute><DummyDashboard /></ProtectedRoute>}
+          path="/tutor/*"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={[USER_ROLES.TUTOR]}>
+                <TutorLayout>
+                  <Routes>
+                    <Route path="dashboard" element={<TutorDashboardOverview />} />
+                    <Route path="grupos" element={<TutorGruposPage />} />
+                    <Route path="estudiantes" element={<TutorEstudiantesPage />} />
+                    <Route path="estadisticas" element={<TutorEstadisticasPage />} />
+                    <Route path="recomendaciones" element={<TutorRecomendacionesPage />} />
+                    <Route path="logros" element={<TutorLogrosPage />} />
+                    <Route index element={<Navigate to="dashboard" replace />} />
+                    <Route path="sesiones" element={<Tutorsesiones />} />
+                  </Routes>
+                </TutorLayout>
+              </RoleRoute>
+            </ProtectedRoute>
+          }
         />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
