@@ -5,6 +5,7 @@ import InstitucionesPage from "../pages/admin/InstitucionesPage";
 import MinijuegosPage from "../pages/admin/MinijuegosPage";
 import UsuariosPage from "../pages/admin/UsuariosPage";
 import LoginPage from "../pages/auth/LoginPage";
+import PrincipalPage from "../pages/auth/Principal";
 import RegistroPage from "../pages/auth/RegistroPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -28,7 +29,7 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<PrincipalPage />} />
 
         <Route
           path="/login"
