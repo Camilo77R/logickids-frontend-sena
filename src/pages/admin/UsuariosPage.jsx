@@ -15,6 +15,7 @@ export default function UsuariosPage() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [roleFilter, setRoleFilter] = useState("todos");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [feedback, setFeedback] = useState(null);
 
@@ -46,9 +47,21 @@ export default function UsuariosPage() {
   }, []);
 
   const visibleUsers = useMemo(() => {
-    if (roleFilter === "todos") return users;
-    return users.filter((user) => user.rol === roleFilter);
-  }, [roleFilter, users]);
+    let filtered = users;
+    
+    if (roleFilter !== "todos") {
+      filtered = filtered.filter((user) => user.rol === roleFilter);
+    }
+    
+    if (searchTerm.trim() !== "") {
+      filtered = filtered.filter((user) =>
+        user.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [roleFilter, users, searchTerm]);
 
   const handleStateChange = async (userId, estado) => {
     try {
@@ -64,7 +77,20 @@ export default function UsuariosPage() {
   };
 
   const pageActions = (
-    <div className="lk-actions">
+    <div className="lk-actions" style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+      <input
+        type="text"
+        placeholder="🔍 Buscar por nombre o email..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          padding: "0.5rem 1rem",
+          borderRadius: "0.5rem",
+          border: "1px solid #ccc",
+          minWidth: "220px",
+          fontSize: "0.9rem"
+        }}
+      />
       {USER_FILTERS.map((filter) => (
         <button
           key={filter.value}
@@ -94,14 +120,14 @@ export default function UsuariosPage() {
             <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
           ) : null}
 
-          {!isLoading && !visibleUsers.length ? (
+          {!isLoading && visibleUsers.length === 0 ? (
             <EmptyState
               title="No hay usuarios para este filtro"
-              description="Ajusta el filtro para explorar las cuentas disponibles."
+              description="Ajusta el filtro o la búsqueda para explorar las cuentas disponibles."
             />
           ) : null}
 
-          {!!visibleUsers.length ? (
+          {visibleUsers.length > 0 ? (
             <div className="lk-table-wrap">
               <table className="lk-table">
                 <thead>
