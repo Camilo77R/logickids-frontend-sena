@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import LogicKidsLogo from "../branding/LogicKidsLogo";
 import { NAVIGATION_BY_ROLE } from "../../constants/navigation";
+import { USER_ROLES } from "../../constants/roles";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function AppShell({
@@ -13,6 +14,14 @@ export default function AppShell({
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const navigation = NAVIGATION_BY_ROLE[user?.rol] ?? [];
+  const roleLabel =
+    user?.rol === USER_ROLES.SUPERADMIN
+      ? "Superadmin"
+      : user?.rol === USER_ROLES.ADMIN
+        ? "Admin"
+        : user?.rol === USER_ROLES.TUTOR
+          ? "Tutor"
+          : "Usuario";
   const initials = user?.nombre
     ? user.nombre
         .split(" ")
@@ -43,7 +52,7 @@ export default function AppShell({
             <div className="lk-shell-profile-copy">
               <strong>{user?.nombre || "Usuario"}</strong>
               <span>{user?.email}</span>
-              <span className="lk-role-badge">{user?.rol === 'tutor' ? 'Tutor' : 'Administrador'}</span>
+              <span className="lk-role-badge">{roleLabel}</span>
             </div>
           </section>
 

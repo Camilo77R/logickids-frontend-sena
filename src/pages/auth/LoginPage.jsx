@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import LogicKidsLogo from "../../components/branding/LogicKidsLogo";
 import { useAuth } from "../../hooks/useAuth";
 import { HttpError } from "../../services/httpClient";
-import { USER_ROLES } from "../../constants/roles";
+import { getHomePathByRole } from "../../utils/paths";
 
 const INITIAL_FORM = {
   email: "",
@@ -61,13 +61,13 @@ export default function LoginPage() {
         contrasena: form.contrasena,
       });
 
-      if (user?.rol === USER_ROLES.ADMIN) {
-        navigate("/admin/dashboard", { replace: true });
-      } else if (user?.rol === USER_ROLES.TUTOR) {
-        navigate("/tutor/dashboard", { replace: true });
-      } else {
+      const homePath = getHomePathByRole(user?.rol);
+
+      if (homePath === "/login") {
         signOut();
         setServerError("Rol de usuario no válido para este portal.");
+      } else {
+        navigate(homePath, { replace: true });
       }
     } catch (error) {
       setServerError(
@@ -97,7 +97,20 @@ export default function LoginPage() {
           </header>
 
           <form className="lk-form-grid" onSubmit={handleSubmit} noValidate>
-            {successMsg ? <div className="lk-alert lk-alert--success" style={{backgroundColor:"#d1e7dd", color:"#0f5132", padding:"10px", borderRadius:"6px", fontSize:"0.85rem"}}>{successMsg}</div> : null}
+            {successMsg ? (
+              <div
+                className="lk-alert lk-alert--success"
+                style={{
+                  backgroundColor: "#d1e7dd",
+                  color: "#0f5132",
+                  padding: "10px",
+                  borderRadius: "6px",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {successMsg}
+              </div>
+            ) : null}
             {serverError ? <div className="lk-alert lk-alert--error">{serverError}</div> : null}
 
             <div className={`lk-field ${errors.email ? "lk-field--error" : ""}`}>
@@ -139,13 +152,25 @@ export default function LoginPage() {
               ) : null}
             </div>
 
-            <button type="submit" className="lk-btn lk-btn--primary lk-btn--full" disabled={isSubmitting}>
+            <button
+              type="submit"
+              className="lk-btn lk-btn--primary lk-btn--full"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Ingresando..." : "Entrar"}
             </button>
 
-            <div className="text-center mt-3" style={{ fontSize: "0.85rem", color: "#6b7280" }}>
+            <div
+              className="text-center mt-3"
+              style={{ fontSize: "0.85rem", color: "#6b7280" }}
+            >
               <span>¿Eres tutor y no tienes cuenta? </span>
-              <Link to="/registro" style={{ color: "#7C6FFF", fontWeight: "bold", textDecoration: "none" }}>Regístrate aquí</Link>
+              <Link
+                to="/registro"
+                style={{ color: "#7C6FFF", fontWeight: "bold", textDecoration: "none" }}
+              >
+                Regístrate aquí
+              </Link>
             </div>
           </form>
         </section>

@@ -20,6 +20,18 @@ const validateInstitutionForm = (form) => {
   return nextErrors;
 };
 
+const normalizeInstitutions = (rows) =>
+  [...rows].sort((left, right) => left.nombre.localeCompare(right.nombre, "es", { sensitivity: "base" }));
+
+const toInstitutionRow = (tenant) => ({
+  id: tenant?.institucion?.id,
+  nombre: tenant?.institucion?.nombre ?? "Institución sin nombre",
+  ciudad: tenant?.institucion?.ciudad ?? "",
+  direccion: "",
+  telefono: "",
+  tutores_activos: 0,
+});
+
 export default function InstitucionesPage() {
   const [institutions, setInstitutions] = useState([]);
   const [form, setForm] = useState(INITIAL_FORM);
@@ -27,13 +39,17 @@ export default function InstitucionesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [createdTenant, setCreatedTenant] = useState(null);
 
-  const loadInstitutions = async () => {
+  const loadInstitutions = async ({ preserveFeedback = false } = {}) => {
     setIsLoading(true);
 
     try {
       const data = await adminService.listInstitutions();
-      setInstitutions(data);
+      setInstitutions(normalizeInstitutions(data));
+      if (!preserveFeedback) {
+        setFeedback(null);
+      }
     } catch (error) {
       setFeedback({
         type: "error",
@@ -52,6 +68,7 @@ export default function InstitucionesPage() {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: "" }));
+    setFeedback(null);
   };
 
   const handleSubmit = async (event) => {
@@ -65,15 +82,27 @@ export default function InstitucionesPage() {
 
     try {
       setIsSaving(true);
-      await adminService.createInstitution({
+      setFeedback(null);
+
+      const created = await adminService.createInstitution({
         nombre: form.nombre.trim(),
         ciudad: form.ciudad.trim(),
         direccion: form.direccion.trim(),
         telefono: form.telefono.trim(),
       });
+
+      setCreatedTenant(created);
+      setInstitutions((current) => {
+        const nextRow = toInstitutionRow(created);
+        const withoutDuplicate = current.filter((institution) => institution.id !== nextRow.id);
+        return normalizeInstitutions([...withoutDuplicate, nextRow]);
+      });
       setForm(INITIAL_FORM);
-      setFeedback({ type: "success", message: "Institución creada correctamente." });
-      await loadInstitutions();
+      setFeedback({
+        type: "success",
+        message: "Institución creada correctamente. Guarda las credenciales del admin generado.",
+      });
+      await loadInstitutions({ preserveFeedback: true });
     } catch (error) {
       setFeedback({
         type: "error",
@@ -105,8 +134,9 @@ export default function InstitucionesPage() {
 
   return (
     <AppShell
+      eyebrow="Superadmin"
       title="Instituciones"
-      description="Consulta, registra y elimina instituciones."
+      description="Crea tenants nuevos y consulta el directorio global de instituciones."
       actions={
         <button type="button" className="lk-btn lk-btn--secondary" onClick={loadInstitutions}>
           Recargar
@@ -116,6 +146,9 @@ export default function InstitucionesPage() {
       <div className="lk-admin-grid">
         <section className="lk-panel-card lk-span-5">
           <h2>Nueva institución</h2>
+          <p className="lk-muted" style={{ marginTop: 0 }}>
+            Al crearla se generará automáticamente un usuario administrador inicial para ese tenant.
+          </p>
 
           <form className="lk-form-grid" onSubmit={handleSubmit} noValidate>
             <div className={`lk-field ${errors.nombre ? "lk-field--error" : ""}`}>
@@ -169,17 +202,74 @@ export default function InstitucionesPage() {
           </form>
         </section>
 
-        <section className="lk-table-card lk-span-7">
-          <h2>Instituciones registradas</h2>
+        <section className="lk-panel-card lk-span-7">
+          <h2>Admin generado</h2>
 
           {feedback ? (
             <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
           ) : null}
 
+          {!createdTenant ? (
+            <EmptyState
+              title="Sin credenciales recientes"
+              description="Cuando crees una institución, aquí aparecerán el correo y la contraseña temporal del admin inicial."
+            />
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gap: "1rem",
+              }}
+            >
+              <div className="lk-list-item">
+                <strong>Institución creada</strong>
+                <p className="lk-muted" style={{ marginBottom: 0 }}>
+                  {createdTenant.institucion?.nombre}
+                  {createdTenant.institucion?.ciudad
+                    ? ` · ${createdTenant.institucion.ciudad}`
+                    : ""}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "1rem",
+                }}
+              >
+                <div className="lk-list-item">
+                  <strong>Correo del admin</strong>
+                  <p className="lk-muted" style={{ marginBottom: 0 }}>
+                    {createdTenant.admin?.email || "No disponible"}
+                  </p>
+                </div>
+                <div className="lk-list-item">
+                  <strong>Contraseña temporal</strong>
+                  <p className="lk-muted" style={{ marginBottom: 0 }}>
+                    {createdTenant.admin?.contrasena_temporal || "No disponible"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="lk-alert lk-alert--success">
+                Comparte estas credenciales de forma segura. Esta contraseña solo se muestra en este momento de creación.
+              </div>
+            </div>
+          )}
+        </section>
+
+        <section className="lk-table-card lk-span-12">
+          <h2>Instituciones registradas</h2>
+
+          {isLoading ? (
+            <p className="lk-muted">Cargando instituciones...</p>
+          ) : null}
+
           {!isLoading && !institutions.length ? (
             <EmptyState
               title="Aún no hay instituciones"
-              description="Registra la primera desde el formulario lateral."
+              description="Registra la primera desde el formulario superior."
             />
           ) : null}
 
@@ -192,6 +282,7 @@ export default function InstitucionesPage() {
                     <th>Ciudad</th>
                     <th>Dirección</th>
                     <th>Teléfono</th>
+                    <th>Tutores activos</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -204,6 +295,7 @@ export default function InstitucionesPage() {
                       <td>{institution.ciudad || "Sin ciudad"}</td>
                       <td>{institution.direccion || "Sin dirección"}</td>
                       <td>{institution.telefono || "Sin teléfono"}</td>
+                      <td>{institution.tutores_activos ?? 0}</td>
                       <td>
                         <button
                           type="button"

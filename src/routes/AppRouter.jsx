@@ -3,6 +3,7 @@ import { USER_ROLES } from "../constants/roles";
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
 import InstitucionesPage from "../pages/admin/InstitucionesPage";
 import MinijuegosPage from "../pages/admin/MinijuegosPage";
+import SuperadminDashboardPage from "../pages/admin/SuperadminDashboardPage";
 import UsuariosPage from "../pages/admin/UsuariosPage";
 import LoginPage from "../pages/auth/LoginPage";
 import RegistroPage from "../pages/auth/RegistroPage";
@@ -37,17 +38,17 @@ export default function AppRouter() {
           }
         />
 
-        {/* Rutas Oficiales del Administrador */}
         <Route
           path="/admin/dashboard"
           element={
             <ProtectedRoute>
-              <RoleRoute allowedRoles={[USER_ROLES.ADMIN]}>
-                <AdminDashboardPage />
+              <RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
+                <SuperadminDashboardPage />
               </RoleRoute>
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/admin/usuarios"
           element={
@@ -58,28 +59,40 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/admin/instituciones"
           element={
             <ProtectedRoute>
-              <RoleRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
                 <InstitucionesPage />
               </RoleRoute>
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/admin/minijuegos"
           element={
             <ProtectedRoute>
-              <RoleRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
                 <MinijuegosPage />
               </RoleRoute>
             </ProtectedRoute>
           }
         />
 
-        {/* Ruta oficial para el dashboard del Tutor */}
+        <Route
+          path="/institution-admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={[USER_ROLES.ADMIN]}>
+                <AdminDashboardPage />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/tutor/dashboard"
           element={
@@ -91,7 +104,6 @@ export default function AppRouter() {
           }
         />
 
-        {/* Ruta para el perfil del Tutor */}
         <Route
           path="/tutor/perfil"
           element={
@@ -103,7 +115,6 @@ export default function AppRouter() {
           }
         />
 
-        {/* Ruta para grupos del Tutor */}
         <Route
           path="/tutor/grupos"
           element={
