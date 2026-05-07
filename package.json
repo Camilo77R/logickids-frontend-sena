@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "smoke:credenciales": "node scripts/credential-smoke.mjs"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
     "chart.js": "^4.5.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.12.0",
+    "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
     "react-chartjs-2": "^5.3.1",

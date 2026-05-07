@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { Bell, Search, User } from "lucide-react";
+import { Bell, Search, Settings } from "lucide-react";
 import { motion } from "framer-motion";
+import AccountCenterModal from "../../account/AccountCenterModal";
 
 export default function TutorTopbar() {
   const { user } = useAuth();
+  const [showAccountCenter, setShowAccountCenter] = useState(false);
   
   const initials = user?.nombre
     ? user.nombre.split(" ").slice(0, 2).map((chunk) => chunk[0]?.toUpperCase()).join("")
@@ -26,8 +29,12 @@ export default function TutorTopbar() {
           <Bell size={20} />
           <span className="tutor-badge">3</span>
         </button>
+
+        <button className="tutor-icon-btn" onClick={() => setShowAccountCenter(true)}>
+          <Settings size={20} />
+        </button>
         
-        <div className="tutor-profile">
+        <button className="tutor-profile" onClick={() => setShowAccountCenter(true)}>
           <div className="tutor-profile-info">
             <span className="tutor-name">{user?.nombre || "Tutor Demo"}</span>
             <span className="tutor-role">Tutor</span>
@@ -35,8 +42,10 @@ export default function TutorTopbar() {
           <div className="tutor-avatar">
             {initials}
           </div>
-        </div>
+        </button>
       </div>
+
+      <AccountCenterModal show={showAccountCenter} onHide={() => setShowAccountCenter(false)} />
     </motion.header>
   );
 }

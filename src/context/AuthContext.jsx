@@ -8,6 +8,19 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(() => getStoredSession());
   const [isBootstrapping, setIsBootstrapping] = useState(true);
 
+  const syncSession = (user, token = session?.token ?? getStoredSession()?.token ?? null) => {
+    if (!token || !user) {
+      clearStoredSession();
+      setSession(null);
+      return null;
+    }
+
+    const nextSession = { token, user };
+    saveStoredSession(nextSession);
+    setSession(nextSession);
+    return nextSession;
+  };
+
   useEffect(() => {
     const verifySession = async () => {
       const storedSession = getStoredSession();
@@ -58,6 +71,20 @@ export function AuthProvider({ children }) {
     setSession(null);
   };
 
+  const refreshProfile = async () => {
+    const profile = await authService.getProfile();
+    syncSession(profile);
+    return profile;
+  };
+
+  const updateProfile = async (profileData) => {
+    const profile = await authService.updateProfile(profileData);
+    syncSession(profile);
+    return profile;
+  };
+
+  const changePassword = async (passwordData) => authService.changePassword(passwordData);
+
   const value = useMemo(
     () => ({
       user: session?.user ?? null,
@@ -67,6 +94,9 @@ export function AuthProvider({ children }) {
       homePath: getHomePathByRole(session?.user?.rol),
       signIn,
       signOut,
+      refreshProfile,
+      updateProfile,
+      changePassword,
     }),
     [isBootstrapping, session]
   );

@@ -6,6 +6,11 @@ const mapLoginSession = (payload) => ({
 });
 
 const authService = {
+  async listInstitutions() {
+    const payload = await request("/auth/instituciones", { auth: false });
+    return payload?.data ?? [];
+  },
+
   async login(credentials) {
     const payload = await request("/auth/login", {
       method: "POST",
@@ -31,6 +36,24 @@ const authService = {
   async getProfile() {
     const payload = await request("/auth/perfil");
     return payload?.data ?? null;
+  },
+
+  async updateProfile(data) {
+    const payload = await request("/auth/perfil", {
+      method: "PUT",
+      body: data,
+    });
+
+    return payload?.data ?? null;
+  },
+
+  async changePassword(credentials) {
+    const payload = await request("/auth/cambiar-contrasena", {
+      method: "PUT",
+      body: credentials,
+    });
+
+    return payload?.data ?? { actualizada: true };
   },
 };
 

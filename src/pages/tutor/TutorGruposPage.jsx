@@ -60,8 +60,8 @@ export default function TutorGruposPage() {
 
   const handleGuardarGrupo = async (e) => {
     e.preventDefault();
-    if (!formData.nombre.trim()) {
-      alert("El nombre del grupo es obligatorio.");
+    if (formData.nombre.trim().length < 2) {
+      alert("El nombre del grupo debe tener al menos 2 caracteres.");
       return;
     }
 
@@ -178,8 +178,11 @@ export default function TutorGruposPage() {
             </div>
           </Col>
         ) : (
-          grupos.map((grupo) => (
-            <Col xs={12} md={6} lg={4} key={grupo.id_grupo}>
+          grupos.map((grupo) => {
+            const groupId = grupo.id ?? grupo.id_grupo;
+
+            return (
+            <Col xs={12} md={6} lg={4} key={groupId}>
               <Card className="h-100 shadow-sm border-0 position-relative" style={{ borderRadius: "16px", backgroundColor: "var(--lk-tutor-surface)" }}>
                 
                 {/* Botones de acción pequeña (Editar / Eliminar) */}
@@ -197,7 +200,7 @@ export default function TutorGruposPage() {
                     style={{ width: "32px", height: "32px" }}
                     onClick={() => handleEliminarGrupo(grupo)}
                     title="Eliminar Grupo"
-                    disabled={cargandoAccion === grupo.id_grupo}
+                    disabled={cargandoAccion === groupId}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -224,9 +227,9 @@ export default function TutorGruposPage() {
                         : "0 4px 12px rgba(19, 181, 107, 0.3)"
                     }}
                     onClick={() => handleToggleSesion(grupo)}
-                    disabled={cargandoAccion === grupo.id_grupo}
+                    disabled={cargandoAccion === groupId}
                   >
-                    {cargandoAccion === grupo.id_grupo ? (
+                    {cargandoAccion === groupId ? (
                       <>
                         <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
                         Procesando...
@@ -244,7 +247,7 @@ export default function TutorGruposPage() {
                 </Card.Body>
               </Card>
             </Col>
-          ))
+          )})
         )}
       </Row>
 
