@@ -76,6 +76,15 @@ export default function LoginPage() {
         navigate(homePath, { replace: true });
       }
     } catch (error) {
+      // ==========================================================
+      // NUEVO: Detectar si es usuario suspendido
+      // ==========================================================
+      if (error instanceof HttpError && error.status === 403 && error.message?.includes('suspendida')) {
+        // Redirigir a la pantalla de solicitud de reactivación
+        navigate('/solicitar-reactivacion', { state: { email: form.email } });
+        return;
+      }
+      
       setServerError(
         error instanceof HttpError
           ? error.message

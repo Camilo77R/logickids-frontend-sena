@@ -25,6 +25,7 @@ import RecuperarAccesoPage from "../pages/auth/RecuperarAccesoPage";
 // Páginas de administrador (institucional)
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
 import UsuariosPage from "../pages/admin/UsuariosPage";
+import SolicitudesPage from "../pages/admin/SolicitudesPage";  // <--- NUEVA
 
 // Páginas de superadmin (plataforma global)
 import InstitucionesPage from "../pages/admin/InstitucionesPage";
@@ -38,6 +39,9 @@ import TutorEstadisticasPage from "../pages/tutor/TutorEstadisticasPage";
 import TutorRecomendacionesPage from "../pages/tutor/TutorRecomendacionesPage";
 import TutorLogrosPage from "../pages/tutor/TutorLogrosPage";
 import TutorSesionesPage from "../pages/tutor/Tutorsesiones.page";
+
+// NUEVA: Página para solicitar reactivación de cuenta suspendida
+import SolicitarReactivacionPage from "../pages/SolicitarReactivacionPage";
 
 // Guardas de ruta
 import ProtectedRoute from "./ProtectedRoute";
@@ -81,6 +85,16 @@ export default function AppRouter() {
           }
         />
 
+        {/* NUEVA RUTA: Solicitar reactivación de cuenta suspendida */}
+        <Route
+          path="/solicitar-reactivacion"
+          element={
+            <PublicRoute>
+              <SolicitarReactivacionPage />
+            </PublicRoute>
+          }
+        />
+
         {/* ───────── RUTAS DEL TUTOR ───────── */}
         <Route
           path="/tutor/*"
@@ -105,7 +119,6 @@ export default function AppRouter() {
         />
 
         {/* ───────── RUTAS DEL ADMIN (institucional) ───────── */}
-        {/* El admin gestiona SOLO los tutores de su institución */}
         <Route
           path="/admin/dashboard"
           element={
@@ -126,9 +139,18 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/solicitudes"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={[USER_ROLES.ADMIN, USER_ROLES.SUPERADMIN]}>
+                <SolicitudesPage />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
 
         {/* ───────── RUTAS DEL SUPERADMIN (plataforma global) ───────── */}
-        {/* El superadmin gestiona instituciones y minijuegos de TODA la plataforma */}
         <Route
           path="/superadmin/instituciones"
           element={

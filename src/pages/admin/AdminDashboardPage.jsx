@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, Clock3, ShieldAlert, UsersRound } from "lucide-react";
+import { Activity, Clock3, ShieldAlert, UsersRound, Mail } from "lucide-react";
 import StatCard from "../../components/common/StatCard";
 import AppShell from "../../components/layout/AppShell";
 import { useAuth } from "../../hooks/useAuth";
@@ -8,10 +8,11 @@ import adminService from "../../services/adminService";
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, token } = useAuth(); // <--- AGREGAR token
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [pendingRequests, setPendingRequests] = useState(0); // <--- NUEVO
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -20,6 +21,25 @@ export default function AdminDashboardPage() {
         const usersData = await adminService.listUsers();
         setUsers(usersData);
         setError("");
+        
+        // ==========================================================
+        // NUEVO: Cargar solicitudes pendientes
+        // ==========================================================
+        try {
+          const response = await fetch("http://localhost:3000/api/solicitudes/admin/solicitudes", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            const pendientes = data.solicitudes?.filter(s => s.estado_solicitud === "pendiente").length || 0;
+            setPendingRequests(pendientes);
+          }
+        } catch (err) {
+          console.error("Error cargando solicitudes:", err);
+        }
+        
       } catch (loadError) {
         setError(loadError.message || "No fue posible cargar el dashboard del administrador.");
       } finally {
@@ -28,7 +48,7 @@ export default function AdminDashboardPage() {
     };
 
     loadDashboard();
-  }, []);
+  }, [token]); // <--- AGREGAR token como dependencia
 
   const summary = useMemo(() => {
     const tutors = users.filter((user) => user.rol === "tutor");
@@ -116,6 +136,8 @@ export default function AdminDashboardPage() {
         <section className="lk-panel-card lk-span-8">
           <h2>Accesos directos</h2>
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1rem", marginTop: "1rem" }}>
+            
+            {/* Botón existente: Gestión de Usuarios */}
             <button
               onClick={() => navigate("/admin/usuarios")}
               style={{
@@ -141,6 +163,52 @@ export default function AdminDashboardPage() {
                 <span className="lk-muted">Activa tutores, revisa institución y controla estados.</span>
               </div>
             </button>
+
+            {/* NUEVO BOTÓN: Solicitudes de Reactivación CON BADGE */}
+            <button
+              onClick={() => navigate("/admin/solicitudes")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                padding: "1.5rem",
+                background: "#f8faff",
+                border: "1px solid var(--lk-color-border)",
+                borderRadius: "1rem",
+                cursor: "pointer",
+                textAlign: "left",
+                transition: "all 0.2s ease",
+                position: "relative"
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-primary)")}
+              onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
+            >
+              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-primary)" }}>
+                <Mail size={32} strokeWidth={1.5} />
+              </div>
+              <div>
+                <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Solicitudes de Reactivación</strong>
+                <span className="lk-muted">Revisa y gestiona las solicitudes de tutores suspendidos.</span>
+              </div>
+              {pendingRequests > 0 && (
+                <div style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "15px",
+                  background: "#dc2626",
+                  color: "white",
+                  borderRadius: "20px",
+                  padding: "2px 10px",
+                  fontSize: "0.75rem",
+                  fontWeight: "bold",
+                  minWidth: "20px",
+                  textAlign: "center"
+                }}>
+                  {pendingRequests}
+                </div>
+              )}
+            </button>
+
           </div>
         </section>
 
@@ -178,20 +246,20 @@ export default function AdminDashboardPage() {
             
             <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "0.5rem 0" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem" }}>
-                <strong>Solicitudes pendientes</strong>
-                <span>{summary.inactiveTutors} por revisar</span>
+                <strong>Solicitudes de reactivación pendientes</strong>
+                <span>{pendingRequests} por revisar</span>
               </div>
               <div className="lk-progress-bar">
                 <div
-                  className="lk-progress-bar-fill"
+                  className="lk-progress-bar-fill lk-progress-bar-fill--warning"
                   style={{
-                    width: `${summary.totalTutors > 0 ? (summary.inactiveTutors / summary.totalTutors) * 100 : 0}%`,
+                    width: `${summary.totalTutors > 0 ? (pendingRequests / summary.totalTutors) * 100 : 0}%`,
                   }}
                 ></div>
               </div>
-              {summary.inactiveTutors > 0 && (
+              {pendingRequests > 0 && (
                  <small style={{ display: "block", color: "var(--lk-color-warning)", marginTop: "0.5rem", fontWeight: "bold" }}>
-                   Revisa estas cuentas antes de que queden bloqueadas en espera.
+                   Tienes {pendingRequests} solicitud(es) de reactivación pendiente(s)
                  </small>
               )}
             </li>
