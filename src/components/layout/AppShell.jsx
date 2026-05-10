@@ -5,6 +5,7 @@ import AccountCenterModal from "../account/AccountCenterModal";
 import LogicKidsLogo from "../branding/LogicKidsLogo";
 import { NAVIGATION_BY_ROLE } from "../../constants/navigation";
 import { useAuth } from "../../hooks/useAuth";
+import NotificationBell from "../../components/NotificationBell";
 
 export default function AppShell({
   eyebrow,
@@ -75,9 +76,10 @@ export default function AppShell({
           <header className="lk-topbar">
             <div className="lk-topbar-title">Administración</div>
             <div className="lk-topbar-tools">
-              <button type="button" className="lk-topbar-icon" aria-label="Notificaciones">
-                <Bell size={16} />
-              </button>
+              {/* Notificaciones con NotificationBell de develop */}
+              <NotificationBell />
+              
+              {/* Centro de cuenta con modal (tu versión) */}
               <button
                 type="button"
                 className="lk-topbar-icon"

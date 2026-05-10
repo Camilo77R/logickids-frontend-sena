@@ -5,6 +5,7 @@ import StatCard from "../../components/common/StatCard";
 import AppShell from "../../components/layout/AppShell";
 import { useAuth } from "../../hooks/useAuth";
 import adminService from "../../services/adminService";
+import Notifications from "../../components/Notifications";
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -273,6 +274,10 @@ export default function AdminDashboardPage() {
               </div>
             </li>
           </ul>
+        </section>
+
+        <section className="lk-panel-card lk-span-12" style={{ marginTop: "1rem" }}>
+          <Notifications />
         </section>
       </div>
     </AppShell>

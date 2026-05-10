@@ -71,6 +71,7 @@ export function AuthProvider({ children }) {
     setSession(null);
   };
 
+  // ========== TUS FUNCIONES (HEAD) ==========
   const refreshProfile = async () => {
     const profile = await authService.getProfile();
     syncSession(profile);
@@ -85,6 +86,19 @@ export function AuthProvider({ children }) {
 
   const changePassword = async (passwordData) => authService.changePassword(passwordData);
 
+  // ========== FUNCIÓN DE DEVELOP ==========
+  const updateUser = (updatedUserData) => {
+    setSession(prev => {
+      if (!prev) return prev;
+      const updatedSession = {
+        ...prev,
+        user: { ...prev.user, ...updatedUserData }
+      };
+      saveStoredSession(updatedSession);
+      return updatedSession;
+    });
+  };
+
   const value = useMemo(
     () => ({
       user: session?.user ?? null,
@@ -97,6 +111,7 @@ export function AuthProvider({ children }) {
       refreshProfile,
       updateProfile,
       changePassword,
+      updateUser,
     }),
     [isBootstrapping, session]
   );

@@ -75,7 +75,7 @@ export default function UsuariosPage() {
     if (selectedUser?.estado === "suspendido" && estado !== "suspendido") {
       setFeedback({
         type: "error",
-        message: "⚠️ No puedes cambiar manualmente el estado de un tutor suspendido. Para reactivarlo, usa la sección 'Solicitudes de Reactivación' en el menú lateral.",
+        message: " No puedes cambiar manualmente el estado de un tutor suspendido. Para reactivarlo, usa la sección 'Solicitudes de Reactivación' en el menú lateral.",
       });
       setTimeout(() => setFeedback(null), 5000);
       return;
@@ -185,14 +185,14 @@ export default function UsuariosPage() {
             <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
           ) : null}
 
-          {!isLoading && !visibleUsers.length ? (
+          {!isLoading && visibleUsers.length === 0 ? (
             <EmptyState
               title="No hay usuarios para este filtro"
               description="Ajusta el filtro o el término de búsqueda para explorar las cuentas disponibles."
             />
           ) : null}
 
-          {!!visibleUsers.length ? (
+          {visibleUsers.length > 0 ? (
             <div className="lk-table-wrap">
               <table className="lk-table">
                 <thead>
@@ -246,24 +246,24 @@ export default function UsuariosPage() {
             />
           ) : (
             <>
-            {selectedUser.estado === "suspendido" && (
-  <div style={{
-    marginBottom: "1rem",
-    padding: "0.75rem 1rem",
-    borderRadius: "8px",
-    background: "#fef3c7",
-    borderLeft: "4px solid #f59e0b",
-    display: "flex",
-    alignItems: "center",
-    gap: "0.75rem"
-  }}>
-    <AlertCircle size={18} color="#d97706" />
-    <span style={{ fontSize: "0.85rem", color: "#92400e" }}>
-      <strong>Usuario suspendido</strong> – Para reactivarlo, usa la sección{" "}
-      <strong>"Solicitudes de Reactivación"</strong> en el menú lateral.
-    </span>
-  </div>
-)}
+              {selectedUser.estado === "suspendido" && (
+                <div style={{
+                  marginBottom: "1rem",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "8px",
+                  background: "#fef3c7",
+                  borderLeft: "4px solid #f59e0b",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem"
+                }}>
+                  <AlertCircle size={18} color="#d97706" />
+                  <span style={{ fontSize: "0.85rem", color: "#92400e" }}>
+                    <strong>Usuario suspendido</strong> – Para reactivarlo, usa la sección{" "}
+                    <strong>"Solicitudes de Reactivación"</strong> en el menú lateral.
+                  </span>
+                </div>
+              )}
 
               <div className="lk-inline-list" style={{ marginBottom: "1rem" }}>
                 <div className="lk-list-item">

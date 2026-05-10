@@ -12,8 +12,9 @@
  * El superadmin debe anotarlas o copiarlas antes de cerrar el modal.
  */
 import { useEffect, useState } from "react";
-import { Building2, Pencil, Trash2, Copy, Check, X } from "lucide-react";
+import { Building2, Pencil, Trash2, Copy, Check, X, Search } from "lucide-react";
 import adminService from "../../services/adminService";
+import EmptyState from "../../components/common/EmptyState";
 
 /** Formulario vacío reutilizable */
 const EMPTY_FORM = { nombre: "", ciudad: "", direccion: "", telefono: "" };
@@ -29,6 +30,12 @@ export default function InstitucionesPage() {
   const [institutions, setInstitutions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [feedback, setFeedback] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredInstitutions = institutions.filter(inst =>
+    inst.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    inst.ciudad?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Estado del formulario (crear o editar)
   const [form, setForm] = useState(EMPTY_FORM);
@@ -141,54 +148,54 @@ export default function InstitucionesPage() {
   };
 
   return (
-    <div style={s.page}>
+    <div style={styleWrapper.page}>
       {/* ── Encabezado ── */}
-      <div style={s.pageHeader}>
-        <div style={s.pageHeaderIcon}><Building2 size={26} color="#4f46e5" /></div>
+      <div style={styleWrapper.pageHeader}>
+        <div style={styleWrapper.pageHeaderIcon}><Building2 size={26} color="#4f46e5" /></div>
         <div>
-          <h1 style={s.pageTitle}>Instituciones</h1>
-          <p style={s.pageSubtitle}>Crea, edita y elimina colegios registrados en la plataforma</p>
+          <h1 style={styleWrapper.pageTitle}>Instituciones</h1>
+          <p style={styleWrapper.pageSubtitle}>Crea, edita y elimina colegios registrados en la plataforma</p>
         </div>
       </div>
 
       {/* ── Feedback ── */}
       {feedback && (
-        <div style={{ ...s.alert, ...(feedback.type === "error" ? s.alertError : s.alertSuccess) }}>
+        <div style={{ ...styleWrapper.alert, ...(feedback.type === "error" ? styleWrapper.alertError : styleWrapper.alertSuccess) }}>
           {feedback.message}
         </div>
       )}
 
-      <div style={s.grid}>
+      <div style={styleWrapper.grid}>
         {/* ── Formulario crear / editar ── */}
-        <section style={s.formCard}>
-          <h2 style={s.cardTitle}>
+        <section style={styleWrapper.formCard}>
+          <h2 style={styleWrapper.cardTitle}>
             {editingId ? "✏️ Editar institución" : "➕ Nueva institución"}
           </h2>
 
-          <form onSubmit={handleSubmit} style={s.form}>
+          <form onSubmit={handleSubmit} style={styleWrapper.form}>
             <Field label="Nombre *" error={formErrors.nombre}>
               <input name="nombre" value={form.nombre} onChange={handleChange}
-                placeholder="Colegio San José" style={s.input} />
+                placeholder="Colegio San José" style={styleWrapper.input} />
             </Field>
             <Field label="Ciudad">
               <input name="ciudad" value={form.ciudad} onChange={handleChange}
-                placeholder="Bogotá" style={s.input} />
+                placeholder="Bogotá" style={styleWrapper.input} />
             </Field>
             <Field label="Dirección">
               <input name="direccion" value={form.direccion} onChange={handleChange}
-                placeholder="Cra 10 # 25-30" style={s.input} />
+                placeholder="Cra 10 # 25-30" style={styleWrapper.input} />
             </Field>
             <Field label="Teléfono">
               <input name="telefono" value={form.telefono} onChange={handleChange}
-                placeholder="601 555 0000" style={s.input} />
+                placeholder="601 555 0000" style={styleWrapper.input} />
             </Field>
 
             <div style={{ display: "flex", gap: "8px" }}>
-              <button type="submit" style={s.btnPrimary} disabled={isSaving}>
+              <button type="submit" style={styleWrapper.btnPrimary} disabled={isSaving}>
                 {isSaving ? "Guardando..." : editingId ? "Guardar cambios" : "Crear institución"}
               </button>
               {editingId && (
-                <button type="button" style={s.btnSecondary} onClick={handleCancelEdit}>
+                <button type="button" style={styleWrapper.btnSecondary} onClick={handleCancelEdit}>
                   Cancelar
                 </button>
               )}
@@ -197,94 +204,121 @@ export default function InstitucionesPage() {
         </section>
 
         {/* ── Tabla de instituciones ── */}
-        <section style={s.tableCard}>
-          <h2 style={s.cardTitle}>Instituciones registradas ({institutions.length})</h2>
+        <section style={styleWrapper.tableCard}>
+          <h2 style={styleWrapper.cardTitle}>Instituciones registradas ({institutions.length})</h2>
 
-          {isLoading && <p style={s.loading}>Cargando...</p>}
+          {isLoading ? (
+            <p style={styleWrapper.loading}>Cargando...</p>
+          ) : (
+            <>
+              <div style={{ marginBottom: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <input
+                  type="text"
+                  placeholder="🔍 Buscar por nombre o ciudad..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    padding: "0.5rem 1rem",
+                    borderRadius: "0.5rem",
+                    border: "1px solid #ccc",
+                    width: "280px",
+                    fontSize: "0.9rem"
+                  }}
+                />
+                <span style={{ fontSize: "0.8rem", color: "#6b7280" }}>{filteredInstitutions.length} de {institutions.length} instituciones</span>
+              </div>
 
-          {!isLoading && institutions.length === 0 && (
-            <div style={s.empty}>
-              <Building2 size={40} color="#d1d5db" />
-              <p>No hay instituciones aún. Crea la primera.</p>
-            </div>
-          )}
-
-          {institutions.length > 0 && (
-            <div style={s.tableWrap}>
-              <table style={s.table}>
-                <thead>
-                  <tr>
-                    <th style={s.th}>Nombre</th>
-                    <th style={s.th}>Ciudad</th>
-                    <th style={s.th}>Tutores activos</th>
-                    <th style={s.th}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {institutions.map((inst) => {
-                    const id = inst.id ?? inst.id_institucion;
-                    return (
-                      <tr key={id} style={editingId === id ? s.rowEditing : {}}>
-                        <td style={s.td}>
-                          <strong>{inst.nombre}</strong>
-                          {inst.ciudad && <div style={s.tdSub}>{inst.ciudad}</div>}
-                        </td>
-                        <td style={s.td}>{inst.ciudad || "—"}</td>
-                        <td style={s.td}>
-                          <span style={s.badge}>{inst.tutores_activos ?? 0}</span>
-                        </td>
-                        <td style={s.td}>
-                          <div style={{ display: "flex", gap: "6px" }}>
-                            <button style={s.btnEdit} onClick={() => handleStartEdit(inst)} title="Editar">
-                              <Pencil size={15} />
-                            </button>
-                            <button style={s.btnDelete} onClick={() => handleDelete(inst)} title="Eliminar">
-                              <Trash2 size={15} />
-                            </button>
-                          </div>
-                        </td>
+              {filteredInstitutions.length === 0 ? (
+                searchTerm ? (
+                  <EmptyState
+                    title="No se encontraron resultados"
+                    description={`No hay instituciones que coincidan con "${searchTerm}"`}
+                  />
+                ) : (
+                  <div style={styleWrapper.empty}>
+                    <Building2 size={40} color="#d1d5db" />
+                    <p>No hay instituciones aún. Crea la primera.</p>
+                  </div>
+                )
+              ) : (
+                <div style={styleWrapper.tableWrap}>
+                  <table style={styleWrapper.table}>
+                    <thead>
+                      <tr>
+                        <th style={styleWrapper.th}>Nombre</th>
+                        <th style={styleWrapper.th}>Ciudad</th>
+                        <th style={styleWrapper.th}>Dirección</th>
+                        <th style={styleWrapper.th}>Teléfono</th>
+                        <th style={styleWrapper.th}>Acciones</th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                    </thead>
+                    <tbody>
+                      {filteredInstitutions.map((inst) => {
+                        const id = inst.id ?? inst.id_institucion;
+                        const isEditing = editingId === id;
+                        return (
+                          <tr key={id} style={isEditing ? styleWrapper.rowEditing : {}}>
+                            <td style={styleWrapper.td}>
+                              <strong>{inst.nombre}</strong>
+                              {inst.ciudad && <div style={styleWrapper.tdSub}>{inst.ciudad}</div>}
+                            </td>
+                            <td style={styleWrapper.td}>{inst.ciudad || "—"}</td>
+                            <td style={styleWrapper.td}>{inst.direccion || "—"}</td>
+                            <td style={styleWrapper.td}>{inst.telefono || "—"}</td>
+                            <td style={styleWrapper.td}>
+                              <div style={{ display: "flex", gap: "6px" }}>
+                                <button style={styleWrapper.btnEdit} onClick={() => handleStartEdit(inst)} title="Editar">
+                                  <Pencil size={15} />
+                                </button>
+                                <button style={styleWrapper.btnDelete} onClick={() => handleDelete(inst)} title="Eliminar">
+                                  <Trash2 size={15} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
           )}
         </section>
       </div>
 
       {/* ── Modal de credenciales (RN-06) ── */}
       {credenciales && (
-        <div style={s.overlay}>
-          <div style={s.modal}>
-            <div style={s.modalHeader}>
-              <h3 style={s.modalTitle}>🔑 Credenciales del administrador</h3>
-              <button style={s.modalClose} onClick={() => setCredenciales(null)}>
+        <div style={styleWrapper.overlay}>
+          <div style={styleWrapper.modal}>
+            <div style={styleWrapper.modalHeader}>
+              <h3 style={styleWrapper.modalTitle}>🔑 Credenciales del administrador</h3>
+              <button style={styleWrapper.modalClose} onClick={() => setCredenciales(null)}>
                 <X size={20} />
               </button>
             </div>
 
-            <div style={s.modalWarning}>
+            <div style={styleWrapper.modalWarning}>
               ⚠️ <strong>Guarda estas credenciales ahora.</strong> No podrás verlas de nuevo.
               El administrador debe usarlas para su primer acceso y luego cambiar la contraseña.
             </div>
 
-            <div style={s.credField}>
-              <span style={s.credLabel}>Email del administrador</span>
-              <code style={s.credValue}>{credenciales.email}</code>
+            <div style={styleWrapper.credField}>
+              <span style={styleWrapper.credLabel}>Email del administrador</span>
+              <code style={styleWrapper.credValue}>{credenciales.email}</code>
             </div>
 
-            <div style={s.credField}>
-              <span style={s.credLabel}>Contraseña temporal</span>
-              <code style={s.credValue}>{credenciales.contrasena_temporal}</code>
+            <div style={styleWrapper.credField}>
+              <span style={styleWrapper.credLabel}>Contraseña temporal</span>
+              <code style={styleWrapper.credValue}>{credenciales.contrasena_temporal}</code>
             </div>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-              <button style={s.btnCopy} onClick={handleCopyCredentials}>
+              <button style={styleWrapper.btnCopy} onClick={handleCopyCredentials}>
                 {copied ? <Check size={16} /> : <Copy size={16} />}
                 {copied ? "¡Copiado!" : "Copiar credenciales"}
               </button>
-              <button style={s.btnPrimary} onClick={() => setCredenciales(null)}>
+              <button style={styleWrapper.btnPrimary} onClick={() => setCredenciales(null)}>
                 Ya las guardé, cerrar
               </button>
             </div>
@@ -306,7 +340,7 @@ function Field({ label, error, children }) {
   );
 }
 
-const s = {
+const styleWrapper = {
   page: { maxWidth: "1100px", margin: "0 auto" },
   pageHeader: { display: "flex", gap: "14px", alignItems: "center", marginBottom: "24px" },
   pageHeaderIcon: { background: "#ede9fe", borderRadius: "12px", padding: "12px", display: "flex" },
@@ -335,7 +369,6 @@ const s = {
   tdSub: { fontSize: "12px", color: "#9ca3af", marginTop: "2px" },
   badge: { background: "#ede9fe", color: "#6d28d9", padding: "2px 10px", borderRadius: "999px", fontSize: "13px", fontWeight: 700 },
   rowEditing: { background: "#fef9c3" },
-  // Modal overlay
   overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" },
   modal: { background: "white", borderRadius: "16px", padding: "28px", maxWidth: "480px", width: "100%", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" },
   modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" },

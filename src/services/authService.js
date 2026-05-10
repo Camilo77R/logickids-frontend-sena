@@ -1,14 +1,15 @@
 import { request } from "./httpClient";
 
-const mapLoginSession = (payload) => ({
-  token: payload?.data?.token ?? null,
-  user: payload?.data?.usuario ?? null,
-});
-
 const authService = {
+  // Listar instituciones para registro (público)
   async listInstitutions() {
     const payload = await request("/auth/instituciones", { auth: false });
     return payload?.data ?? [];
+  },
+
+  async getProfile() {
+    const payload = await request("/auth/perfil");
+    return payload?.data ?? null;
   },
 
   async login(credentials) {
@@ -20,8 +21,10 @@ const authService = {
         contrasena: credentials.contrasena,
       },
     });
-
-    return mapLoginSession(payload);
+    return {
+      token: payload?.data?.token ?? null,
+      user: payload?.data?.usuario ?? null,
+    };
   },
 
   async register(data) {
@@ -33,26 +36,33 @@ const authService = {
     return payload?.data ?? null;
   },
 
-  async getProfile() {
-    const payload = await request("/auth/perfil");
-    return payload?.data ?? null;
-  },
-
-  async updateProfile(data) {
+  // Actualizar perfil
+  async updateProfile(profileData) {
     const payload = await request("/auth/perfil", {
       method: "PUT",
-      body: data,
+      body: profileData,
     });
-
     return payload?.data ?? null;
   },
 
+  // Cambiar contraseña
+  async cambiarContrasena(data) {
+    const payload = await request("/auth/cambiar-contrasena", {
+      method: "PUT",
+      body: {
+        contrasena_actual: data.contrasenaActual,
+        contrasena_nueva: data.contrasenaNueva,
+      },
+    });
+    return payload?.data ?? null;
+  },
+
+  // Cambiar contraseña (versión alternativa)
   async changePassword(credentials) {
     const payload = await request("/auth/cambiar-contrasena", {
       method: "PUT",
       body: credentials,
     });
-
     return payload?.data ?? { actualizada: true };
   },
 };
