@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import LogicKidsLogo from "../../components/branding/LogicKidsLogo";
 import { useAuth } from "../../hooks/useAuth";
 import { HttpError } from "../../services/httpClient";
-import { USER_ROLES } from "../../constants/roles";
+import { getHomePathByRole } from "../../utils/paths";
 
 const INITIAL_FORM = {
   email: "",
@@ -61,15 +61,30 @@ export default function LoginPage() {
         contrasena: form.contrasena,
       });
 
-      if (user?.rol === USER_ROLES.ADMIN) {
-        navigate("/admin/dashboard", { replace: true });
-      } else if (user?.rol === USER_ROLES.TUTOR) {
-        navigate("/tutor/dashboard", { replace: true });
-      } else {
+      // Redirige al panel correcto según el rol del usuario autenticado.
+      // getHomePathByRole centraliza esta lógica para todos los roles:
+      //   superadmin → /superadmin/instituciones
+      //   admin      → /admin/dashboard
+      //   tutor      → /tutor/dashboard
+      const homePath = getHomePathByRole(user?.rol);
+
+      if (homePath === "/login") {
+        // Rol desconocido o no soportado en este portal
         signOut();
-        setServerError("Rol de usuario no válido para este portal.");
+        setServerError("Rol de usuario no reconocido. Contacta al administrador.");
+      } else {
+        navigate(homePath, { replace: true });
       }
     } catch (error) {
+      // ==========================================================
+      // NUEVO: Detectar si es usuario suspendido
+      // ==========================================================
+      if (error instanceof HttpError && error.status === 403 && error.message?.includes('suspendida')) {
+        // Redirigir a la pantalla de solicitud de reactivación
+        navigate('/solicitar-reactivacion', { state: { email: form.email } });
+        return;
+      }
+      
       setServerError(
         error instanceof HttpError
           ? error.message
@@ -142,6 +157,12 @@ export default function LoginPage() {
             <button type="submit" className="lk-btn lk-btn--primary lk-btn--full" disabled={isSubmitting}>
               {isSubmitting ? "Ingresando..." : "Entrar"}
             </button>
+
+            <div className="text-center" style={{ fontSize: "0.85rem" }}>
+              <Link to="/recuperar-acceso" style={{ color: "#1796ed", fontWeight: 700 }}>
+                ¿Olvidaste tu acceso?
+              </Link>
+            </div>
 
             <div className="text-center mt-3" style={{ fontSize: "0.85rem", color: "#6b7280" }}>
               <span>¿Eres tutor y no tienes cuenta? </span>

@@ -1,16 +1,41 @@
-export default function SesionesFilters({ tipo, setTipo, estudiantes, setEstudiante }) {
+export default function SesionesFilters({
+  tipo,
+  setTipo,
+  grupos,
+  grupoId,
+  setGrupoId,
+  estudiantes,
+  estudianteId,
+  setEstudiante,
+}) {
   return (
-    <div style={{ marginBottom: "20px" }}>
+    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "20px" }}>
       {/* Tipo */}
       <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
         <option value="estudiante">Estudiante</option>
         <option value="grupo">Grupo</option>
       </select>
 
+      <select value={grupoId} onChange={(e) => setGrupoId(e.target.value)}>
+        <option value="">Selecciona un grupo</option>
+        {grupos.map((grupo) => (
+          <option key={grupo.id} value={grupo.id}>
+            {grupo.nombre}
+          </option>
+        ))}
+      </select>
+
       {/* Lista estudiantes */}
-      <select onChange={(e) => setEstudiante(e.target.value)}>
-        {estudiantes.map(e => (
-          <option key={e.id} value={e.id}>{e.nombre}</option>
+      <select
+        value={estudianteId}
+        onChange={(e) => setEstudiante(e.target.value)}
+        disabled={tipo !== "estudiante" || !estudiantes.length}
+      >
+        <option value="">Selecciona un estudiante</option>
+        {estudiantes.map((estudiante) => (
+          <option key={estudiante.id} value={estudiante.id}>
+            {estudiante.nombre}
+          </option>
         ))}
       </select>
     </div>

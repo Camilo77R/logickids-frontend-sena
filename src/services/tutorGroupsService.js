@@ -1,5 +1,8 @@
 import { request } from "./httpClient";
 
+const unwrapCollection = (payload) => payload?.data ?? (Array.isArray(payload) ? payload : []);
+const unwrapEntity = (payload) => payload?.data ?? payload ?? null;
+
 /**
  * Servicio para manejar la lógica de grupos del Tutor
  */
@@ -11,9 +14,20 @@ const tutorGroupsService = {
     return await request("/grupos");
   },
 
+  // Devuelve la colección ya desempaquetada para páginas que solo necesitan el arreglo.
+  getGroups: async () => {
+    const payload = await request("/grupos");
+    return unwrapCollection(payload);
+  },
+
   // 2. Obtener un grupo específico con sus estudiantes
   obtenerGrupo: async (grupoId) => {
     return await request(`/grupos/${grupoId}`);
+  },
+
+  getGroup: async (grupoId) => {
+    const payload = await request(`/grupos/${grupoId}`);
+    return unwrapEntity(payload);
   },
 
   // 3. Crear un nuevo grupo

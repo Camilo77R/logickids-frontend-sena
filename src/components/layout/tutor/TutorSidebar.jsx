@@ -1,7 +1,7 @@
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../../hooks/useAuth";
-import { LayoutDashboard, Users, UserPlus, BarChart3, MessageSquareWarning, Trophy, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, BarChart3, MessageSquareWarning, Trophy, LogOut, History } from "lucide-react";
 
 export default function TutorSidebar() {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ export default function TutorSidebar() {
     { path: "/tutor/estudiantes", label: "Estudiantes", icon: <UserPlus size={20} /> },
     { path: "/tutor/estadisticas", label: "Estadísticas", icon: <BarChart3 size={20} /> },
     { path: "/tutor/recomendaciones", label: "Recomendaciones IA", icon: <MessageSquareWarning size={20} /> },
+    { path: "/tutor/sesiones", label: "Sesiones", icon: <History size={20} /> },
     { path: "/tutor/logros", label: "Logros", icon: <Trophy size={20} /> },
   ];
 

@@ -42,6 +42,23 @@ const adminService = {
     return payload?.data ?? { eliminada: true };
   },
 
+  /**
+   * Actualiza los datos de una institución existente.
+   * Solo el superadmin puede ejecutar esta operación.
+   *
+   * @param {number} institutionId
+   * @param {{ nombre?: string, ciudad?: string, direccion?: string, telefono?: string }} data
+   * @returns {Promise<object|null>} Institución actualizada
+   */
+  async updateInstitution(institutionId, data) {
+    const payload = await request(`/admin/instituciones/${institutionId}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return payload?.data ?? null;
+  },
+
   async listMinigames() {
     const payload = await request("/admin/minijuegos");
     return payload?.data || (Array.isArray(payload) ? payload : []);
