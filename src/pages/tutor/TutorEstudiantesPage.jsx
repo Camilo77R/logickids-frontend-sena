@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { Edit2, Trash2, QrCode, Users, RefreshCw, X, Check } from "lucide-react";
+import { Edit2, Trash2, QrCode, Users, RefreshCw } from "lucide-react";
 import { Container, Row, Col, Card, Button, Alert, Spinner, Modal, Form } from "react-bootstrap";
+import StudentQrPreview from "../../components/account/StudentQrPreview";
 import estudianteService from "../../services/estudianteService";
 import tutorGroupsService from "../../services/tutorGroupsService";
 
@@ -16,6 +17,8 @@ const validateForm = (form) => {
     const errors = {};
     if (!form.nombre?.trim()) {
         errors.nombre = "El nombre es obligatorio.";
+    } else if (form.nombre.trim().length < 2) {
+        errors.nombre = "El nombre debe tener al menos 2 caracteres.";
     }
     if (!form.edad?.trim()) {
         errors.edad = "La edad es obligatoria.";
@@ -53,6 +56,7 @@ export default function TutorEstudiantesPage() {
     const [showQrModal, setShowQrModal] = useState(false);
     const [qrData, setQrData] = useState(null);
     const [loadingQr, setLoadingQr] = useState(false);
+    const [selectedQrStudentName, setSelectedQrStudentName] = useState("");
     
     // Estado para modal de cambiar grupo
     const [showGrupoModal, setShowGrupoModal] = useState(false);
@@ -91,7 +95,6 @@ export default function TutorEstudiantesPage() {
             const respuesta = await tutorGroupsService.listarGrupos();
             const data = normalizeArray(respuesta);
             
-            console.log("Grupos cargados:", data);
             setGrupos(data);
             setAllGrupos(data);
             
@@ -99,7 +102,6 @@ export default function TutorEstudiantesPage() {
                 setSelectedGrupoId(data[0].id_grupo || data[0].id);
             }
         } catch (error) {
-            console.error("Error cargando grupos:", error);
             showFeedback("error", "No fue posible cargar los grupos.");
         }
     };
@@ -117,7 +119,6 @@ export default function TutorEstudiantesPage() {
             const data = normalizeArray(respuesta);
             setEstudiantes(data);
         } catch (error) {
-            console.error("Error cargando estudiantes:", error);
             showFeedback("error", "No fue posible cargar los estudiantes.");
         } finally {
             setIsLoading(false);
@@ -248,6 +249,7 @@ export default function TutorEstudiantesPage() {
     const handleObtenerQr = async (estudiante) => {
         setLoadingQr(true);
         setQrData(null);
+        setSelectedQrStudentName(estudiante.nombre || "estudiante");
         setShowQrModal(true);
         
         try {
@@ -285,19 +287,6 @@ export default function TutorEstudiantesPage() {
         }
     };
 
-    // Toggle sesión del estudiante
-    const handleToggleSesion = async (estudiante) => {
-        const nuevaSesion = !estudiante.sesion_activa;
-        
-        try {
-            await estudianteService.toggleSesion(estudiante.id, nuevaSesion);
-            showFeedback("success", `Sesión ${nuevaSesion ? "activada" : "desactivada"} correctamente.`);
-            await loadEstudiantes(selectedGrupoId, showInactivos);
-        } catch (error) {
-            showFeedback("error", "No fue posible cambiar el estado de la sesión.");
-        }
-    };
-
     return (
         <Container fluid className="py-4">
             {/* Feedback Alert */}
@@ -312,6 +301,9 @@ export default function TutorEstudiantesPage() {
                 <div>
                     <h1 className="h3 mb-1">Estudiantes</h1>
                     <p className="text-muted mb-0">Gestiona los estudiantes de tu grupo</p>
+                    <small className="text-muted">
+                        La sesión de juego se abre desde "Mis Grupos" para respetar la regla de clase completa.
+                    </small>
                 </div>
                 <div className="d-flex gap-2">
                     <Button 
@@ -502,13 +494,13 @@ export default function TutorEstudiantesPage() {
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <Button
-                                                            size="sm"
-                                                            variant={estudiante.sesion_activa ? "success" : "outline-secondary"}
-                                                            onClick={() => handleToggleSesion(estudiante)}
+                                                        <span
+                                                            className={`badge ${
+                                                                estudiante.sesion_activa ? "bg-success" : "bg-secondary"
+                                                            }`}
                                                         >
-                                                            {estudiante.sesion_activa ? <Check size={16} /> : <X size={16} />}
-                                                        </Button>
+                                                            {estudiante.sesion_activa ? "Clase abierta" : "Clase cerrada"}
+                                                        </span>
                                                     </td>
                                                     <td>
                                                         <div className="d-flex gap-1">
@@ -577,13 +569,10 @@ export default function TutorEstudiantesPage() {
                     {loadingQr ? (
                         <Spinner animation="border" variant="primary" />
                     ) : qrData ? (
-                        <div>
-                            <div className="bg-light p-4 rounded mb-3">
-                                <QrCode size={64} className="text-muted" />
-                                <p className="mt-3 font-monospace mb-0">{qrData.qr_token}</p>
-                            </div>
-                            <p className="text-muted mb-0">Token QR</p>
-                        </div>
+                        <StudentQrPreview
+                            token={qrData.qr_token}
+                            studentName={selectedQrStudentName}
+                        />
                     ) : (
                         <p className="text-muted">No se pudo cargar el QR</p>
                     )}

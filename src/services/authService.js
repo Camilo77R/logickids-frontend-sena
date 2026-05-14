@@ -1,6 +1,12 @@
 import { request } from "./httpClient";
 
 const authService = {
+  // Listar instituciones para registro (público)
+  async listInstitutions() {
+    const payload = await request("/auth/instituciones", { auth: false });
+    return payload?.data ?? [];
+  },
+
   async getProfile() {
     const payload = await request("/auth/perfil");
     return payload?.data ?? null;
@@ -30,7 +36,7 @@ const authService = {
     return payload?.data ?? null;
   },
 
-  // ✅ Actualizar perfil
+  // Actualizar perfil
   async updateProfile(profileData) {
     const payload = await request("/auth/perfil", {
       method: "PUT",
@@ -39,7 +45,7 @@ const authService = {
     return payload?.data ?? null;
   },
 
-  // ✅ CAMBIAR CONTRASEÑA - AGREGAR ESTO
+  // Cambiar contraseña
   async cambiarContrasena(data) {
     const payload = await request("/auth/cambiar-contrasena", {
       method: "PUT",
@@ -49,6 +55,15 @@ const authService = {
       },
     });
     return payload?.data ?? null;
+  },
+
+  // Cambiar contraseña (versión alternativa)
+  async changePassword(credentials) {
+    const payload = await request("/auth/cambiar-contrasena", {
+      method: "PUT",
+      body: credentials,
+    });
+    return payload?.data ?? { actualizada: true };
   },
 };
 

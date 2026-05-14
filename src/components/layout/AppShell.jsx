@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { Bell, Settings } from "lucide-react";
+import AccountCenterModal from "../account/AccountCenterModal";
 import LogicKidsLogo from "../branding/LogicKidsLogo";
 import { NAVIGATION_BY_ROLE } from "../../constants/navigation";
 import { useAuth } from "../../hooks/useAuth";
@@ -13,6 +16,7 @@ export default function AppShell({
 }) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const [showAccountCenter, setShowAccountCenter] = useState(false);
   const navigation = NAVIGATION_BY_ROLE[user?.rol] ?? [];
   const initials = user?.nombre
     ? user.nombre
@@ -71,10 +75,27 @@ export default function AppShell({
         <main className="lk-shell-main">
           <header className="lk-topbar">
             <div className="lk-topbar-title">Administración</div>
-            <div className="lk-topbar-tools" aria-hidden="true">
+            <div className="lk-topbar-tools">
+              {/* Notificaciones con NotificationBell de develop */}
               <NotificationBell />
-              <span className="lk-topbar-icon">⚙</span>
-              <span className="lk-topbar-icon">{initials}</span>
+              
+              {/* Centro de cuenta con modal (tu versión) */}
+              <button
+                type="button"
+                className="lk-topbar-icon"
+                aria-label="Centro de cuenta"
+                onClick={() => setShowAccountCenter(true)}
+              >
+                <Settings size={16} />
+              </button>
+              <button
+                type="button"
+                className="lk-topbar-icon"
+                aria-label="Abrir centro de cuenta"
+                onClick={() => setShowAccountCenter(true)}
+              >
+                {initials}
+              </button>
             </div>
           </header>
 
@@ -90,6 +111,8 @@ export default function AppShell({
           {children}
         </main>
       </div>
+
+      <AccountCenterModal show={showAccountCenter} onHide={() => setShowAccountCenter(false)} />
     </div>
   );
 }
