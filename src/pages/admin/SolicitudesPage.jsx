@@ -70,7 +70,8 @@ export default function SolicitudesPage() {
       }
 
       const data = await response.json();
-      setSolicitudes(data.solicitudes || []);
+      // ✅ CORREGIDO: el backend devuelve data.data
+      setSolicitudes(data.data || data.solicitudes || []);
       setError("");
     } catch (err) {
       setError(err.message);
@@ -105,6 +106,10 @@ export default function SolicitudesPage() {
 
   // Aprobar solicitud
   const handleAprobar = async (id) => {
+    if (!id) {
+      setFeedback({ type: "error", message: "ID de solicitud no válido" });
+      return;
+    }
     try {
       const response = await fetch(`http://localhost:3000/api/solicitudes/admin/solicitudes/${id}/aprobar`, {
         method: "PUT",
@@ -143,8 +148,13 @@ export default function SolicitudesPage() {
       return;
     }
 
+    if (!selectedSolicitud?.id) {
+      setFeedback({ type: "error", message: "ID de solicitud no válido" });
+      return;
+    }
+
     try {
-      const response = await fetch(`http://localhost:3000/api/solicitudes/admin/solicitudes/${selectedSolicitud.id_solicitud}/rechazar`, {
+      const response = await fetch(`http://localhost:3000/api/solicitudes/admin/solicitudes/${selectedSolicitud.id}/rechazar`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -292,7 +302,7 @@ export default function SolicitudesPage() {
                 </thead>
                 <tbody>
                   {filteredSolicitudes.map((solicitud) => (
-                    <tr key={solicitud.id_solicitud}>
+                    <tr key={solicitud.id}>
                       <td>{new Date(solicitud.fecha_solicitud).toLocaleDateString()}</td>
                       <td>
                         <strong>{solicitud.tutor_nombre}</strong>
@@ -372,7 +382,7 @@ export default function SolicitudesPage() {
             <div className="lk-modal-footer">
               <button
                 className="lk-btn lk-btn--success"
-                onClick={() => handleAprobar(selectedSolicitud.id_solicitud)}
+                onClick={() => handleAprobar(selectedSolicitud.id)}
               >
                 <CheckCircle size={18} /> Aprobar
               </button>
