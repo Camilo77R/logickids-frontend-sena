@@ -848,3 +848,706 @@
     }
 }
 
+/* ================================================================
+   SESIONES MODULE — Añadir al FINAL de tutor.css
+   ================================================================ */
+
+/* --- Filtros --- */
+.ses-filters-card {
+  margin-bottom: 20px;
+}
+
+.ses-filters-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ses-select {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 36px 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--lk-tutor-border);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  font-size: 14px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--lk-tutor-text);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234f46e5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.ses-select:focus {
+  border-color: var(--lk-tutor-primary);
+  box-shadow: 0 0 0 3px var(--lk-tutor-glow);
+}
+
+.ses-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* --- Stat Cards Grid --- */
+.ses-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.ses-stat-card {
+  border-radius: 16px;
+  padding: 25px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  min-height: 96px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ses-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+  position: relative;
+}
+
+.ses-stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ses-stat-value {
+  font-size: 35px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ses-stat-icon {
+  font-size: 50px; 
+  opacity: 0.9; 
+  position: absolute;
+  right: -1px;
+  bottom: 5px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ses-stat-card--orange { background: linear-gradient(135deg, #F97316, #FFA500); }
+.ses-stat-card--purple { background: linear-gradient(135deg, #8B30C9, #9B3DD4); }
+.ses-stat-card--green  { background: linear-gradient(135deg, #22C55E, #4ADE80); }
+.ses-stat-card--red    { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+/* --- Charts --- */
+.ses-charts-card {
+  margin-bottom: 20px;
+}
+
+.ses-charts-container {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.ses-donut-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ses-donut-canvas {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.ses-donut-canvas canvas {
+  width: 160px !important;
+  height: 160px !important;
+}
+
+.ses-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ses-donut-pct {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--lk-tutor-text);
+  line-height: 1;
+}
+
+.ses-donut-label {
+  font-size: 11px;
+  color: var(--lk-tutor-text-muted);
+  margin-top: 2px;
+}
+
+.ses-chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.ses-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lk-tutor-text-muted);
+}
+
+.ses-legend-item strong {
+  margin-left: auto;
+  color: var(--lk-tutor-text);
+  font-weight: 700;
+}
+
+.ses-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ses-legend-dot--green { background: #10b981; }
+.ses-legend-dot--red   { background: #ef4444; }
+
+.ses-bar-wrapper {
+  height: 200px;
+  overflow-x: auto;
+}
+
+.ses-bar-wrapper canvas {
+  height: 200px !important;
+}
+
+/* --- Bottom grid: tabla + detalle --- */
+.ses-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+.ses-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--lk-tutor-text);
+  margin-bottom: 16px;
+}
+
+/* --- Tabla --- */
+.ses-table-wrapper {
+  overflow-x: auto;
+}
+
+.ses-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ses-table thead th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--lk-tutor-text-muted);
+  border-bottom: 1.5px solid var(--lk-tutor-border);
+}
+
+.ses-table-row {
+  border-bottom: 1px solid var(--lk-tutor-border);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.ses-table-row td {
+  padding: 11px 14px;
+  color: var(--lk-tutor-text);
+  vertical-align: middle;
+}
+
+.ses-table-row:hover {
+  background: rgba(79, 70, 229, 0.04);
+}
+
+.ses-table-row--selected {
+  background: rgba(79, 70, 229, 0.07) !important;
+}
+
+.ses-table-row--selected td {
+  color: var(--lk-tutor-primary);
+}
+
+.ses-td-bold  { font-weight: 700; }
+.ses-td-green { color: #059669; font-weight: 700; }
+.ses-td-red   { color: #dc2626; font-weight: 700; }
+
+/* Pill para minijuego */
+.ses-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(79, 70, 229, 0.09);
+  color: var(--lk-tutor-primary);
+}
+
+/* Badge estado */
+.ses-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.ses-badge--green {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.ses-badge--blue {
+  background: rgba(14, 165, 233, 0.1);
+  color: #0284c7;
+}
+
+/* --- Detalle de eventos --- */
+.ses-detalle-card {
+  align-self: start;
+}
+
+.ses-detalle-empty {
+  font-size: 13px;
+  color: var(--lk-tutor-text-muted);
+  margin: 0;
+}
+
+.ses-eventos-list {
+  max-height: 460px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.ses-eventos-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ses-eventos-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ses-eventos-list::-webkit-scrollbar-thumb {
+  background: var(--lk-tutor-border);
+  border-radius: 4px;
+}
+
+.ses-evento-item {
+  background: var(--lk-tutor-bg);
+  border: 1px solid var(--lk-tutor-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.ses-evento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+
+.ses-evento-header strong {
+  font-size: 13px;
+  color: var(--lk-tutor-text);
+}
+
+.ses-evento-header small {
+  font-size: 11px;
+  color: var(--lk-tutor-text-muted);
+  white-space: nowrap;
+}
+
+.ses-evento-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ses-evento-meta span {
+  font-size: 12px;
+  color: var(--lk-tutor-text-muted);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1100px) {
+  .ses-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .ses-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ses-charts-container {
+    grid-template-columns: 1fr;
+  }
+
+  .ses-donut-wrapper {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .ses-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ses-stat-value {
+    font-size: 28px;
+  }
+}
+/* ================================================================
+   LOGICKIDS — MEJORAS GLOBALES v2
+   Añadir al FINAL de tutor.css después del bloque de sesiones.
+   Prefijo "lk-v2-" para total aislamiento. No toca nada existente.
+   Inspirado en el estilo vibrante de ilogiK.
+   ================================================================ */
+
+/* ────────────────────────────────────────────────
+   1. VARIABLES NUEVAS (amplían las existentes)
+      Añaden naranja, gris suave y sombras de color
+   ──────────────────────────────────────────────── */
+:root {
+  --lk-orange:        #f97316;
+  --lk-orange-dark:   #ea580c;
+  --lk-orange-glow:   rgba(249, 115, 22, 0.2);
+  --lk-card-shadow:   0 2px 8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  --lk-card-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(79, 70, 229, 0.1);
+  --lk-scrollbar-w:   5px;
+}
+
+/* ────────────────────────────────────────────────
+   2. SIDEBAR — Item activo más vibrante
+      El item activo ya tiene .tutor-nav-active-bg con gradiente.
+      Aquí solo añadimos el ícono blanco y pill más redondo.
+   ──────────────────────────────────────────────── */
+.tutor-nav-item.active {
+  font-weight: 700;
+  letter-spacing: -0.1px;
+}
+
+/* Ícono del item activo: blanco puro */
+.tutor-nav-item.active svg,
+.tutor-nav-item.active .lucide {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+/* Pill activo más redondeado, como ilogiK */
+.tutor-nav-active-bg {
+  border-radius: 12px !important;
+}
+
+/* Item inactivo: el ícono tiene más contraste */
+.tutor-nav-item:not(.active) svg,
+.tutor-nav-item:not(.active) .lucide {
+  opacity: 0.65;
+  transition: opacity 0.2s;
+}
+
+.tutor-nav-item:not(.active):hover svg,
+.tutor-nav-item:not(.active):hover .lucide {
+  opacity: 1;
+}
+
+/* Separador visual sutil en nav */
+.tutor-nav {
+  gap: 4px !important;
+}
+
+/* ────────────────────────────────────────────────
+   3. SIDEBAR — Brand logo con color naranja/primario
+      Más cercano al estilo ilogiK (logo cuadrado vibrante)
+   ──────────────────────────────────────────────── */
+.tutor-brand-logo {
+  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-orange)) !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3) !important;
+  border-radius: 14px !important;
+}
+
+/* ────────────────────────────────────────────────
+   4. TOPBAR — Avatar con color naranja vibrante
+      Igual que ilogiK: avatar redondo naranja/amarillo
+   ──────────────────────────────────────────────── */
+.tutor-avatar {
+  background: linear-gradient(135deg, var(--lk-orange), #fbbf24) !important;
+  box-shadow: 0 4px 14px var(--lk-orange-glow) !important;
+  font-weight: 800 !important;
+  border: 2.5px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Badge de notificaciones: rojo más vivo */
+.tutor-badge {
+  background: #ef4444 !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  border: 2px solid white !important;
+  min-width: 17px;
+  min-height: 17px;
+}
+
+/* Icono btn: hover con naranja opcional */
+.tutor-icon-btn:hover {
+  border-color: rgba(79, 70, 229, 0.3) !important;
+  box-shadow: 0 0 0 3px var(--lk-tutor-glow) !important;
+}
+
+/* ────────────────────────────────────────────────
+   5. CARDS — Hover con elevación suave
+      ilogiK: cards se elevan al hacer hover
+   ──────────────────────────────────────────────── */
+.tutor-card {
+  box-shadow: var(--lk-card-shadow) !important;
+  transition: box-shadow 0.22s ease, transform 0.22s ease !important;
+}
+
+.tutor-card:hover {
+  box-shadow: var(--lk-card-shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+/* Evitar hover en cards que contienen tablas o charts grandes */
+.tutor-card:has(table):hover,
+.tutor-card:has(canvas):hover {
+  transform: none;
+  box-shadow: var(--lk-card-shadow-hover) !important;
+}
+
+/* ────────────────────────────────────────────────
+   6. PAGE HEADER — Título con icono alineado
+      Como ilogiK: icono + h1 en la misma línea, subtítulo abajo
+   ──────────────────────────────────────────────── */
+.tutor-page-header {
+  margin-bottom: 28px !important;
+}
+
+/* Contenedor título: icono + texto en fila */
+.tutor-page-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+  color: var(--lk-tutor-text) !important;
+  margin: 0 !important;
+}
+
+/* El icono en el título hereda el color primario */
+.tutor-page-title svg,
+.tutor-page-title .lucide {
+  color: var(--lk-tutor-primary);
+  flex-shrink: 0;
+}
+
+.tutor-page-subtitle {
+  font-size: 14px !important;
+  color: var(--lk-tutor-text-muted) !important;
+  margin: 6px 0 0 0 !important;
+  line-height: 1.5 !important;
+}
+
+/* ────────────────────────────────────────────────
+   7. BOTONES — Estilo premium con sombra de color
+      Gradiente + sombra coloreada, como ilogiK
+   ──────────────────────────────────────────────── */
+.lk-v2-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-tutor-accent-blue));
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.lk-v2-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+  color: #fff;
+}
+
+.lk-v2-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+/* Botón secundario (outline) */
+.lk-v2-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  color: var(--lk-tutor-text);
+  border: 1.5px solid var(--lk-tutor-border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.lk-v2-btn-secondary:hover {
+  border-color: var(--lk-tutor-primary);
+  color: var(--lk-tutor-primary);
+  background: rgba(79, 70, 229, 0.04);
+  transform: translateY(-1px);
+}
+
+/* ────────────────────────────────────────────────
+   8. SCROLLBAR — Delgado y con color primario
+      ilogiK tiene scrollbars muy finos y elegantes
+   ──────────────────────────────────────────────── */
+.tutor-main-content::-webkit-scrollbar,
+.ses-eventos-list::-webkit-scrollbar {
+  width: var(--lk-scrollbar-w);
+}
+
+.tutor-main-content::-webkit-scrollbar-track,
+.ses-eventos-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tutor-main-content::-webkit-scrollbar-thumb,
+.ses-eventos-list::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 229, 0.25);
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.tutor-main-content::-webkit-scrollbar-thumb:hover,
+.ses-eventos-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.5);
+}
+
+/* ────────────────────────────────────────────────
+   9. ESTADO VACÍO — Más visual, menos genérico
+      Icono centrado con fondo suave, como ilogiK
+   ──────────────────────────────────────────────── */
+.tutor-empty {
+  padding: 56px 32px !important;
+}
+
+.tutor-empty svg,
+.tutor-empty .lucide {
+  color: var(--lk-tutor-primary);
+  opacity: 0.4;
+  margin-bottom: 16px;
+}
+
+.tutor-empty p {
+  font-size: 14px !important;
+  color: var(--lk-tutor-text-muted) !important;
+  max-width: 320px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────
+   10. TOPBAR SEARCH — Más definida y elegante
+       ilogiK tiene la búsqueda muy prominente arriba
+   ──────────────────────────────────────────────── */
+.tutor-topbar-search {
+  width: 360px !important;
+  border-radius: 14px !important;
+  padding: 11px 18px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
+}
+
+.tutor-topbar-search:focus-within {
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 0 0 3px var(--lk-tutor-glow), 0 4px 16px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ────────────────────────────────────────────────
+   11. SIDEBAR FOOTER — Logout más elegante
+   ──────────────────────────────────────────────── */
+.tutor-logout-btn {
+  border-radius: 12px !important;
+  font-size: 13.5px !important;
+  padding: 11px 14px !important;
+}
+
+/* ────────────────────────────────────────────────
+   12. RESPONSIVE ajustes globales
+   ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .tutor-topbar-search {
+    width: 240px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutor-topbar-search {
+    width: 180px !important;
+  }
+
+  .tutor-page-title {
+    font-size: 22px !important;
+  }
+}

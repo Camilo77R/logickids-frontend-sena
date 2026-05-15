@@ -5,61 +5,58 @@ export default function SesionesTable({
   showStudentColumn = false,
 }) {
   return (
-    <table
-      style={{
-        width: "100%",
-        borderCollapse: "collapse",
-        textAlign: "center",
-        fontSize: "18px" 
-      }}
-    >
-      <thead>
-        <tr style={{ background: "#f3f4f6" }}>
-          <th style={th}>Fecha</th>
-          {showStudentColumn ? <th style={th}>Estudiante</th> : null}
-          <th style={th}>Minijuego</th>
-          <th style={th}>Puntaje</th>
-          <th style={th}>Aciertos</th>
-          <th style={th}>Errores</th>
-          <th style={th}>Estado</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {data.map((s) => (
-          <tr
-            key={s.id}
-            onClick={() => onSelectSession?.(s)}
-            style={{
-              cursor: onSelectSession ? "pointer" : "default",
-              backgroundColor: selectedSessionId === s.id ? "#eff6ff" : "transparent",
-            }}
-          >
-            <td style={td}>
-              {new Date(s.iniciada_en).toLocaleDateString()}
-            </td>
-            {showStudentColumn ? <td style={td}>{s.estudiante_nombre || "Sin nombre"}</td> : null}
-            <td style={td}>{s.minijuego}</td>
-            <td style={td}>{s.puntaje}</td>
-            <td style={td}>{s.aciertos}</td>
-            <td style={td}>{s.errores}</td>
-            <td style={td}>{s.estado}</td>
+    <div className="ses-table-wrapper">
+      <table className="ses-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            {showStudentColumn && <th>Estudiante</th>}
+            <th>Minijuego</th>
+            <th>Puntaje</th>
+            <th>Aciertos</th>
+            <th>Errores</th>
+            <th>Estado</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          {data.map((s) => (
+            <tr
+              key={s.id}
+              className={`ses-table-row${selectedSessionId === s.id ? " ses-table-row--selected" : ""}`}
+              onClick={() => onSelectSession?.(s)}
+            >
+              <td className="ses-td-bold">
+                {new Date(s.iniciada_en).toLocaleDateString("es-CO")}
+              </td>
+
+              {showStudentColumn && (
+                <td style={{ color: "var(--lk-tutor-primary)", fontWeight: 600 }}>
+                  {s.estudiante_nombre || "Sin nombre"}
+                </td>
+              )}
+
+              <td>
+                <span className="ses-tag">{s.minijuego}</span>
+              </td>
+
+              <td className="ses-td-bold">{s.puntaje}</td>
+              <td className="ses-td-green">{s.aciertos}</td>
+              <td className="ses-td-red">{s.errores}</td>
+
+              <td>
+                <span
+                  className={`ses-badge ${
+                    s.estado === "completado" ? "ses-badge--green" : "ses-badge--blue"
+                  }`}
+                >
+                  {s.estado}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
-
-const th = {
-  border: "1px solid #ddd",
-  padding: "16px", 
-  fontWeight: "bold",
-  fontSize: "18px"
-};
-
-const td = {
-  border: "1px solid #ddd",
-  padding: "14px", 
-  fontSize: "17px"
-};
