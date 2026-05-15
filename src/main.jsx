@@ -11,9 +11,13 @@ import './index.css'
 import './styles/shared-layout.css'
 // 5. Bloques de marca compartidos
 import './styles/branding-shared.css'
-// 6. Auth pages (login, registro)
+// 6. Shell moderno admin/superadmin + dashboards por rol
+import './styles/portal-shell.css'
+import './styles/role-dashboard.css'
+import './styles/role-management.css'
+// 7. Auth pages (login, registro)
 import './styles/auth.css'
-// 7. Shell y UI administrativa existentes
+// 8. Shell y UI administrativa existentes
 import './styles/admin-shell.css'
 import './styles/admin-ui.css'
 

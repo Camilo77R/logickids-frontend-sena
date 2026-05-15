@@ -1,0 +1,418 @@
+/**
+ * role-management.css — Piezas reutilizables para páginas internas admin/superadmin
+ * ================================================================================
+ * Mantiene el mismo lenguaje visual del shell nuevo: tipografía Fredoka +
+ * Plus Jakarta Sans y paleta púrpura / amarillo / naranja.
+ */
+
+.lk-role-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.lk-role-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.lk-role-search {
+  position: relative;
+  min-width: min(360px, 100%);
+}
+
+.lk-role-search__icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  transform: translateY(-50%);
+  color: var(--lk-text-muted);
+}
+
+.lk-role-search__input {
+  width: 100%;
+  border: 1px solid rgba(139, 47, 201, 0.12);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--lk-text);
+  border-radius: 999px;
+  padding: 0.82rem 1rem 0.82rem 2.65rem;
+  font-size: 0.88rem;
+  box-shadow: 0 10px 20px rgba(139, 47, 201, 0.06);
+}
+
+.lk-role-search__input:focus {
+  outline: none;
+  border-color: var(--lk-purple);
+  box-shadow: 0 0 0 4px var(--lk-purple-soft);
+}
+
+.lk-role-entity-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+}
+
+.lk-role-entity-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.15rem;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(139, 47, 201, 0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(249,245,255,0.9));
+  box-shadow: 0 16px 28px rgba(139, 47, 201, 0.08);
+}
+
+.lk-role-entity-card--gold {
+  border-color: rgba(245, 169, 16, 0.2);
+  background: linear-gradient(180deg, rgba(255, 250, 237, 0.98), rgba(255,255,255,0.94));
+}
+
+.lk-role-entity-card--rose {
+  border-color: rgba(168, 79, 211, 0.2);
+  background: linear-gradient(180deg, rgba(252, 243, 255, 0.98), rgba(255,255,255,0.94));
+}
+
+.lk-role-entity-card.is-editing {
+  box-shadow: 0 0 0 3px rgba(139, 47, 201, 0.12), 0 16px 28px rgba(139, 47, 201, 0.12);
+}
+
+.lk-role-entity-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.lk-role-entity-card__title {
+  margin: 0;
+  color: var(--lk-text);
+  font-family: var(--lk-display-font);
+  font-size: 1.22rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.lk-role-entity-card__subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--lk-text-soft);
+  font-size: 0.82rem;
+}
+
+.lk-role-entity-card__meta {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.lk-role-entity-card__meta div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.lk-role-entity-card__meta dt {
+  color: var(--lk-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lk-role-entity-card__meta dd {
+  margin: 0;
+  color: var(--lk-text);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.lk-role-entity-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.lk-btn--ghost-danger {
+  color: #9b1c1c;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.16);
+}
+
+.lk-btn--ghost-danger:hover {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+.lk-role-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 27, 46, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 1080;
+  padding: 1.25rem;
+}
+
+.lk-role-modal {
+  width: min(520px, 100%);
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(139, 47, 201, 0.12);
+  box-shadow: 0 20px 52px rgba(48, 21, 73, 0.24);
+}
+
+.lk-role-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.lk-role-modal__eyebrow {
+  display: inline-block;
+  color: var(--lk-purple);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lk-role-modal__title {
+  margin: 0.28rem 0 0;
+  color: var(--lk-text);
+  font-family: var(--lk-display-font);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.lk-role-modal__warning {
+  margin: 0;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 179, 37, 0.15);
+  color: #8a5600;
+  line-height: 1.6;
+  font-size: 0.88rem;
+}
+
+.lk-role-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.lk-role-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.lk-role-page__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.lk-role-page__filter {
+  border: 1px solid rgba(139, 47, 201, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--lk-text-soft);
+  border-radius: 999px;
+  padding: 0.62rem 0.9rem;
+  font-size: 0.84rem;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(139, 47, 201, 0.06);
+}
+
+.lk-role-page__filter.is-active {
+  background: linear-gradient(180deg, var(--lk-yellow) 0%, var(--lk-orange) 100%);
+  border-color: transparent;
+  color: var(--lk-purple-deep);
+  box-shadow: 0 12px 24px rgba(255, 179, 37, 0.22);
+}
+
+.lk-role-section-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.38fr) minmax(320px, 0.95fr);
+}
+
+.lk-role-info-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.lk-role-info-card {
+  display: grid;
+  gap: 0.22rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248, 244, 255, 0.92));
+  border: 1px solid rgba(139, 47, 201, 0.08);
+}
+
+.lk-role-info-card__label {
+  color: var(--lk-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lk-role-info-card__value {
+  color: var(--lk-text);
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.lk-role-info-card__hint {
+  margin: 0;
+  color: var(--lk-text-soft);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.lk-role-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  line-height: 1.6;
+}
+
+.lk-role-banner--warning {
+  background: rgba(255, 202, 40, 0.16);
+  border: 1px solid rgba(245, 169, 16, 0.18);
+  color: #8a5600;
+}
+
+.lk-role-banner__icon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.lk-role-banner__content {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.lk-role-banner__content strong {
+  color: inherit;
+  font-size: 0.88rem;
+}
+
+.lk-role-banner__content p {
+  margin: 0;
+  font-size: 0.83rem;
+}
+
+.lk-role-table-footer {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(139, 47, 201, 0.08);
+  text-align: right;
+  color: var(--lk-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.lk-role-text-note {
+  margin: 0;
+  color: var(--lk-text-soft);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.lk-role-text-note strong {
+  color: var(--lk-text);
+}
+
+.lk-role-textarea {
+  width: 100%;
+  min-height: 132px;
+  padding: 0.88rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(139, 47, 201, 0.12);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--lk-text);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.lk-role-textarea:focus {
+  outline: none;
+  border-color: var(--lk-purple);
+  box-shadow: 0 0 0 4px var(--lk-purple-soft);
+}
+
+.lk-role-detail-stack {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.lk-role-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.lk-role-modal__field {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.lk-role-modal__field strong {
+  color: var(--lk-text-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lk-role-modal__field p {
+  margin: 0;
+  padding: 0.82rem 0.95rem;
+  border-radius: 0.95rem;
+  background: rgba(248, 244, 255, 0.92);
+  color: var(--lk-text);
+  line-height: 1.6;
+}
+
+.lk-role-modal__muted {
+  color: var(--lk-text-muted);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.lk-role-modal__field .lk-status-badge {
+  width: fit-content;
+}
+
+@media (max-width: 767.98px) {
+  .lk-role-search {
+    min-width: 100%;
+  }
+
+  .lk-role-entity-card__header {
+    flex-direction: column;
+  }
+
+  .lk-role-page__toolbar {
+    align-items: stretch;
+  }
+
+  .lk-role-page__filters {
+    width: 100%;
+  }
+
+  .lk-role-section-grid {
+    grid-template-columns: 1fr;
+  }
+}
