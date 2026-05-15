@@ -1,111 +1,65 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+/**
+ * index.css — Reset global LogicKids
+ * ==================================
+ * Este archivo contiene SOLO:
+ * 1) Reset/base del navegador
+ * 2) variables alias mínimas
+ * 3) utilidades verdaderamente globales
+ *
+ * NO agregar shells, grids, cards o estilos de feature aquí.
+ * Cada módulo debe ser dueño de su CSS.
+ */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+/* ── Reset base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
+html { font-size: 16px; }
 
 body {
   margin: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+button, input, textarea, select { font: inherit; }
+
+a { color: inherit; text-decoration: none; }
+
+#root { min-height: 100vh; }
+
+/* ── Variables alias compartidas ────────────────────────────────── */
+:root {
+  --lk-color-bg:             var(--lk-bg);
+  --lk-color-surface:        var(--lk-surface);
+  --lk-color-surface-strong: #ffffff;
+  --lk-color-surface-soft:   var(--lk-surface-soft);
+  --lk-color-border:         var(--lk-border);
+  --lk-color-border-strong:  var(--lk-border-strong);
+  --lk-color-text:           var(--lk-text);
+  --lk-color-text-soft:      var(--lk-text-soft);
+  --lk-color-text-muted:     var(--lk-text-muted);
+  --lk-color-primary:        var(--lk-purple);
+  --lk-color-primary-strong: var(--lk-purple-dark);
+  --lk-color-primary-soft:   var(--lk-purple-soft);
+  --lk-color-secondary:      var(--lk-purple-light);
+  --lk-color-secondary-soft: var(--lk-purple-soft);
+  --lk-color-success:        var(--lk-success);
+  --lk-color-warning:        var(--lk-yellow-dark);
+  --lk-color-danger:         var(--lk-danger);
+  --lk-color-danger-soft:    var(--lk-danger-soft);
+  --lk-radius-sm:            var(--lk-radius-sm);
+  --lk-radius-md:            var(--lk-radius-md);
+  --lk-radius-lg:            var(--lk-radius-lg);
+  --lk-radius-xl:            var(--lk-radius-xl);
+  --lk-shadow-soft:          var(--lk-shadow-sm);
+  --lk-shadow-card:          var(--lk-shadow-card);
+  --lk-font-sans:            var(--lk-font);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* ── Utilidad accesibilidad ─────────────────────────────────────── */
+.lk-visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
 }
