@@ -249,7 +249,7 @@ export default function TutorDashboardOverview() {
       <div className="tov-bento">
 
         {/* Columna principal (2/3) */}
-        <div class="tov-main">
+        <div className="tov-main">
 
           {/* GRUPOS */}
           <div className="tov-panel">

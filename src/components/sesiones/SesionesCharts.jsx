@@ -30,17 +30,19 @@ export default function SesionesCharts({ data }) {
   };
 
   const doughnutOptions = {
-    cutout: "72%",
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => ` ${ctx.label}: ${ctx.raw}`,
-        },
+  cutout: "72%",
+  responsive: false,
+  maintainAspectRatio: true,
+  aspectRatio: 1,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      callbacks: {
+        label: (ctx) => ` ${ctx.label}: ${ctx.raw}`,
       },
     },
-  };
+  },
+};
 
   const barData = {
     labels: data.map((s) => s.minijuego || "Juego"),
@@ -82,13 +84,13 @@ export default function SesionesCharts({ data }) {
     <div className="ses-charts-container">
       {/* Donut + leyenda */}
       <div className="ses-donut-wrapper">
-        <div className="ses-donut-canvas">
-          <Doughnut data={doughnutData} options={doughnutOptions} />
-          <div className="ses-donut-center">
-            <span className="ses-donut-pct">{pct}%</span>
-            <span className="ses-donut-label">aciertos</span>
-          </div>
-        </div>
+      <div className="ses-donut-canvas" style={{ width: "160px", height: "160px", position: "relative" }}>
+      <Doughnut data={doughnutData} options={doughnutOptions} width={160} height={160} />
+      <div className="ses-donut-center">
+      <span className="ses-donut-pct">{pct}%</span>
+      <span className="ses-donut-label">aciertos</span>
+      </div>
+    </div>
 
         <div className="ses-chart-legend">
           <div className="ses-legend-item">

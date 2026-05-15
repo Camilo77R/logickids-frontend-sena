@@ -7,6 +7,7 @@
 import { motion } from "framer-motion";
 import TutorSidebar from "./TutorSidebar";
 import TutorTopbar from "./TutorTopbar";
+import "./tutor.css";
 
 export default function TutorLayout({ children }) {
   return (
