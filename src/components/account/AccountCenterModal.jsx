@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
-import { KeyRound, ShieldCheck, UserRound } from "lucide-react";
+import { Modal, Spinner } from "react-bootstrap";
 import { useAuth } from "../../hooks/useAuth";
 
 const getRoleLabel = (role) => {
@@ -12,272 +11,188 @@ const getRoleLabel = (role) => {
 
 const mapErrorMessage = (error, fallback) => {
   if (!error) return fallback;
-
   if (Array.isArray(error.details) && error.details.length > 0) {
     return error.details.map((detail) => detail.message).join(" ");
   }
-
   return error.message || fallback;
 };
 
 export default function AccountCenterModal({ show, onHide }) {
   const { user, updateProfile, changePassword } = useAuth();
 
-  const [profileForm, setProfileForm] = useState({ nombre: "" });
-  const [passwordForm, setPasswordForm] = useState({
-    contrasena_actual: "",
-    contrasena_nueva: "",
-    confirmar_contrasena: "",
-  });
-  const [profileFeedback, setProfileFeedback] = useState(null);
-  const [passwordFeedback, setPasswordFeedback] = useState(null);
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
-  const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [nombre, setNombre] = useState("");
+  const [passwords, setPasswords] = useState({ actual: "", nueva: "", confirmar: "" });
+  const [feedback, setFeedback] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!show) return;
-
-    setProfileForm({ nombre: user?.nombre ?? "" });
-    setPasswordForm({
-      contrasena_actual: "",
-      contrasena_nueva: "",
-      confirmar_contrasena: "",
-    });
-    setProfileFeedback(null);
-    setPasswordFeedback(null);
+    setNombre(user?.nombre ?? "");
+    setPasswords({ actual: "", nueva: "", confirmar: "" });
+    setFeedback(null);
   }, [show, user]);
 
   const roleLabel = useMemo(() => getRoleLabel(user?.rol), [user?.rol]);
+  const initials = user?.nombre ? user.nombre.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase()).join("") : "TU";
 
-  const handleProfileSubmit = async (event) => {
-    event.preventDefault();
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setFeedback(null);
 
-    if (!profileForm.nombre.trim()) {
-      setProfileFeedback({ type: "error", message: "El nombre es obligatorio." });
+    // Si solo cambia el nombre
+    if (!passwords.actual && !passwords.nueva) {
+      if (nombre.trim() === user?.nombre) {
+        onHide();
+        return;
+      }
+      if (nombre.trim().length < 2) {
+        return setFeedback({ type: "error", msg: "El nombre debe tener al menos 2 caracteres." });
+      }
+      try {
+        setIsLoading(true);
+        await updateProfile({ nombre: nombre.trim() });
+        setFeedback({ type: "success", msg: "Perfil actualizado." });
+        setTimeout(onHide, 1500);
+      } catch (err) {
+        setFeedback({ type: "error", msg: mapErrorMessage(err, "Error al actualizar.") });
+      } finally {
+        setIsLoading(false);
+      }
       return;
     }
 
-    if (profileForm.nombre.trim().length < 2) {
-      setProfileFeedback({
-        type: "error",
-        message: "El nombre debe tener al menos 2 caracteres.",
-      });
-      return;
-    }
+    // Si cambia la contraseña
+    if (!passwords.actual) return setFeedback({ type: "error", msg: "Ingresa tu contraseña actual." });
+    if (passwords.nueva.length < 8) return setFeedback({ type: "error", msg: "La nueva contraseña debe tener 8+ caracteres." });
+    if (passwords.nueva !== passwords.confirmar) return setFeedback({ type: "error", msg: "Las contraseñas no coinciden." });
 
     try {
-      setIsSavingProfile(true);
-      setProfileFeedback(null);
-      await updateProfile({ nombre: profileForm.nombre.trim() });
-      setProfileFeedback({ type: "success", message: "Perfil actualizado correctamente." });
-    } catch (error) {
-      setProfileFeedback({
-        type: "error",
-        message: mapErrorMessage(error, "No fue posible actualizar el perfil."),
-      });
+      setIsLoading(true);
+      if (nombre.trim() !== user?.nombre) await updateProfile({ nombre: nombre.trim() });
+      await changePassword({ contrasena_actual: passwords.actual, contrasena_nueva: passwords.nueva });
+      setFeedback({ type: "success", msg: "Datos actualizados correctamente." });
+      setTimeout(onHide, 1500);
+    } catch (err) {
+      setFeedback({ type: "error", msg: mapErrorMessage(err, "Error al guardar.") });
     } finally {
-      setIsSavingProfile(false);
+      setIsLoading(false);
     }
   };
 
-  const handlePasswordSubmit = async (event) => {
-    event.preventDefault();
+  const inputStyle = {
+    width: '100%',
+    padding: '0.7rem 1rem',
+    borderRadius: '999px',
+    border: '1.5px solid #e8e8ed',
+    fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    color: '#333',
+    outline: 'none',
+    marginBottom: '0.9rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+  };
 
-    if (!passwordForm.contrasena_actual) {
-      setPasswordFeedback({
-        type: "error",
-        message: "Debes escribir la contraseña actual.",
-      });
-      return;
-    }
-
-    if (!passwordForm.contrasena_nueva || passwordForm.contrasena_nueva.length < 8) {
-      setPasswordFeedback({
-        type: "error",
-        message: "La nueva contraseña debe tener al menos 8 caracteres.",
-      });
-      return;
-    }
-
-    if (passwordForm.contrasena_nueva !== passwordForm.confirmar_contrasena) {
-      setPasswordFeedback({
-        type: "error",
-        message: "La confirmación de contraseña no coincide.",
-      });
-      return;
-    }
-
-    try {
-      setIsSavingPassword(true);
-      setPasswordFeedback(null);
-      await changePassword({
-        contrasena_actual: passwordForm.contrasena_actual,
-        contrasena_nueva: passwordForm.contrasena_nueva,
-      });
-      setPasswordForm({
-        contrasena_actual: "",
-        contrasena_nueva: "",
-        confirmar_contrasena: "",
-      });
-      setPasswordFeedback({
-        type: "success",
-        message: "Contraseña actualizada correctamente.",
-      });
-    } catch (error) {
-      setPasswordFeedback({
-        type: "error",
-        message: mapErrorMessage(error, "No fue posible actualizar la contraseña."),
-      });
-    } finally {
-      setIsSavingPassword(false);
-    }
+  const labelStyle = {
+    display: 'block',
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    color: '#444',
+    marginBottom: '0.3rem',
+    paddingLeft: '0.5rem'
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered size="lg">
-      <Modal.Header closeButton>
-        <Modal.Title>Centro de cuenta</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className="row g-4">
-          <div className="col-lg-5">
-            <div className="border rounded-4 p-4 h-100 bg-light">
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <UserRound size={18} className="text-primary" />
-                <h2 className="h5 mb-0">Identidad actual</h2>
-              </div>
-
-              <dl className="mb-0">
-                <dt className="small text-muted mb-1">Nombre</dt>
-                <dd className="fw-semibold">{user?.nombre || "Sin nombre"}</dd>
-
-                <dt className="small text-muted mb-1">Correo</dt>
-                <dd className="fw-semibold text-break">{user?.email || "Sin correo"}</dd>
-
-                <dt className="small text-muted mb-1">Rol</dt>
-                <dd className="fw-semibold">{roleLabel}</dd>
-
-                <dt className="small text-muted mb-1">Institución</dt>
-                <dd className="fw-semibold">{user?.institucion || "No asignada"}</dd>
-              </dl>
-
-              <div className="alert alert-warning mt-4 mb-0 small">
-                Si ingresaste con una credencial temporal, cambia la contraseña antes de cerrar sesión.
-              </div>
-            </div>
+    <Modal show={show} onHide={onHide} centered>
+      <Modal.Body style={{ padding: '2rem', fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
+        {/* Cabecera / Info de Usuario */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.8rem' }}>
+          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#9b4d96', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 800 }}>
+            {initials}
           </div>
-
-          <div className="col-lg-7">
-            <div className="border rounded-4 p-4 mb-4">
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <ShieldCheck size={18} className="text-success" />
-                <h2 className="h5 mb-0">Actualizar perfil</h2>
-              </div>
-
-              {profileFeedback ? (
-                <Alert variant={profileFeedback.type === "success" ? "success" : "danger"}>
-                  {profileFeedback.message}
-                </Alert>
-              ) : null}
-
-              <Form onSubmit={handleProfileSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Nombre visible</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={profileForm.nombre}
-                    onChange={(event) =>
-                      setProfileForm((current) => ({ ...current, nombre: event.target.value }))
-                    }
-                    placeholder="Tu nombre completo"
-                  />
-                </Form.Group>
-
-                <Button type="submit" disabled={isSavingProfile}>
-                  {isSavingProfile ? (
-                    <>
-                      <Spinner size="sm" className="me-2" />
-                      Guardando...
-                    </>
-                  ) : (
-                    "Guardar perfil"
-                  )}
-                </Button>
-              </Form>
+          <div style={{ minWidth: 0 }}>
+            <h2 style={{ margin: 0, fontFamily: '"Fredoka", system-ui, sans-serif', fontSize: '1.4rem', fontWeight: 600, color: '#333', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Mi Perfil
+            </h2>
+            <div style={{ fontSize: '0.9rem', color: '#555', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {user?.email}
             </div>
-
-            <div className="border rounded-4 p-4">
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <KeyRound size={18} className="text-warning" />
-                <h2 className="h5 mb-0">Cambiar contraseña</h2>
-              </div>
-
-              {passwordFeedback ? (
-                <Alert variant={passwordFeedback.type === "success" ? "success" : "danger"}>
-                  {passwordFeedback.message}
-                </Alert>
-              ) : null}
-
-              <Form onSubmit={handlePasswordSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Contraseña actual</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={passwordForm.contrasena_actual}
-                    onChange={(event) =>
-                      setPasswordForm((current) => ({
-                        ...current,
-                        contrasena_actual: event.target.value,
-                      }))
-                    }
-                    autoComplete="current-password"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Nueva contraseña</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={passwordForm.contrasena_nueva}
-                    onChange={(event) =>
-                      setPasswordForm((current) => ({
-                        ...current,
-                        contrasena_nueva: event.target.value,
-                      }))
-                    }
-                    autoComplete="new-password"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Confirmar nueva contraseña</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={passwordForm.confirmar_contrasena}
-                    onChange={(event) =>
-                      setPasswordForm((current) => ({
-                        ...current,
-                        confirmar_contrasena: event.target.value,
-                      }))
-                    }
-                    autoComplete="new-password"
-                  />
-                </Form.Group>
-
-                <Button variant="warning" type="submit" disabled={isSavingPassword}>
-                  {isSavingPassword ? (
-                    <>
-                      <Spinner size="sm" className="me-2" />
-                      Actualizando...
-                    </>
-                  ) : (
-                    "Actualizar contraseña"
-                  )}
-                </Button>
-              </Form>
+            <div style={{ display: 'inline-block', marginTop: '5px', padding: '0.2rem 0.6rem', borderRadius: '999px', background: 'rgba(155, 77, 150, 0.1)', color: '#9b4d96', fontSize: '0.75rem', fontWeight: 700 }}>
+              Rol: {roleLabel}
             </div>
           </div>
         </div>
+
+        {feedback && (
+          <div style={{ padding: '0.6rem 1rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 600, textAlign: 'center', marginBottom: '1rem', background: feedback.type === 'success' ? '#ecfdf5' : '#fef2f2', color: feedback.type === 'success' ? '#059669' : '#dc2626' }}>
+            {feedback.msg}
+          </div>
+        )}
+
+        <form onSubmit={handleSave}>
+          <div>
+            <label style={labelStyle}>Nombre visible</label>
+            <input 
+              type="text" 
+              style={inputStyle} 
+              value={nombre} 
+              onChange={(e) => setNombre(e.target.value)} 
+              placeholder="Tu nombre" 
+            />
+          </div>
+
+          <div style={{ margin: '1rem 0 0.5rem', fontSize: '0.75rem', fontWeight: 700, color: '#9b4d96', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Cambiar Contraseña (Opcional)
+          </div>
+
+          <div>
+            <label style={labelStyle}>Contraseña actual</label>
+            <input 
+              type="password" 
+              style={inputStyle} 
+              value={passwords.actual} 
+              onChange={(e) => setPasswords({...passwords, actual: e.target.value})} 
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Nueva</label>
+              <input 
+                type="password" 
+                style={inputStyle} 
+                value={passwords.nueva} 
+                onChange={(e) => setPasswords({...passwords, nueva: e.target.value})} 
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Confirmar</label>
+              <input 
+                type="password" 
+                style={inputStyle} 
+                value={passwords.confirmar} 
+                onChange={(e) => setPasswords({...passwords, confirmar: e.target.value})} 
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <button 
+              type="button" 
+              onClick={onHide}
+              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: '#f4f1fa', color: '#777', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              disabled={isLoading}
+              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: 'linear-gradient(90deg, #f5a910 0%, #fdb813 48%, #ffc42e 100%)', color: '#fff', border: 'none', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(253, 184, 19, 0.3)' }}
+            >
+              {isLoading ? <Spinner size="sm" /> : "Guardar"}
+            </button>
+          </div>
+        </form>
       </Modal.Body>
     </Modal>
   );
