@@ -1,118 +1,97 @@
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Bell, Settings } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Building2,
+  LayoutDashboard,
+  Mail,
+  UsersRound,
+} from "lucide-react";
+import PortalShell from "./portal/PortalShell";
 import AccountCenterModal from "../account/AccountCenterModal";
-import LogicKidsLogo from "../branding/LogicKidsLogo";
-import { NAVIGATION_BY_ROLE } from "../../constants/navigation";
+import { USER_ROLES } from "../../constants/roles";
 import { useAuth } from "../../hooks/useAuth";
-import NotificationBell from "../../components/NotificationBell";
 
+const PORTAL_NAVIGATION = {
+  [USER_ROLES.ADMIN]: [
+    { key: "admin-dashboard", label: "Resumen", path: "/admin/dashboard", icon: LayoutDashboard },
+    { key: "admin-usuarios", label: "Tutores", path: "/admin/usuarios", icon: UsersRound },
+    { key: "admin-solicitudes", label: "Solicitudes", path: "/admin/solicitudes", icon: Mail },
+  ],
+  [USER_ROLES.SUPERADMIN]: [
+    { key: "superadmin-dashboard", label: "Resumen global", path: "/superadmin/dashboard", icon: LayoutDashboard },
+    { key: "superadmin-instituciones", label: "Instituciones", path: "/superadmin/instituciones", icon: Building2 },
+  ],
+};
+
+const ROLE_LABEL = {
+  [USER_ROLES.ADMIN]: "Administrador",
+  [USER_ROLES.SUPERADMIN]: "Superadmin",
+};
+
+/**
+ * AppShell
+ *
+ * Adaptador entre páginas administrativas y el shell moderno.
+ * Mantiene la API simple: título, descripción, acciones y children.
+ */
 export default function AppShell({
-  eyebrow,
   title,
   description,
   children,
   actions,
+  notificationCount = 0,
 }) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const [showAccountCenter, setShowAccountCenter] = useState(false);
-  const navigation = NAVIGATION_BY_ROLE[user?.rol] ?? [];
-  const initials = user?.nombre
-    ? user.nombre
-        .split(" ")
-        .slice(0, 2)
-        .map((chunk) => chunk[0]?.toUpperCase())
-        .join("")
-    : "LK";
+
+  const initials = useMemo(() => {
+    if (!user?.nombre) return "LK";
+
+    return user.nombre
+      .split(" ")
+      .slice(0, 2)
+      .map((chunk) => chunk[0]?.toUpperCase())
+      .join("");
+  }, [user?.nombre]);
+
+  const navigation = PORTAL_NAVIGATION[user?.rol] ?? [];
+  const roleLabel = ROLE_LABEL[user?.rol] ?? "Portal";
 
   const handleLogout = () => {
     signOut();
     navigate("/login", { replace: true });
   };
 
+  const handleNotificationsClick = () => {
+    if (user?.rol === USER_ROLES.ADMIN) {
+      navigate("/admin/solicitudes");
+    }
+  };
+
   return (
-    <div className="lk-shell">
-      <div className="lk-shell-grid">
-        <aside className="lk-shell-sidebar">
-          <div className="lk-auth-brand">
-            <LogicKidsLogo />
-            <div className="lk-auth-brand-copy">
-              <strong>LogicKids</strong>
-              <span>Panel administrativo</span>
-            </div>
-          </div>
+    <>
+      <PortalShell
+        navigation={navigation}
+        roleLabel={roleLabel}
+        title={title}
+        subtitle={description}
+        userName={user?.nombre || "Usuario LogicKids"}
+        initials={initials}
+        notificationCount={user?.rol === USER_ROLES.ADMIN ? notificationCount : 0}
+        showNotifications={user?.rol === USER_ROLES.ADMIN}
+        onNotificationsClick={handleNotificationsClick}
+        onAccountCenter={() => setShowAccountCenter(true)}
+        onLogout={handleLogout}
+        actions={actions}
+      >
+        {children}
+      </PortalShell>
 
-          <section className="lk-shell-profile">
-            <div className="lk-avatar">{initials}</div>
-            <div className="lk-shell-profile-copy">
-              <strong>{user?.nombre || "Usuario"}</strong>
-              <span>{user?.email}</span>
-              <span className="lk-role-badge">Administrador</span>
-            </div>
-          </section>
-
-          <nav className="lk-nav" aria-label="Navegación principal">
-            {navigation.map((item) => (
-              <NavLink
-                key={item.key}
-                to={item.path}
-                className={({ isActive }) =>
-                  `lk-nav-link${isActive ? " active" : ""}`
-                }
-              >
-                <span aria-hidden="true">{item.icon}</span>
-                <span>{item.label}</span>
-              </NavLink>
-            ))}
-          </nav>
-
-          <button type="button" className="lk-btn lk-btn--secondary" onClick={handleLogout}>
-            Cerrar sesión
-          </button>
-        </aside>
-
-        <main className="lk-shell-main">
-          <header className="lk-topbar">
-            <div className="lk-topbar-title">Administración</div>
-            <div className="lk-topbar-tools">
-              {/* Notificaciones con NotificationBell de develop */}
-              <NotificationBell />
-              
-              {/* Centro de cuenta con modal (tu versión) */}
-              <button
-                type="button"
-                className="lk-topbar-icon"
-                aria-label="Centro de cuenta"
-                onClick={() => setShowAccountCenter(true)}
-              >
-                <Settings size={16} />
-              </button>
-              <button
-                type="button"
-                className="lk-topbar-icon"
-                aria-label="Abrir centro de cuenta"
-                onClick={() => setShowAccountCenter(true)}
-              >
-                {initials}
-              </button>
-            </div>
-          </header>
-
-          <section className="lk-page-header">
-            <div>
-              {eyebrow ? <span className="lk-page-eyebrow">{eyebrow}</span> : null}
-              <h1>{title}</h1>
-              <p className="lk-page-subtitle">{description}</p>
-            </div>
-            {actions ? <div className="lk-actions">{actions}</div> : null}
-          </section>
-
-          {children}
-        </main>
-      </div>
-
-      <AccountCenterModal show={showAccountCenter} onHide={() => setShowAccountCenter(false)} />
-    </div>
+      <AccountCenterModal
+        show={showAccountCenter}
+        onHide={() => setShowAccountCenter(false)}
+      />
+    </>
   );
 }

@@ -42,6 +42,22 @@ const adminService = {
     return payload?.data ?? { eliminada: true };
   },
 
+  async deactivateInstitution(institutionId) {
+    const payload = await request(`/admin/instituciones/${institutionId}/desactivar`, {
+      method: "PATCH",
+    });
+
+    return payload?.data ?? null;
+  },
+
+  async reactivateInstitution(institutionId) {
+    const payload = await request(`/admin/instituciones/${institutionId}/reactivar`, {
+      method: "PATCH",
+    });
+
+    return payload?.data ?? null;
+  },
+
   /**
    * Actualiza los datos de una institución existente.
    * Solo el superadmin puede ejecutar esta operación.
@@ -68,6 +84,28 @@ const adminService = {
     const payload = await request(`/admin/minijuegos/${minigameId}/toggle`, {
       method: "PATCH",
       body: { activo },
+    });
+
+    return payload?.data ?? null;
+  },
+
+  async listReactivationRequests() {
+    const payload = await request("/solicitudes/admin/solicitudes");
+    return payload?.data || payload?.solicitudes || [];
+  },
+
+  async approveReactivationRequest(requestId) {
+    const payload = await request(`/solicitudes/admin/solicitudes/${requestId}/aprobar`, {
+      method: "PUT",
+    });
+
+    return payload?.data ?? null;
+  },
+
+  async rejectReactivationRequest(requestId, motivoRechazo) {
+    const payload = await request(`/solicitudes/admin/solicitudes/${requestId}/rechazar`, {
+      method: "PUT",
+      body: { motivo_rechazo: motivoRechazo },
     });
 
     return payload?.data ?? null;
