@@ -1,70 +1,105 @@
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+/**
+ * TutorSidebar — Barra lateral del portal tutor LogicKids
+ *
+ * Usa clases de shared-layout.css (lk-sidebar, lk-nav-link, lk-avatar).
+ * El ítem activo resalta en amarillo sobre fondo púrpura oscuro.
+ */
+import { NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../../hooks/useAuth";
-import { LayoutDashboard, Users, UserPlus, BarChart3, MessageSquareWarning, Trophy, LogOut, History } from "lucide-react";
+import logoBadge from "../../../assets/imgs/logofondo transparente.png";
+import logoWordmark from "../../../assets/imgs/logoLogickids transparente.png";
+import {
+  LayoutDashboard,
+  Users,
+  UserPlus,
+  BarChart3,
+  MessageSquareWarning,
+  Trophy,
+  LogOut,
+  History,
+} from "lucide-react";
+
+/** Ítems de navegación del tutor */
+const NAV_ITEMS = [
+  { path: "/tutor/dashboard",        label: "Inicio",            icon: LayoutDashboard },
+  { path: "/tutor/grupos",           label: "Mis Grupos",        icon: Users },
+  { path: "/tutor/estudiantes",      label: "Estudiantes",       icon: UserPlus },
+  { path: "/tutor/estadisticas",     label: "Estadísticas",      icon: BarChart3 },
+  { path: "/tutor/recomendaciones",  label: "Recomendaciones IA",icon: MessageSquareWarning },
+  { path: "/tutor/sesiones",         label: "Sesiones",          icon: History },
+  { path: "/tutor/logros",           label: "Logros",            icon: Trophy },
+];
 
 export default function TutorSidebar() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
+
+  const initials = user?.nombre
+    ? user.nombre.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase()).join("")
+    : "TU";
 
   const handleLogout = () => {
     signOut();
     navigate("/login", { replace: true });
   };
 
-  const navItems = [
-    { path: "/tutor/dashboard", label: "Inicio", icon: <LayoutDashboard size={20} /> },
-    { path: "/tutor/grupos", label: "Mis Grupos", icon: <Users size={20} /> },
-    { path: "/tutor/estudiantes", label: "Estudiantes", icon: <UserPlus size={20} /> },
-    { path: "/tutor/estadisticas", label: "Estadísticas", icon: <BarChart3 size={20} /> },
-    { path: "/tutor/recomendaciones", label: "Recomendaciones IA", icon: <MessageSquareWarning size={20} /> },
-    { path: "/tutor/sesiones", label: "Sesiones", icon: <History size={20} /> },
-    { path: "/tutor/logros", label: "Logros", icon: <Trophy size={20} /> },
-  ];
-
   return (
-    <motion.aside 
-      className="tutor-sidebar"
-      initial={{ x: -250 }}
+    <motion.aside
+      className="lk-tutor-sidebar"
+      initial={{ x: -260 }}
       animate={{ x: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 0.40, ease: "easeOut" }}
     >
-      <div className="tutor-brand">
-        <div className="tutor-brand-logo">LK</div>
-        <div className="tutor-brand-text">
-          <h2>LogicKids</h2>
-          <span>Portal Tutor</span>
+      {/* Branding */}
+      <div className="lk-tutor-sidebar-brand">
+        <div className="lk-tutor-sidebar-brand-mark">
+          <img
+            src={logoBadge}
+            alt=""
+            className="lk-tutor-sidebar-brand-badge"
+            aria-hidden="true"
+          />
+        </div>
+        <div className="lk-tutor-sidebar-brand-copy">
+          <img
+            src={logoWordmark}
+            alt="LogicKids"
+            className="lk-tutor-sidebar-brand-wordmark"
+          />
+          <div className="lk-tutor-sidebar-brand-role">Portal Tutor</div>
         </div>
       </div>
 
-      <nav className="tutor-nav">
-        {navItems.map((item) => {
-          const isActive = location.pathname.startsWith(item.path);
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={`tutor-nav-item ${isActive ? "active" : ""}`}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="tutor-nav-active-bg"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-              <span className="tutor-nav-icon">{item.icon}</span>
-              <span className="tutor-nav-label">{item.label}</span>
-            </NavLink>
-          );
-        })}
+      {/* Navegación */}
+      <nav className="lk-tutor-sidebar-nav" aria-label="Navegación principal">
+        {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
+          <NavLink
+            key={path}
+            to={path}
+            title={label}
+            className={({ isActive }) =>
+              `lk-tutor-nav-link${isActive ? " active" : ""}`
+            }
+          >
+            <Icon size={18} className="lk-tutor-nav-link__icon" aria-hidden="true" />
+            <span className="lk-tutor-nav-link__label">{label}</span>
+          </NavLink>
+        ))}
       </nav>
 
-      <div className="tutor-sidebar-footer">
-        <button className="tutor-logout-btn" onClick={handleLogout}>
-          <LogOut size={20} />
-          <span>Cerrar sesión</span>
+      {/* Footer: acceso rápido al cierre de sesión */}
+      <div className="lk-tutor-sidebar-footer">
+        <button
+          className="lk-tutor-sidebar-power"
+          onClick={handleLogout}
+          aria-label="Cerrar sesión"
+          title={`Cerrar sesión de ${user?.nombre || "Tutor"}`}
+        >
+          <span className="lk-tutor-sidebar-power__avatar" aria-hidden="true">
+            {initials}
+          </span>
+          <LogOut size={18} aria-hidden="true" />
         </button>
       </div>
     </motion.aside>
