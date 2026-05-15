@@ -269,6 +269,15 @@
   gap: 12px;
   padding-left: 12px;
   border-left: 1px solid var(--lk-tutor-border);
+  background: transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  cursor: pointer;
+  text-align: left;
+}
+.tutor-profile:hover {
+  opacity: 0.9;
 }
 .tutor-profile-info {
   display: flex;

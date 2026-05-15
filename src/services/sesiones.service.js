@@ -2,30 +2,32 @@ import { request } from "./httpClient";
 
 const API = "/sesiones";
 
-//  POR ESTUDIANTE
-export const getSesionesByEstudiante = async (id) => {
-  try {
-    const res = await request(`${API}/estudiante/${id}`);
+const unwrapCollection = (payload) => payload?.data ?? (Array.isArray(payload) ? payload : []);
 
-    return Array.isArray(res.data) ? res.data : [];
-  } catch (error) {
-    console.error("Error sesiones:", error);
-    return [];
-  }
+export const getSesionesByEstudiante = async (id) => {
+  const payload = await request(`${API}/estudiante/${id}`);
+  return unwrapCollection(payload);
 };
 
-//  POR GRUPO
 export const getSesionesPorGrupo = async (estudiantes) => {
-  try {
-    const promesas = estudiantes.map((e) =>
-      getSesionesByEstudiante(e.id)
-    );
+  const resultados = await Promise.all(
+    estudiantes.map(async (estudiante) => {
+      const sesiones = await getSesionesByEstudiante(estudiante.id);
 
-    const resultados = await Promise.all(promesas);
+      return sesiones.map((sesion) => ({
+        ...sesion,
+        estudiante_id: estudiante.id,
+        estudiante_nombre: estudiante.nombre,
+      }));
+    })
+  );
 
-    return resultados.flat();
-  } catch (error) {
-    console.error("Error grupo:", error);
-    return [];
-  }
+  return resultados.flat().sort((left, right) =>
+    new Date(right.iniciada_en).getTime() - new Date(left.iniciada_en).getTime()
+  );
+};
+
+export const getEventosSesion = async (sesionId) => {
+  const payload = await request(`${API}/${sesionId}/eventos`);
+  return unwrapCollection(payload);
 };

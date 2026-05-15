@@ -1,16 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Activity, Building2, Database, Gamepad2, Users, UsersRound } from "lucide-react";
-import StatCard from "../../components/common/StatCard";
+import {
+  Activity,
+  Clock3,
+  Mail,
+  ShieldAlert,
+  UserCheck2,
+  UserCog2,
+  UserPlus2,
+  UsersRound,
+} from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
+import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
+import DashboardPanel from "../../components/dashboard/DashboardPanel";
+import QuickActionCard from "../../components/dashboard/QuickActionCard";
 import adminService from "../../services/adminService";
-import Notifications from "../../components/Notifications";
+import { useAuth } from "../../hooks/useAuth";
+import { buildAdminDashboardView } from "./adminDashboard.selectors";
 
 export default function AdminDashboardPage() {
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
-  const [institutions, setInstitutions] = useState([]);
-  const [minigames, setMinigames] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -18,16 +29,20 @@ export default function AdminDashboardPage() {
     const loadDashboard = async () => {
       try {
         setIsLoading(true);
-        const [usersData, institutionsData, minigamesData] = await Promise.all([
+
+        const [usersData, requestsData] = await Promise.all([
           adminService.listUsers(),
-          adminService.listInstitutions(),
-          adminService.listMinigames(),
+          adminService.listReactivationRequests(),
         ]);
+
         setUsers(usersData);
-        setInstitutions(institutionsData);
-        setMinigames(minigamesData);
+        setRequests(requestsData);
+        setPendingRequests(
+          requestsData.filter((request) => request.estado_solicitud === "pendiente").length
+        );
+        setError("");
       } catch (loadError) {
-        setError(loadError.message || "No fue posible cargar el dashboard del administrador.");
+        setError(loadError.message || "No fue posible cargar el panel institucional.");
       } finally {
         setIsLoading(false);
       }
@@ -36,217 +51,205 @@ export default function AdminDashboardPage() {
     loadDashboard();
   }, []);
 
-  const summary = useMemo(() => {
-    const tutors = users.filter((user) => user.rol === "tutor");
-    const activeUsers = users.filter((user) => user.estado === "activo");
+  const firstName = user?.nombre?.split(" ")[0] || "Profe";
 
-    return {
-      totalUsers: users.length,
-      totalTutors: tutors.length,
-      activeUsers: activeUsers.length,
-      institutions: institutions.length,
-      activeMinigames: minigames.filter((minigame) => minigame.activo).length,
-    };
-  }, [institutions.length, minigames, users]);
+  const view = useMemo(
+    () =>
+      buildAdminDashboardView({
+        users,
+        pendingRequests,
+        institutionName: user?.institucion,
+      }),
+    [pendingRequests, user?.institucion, users]
+  );
+
+  const requestPreview = requests.slice(0, 4);
 
   return (
     <AppShell
-      title="Dashboard General"
-      description="Monitoreo y administración de la plataforma"
+      title={`Hola, ${firstName}`}
+      description="Supervisa tutores, activaciones y solicitudes dentro de tu institución."
+      notificationCount={pendingRequests}
     >
-      {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
+      <div className="lk-role-dashboard">
+        {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
-      <div className="lk-admin-grid">
-        <section className="lk-span-12" style={{ marginBottom: "0.5rem" }}>
-          <div
-            style={{
-              padding: "2rem",
-              borderRadius: "1.5rem",
-              background: "linear-gradient(135deg, rgba(23, 150, 237, 0.1), rgba(154, 79, 211, 0.12))",
-              border: "1px solid rgba(255, 255, 255, 0.7)",
-              backdropFilter: "blur(12px)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
+        <section className="lk-role-dashboard__hero">
+          <span className="lk-role-dashboard__hero-badge">Panel institucional</span>
+          <h2 className="lk-role-dashboard__hero-title">Tu institución bajo control</h2>
+          <p className="lk-role-dashboard__hero-subtitle">
+            Aquí concentras el pulso de tutores, activaciones y reactivaciones sin salir del
+            alcance que el backend permite para tu institución.
+          </p>
+
+          <div className="lk-role-dashboard__hero-tags">
+            {view.heroTags.map((tag) => (
+              <article key={tag.label} className="lk-role-dashboard__hero-tag">
+                <strong>{isLoading ? "..." : tag.value}</strong>
+                <span>{tag.label}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="lk-role-dashboard__metrics">
+          <DashboardMetricCard
+            icon={UsersRound}
+            label={view.metrics[0].label}
+            value={isLoading ? "..." : view.metrics[0].value}
+            description={view.metrics[0].description}
+            tone={view.metrics[0].tone}
+          />
+          <DashboardMetricCard
+            icon={UserCheck2}
+            label={view.metrics[1].label}
+            value={isLoading ? "..." : view.metrics[1].value}
+            description={view.metrics[1].description}
+            tone={view.metrics[1].tone}
+          />
+          <DashboardMetricCard
+            icon={UserPlus2}
+            label={view.metrics[2].label}
+            value={isLoading ? "..." : view.metrics[2].value}
+            description={view.metrics[2].description}
+            tone={view.metrics[2].tone}
+          />
+          <DashboardMetricCard
+            icon={ShieldAlert}
+            label={view.metrics[3].label}
+            value={isLoading ? "..." : view.metrics[3].value}
+            description={view.metrics[3].description}
+            tone={view.metrics[3].tone}
+          />
+        </section>
+
+        <section className="lk-role-dashboard__grid">
+          <DashboardPanel
+            eyebrow="Acciones rápidas"
+            title="Siguientes movimientos"
+            subtitle="Atajos para administrar las cuentas que hoy requieren atención."
           >
-            <div>
-              <h2 style={{ fontSize: "1.8rem", margin: "0 0 0.5rem", color: "#1d2737" }}>
-                Sistema operativo y en línea
-              </h2>
-              <p className="lk-muted" style={{ margin: 0, fontSize: "1.05rem" }}>
-                Revisa el flujo de usuarios, administra instituciones y controla el catálogo de minijuegos.
-              </p>
+            <div className="lk-role-quick-grid">
+              <QuickActionCard
+                to="/admin/usuarios"
+                icon={UsersRound}
+                title="Gestionar tutores"
+                description="Activa cuentas, revisa estados y filtra el personal de tu institución."
+                tone="purple"
+              />
+              <QuickActionCard
+                to="/admin/solicitudes"
+                icon={Mail}
+                title="Revisar solicitudes"
+                description="Atiende reactivaciones pendientes sin salir del flujo institucional."
+                tone="orange"
+              />
             </div>
-            <div style={{ color: "rgba(23, 150, 237, 0.8)" }}>
-              <Activity size={48} strokeWidth={1.5} />
+          </DashboardPanel>
+
+          <DashboardPanel
+            eyebrow="Pulso del tablero"
+            title="Salud de accesos"
+            subtitle="Indicadores clave para saber si tu institución está lista para operar."
+            aside={<Activity size={18} color="var(--lk-purple)" aria-hidden="true" />}
+          >
+            <div className="lk-role-inline-metric">
+              {view.progress.map((item) => (
+                <article key={item.key} className="lk-role-inline-metric__row">
+                  <div className="lk-role-inline-metric__label">
+                    <span>{item.label}</span>
+                    <strong>{isLoading ? "..." : item.value}</strong>
+                  </div>
+                  <div className="lk-role-inline-metric__track">
+                    <div
+                      className={`lk-role-inline-metric__fill lk-role-inline-metric__fill--${item.tone}`}
+                      style={{ width: `${isLoading ? 0 : item.percent}%` }}
+                    />
+                  </div>
+                </article>
+              ))}
             </div>
-          </div>
+          </DashboardPanel>
         </section>
 
-        <div className="lk-span-3">
-          <StatCard
-            label="Usuarios registrados"
-            value={isLoading ? "..." : summary.totalUsers}
-            helpText="Cuentas web creadas."
-            tone="blue"
-          />
-        </div>
-        <div className="lk-span-3">
-          <StatCard
-            label="Tutores activos"
-            value={isLoading ? "..." : summary.totalTutors}
-            helpText="Educadores en el sistema."
-            tone="orange"
-          />
-        </div>
-        <div className="lk-span-3">
-          <StatCard
-            label="Instituciones"
-            value={isLoading ? "..." : summary.institutions}
-            helpText="Colegios afiliados."
-            tone="purple"
-          />
-        </div>
-        <div className="lk-span-3">
-          <StatCard
-            label="Minijuegos"
-            value={isLoading ? "..." : summary.activeMinigames}
-            helpText="Catálogo disponible."
-            tone="green"
-          />
-        </div>
-
-        <section className="lk-panel-card lk-span-8">
-          <h2>Accesos directos</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
-            <button
-              onClick={() => navigate("/admin/usuarios")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                padding: "1.5rem",
-                background: "#f8faff",
-                border: "1px solid var(--lk-color-border)",
-                borderRadius: "1rem",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "all 0.2s ease"
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-primary)")}
-              onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
-            >
-              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-primary)" }}>
-                <UsersRound size={32} strokeWidth={1.5} />
-              </div>
-              <div>
-                <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Gestión de Usuarios</strong>
-                <span className="lk-muted">Controla cuentas, roles y estados.</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => navigate("/admin/instituciones")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                padding: "1.5rem",
-                background: "#fcf8ff",
-                border: "1px solid var(--lk-color-border)",
-                borderRadius: "1rem",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "all 0.2s ease"
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-secondary)")}
-              onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
-            >
-              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-secondary)" }}>
-                <Building2 size={32} strokeWidth={1.5} />
-              </div>
-              <div>
-                <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Directorio Institucional</strong>
-                <span className="lk-muted">Añade o elimina colegios.</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => navigate("/admin/minijuegos")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                padding: "1.5rem",
-                background: "#f4fcf8",
-                border: "1px solid var(--lk-color-border)",
-                borderRadius: "1rem",
-                cursor: "pointer",
-                textAlign: "left",
-                gridColumn: "1 / -1",
-                transition: "all 0.2s ease"
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-success)")}
-              onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
-            >
-              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-success)" }}>
-                <Gamepad2 size={32} strokeWidth={1.5} />
-              </div>
-              <div>
-                <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Catálogo de Minijuegos</strong>
-                <span className="lk-muted">Activa o pausa los juegos para los estudiantes.</span>
-              </div>
-            </button>
-          </div>
-        </section>
-
-        <section className="lk-card lk-span-4" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-              <Database size={20} color="var(--lk-color-text-muted)" strokeWidth={1.5} />
-              <h2 style={{ margin: 0 }}>Salud del Servidor</h2>
+        <section className="lk-role-dashboard__grid">
+          <DashboardPanel
+            eyebrow="Visibilidad rápida"
+            title="Tutores que requieren contexto"
+            subtitle="Muestra breve del personal visible para el admin con el contrato actual."
+            aside={<UserCog2 size={18} color="var(--lk-purple)" aria-hidden="true" />}
+          >
+            <div className="lk-role-list">
+              {view.tutorPreview.map((tutor) => (
+                <article
+                  key={tutor.id}
+                  className={`lk-role-list__item lk-role-list__item--${resolveTutorTone(
+                    tutor.estado
+                  )}`}
+                >
+                  <div className="lk-role-list__top">
+                    <span className="lk-role-list__title">{tutor.nombre}</span>
+                    <span className={`lk-role-list__meta lk-role-list__meta--${resolveTutorTone(tutor.estado)}`}>
+                      {tutor.estado}
+                    </span>
+                  </div>
+                  <p className="lk-role-list__description">{tutor.email}</p>
+                </article>
+              ))}
             </div>
-            <p className="lk-muted" style={{ marginBottom: "1.5rem" }}>Métricas operativas en tiempo real.</p>
-          </div>
-          
-          <ul className="lk-list" style={{ marginTop: 0 }}>
-            <li className="lk-list-item" style={{ display: "flex", alignItems: "center", gap: "0.75rem", background: "transparent", border: "none", padding: "0.5rem 0" }}>
-              <span className="lk-status-dot lk-status-dot--pulse"></span>
-              <strong>PostgreSQL 13 Conectado</strong>
-            </li>
-            
-            <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "1rem 0" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem" }}>
-                <strong>Instituciones en línea</strong>
-                <span>{summary.institutions} activas</span>
-              </div>
-              <div className="lk-progress-bar">
-                <div className="lk-progress-bar-fill lk-progress-bar-fill--success" style={{ width: summary.institutions > 0 ? "100%" : "0%" }}></div>
-              </div>
-            </li>
-            
-            <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "0.5rem 0" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem" }}>
-                <strong>Disponibilidad Minijuegos</strong>
-                <span>{summary.activeMinigames} de {minigames.length}</span>
-              </div>
-              <div className="lk-progress-bar">
-                <div className="lk-progress-bar-fill lk-progress-bar-fill--success" style={{ width: `${minigames.length > 0 ? (summary.activeMinigames / minigames.length) * 100 : 0}%` }}></div>
-              </div>
-              {minigames.length > summary.activeMinigames && (
-                 <small style={{ display: "block", color: "var(--lk-color-warning)", marginTop: "0.5rem", fontWeight: "bold" }}>
-                   ⚠️ {minigames.length - summary.activeMinigames} minijuegos pausados
-                 </small>
+          </DashboardPanel>
+
+          <DashboardPanel
+            eyebrow="Bandeja"
+            title="Solicitudes recientes"
+            subtitle="Reactivaciones visibles para que no se acumulen sin respuesta."
+            aside={<Clock3 size={18} color="var(--lk-purple)" aria-hidden="true" />}
+          >
+            <div className="lk-role-list">
+              {requestPreview.length ? (
+                requestPreview.map((request) => (
+                  <article
+                    key={request.id}
+                    className={`lk-role-list__item lk-role-list__item--${resolveRequestTone(
+                      request.estado_solicitud
+                    )}`}
+                  >
+                    <div className="lk-role-list__top">
+                      <span className="lk-role-list__title">{request.tutor_nombre}</span>
+                      <span
+                        className={`lk-role-list__meta lk-role-list__meta--${resolveRequestTone(
+                          request.estado_solicitud
+                        )}`}
+                      >
+                        {request.estado_solicitud}
+                      </span>
+                    </div>
+                    <p className="lk-role-list__description">
+                      {request.correo_contacto || request.tutor_email}
+                    </p>
+                  </article>
+                ))
+              ) : (
+                <p className="lk-role-note">
+                  No hay solicitudes recientes en este momento.
+                </p>
               )}
-            </li>
-          </ul>
-        </section>
-
-        <section className="lk-panel-card lk-span-12" style={{ marginTop: "1rem" }}>
-          <Notifications />
+            </div>
+          </DashboardPanel>
         </section>
       </div>
     </AppShell>
   );
+}
+
+function resolveTutorTone(estado) {
+  if (estado === "activo") return "gold";
+  if (estado === "inactivo") return "orange";
+  return "rose";
+}
+
+function resolveRequestTone(estado) {
+  if (estado === "aprobado") return "gold";
+  if (estado === "rechazado") return "rose";
+  return "orange";
 }

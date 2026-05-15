@@ -1,155 +1,150 @@
 import { useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-import LogicKidsLogo from "../../components/branding/LogicKidsLogo";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Mail } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { HttpError } from "../../services/httpClient";
-import { USER_ROLES } from "../../constants/roles";
+import { getHomePathByRole } from "../../utils/paths";
+import { validateLoginForm } from "../../utils/validation/loginFormValidation";
+import logoWordmark from "../../assets/imgs/logoLogickids transparente.png";
+import loginPoster from "../../assets/imgs/logickIdsfofndoo.jpg";
+import AuthPosterLayout from "../../components/auth/layout/AuthPosterLayout";
+import AuthFormColumn from "../../components/auth/form/AuthFormColumn";
+import AuthFormHeader from "../../components/auth/form/AuthFormHeader";
+import AuthInlineNotice from "../../components/auth/feedback/AuthInlineNotice";
+import LkIconTextField from "../../components/auth/form/LkIconTextField";
+import LkPasswordField from "../../components/auth/form/LkPasswordField";
+import LkPrimaryButton from "../../components/auth/form/LkPrimaryButton";
+import "../../styles/auth.css";
 
-const INITIAL_FORM = {
-  email: "",
-  contrasena: "",
-};
-
-const validateLoginForm = (form) => {
-  const nextErrors = {};
-
-  if (!form.email.trim()) {
-    nextErrors.email = "El correo es obligatorio.";
-  } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-    nextErrors.email = "El correo no tiene un formato válido.";
-  }
-
-  if (!form.contrasena) {
-    nextErrors.contrasena = "La contraseña es obligatoria.";
-  }
-
-  return nextErrors;
-};
+const INITIAL_FORM = { email: "", contrasena: "" };
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, signOut } = useAuth();
-  const successMsg = location.state?.msg;
+  const authNotice = location.state?.notice ?? null;
 
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [serverError, setServerError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
+  const [serverErr, setServerErr] = useState("");
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm((current) => ({ ...current, [name]: value }));
-    setErrors((current) => ({ ...current, [name]: "" }));
-    setServerError("");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((p) => ({ ...p, [name]: value }));
+    setErrors((p) => ({ ...p, [name]: "" }));
+    setServerErr("");
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const validationErrors = validateLoginForm(form);
-
-    if (Object.keys(validationErrors).length) {
-      setErrors(validationErrors);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errs = validateLoginForm(form);
+    if (Object.keys(errs).length) {
+      setErrors(errs);
       return;
     }
-
     try {
-      setIsSubmitting(true);
+      setSubmitting(true);
       const user = await signIn({
         email: form.email.trim().toLowerCase(),
         contrasena: form.contrasena,
       });
-
-      if (user?.rol === USER_ROLES.ADMIN) {
-        navigate("/admin/dashboard", { replace: true });
-      } else if (user?.rol === USER_ROLES.TUTOR) {
-        navigate("/tutor/dashboard", { replace: true });
-      } else {
+      const path = getHomePathByRole(user?.rol);
+      if (path === "/login") {
         signOut();
-        setServerError("Rol de usuario no válido para este portal.");
+        setServerErr("Rol no reconocido.");
+      } else navigate(path, { replace: true });
+    } catch (err) {
+      if (
+        err instanceof HttpError &&
+        err.status === 403 &&
+        err.message?.includes("suspendida")
+      ) {
+        navigate("/solicitar-reactivacion", { state: { email: form.email } });
+        return;
       }
-    } catch (error) {
-      setServerError(
-        error instanceof HttpError
-          ? error.message
-          : "No fue posible iniciar sesión. Intente de nuevo."
+      setServerErr(
+        err instanceof HttpError ? err.message : "Error al iniciar sesión."
       );
     } finally {
-      setIsSubmitting(false);
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="lk-auth-page">
-      <div className="lk-auth-shell lk-auth-shell--single">
-        <section className="lk-auth-card">
-          <div className="lk-auth-brand" style={{ marginBottom: "1.25rem" }}>
-            <LogicKidsLogo size={44} />
-            <div className="lk-auth-brand-copy">
-              <strong>LogicKids</strong>
-              <span>Portal de Acceso</span>
+    <AuthPosterLayout backgroundSrc={loginPoster}>
+      <AuthFormColumn>
+        <div className="lk-auth-card lk-auth-card--poster-auth">
+          <AuthFormHeader
+            iconSrc={logoWordmark}
+            iconAlt="LogicKids"
+            title="¡Bienvenido!"
+            subtitle="Inicia sesión para acceder a tu panel de profesor."
+            variant="poster"
+            iconVariant="wordmark"
+          />
+
+          {authNotice ? (
+            <AuthInlineNotice
+              tone={authNotice.tone}
+              title={authNotice.title}
+              message={authNotice.message}
+            />
+          ) : null}
+          {serverErr && (
+            <AuthInlineNotice
+              tone="error"
+              title="No pudimos iniciar sesión"
+              message={serverErr}
+            />
+          )}
+
+          <form onSubmit={handleSubmit} noValidate>
+            <LkIconTextField
+              id="lg-email"
+              name="email"
+              label="Correo electrónico"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="ejemplo@logickids.com"
+              autoComplete="email"
+              icon={Mail}
+              error={errors.email}
+            />
+
+            <LkPasswordField
+              id="lg-pwd"
+              name="contrasena"
+              label="Contraseña"
+              value={form.contrasena}
+              onChange={handleChange}
+              placeholder="••••••••"
+              showPassword={showPwd}
+              onToggleVisibility={() => setShowPwd((v) => !v)}
+              error={errors.contrasena}
+            />
+
+            <div className="lk-row-between">
+              <label className="lk-remember">
+                <input type="checkbox" name="remember" /> Recordarme
+              </label>
+              <Link to="/recuperar-acceso" className="lk-recover">
+                ¿Olvidaste tu contraseña?
+              </Link>
             </div>
-          </div>
 
-          <header className="lk-auth-card-header">
-            <h1>Iniciar sesión</h1>
-          </header>
-
-          <form className="lk-form-grid" onSubmit={handleSubmit} noValidate>
-            {successMsg ? <div className="lk-alert lk-alert--success" style={{backgroundColor:"#d1e7dd", color:"#0f5132", padding:"10px", borderRadius:"6px", fontSize:"0.85rem"}}>{successMsg}</div> : null}
-            {serverError ? <div className="lk-alert lk-alert--error">{serverError}</div> : null}
-
-            <div className={`lk-field ${errors.email ? "lk-field--error" : ""}`}>
-              <label htmlFor="login-email">Correo electrónico</label>
-              <input
-                id="login-email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="tu@correo.com"
-                autoComplete="email"
-              />
-              {errors.email ? <span className="lk-field-error">{errors.email}</span> : null}
-            </div>
-
-            <div className={`lk-field ${errors.contrasena ? "lk-field--error" : ""}`}>
-              <label htmlFor="login-password">Contraseña</label>
-              <div className="lk-input-with-action">
-                <input
-                  id="login-password"
-                  name="contrasena"
-                  type={showPassword ? "text" : "password"}
-                  value={form.contrasena}
-                  onChange={handleChange}
-                  placeholder="Ingresa tu contraseña"
-                  autoComplete="current-password"
-                />
-                <button
-                  type="button"
-                  className="lk-input-action"
-                  onClick={() => setShowPassword((current) => !current)}
-                >
-                  {showPassword ? "Ocultar" : "Ver"}
-                </button>
-              </div>
-              {errors.contrasena ? (
-                <span className="lk-field-error">{errors.contrasena}</span>
-              ) : null}
-            </div>
-
-            <button type="submit" className="lk-btn lk-btn--primary lk-btn--full" disabled={isSubmitting}>
-              {isSubmitting ? "Ingresando..." : "Entrar"}
-            </button>
-
-            <div className="text-center mt-3" style={{ fontSize: "0.85rem", color: "#6b7280" }}>
-              <span>¿Eres tutor y no tienes cuenta? </span>
-              <Link to="/registro" style={{ color: "#7C6FFF", fontWeight: "bold", textDecoration: "none" }}>Regístrate aquí</Link>
-            </div>
+            <LkPrimaryButton id="btn-login-submit" disabled={submitting}>
+              {submitting ? "Ingresando..." : "Iniciar sesión"}
+            </LkPrimaryButton>
           </form>
-        </section>
-      </div>
-    </div>
+
+          <p className="lk-foot">
+            ¿No tienes cuenta? <Link to="/registro">Regístrate aquí</Link>
+          </p>
+        </div>
+      </AuthFormColumn>
+    </AuthPosterLayout>
   );
 }

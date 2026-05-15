@@ -1,5 +1,5 @@
 const normalizeVariant = (variant) => {
-  if (variant === "activo" || variant === "abierta") return "activo";
+  if (variant === "activo" || variant === "abierta" || variant === "aprobado") return "activo";
   if (variant === "predeterminado" || variant === "pendiente") return "predeterminado";
   return "suspendido";
 };
