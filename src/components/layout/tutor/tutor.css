@@ -868,26 +868,36 @@
 .ses-select {
   flex: 1;
   min-width: 180px;
-  padding: 10px 36px 10px 14px;
-  border-radius: 10px;
-  border: 1.5px solid var(--lk-tutor-border);
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(8px);
+  padding: 12px 40px 12px 14px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(180, 85, 178, 0.18);
+
+  background: rgba(255, 255, 255, 0.88);
+
   font-size: 14px;
   font-family: 'Outfit', sans-serif;
-  color: var(--lk-tutor-text);
-  cursor: pointer;
+
+  color: #3d2b40;
+
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+
+  transition: all 0.2s ease;
+
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234f46e5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B455B2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 14px center;
 }
 
 .ses-select:focus {
-  border-color: var(--lk-tutor-primary);
-  box-shadow: 0 0 0 3px var(--lk-tutor-glow);
+  border-color: #B455B2;
+
+  box-shadow:
+    0 0 0 4px rgba(180, 85, 178, 0.12);
 }
 
 .ses-select:disabled {
