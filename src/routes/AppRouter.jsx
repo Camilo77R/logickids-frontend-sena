@@ -20,6 +20,7 @@ import SolicitudesPage from "../pages/admin/SolicitudesPage";
 // Páginas de superadmin (plataforma global)
 import InstitucionesPage from "../pages/admin/InstitucionesPage";
 import MinijuegosPage from "../pages/admin/MinijuegosPage";
+import SuperadminDashboardPage from "../pages/superadmin/SuperadminDashboardPage";
 
 // Páginas del tutor
 import TutorDashboardOverview from "../pages/tutor/TutorDashboardOverview";
@@ -41,7 +42,6 @@ import RoleRoute from "./RoleRoute";
 
 // Layouts
 import TutorLayout from "../components/layout/tutor/TutorLayout";
-import SuperadminLayout from "../components/layout/superadmin/SuperadminLayout";
 
 export default function AppRouter() {
   return (
@@ -85,33 +85,12 @@ export default function AppRouter() {
         {/* ───────── RUTAS DEL ADMIN (institucional) ───────── */}
         <Route path="/admin/dashboard" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminDashboardPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/admin/usuarios" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><UsuariosPage /></RoleRoute></ProtectedRoute>} />
-        <Route path="/admin/solicitudes" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN, USER_ROLES.SUPERADMIN]}><SolicitudesPage /></RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/solicitudes" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><SolicitudesPage /></RoleRoute></ProtectedRoute>} />
 
         {/* ───────── RUTAS DEL SUPERADMIN (plataforma global) ───────── */}
-        <Route
-          path="/superadmin/instituciones"
-          element={
-            <ProtectedRoute>
-              <RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
-                <SuperadminLayout>
-                  <InstitucionesPage />
-                </SuperadminLayout>
-              </RoleRoute>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/superadmin/minijuegos"
-          element={
-            <ProtectedRoute>
-              <RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}>
-                <SuperadminLayout>
-                  <MinijuegosPage />
-                </SuperadminLayout>
-              </RoleRoute>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/superadmin/dashboard" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><SuperadminDashboardPage /></RoleRoute></ProtectedRoute>} />
+        <Route path="/superadmin/instituciones" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><InstitucionesPage /></RoleRoute></ProtectedRoute>} />
+        <Route path="/superadmin/minijuegos" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><MinijuegosPage /></RoleRoute></ProtectedRoute>} />
 
         {/* Cualquier ruta desconocida → login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
