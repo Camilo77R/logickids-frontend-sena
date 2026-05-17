@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import { History, MousePointerClick } from "lucide-react";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
 import SesionesTable from "../../components/sesiones/SesionesTable";
 import estudianteService from "../../services/estudianteService";
-import { getEventosSesion, getSesionesByEstudiante, getSesionesPorGrupo } from "../../services/sesiones.service";
+import {
+  getEventosSesion,
+  getSesionesByEstudiante,
+  getSesionesPorGrupo,
+} from "../../services/sesiones.service";
 import tutorGroupsService from "../../services/tutorGroupsService";
 
 const normalizeId = (value) => String(value ?? "");
@@ -23,281 +26,250 @@ export default function SesionesPage() {
   const [isLoadingEventos, setIsLoadingEventos] = useState(false);
   const [error, setError] = useState("");
 
+  /* ── Cargar grupos ── */
   useEffect(() => {
     const cargarGrupos = async () => {
       try {
         const groups = await tutorGroupsService.getGroups();
-        const normalizedGroups = groups.map((grupo) => ({
-          ...grupo,
-          id: grupo.id ?? grupo.id_grupo,
-        }));
-
-        setGrupos(normalizedGroups);
-
-        if (normalizedGroups.length > 0) {
-          setGrupoId(normalizeId(normalizedGroups[0].id));
-        }
-      } catch (loadError) {
-        setError(loadError.message || "No fue posible cargar los grupos.");
+        const normalized = groups.map((g) => ({ ...g, id: g.id ?? g.id_grupo }));
+        setGrupos(normalized);
+        if (normalized.length > 0) setGrupoId(normalizeId(normalized[0].id));
+      } catch (e) {
+        setError(e.message || "No fue posible cargar los grupos.");
       } finally {
         setIsLoading(false);
       }
     };
-
     cargarGrupos();
   }, []);
 
+  /* ── Cargar estudiantes al cambiar grupo ── */
   useEffect(() => {
     const cargarEstudiantes = async () => {
-      if (!grupoId) {
-        setEstudiantes([]);
-        setEstudiante("");
-        return;
-      }
-
+      if (!grupoId) { setEstudiantes([]); setEstudiante(""); return; }
       try {
         const students = await estudianteService.listEstudiantes(Number(grupoId));
-        const normalizedStudents = students.map((student) => ({
-          ...student,
-          id: student.id ?? student.id_estudiante,
-        }));
-
-        setEstudiantes(normalizedStudents);
-        setEstudiante((current) =>
-          current && normalizedStudents.some((student) => normalizeId(student.id) === current)
-            ? current
-            : normalizeId(normalizedStudents[0]?.id)
+        const normalized = students.map((s) => ({ ...s, id: s.id ?? s.id_estudiante }));
+        setEstudiantes(normalized);
+        setEstudiante((cur) =>
+          cur && normalized.some((s) => normalizeId(s.id) === cur)
+            ? cur
+            : normalizeId(normalized[0]?.id)
         );
-      } catch (loadError) {
-        setError(loadError.message || "No fue posible cargar los estudiantes del grupo.");
+      } catch (e) {
+        setError(e.message || "No fue posible cargar los estudiantes del grupo.");
         setEstudiantes([]);
       }
     };
-
     cargarEstudiantes();
   }, [grupoId]);
 
+  /* ── Cargar sesiones ── */
   useEffect(() => {
     const cargarSesiones = async () => {
-      if (!grupoId) {
-        setData([]);
-        setSelectedSession(null);
-        setEventosSesion([]);
-        return;
-      }
-
-      if (tipo === "estudiante" && !estudianteId) {
-        setData([]);
-        setSelectedSession(null);
-        setEventosSesion([]);
-        return;
-      }
+      if (!grupoId) { setData([]); setSelectedSession(null); setEventosSesion([]); return; }
+      if (tipo === "estudiante" && !estudianteId) { setData([]); setSelectedSession(null); setEventosSesion([]); return; }
 
       setIsLoading(true);
       setError("");
-
       try {
         const sesiones =
           tipo === "estudiante"
             ? await getSesionesByEstudiante(Number(estudianteId))
             : await getSesionesPorGrupo(estudiantes);
-
         setData(sesiones);
         setSelectedSession(null);
         setEventosSesion([]);
-      } catch (loadError) {
-        setError(loadError.message || "No fue posible cargar el historial de sesiones.");
+      } catch (e) {
+        setError(e.message || "No fue posible cargar el historial de sesiones.");
         setData([]);
       } finally {
         setIsLoading(false);
       }
     };
-
     cargarSesiones();
   }, [tipo, grupoId, estudianteId, estudiantes]);
 
+  /* ── Seleccionar sesión → cargar eventos ── */
   const handleSelectSession = async (session) => {
     setSelectedSession(session);
     setIsLoadingEventos(true);
-
     try {
       const eventos = await getEventosSesion(session.id);
       setEventosSesion(eventos);
-    } catch (loadError) {
-      setError(loadError.message || "No fue posible cargar el detalle de la sesión.");
+    } catch (e) {
+      setError(e.message || "No fue posible cargar el detalle de la sesión.");
       setEventosSesion([]);
     } finally {
       setIsLoadingEventos(false);
     }
   };
 
-  const summary = useMemo(() => {
-    return data.reduce(
-      (acc, sesion) => {
-        acc.sesiones += 1;
-        acc.puntaje += Number(sesion.puntaje || 0);
-        acc.aciertos += Number(sesion.aciertos || 0);
-        acc.errores += Number(sesion.errores || 0);
-        return acc;
-      },
-      { sesiones: 0, puntaje: 0, aciertos: 0, errores: 0 }
-    );
-  }, [data]);
+  /* ── Totales ── */
+  const summary = useMemo(
+    () =>
+      data.reduce(
+        (acc, s) => {
+          acc.sesiones += 1;
+          acc.puntaje  += Number(s.puntaje  || 0);
+          acc.aciertos += Number(s.aciertos || 0);
+          acc.errores  += Number(s.errores  || 0);
+          return acc;
+        },
+        { sesiones: 0, puntaje: 0, aciertos: 0, errores: 0 }
+      ),
+    [data]
+  );
 
+  /* ─────────────── RENDER ─────────────── */
   return (
-    <Container fluid className="py-4">
-      <div className="mb-4">
-        <div className="d-flex align-items-center gap-2 mb-2">
-          <History size={28} className="text-primary" />
-          <h1 className="m-0">Sesiones</h1>
+    <div className="tutor-page-container">
+
+      {/* Header */}
+      <div className="tutor-page-header">
+        <div>
+          <h1 className="tutor-page-title">
+            <History size={26} />
+            Sesiones
+          </h1>
+          <p className="tutor-page-subtitle">
+            Revisa el historial real de partidas por estudiante o consolídalo por grupo.
+          </p>
         </div>
-        <p className="text-muted mb-0">
-          Revisa el historial real de partidas por estudiante o consolídalo por grupo.
-        </p>
       </div>
 
-      {error ? <Alert variant="danger">{error}</Alert> : null}
+      {/* Error */}
+      {error && <div className="tutor-alert tutor-alert--error">{error}</div>}
 
-      <Card className="mb-4">
-        <Card.Body>
-          <SesionesFilters
-            tipo={tipo}
-            setTipo={setTipo}
-            grupos={grupos}
-            grupoId={grupoId}
-            setGrupoId={setGrupoId}
-            estudiantes={estudiantes}
-            estudianteId={estudianteId}
-            setEstudiante={setEstudiante}
-          />
-        </Card.Body>
-      </Card>
+      {/* Filtros */}
+      <div className="tutor-card ses-filters-card">
+        <SesionesFilters
+          tipo={tipo}
+          setTipo={setTipo}
+          grupos={grupos}
+          grupoId={grupoId}
+          setGrupoId={setGrupoId}
+          estudiantes={estudiantes}
+          estudianteId={estudianteId}
+          setEstudiante={setEstudiante}
+        />
+      </div>
 
-      <Row className="g-4 mb-4">
-        <Col md={3}>
-          <Card className="h-100">
-            <Card.Body>
-              <small className="text-muted">Sesiones encontradas</small>
-              <h2 className="mt-2 mb-0">{summary.sesiones}</h2>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3}>
-          <Card className="h-100">
-            <Card.Body>
-              <small className="text-muted">Puntaje acumulado</small>
-              <h2 className="mt-2 mb-0">{summary.puntaje}</h2>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3}>
-          <Card className="h-100">
-            <Card.Body>
-              <small className="text-muted">Aciertos</small>
-              <h2 className="mt-2 mb-0 text-success">{summary.aciertos}</h2>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3}>
-          <Card className="h-100">
-            <Card.Body>
-              <small className="text-muted">Errores</small>
-              <h2 className="mt-2 mb-0 text-danger">{summary.errores}</h2>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      {/* Stat Cards */}
+      <div className="ses-stats-grid">
+        <div className="ses-stat-card ses-stat-card--orange">
+          <div className="ses-stat-info">
+            <span className="ses-stat-label">Sesiones encontradas</span>
+            <span className="ses-stat-value">{summary.sesiones}</span>
+          </div>
+          <span className="ses-stat-icon">⏱️</span>
+        </div>
 
+        <div className="ses-stat-card ses-stat-card--purple">
+          <div className="ses-stat-info">
+            <span className="ses-stat-label">Puntaje acumulado</span>
+            <span className="ses-stat-value">{summary.puntaje}</span>
+          </div>
+          <span className="ses-stat-icon">🏆</span>
+        </div>
+
+        <div className="ses-stat-card ses-stat-card--green">
+          <div className="ses-stat-info">
+            <span className="ses-stat-label">Aciertos</span>
+            <span className="ses-stat-value">{summary.aciertos}</span>
+          </div>
+          <span className="ses-stat-icon">⚡</span>
+        </div>
+
+        <div className="ses-stat-card ses-stat-card--red">
+          <div className="ses-stat-info">
+            <span className="ses-stat-label">Errores</span>
+            <span className="ses-stat-value">{summary.errores}</span>
+          </div>
+          <span className="ses-stat-icon">⚠️</span>
+        </div>
+      </div>
+
+      {/* Estado: cargando */}
       {isLoading ? (
-        <div className="text-center py-5">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-3 text-muted mb-0">Cargando sesiones...</p>
+        <div className="tutor-loading">
+          <span>Cargando sesiones...</span>
         </div>
       ) : !data.length ? (
-        <Card>
-          <Card.Body className="text-center py-5">
-            <History size={44} className="text-muted mb-3" />
-            <p className="text-muted mb-0">
-              No hay sesiones registradas para el filtro actual.
-            </p>
-          </Card.Body>
-        </Card>
+        /* Estado: sin datos */
+        <div className="tutor-card tutor-empty">
+          <History size={44} />
+          <p>No hay sesiones registradas para el filtro actual.</p>
+        </div>
       ) : (
         <>
-          <Card className="mb-4">
-            <Card.Body>
-              <SesionesCharts data={data} />
-            </Card.Body>
-          </Card>
+          {/* Charts */}
+          <div className="tutor-card ses-charts-card">
+            <SesionesCharts data={data} />
+          </div>
 
-          <Row className="g-4">
-            <Col lg={8}>
-              <Card>
-                <Card.Body>
-                  <SesionesTable
-                    data={data}
-                    onSelectSession={handleSelectSession}
-                    selectedSessionId={selectedSession?.id}
-                    showStudentColumn={tipo === "grupo"}
-                  />
-                </Card.Body>
-              </Card>
-            </Col>
+          {/* Tabla + Detalle */}
+          <div className="ses-bottom-grid">
 
-            <Col lg={4}>
-              <Card className="h-100">
-                <Card.Body>
-                  <div className="d-flex align-items-center gap-2 mb-3">
-                    <MousePointerClick size={18} className="text-primary" />
-                    <h2 className="h5 mb-0">Detalle de eventos</h2>
-                  </div>
+            {/* Historial */}
+            <div className="tutor-card">
+              <div className="ses-section-title">
+                <History size={16} />
+                Historial de sesiones
+              </div>
+              <SesionesTable
+                data={data}
+                onSelectSession={handleSelectSession}
+                selectedSessionId={selectedSession?.id}
+                showStudentColumn={tipo === "grupo"}
+              />
+            </div>
 
-                  {!selectedSession ? (
-                    <p className="text-muted mb-0">
-                      Selecciona una sesión de la tabla para ver sus eventos.
-                    </p>
-                  ) : isLoadingEventos ? (
-                    <div className="text-center py-4">
-                      <Spinner animation="border" size="sm" variant="primary" />
-                      <p className="text-muted mt-2 mb-0">Cargando eventos...</p>
+            {/* Detalle de eventos */}
+            <div className="tutor-card ses-detalle-card">
+              <div className="ses-section-title">
+                <MousePointerClick size={16} />
+                Detalle de eventos
+              </div>
+
+              {!selectedSession ? (
+                <p className="ses-detalle-empty">
+                  Selecciona una sesión de la tabla para ver sus eventos.
+                </p>
+              ) : isLoadingEventos ? (
+                <div className="tutor-loading">
+                  <span>Cargando eventos...</span>
+                </div>
+              ) : !eventosSesion.length ? (
+                <p className="ses-detalle-empty">
+                  Esta sesión no tiene eventos registrados.
+                </p>
+              ) : (
+                <div className="ses-eventos-list">
+                  {eventosSesion.map((evento) => (
+                    <div key={evento.id} className="ses-evento-item">
+                      <div className="ses-evento-header">
+                        <strong>{evento.tipo_evento}</strong>
+                        <small>
+                          {new Date(evento.ocurrido_en).toLocaleTimeString("es-CO")}
+                        </small>
+                      </div>
+                      <div className="ses-evento-meta">
+                        <span>Habilidad: {evento.habilidad || "No aplica"}</span>
+                        <span>Reacción: {evento.tiempo_reaccion_ms ?? "—"} ms</span>
+                        <span>
+                          Puntos: {evento.puntos ?? 0} · Combo: {evento.combo_en_evento ?? 0}
+                        </span>
+                      </div>
                     </div>
-                  ) : !eventosSesion.length ? (
-                    <p className="text-muted mb-0">
-                      Esta sesión no tiene eventos registrados para mostrar.
-                    </p>
-                  ) : (
-                    <div style={{ maxHeight: "480px", overflowY: "auto" }}>
-                      {eventosSesion.map((evento) => (
-                        <div
-                          key={evento.id}
-                          className="border rounded p-3 mb-2"
-                          style={{ backgroundColor: "#f8fafc" }}
-                        >
-                          <div className="d-flex justify-content-between gap-2">
-                            <strong>{evento.tipo_evento}</strong>
-                            <small className="text-muted">
-                              {new Date(evento.ocurrido_en).toLocaleTimeString("es-CO")}
-                            </small>
-                          </div>
-                          <small className="d-block text-muted mt-1">
-                            Habilidad: {evento.habilidad || "No aplica"}
-                          </small>
-                          <small className="d-block text-muted">
-                            Reacción: {evento.tiempo_reaccion_ms ?? "—"} ms
-                          </small>
-                          <small className="d-block text-muted">
-                            Puntos: {evento.puntos ?? 0} · Combo: {evento.combo_en_evento ?? 0}
-                          </small>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+                  ))}
+                </div>
+              )}
+            </div>
+
+          </div>
         </>
       )}
-    </Container>
+    </div>
   );
 }

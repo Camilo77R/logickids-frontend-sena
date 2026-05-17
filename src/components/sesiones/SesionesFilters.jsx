@@ -9,14 +9,21 @@ export default function SesionesFilters({
   setEstudiante,
 }) {
   return (
-    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "20px" }}>
-      {/* Tipo */}
-      <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+    <div className="ses-filters-row">
+      <select
+        className="ses-select"
+        value={tipo}
+        onChange={(e) => setTipo(e.target.value)}
+      >
         <option value="estudiante">Estudiante</option>
         <option value="grupo">Grupo</option>
       </select>
 
-      <select value={grupoId} onChange={(e) => setGrupoId(e.target.value)}>
+      <select
+        className="ses-select"
+        value={grupoId}
+        onChange={(e) => setGrupoId(e.target.value)}
+      >
         <option value="">Selecciona un grupo</option>
         {grupos.map((grupo) => (
           <option key={grupo.id} value={grupo.id}>
@@ -25,8 +32,8 @@ export default function SesionesFilters({
         ))}
       </select>
 
-      {/* Lista estudiantes */}
       <select
+        className="ses-select"
         value={estudianteId}
         onChange={(e) => setEstudiante(e.target.value)}
         disabled={tipo !== "estudiante" || !estudiantes.length}
