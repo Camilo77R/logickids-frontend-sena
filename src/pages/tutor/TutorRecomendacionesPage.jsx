@@ -1,17 +1,17 @@
 /**
  * TutorRecomendacionesPage
  *
- * Panel de recomendaciones pedagógicas generadas por IA (Google Gemini).
+ * Panel de recomendaciones pedagógicas para estudiantes y grupos.
  * El tutor puede:
  *  - Ver las recomendaciones activas por estudiante o por grupo
- *  - Generar una nueva recomendación usando IA
+ *  - Generar una nueva recomendación
  *  - Archivar recomendaciones que ya no son relevantes
  *
  * Flujo de datos:
  *  useRecomendaciones → recomendacionesService → GET/POST /api/recomendaciones/*
  */
 import { useState } from "react";
-import { Brain, Archive, RefreshCw, Users, User } from "lucide-react";
+import { Archive, RefreshCw, Users, User } from "lucide-react";
 import { useRecomendacionesEstudiante, useRecomendacionesGrupo } from "../../hooks/useRecomendaciones";
 import tutorGroupsService from "../../services/tutorGroupsService";
 import estudianteService from "../../services/estudianteService";
@@ -79,12 +79,12 @@ export default function TutorRecomendacionesPage() {
       {/* Encabezado */}
       <div style={styles.header}>
         <div style={styles.headerIcon}>
-          <Brain size={28} color="#7c3aed" />
+          <Users size={28} color="#7c3aed" />
         </div>
         <div>
-          <h1 style={styles.title}>Recomendaciones IA</h1>
+          <h1 style={styles.title}>Recomendaciones</h1>
           <p style={styles.subtitle}>
-            Feedback pedagógico generado por Gemini basado en las estadísticas reales de tus estudiantes
+            Sugerencias pedagógicas basadas en las estadísticas reales de tus estudiantes
           </p>
         </div>
       </div>
@@ -137,14 +137,14 @@ export default function TutorRecomendacionesPage() {
           </select>
         )}
 
-        {/* Botón generar IA */}
+        {/* Botón para generar recomendaciones */}
         <button
           style={{ ...styles.btnGenerar, opacity: hook.generando || !canGenerate ? 0.7 : 1 }}
           onClick={hook.generar}
           disabled={hook.generando || !canGenerate}
         >
           <RefreshCw size={16} style={{ animation: hook.generando ? "spin 1s linear infinite" : "none" }} />
-          {hook.generando ? "Generando con IA..." : "Generar Recomendación"}
+          {hook.generando ? "Generando..." : "Generar recomendación"}
         </button>
       </div>
 
@@ -157,7 +157,7 @@ export default function TutorRecomendacionesPage() {
         <div style={styles.list}>
           {hook.recomendaciones.length === 0 ? (
             <div style={styles.empty}>
-              <Brain size={48} color="#d1d5db" />
+              <Users size={48} color="#d1d5db" />
               <p>No hay recomendaciones activas. Genera una con el botón de arriba.</p>
             </div>
           ) : (
@@ -192,7 +192,6 @@ function RecomendacionCard({ recomendacion, onArchivar }) {
           <span style={styles.habilidad}>{recomendacion.habilidad}</span>
         </div>
         <div style={styles.cardMeta}>
-          <span style={styles.modelo}>{recomendacion.modelo_ia ?? "IA"}</span>
           <span style={styles.fecha}>
             {new Date(recomendacion.generado_en).toLocaleDateString("es-CO")}
           </span>

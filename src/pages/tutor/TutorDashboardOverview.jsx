@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import {
   BookOpen, Users, PlayCircle, PauseCircle,
   TrendingUp, Award, Clock, ChevronRight,
-  Zap, Lightbulb, BarChart2, Star, Target,
+  Zap, BarChart2, Star, Target,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import tutorGroupsService from "../../services/tutorGroupsService";
@@ -350,7 +350,7 @@ export default function TutorDashboardOverview() {
       <div className="tov-bento">
 
         {/* Columna principal (2/3) */}
-        <div class="tov-main">
+        <div className="tov-main">
 
           {/* GRUPOS */}
           <div className="tov-panel">
@@ -441,15 +441,14 @@ export default function TutorDashboardOverview() {
             </div>
           )}
 
-          {/* Recomendaciones IA */}
+          {/* Recomendaciones */}
           {recs.length > 0 && (
             <div className="tov-panel">
               <div className="tov-ph">
                 <div>
-                  <span className="tov-eye">IA · Gemini</span>
+                  <span className="tov-eye">Seguimiento pedagógico</span>
                   <h2 className="tov-ptitle">Recomendaciones</h2>
                 </div>
-                <Lightbulb size={15} color="#bc59b1" />
               </div>
               <div className="tov-recs">
                 {recs.slice(0, 3).map((r, i) => (
