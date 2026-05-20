@@ -85,7 +85,7 @@ export default function AppRouter() {
         {/* ───────── RUTAS DEL ADMIN (institucional) ───────── */}
         <Route path="/admin/dashboard" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminDashboardPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/admin/usuarios" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><UsuariosPage /></RoleRoute></ProtectedRoute>} />
-        <Route path="/admin/solicitudes" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN, USER_ROLES.SUPERADMIN]}><SolicitudesPage /></RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/solicitudes" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><SolicitudesPage /></RoleRoute></ProtectedRoute>} />
 
         {/* ───────── RUTAS DEL SUPERADMIN (plataforma global) ───────── */}
         <Route

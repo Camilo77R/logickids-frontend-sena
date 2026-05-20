@@ -5,15 +5,16 @@ import StatCard from "../../components/common/StatCard";
 import AppShell from "../../components/layout/AppShell";
 import { useAuth } from "../../hooks/useAuth";
 import adminService from "../../services/adminService";
+import solicitudesService from "../../services/solicitudesService";
 import Notifications from "../../components/Notifications";
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
-  const { user, token } = useAuth(); // <--- AGREGAR token
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [pendingRequests, setPendingRequests] = useState(0); // <--- NUEVO
+  const [pendingRequests, setPendingRequests] = useState(0);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -22,25 +23,14 @@ export default function AdminDashboardPage() {
         const usersData = await adminService.listUsers();
         setUsers(usersData);
         setError("");
-        
-        // ==========================================================
-        // NUEVO: Cargar solicitudes pendientes
-        // ==========================================================
+
         try {
-          const response = await fetch("http://localhost:3000/api/solicitudes/admin/solicitudes", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.ok) {
-            const data = await response.json();
-            const pendientes = data.solicitudes?.filter(s => s.estado_solicitud === "pendiente").length || 0;
-            setPendingRequests(pendientes);
-          }
+          const solicitudes = await solicitudesService.listSolicitudes();
+          const pendientes = solicitudes.filter((solicitud) => solicitud.estado_solicitud === "pendiente").length;
+          setPendingRequests(pendientes);
         } catch (err) {
           console.error("Error cargando solicitudes:", err);
         }
-        
       } catch (loadError) {
         setError(loadError.message || "No fue posible cargar el dashboard del administrador.");
       } finally {
@@ -49,7 +39,7 @@ export default function AdminDashboardPage() {
     };
 
     loadDashboard();
-  }, [token]); // <--- AGREGAR token como dependencia
+  }, []);
 
   const summary = useMemo(() => {
     const tutors = users.filter((user) => user.rol === "tutor");
@@ -119,9 +109,9 @@ export default function AdminDashboardPage() {
         </div>
         <div className="lk-span-3">
           <StatCard
-            label="Pendientes de activar"
+            label="Tutores inactivos"
             value={isLoading ? "..." : summary.inactiveTutors}
-            helpText="Solicitudes nuevas o inactivas."
+            helpText="Aún no operan clases."
             tone="purple"
           />
         </div>

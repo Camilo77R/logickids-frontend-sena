@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AlertCircle, Send, CheckCircle, Mail, FileText, MessageSquare } from 'lucide-react';
+import { request } from '../services/httpClient';
 
 export default function SolicitarReactivacionPage() {
   const navigate = useNavigate();
@@ -32,24 +33,16 @@ export default function SolicitarReactivacionPage() {
     setStatus({ loading: true, error: '', success: false });
 
     try {
-      const response = await fetch('http://localhost:3000/api/solicitudes/reactivacion', {
+      await request('/solicitudes/reactivacion', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: formData.email,                      // email de la cuenta (obligatorio)
-          correo_respuesta: formData.correo_respuesta, // opcional
+        auth: false,
+        body: {
+          email: formData.email,
+          correo_respuesta: formData.correo_respuesta,
           motivo: formData.motivo,
-          descripcion: formData.descripcion
-        })
+          descripcion: formData.descripcion,
+        },
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.details || data.error || 'Error al enviar la solicitud');
-      }
 
       setStatus({ loading: false, error: '', success: true });
     } catch (error) {

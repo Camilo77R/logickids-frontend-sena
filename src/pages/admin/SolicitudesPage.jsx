@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Eye, CheckCircle, XCircle, Clock, Search, X } from "lucide-react";
+import { Eye, CheckCircle, XCircle, Search, X } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
-import { useAuth } from "../../hooks/useAuth";
 import EmptyState from "../../components/common/EmptyState";
-import StatusBadge from "../../components/common/StatusBadge";
+import solicitudesService from "../../services/solicitudesService";
 
 // Filtros por estado
 const STATUS_FILTERS = [
@@ -42,8 +40,6 @@ const getEstadoLabel = (estado) => {
 };
 
 export default function SolicitudesPage() {
-  const navigate = useNavigate();
-  const { token } = useAuth();
   const [solicitudes, setSolicitudes] = useState([]);
   const [filteredSolicitudes, setFilteredSolicitudes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,18 +55,8 @@ export default function SolicitudesPage() {
   const loadSolicitudes = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/api/solicitudes/admin/solicitudes", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Error al cargar las solicitudes");
-      }
-
-      const data = await response.json();
-      setSolicitudes(data.solicitudes || []);
+      const data = await solicitudesService.listSolicitudes();
+      setSolicitudes(data);
       setError("");
     } catch (err) {
       setError(err.message);
@@ -106,19 +92,7 @@ export default function SolicitudesPage() {
   // Aprobar solicitud
   const handleAprobar = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/solicitudes/admin/solicitudes/${id}/aprobar`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error al aprobar la solicitud");
-      }
-
+      await solicitudesService.aprobarSolicitud(id);
       setFeedback({ type: "success", message: "Solicitud aprobada y usuario reactivado ✅" });
       loadSolicitudes();
       setSelectedSolicitud(null);
@@ -144,20 +118,7 @@ export default function SolicitudesPage() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/solicitudes/admin/solicitudes/${selectedSolicitud.id_solicitud}/rechazar`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ motivo_rechazo: rechazoMotivo }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error al rechazar la solicitud");
-      }
-
+      await solicitudesService.rechazarSolicitud(selectedSolicitud.id, rechazoMotivo);
       setFeedback({ type: "success", message: "Solicitud rechazada. Se ha notificado al tutor." });
       setShowRechazoModal(false);
       setSelectedSolicitud(null);
@@ -292,7 +253,7 @@ export default function SolicitudesPage() {
                 </thead>
                 <tbody>
                   {filteredSolicitudes.map((solicitud) => (
-                    <tr key={solicitud.id_solicitud}>
+                    <tr key={solicitud.id}>
                       <td>{new Date(solicitud.fecha_solicitud).toLocaleDateString()}</td>
                       <td>
                         <strong>{solicitud.tutor_nombre}</strong>
@@ -372,7 +333,7 @@ export default function SolicitudesPage() {
             <div className="lk-modal-footer">
               <button
                 className="lk-btn lk-btn--success"
-                onClick={() => handleAprobar(selectedSolicitud.id_solicitud)}
+                onClick={() => handleAprobar(selectedSolicitud.id)}
               >
                 <CheckCircle size={18} /> Aprobar
               </button>
