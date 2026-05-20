@@ -378,10 +378,7 @@ export default function SolicitudesPage() {
         </section>
 
         {showRechazoModal ? (
-          <div
-            className="lk-role-modal-overlay"
-            onClick={() => setShowRechazoModal(false)}
-          >
+          <div className="lk-role-modal-overlay" onClick={() => setShowRechazoModal(false)}>
             <div className="lk-role-modal" onClick={(event) => event.stopPropagation()}>
               <header className="lk-role-modal__header">
                 <div>

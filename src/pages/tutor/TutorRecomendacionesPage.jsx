@@ -2,12 +2,11 @@
  * TutorRecomendacionesPage
  *
  * Mantiene la línea visual reciente del frontend y agrega el flujo
- * CSV + FastAPI para generar recomendaciones filtradas por grupo o estudiante.
+ * complementario por archivo de datos para el tutor.
  */
 import { useEffect, useMemo, useState } from "react";
 import {
   Archive,
-  Brain,
   FileSpreadsheet,
   RefreshCw,
   User,
@@ -51,18 +50,16 @@ export default function TutorRecomendacionesPage() {
   const [csvGrupos, setCsvGrupos] = useState([]);
   const [selectedCsvGrupoId, setSelectedCsvGrupoId] = useState("");
   const [selectedCsvEstudianteId, setSelectedCsvEstudianteId] = useState("");
-  const [recomendacionesCsvIA, setRecomendacionesCsvIA] = useState([]);
+  const [recomendacionesCsv, setRecomendacionesCsv] = useState([]);
   const [csvError, setCsvError] = useState(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [isLoadingStudents, setIsLoadingStudents] = useState(false);
-  const [isGeneratingCsvIA, setIsGeneratingCsvIA] = useState(false);
+  const [isGeneratingCsv, setIsGeneratingCsv] = useState(false);
 
   const hookEstudiante = useRecomendacionesEstudiante(
     modo === "estudiante" ? estudianteSeleccionado : null
   );
-  const hookGrupo = useRecomendacionesGrupo(
-    modo === "grupo" ? grupoSeleccionado : null
-  );
+  const hookGrupo = useRecomendacionesGrupo(modo === "grupo" ? grupoSeleccionado : null);
   const hook = modo === "estudiante" ? hookEstudiante : hookGrupo;
 
   const selectedCsvGroup = useMemo(
@@ -74,11 +71,6 @@ export default function TutorRecomendacionesPage() {
     if (!selectedCsvGrupoId) return [];
     return selectedCsvGroup?.estudiantes ?? [];
   }, [selectedCsvGroup, selectedCsvGrupoId]);
-
-  const selectedCsvStudent = useMemo(
-    () => csvStudents.find((item) => String(item.id) === String(selectedCsvEstudianteId)) ?? null,
-    [csvStudents, selectedCsvEstudianteId]
-  );
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -157,8 +149,8 @@ export default function TutorRecomendacionesPage() {
   const canGenerate =
     modo === "estudiante" ? Boolean(estudianteSeleccionado) : Boolean(grupoSeleccionado);
 
-  const handleGenerateCsvIA = async () => {
-    setIsGeneratingCsvIA(true);
+  const handleGenerateCsv = async () => {
+    setIsGeneratingCsv(true);
     setCsvError(null);
 
     try {
@@ -166,12 +158,12 @@ export default function TutorRecomendacionesPage() {
         grupoId: selectedCsvGrupoId,
         estudianteId: selectedCsvEstudianteId,
       });
-      setRecomendacionesCsvIA(result.recomendaciones ?? []);
+      setRecomendacionesCsv(result.recomendaciones ?? []);
     } catch (error) {
-      setRecomendacionesCsvIA([]);
-      setCsvError(error.message || "No fue posible ejecutar el flujo CSV con FastAPI.");
+      setRecomendacionesCsv([]);
+      setCsvError(error.message || "No fue posible ejecutar el análisis complementario.");
     } finally {
-      setIsGeneratingCsvIA(false);
+      setIsGeneratingCsv(false);
     }
   };
 
@@ -183,12 +175,13 @@ export default function TutorRecomendacionesPage() {
     <div style={styles.container}>
       <div style={styles.header}>
         <div style={styles.headerIcon}>
-          <Brain size={28} color="#7c3aed" />
+          <Users size={28} color="#7c3aed" />
         </div>
         <div>
-          <h1 style={styles.title}>Recomendaciones IA</h1>
+          <h1 style={styles.title}>Recomendaciones</h1>
           <p style={styles.subtitle}>
-            Feedback pedagógico generado por IA según el rendimiento individual, grupal y el flujo CSV + FastAPI.
+            Sugerencias pedagógicas basadas en el rendimiento individual, grupal y los registros
+            disponibles.
           </p>
         </div>
       </div>
@@ -201,45 +194,45 @@ export default function TutorRecomendacionesPage() {
               onClick={() => setModo("estudiante")}
               type="button"
             >
-              <User size={16} /> Por Estudiante
+              <User size={16} /> Por estudiante
             </button>
             <button
               style={{ ...styles.modeBtn, ...(modo === "grupo" ? styles.modeBtnActive : {}) }}
               onClick={() => setModo("grupo")}
               type="button"
             >
-              <Users size={16} /> Por Grupo
+              <Users size={16} /> Por grupo
             </button>
           </div>
 
           <select
             style={styles.select}
             value={grupoSeleccionado ?? ""}
-            onChange={(e) => setGrupoSeleccionado(Number(e.target.value))}
+            onChange={(event) => setGrupoSeleccionado(Number(event.target.value))}
           >
             <option value="">-- Selecciona un grupo --</option>
-            {grupos.map((g) => (
-              <option key={g.id_grupo ?? g.id} value={g.id_grupo ?? g.id}>
-                {g.nombre}
+            {grupos.map((group) => (
+              <option key={group.id_grupo ?? group.id} value={group.id_grupo ?? group.id}>
+                {group.nombre}
               </option>
             ))}
           </select>
 
-          {modo === "estudiante" && (
+          {modo === "estudiante" ? (
             <select
               style={styles.select}
               value={estudianteSeleccionado ?? ""}
-              onChange={(e) => setEstudianteSeleccionado(Number(e.target.value))}
+              onChange={(event) => setEstudianteSeleccionado(Number(event.target.value))}
               disabled={!grupoSeleccionado || isLoadingStudents}
             >
               <option value="">-- Selecciona un estudiante --</option>
-              {estudiantes.map((e) => (
-                <option key={e.id_estudiante ?? e.id} value={e.id_estudiante ?? e.id}>
-                  {e.nombre}
+              {estudiantes.map((student) => (
+                <option key={student.id_estudiante ?? student.id} value={student.id_estudiante ?? student.id}>
+                  {student.nombre}
                 </option>
               ))}
             </select>
-          )}
+          ) : null}
 
           <button
             style={{ ...styles.btnGenerar, opacity: hook.generando || !canGenerate ? 0.7 : 1 }}
@@ -251,11 +244,11 @@ export default function TutorRecomendacionesPage() {
               size={16}
               style={{ animation: hook.generando ? "spin 1s linear infinite" : "none" }}
             />
-            {hook.generando ? "Generando con IA..." : "Generar Recomendación"}
+            {hook.generando ? "Generando..." : "Generar recomendación"}
           </button>
         </div>
 
-        {hook.error && <div style={styles.error}>{hook.error}</div>}
+        {hook.error ? <div style={styles.error}>{hook.error}</div> : null}
         {hook.loading ? (
           <LoadingState message="Cargando recomendaciones..." />
         ) : (
@@ -263,14 +256,14 @@ export default function TutorRecomendacionesPage() {
             {hook.recomendaciones.length === 0 ? (
               <EmptyState
                 title="Sin recomendaciones activas"
-                description="Genera una recomendación con IA para comenzar el seguimiento."
+                description="Genera una recomendación para comenzar el seguimiento."
               />
             ) : (
-              hook.recomendaciones.map((rec) => (
+              hook.recomendaciones.map((recommendation) => (
                 <RecomendacionCard
-                  key={rec.id}
-                  recomendacion={rec}
-                  onArchivar={() => hook.archivar(rec.id)}
+                  key={recommendation.id}
+                  recomendacion={recommendation}
+                  onArchivar={() => hook.archivar(recommendation.id)}
                 />
               ))
             )}
@@ -282,10 +275,11 @@ export default function TutorRecomendacionesPage() {
         <div style={styles.csvHeader}>
           <div style={styles.csvHeaderTitle}>
             <FileSpreadsheet size={20} />
-            <strong>CSV + FastAPI</strong>
+            <strong>Análisis complementario</strong>
           </div>
           <p style={styles.csvSubtitle}>
-            Ejecuta recomendaciones desde el archivo `datos_estudiantes.csv`, filtrando por grupo o por estudiante.
+            Genera sugerencias adicionales a partir del archivo de datos filtrando por grupo o por
+            estudiante.
           </p>
         </div>
 
@@ -293,12 +287,12 @@ export default function TutorRecomendacionesPage() {
           <select
             style={styles.select}
             value={selectedCsvGrupoId}
-            onChange={(e) => setSelectedCsvGrupoId(e.target.value)}
+            onChange={(event) => setSelectedCsvGrupoId(event.target.value)}
           >
-            <option value="">-- Selecciona un grupo del CSV --</option>
-            {csvGrupos.map((grupo) => (
-              <option key={grupo.id} value={String(grupo.id)}>
-                {grupo.nombre}
+            <option value="">-- Selecciona un grupo del archivo --</option>
+            {csvGrupos.map((group) => (
+              <option key={group.id} value={String(group.id)}>
+                {group.nombre}
               </option>
             ))}
           </select>
@@ -306,7 +300,7 @@ export default function TutorRecomendacionesPage() {
           <select
             style={styles.select}
             value={selectedCsvEstudianteId}
-            onChange={(e) => setSelectedCsvEstudianteId(e.target.value)}
+            onChange={(event) => setSelectedCsvEstudianteId(event.target.value)}
             disabled={!selectedCsvGrupoId}
           >
             <option value="">-- Todos los estudiantes del grupo --</option>
@@ -318,33 +312,31 @@ export default function TutorRecomendacionesPage() {
           </select>
 
           <button
-            style={{ ...styles.btnCsv, opacity: isGeneratingCsvIA || !selectedCsvGrupoId ? 0.7 : 1 }}
-            onClick={handleGenerateCsvIA}
-            disabled={isGeneratingCsvIA || !selectedCsvGrupoId}
+            style={{ ...styles.btnCsv, opacity: isGeneratingCsv || !selectedCsvGrupoId ? 0.7 : 1 }}
+            onClick={handleGenerateCsv}
+            disabled={isGeneratingCsv || !selectedCsvGrupoId}
             type="button"
           >
             <FileSpreadsheet size={16} />
-            {isGeneratingCsvIA ? "Procesando CSV..." : "Generar desde CSV IA"}
+            {isGeneratingCsv ? "Procesando..." : "Generar análisis"}
           </button>
         </div>
 
-        {csvError && <div style={styles.error}>{csvError}</div>}
+        {csvError ? <div style={styles.error}>{csvError}</div> : null}
 
-        {isGeneratingCsvIA ? (
-          <LoadingState message="Procesando archivo CSV en el servicio FastAPI..." />
-        ) : recomendacionesCsvIA.length === 0 ? (
+        {isGeneratingCsv ? (
+          <LoadingState message="Procesando archivo de datos..." />
+        ) : recomendacionesCsv.length === 0 ? (
           <EmptyState
-            title="Sin resultados del flujo CSV"
-            description="Selecciona un grupo del CSV y genera recomendaciones desde FastAPI."
+            title="Sin resultados complementarios"
+            description="Selecciona un grupo y genera sugerencias adicionales."
           />
         ) : (
           <div style={styles.list}>
-            {recomendacionesCsvIA.map((item, index) => (
+            {recomendacionesCsv.map((item, index) => (
               <CsvRecommendationCard
                 key={`${item.estudiante_id}-${item.habilidad_critica}-${index}`}
                 item={item}
-                groupName={selectedCsvGroup?.nombre}
-                studentName={selectedCsvStudent?.nombre}
               />
             ))}
           </div>
@@ -367,9 +359,13 @@ function RecomendacionCard({ recomendacion, onArchivar }) {
           <span style={styles.habilidad}>{recomendacion.habilidad}</span>
         </div>
         <div style={styles.cardMeta}>
-          <span style={styles.modelo}>{recomendacion.modelo_ia ?? "IA"}</span>
           <span style={styles.fecha}>{formatDate(recomendacion.generado_en)}</span>
-          <button style={styles.btnArchivar} onClick={onArchivar} title="Archivar recomendación" type="button">
+          <button
+            style={styles.btnArchivar}
+            onClick={onArchivar}
+            title="Archivar recomendación"
+            type="button"
+          >
             <Archive size={16} />
           </button>
         </div>
@@ -392,7 +388,6 @@ function CsvRecommendationCard({ item }) {
           <span style={styles.habilidad}>{item.nombre ?? "Estudiante sin nombre"}</span>
         </div>
         <div style={styles.cardMeta}>
-          <span style={styles.modelo}>{item.modelo_usado ?? "IA"}</span>
           <span style={styles.fecha}>{formatDate(item.fecha_generacion)}</span>
         </div>
       </div>
@@ -407,16 +402,7 @@ function CsvRecommendationCard({ item }) {
         <p style={styles.metaLine}>
           Prioridad: <strong>{item.prioridad ?? "N/D"}</strong>
         </p>
-        <p style={styles.metaLine}>
-          Tipo de salida: <strong>{item.es_simulada ? "Simulada" : "IA generativa"}</strong>
-        </p>
       </div>
-
-      {item.ia_error ? (
-        <p style={{ ...styles.metaLine, color: "#dc2626", marginTop: "8px" }}>
-          Detalle IA: <strong>{item.ia_error}</strong>
-        </p>
-      ) : null}
 
       <p style={styles.mensaje}>{item.recomendacion ?? "Sin recomendación generada."}</p>
     </div>
@@ -437,7 +423,13 @@ const styles = {
     border: "1px solid #f3f4f6",
     marginBottom: "24px",
   },
-  controls: { display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", marginBottom: "24px" },
+  controls: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+    alignItems: "center",
+    marginBottom: "24px",
+  },
   modeToggle: { display: "flex", background: "#f3f4f6", borderRadius: "8px", padding: "4px" },
   modeBtn: {
     display: "flex",
@@ -492,10 +484,28 @@ const styles = {
     fontSize: "14px",
   },
   csvHeader: { marginBottom: "18px" },
-  csvHeaderTitle: { display: "flex", gap: "10px", alignItems: "center", marginBottom: "8px", color: "#1f2937" },
+  csvHeaderTitle: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+    marginBottom: "8px",
+    color: "#1f2937",
+  },
   csvSubtitle: { margin: 0, color: "#6b7280", fontSize: "14px", lineHeight: 1.6 },
-  csvFilters: { display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", marginBottom: "18px" },
-  error: { background: "#fee2e2", color: "#dc2626", padding: "12px 16px", borderRadius: "8px", marginBottom: "16px" },
+  csvFilters: {
+    display: "flex",
+    gap: "12px",
+    flexWrap: "wrap",
+    alignItems: "center",
+    marginBottom: "18px",
+  },
+  error: {
+    background: "#fee2e2",
+    color: "#dc2626",
+    padding: "12px 16px",
+    borderRadius: "8px",
+    marginBottom: "16px",
+  },
   list: { display: "flex", flexDirection: "column", gap: "16px" },
   card: {
     background: "white",
@@ -512,10 +522,15 @@ const styles = {
     flexWrap: "wrap",
     gap: "8px",
   },
-  badge: { padding: "2px 10px", borderRadius: "999px", color: "white", fontSize: "11px", fontWeight: 700 },
+  badge: {
+    padding: "2px 10px",
+    borderRadius: "999px",
+    color: "white",
+    fontSize: "11px",
+    fontWeight: 700,
+  },
   habilidad: { fontSize: "14px", fontWeight: 600, color: "#374151" },
   cardMeta: { display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" },
-  modelo: { fontSize: "12px", color: "#9ca3af", background: "#f3f4f6", padding: "2px 8px", borderRadius: "6px" },
   fecha: { fontSize: "12px", color: "#9ca3af" },
   btnArchivar: {
     background: "transparent",
@@ -525,7 +540,13 @@ const styles = {
     display: "flex",
     alignItems: "center",
   },
-  mensaje: { fontSize: "14px", color: "#4b5563", lineHeight: 1.7, whiteSpace: "pre-wrap", marginBottom: 0 },
+  mensaje: {
+    fontSize: "14px",
+    color: "#4b5563",
+    lineHeight: 1.7,
+    whiteSpace: "pre-wrap",
+    marginBottom: 0,
+  },
   csvMetaGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",

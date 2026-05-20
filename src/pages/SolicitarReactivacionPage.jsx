@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import { Mail, FileText, MessageSquare, CheckCircle, ArrowLeft } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft, CheckCircle, FileText, Mail, MessageSquare } from "lucide-react";
 import AuthPosterLayout from "../components/auth/layout/AuthPosterLayout";
 import AuthFormColumn from "../components/auth/form/AuthFormColumn";
 import AuthFormHeader from "../components/auth/form/AuthFormHeader";
 import LkIconTextField from "../components/auth/form/LkIconTextField";
 import LkPrimaryButton from "../components/auth/form/LkPrimaryButton";
+import { request } from "../services/httpClient";
 import logoWordmark from "../assets/imgs/logoLogickids transparente.png";
 import loginPoster from "../assets/imgs/logickIdsfofndoo.jpg";
 import "../styles/auth.css";
@@ -26,33 +27,36 @@ export default function SolicitarReactivacionPage() {
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
     setServerError("");
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const nextErrors = {};
+
     if (!formData.motivo.trim()) {
-      newErrors.motivo = "El motivo es obligatorio.";
+      nextErrors.motivo = "El motivo es obligatorio.";
+    } else if (formData.motivo.trim().length < 5) {
+      nextErrors.motivo = "El motivo debe tener al menos 5 caracteres.";
     }
-    if (formData.motivo.trim().length < 5) {
-      newErrors.motivo = "El motivo debe tener al menos 5 caracteres.";
-    }
+
     if (
       formData.correo_respuesta &&
       !/\S+@\S+\.\S+/.test(formData.correo_respuesta)
     ) {
-      newErrors.correo_respuesta = "Ingresa un correo válido.";
+      nextErrors.correo_respuesta = "Ingresa un correo válido.";
     }
-    return newErrors;
+
+    return nextErrors;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const validationErrors = validateForm();
+
     if (Object.keys(validationErrors).length) {
       setErrors(validationErrors);
       return;
@@ -62,48 +66,25 @@ export default function SolicitarReactivacionPage() {
     setServerError("");
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/solicitudes/reactivacion",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            correo_respuesta: formData.correo_respuesta,
-            motivo: formData.motivo,
-            descripcion: formData.descripcion,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error("No se pudo conectar con el servidor. Verifica que el backend esté corriendo.");
-        }
-        if (response.status === 400 && data.message?.includes("pendiente")) {
-          throw new Error("⏳ Ya tienes una solicitud pendiente. Espera la respuesta del administrador.");
-        }
-        if (data.errors) {
-          const motivoError = data.errors.find(e => e.field === "motivo");
-          if (motivoError) {
-            throw new Error("📝 El motivo debe tener al menos 5 caracteres.");
-          }
-          throw new Error(data.errors[0]?.message || "Error en los datos del formulario.");
-        }
-        throw new Error(data.details || data.message || data.error || "Error al enviar la solicitud");
-      }
+      await request("/solicitudes/reactivacion", {
+        method: "POST",
+        auth: false,
+        body: {
+          email: formData.email,
+          correo_respuesta: formData.correo_respuesta,
+          motivo: formData.motivo,
+          descripcion: formData.descripcion,
+        },
+      });
 
       setSuccess(true);
     } catch (error) {
-      setServerError(error.message);
+      setServerError(error.message || "No fue posible enviar la solicitud.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  // ── Pantalla de éxito ──
   if (success) {
     return (
       <AuthPosterLayout backgroundSrc={loginPoster}>
@@ -112,7 +93,7 @@ export default function SolicitarReactivacionPage() {
             <AuthFormHeader
               iconSrc={logoWordmark}
               iconAlt="LogicKids"
-              title="¡Solicitud Enviada!"
+              title="¡Solicitud enviada!"
               subtitle={`Recibirás la respuesta en: ${formData.correo_respuesta || formData.email}`}
               variant="poster"
               iconVariant="wordmark"
@@ -150,7 +131,6 @@ export default function SolicitarReactivacionPage() {
               </p>
             </div>
 
-            {/* Botón IDÉNTICO al del login con flecha inversa */}
             <button
               type="button"
               onClick={() => navigate("/login")}
@@ -163,7 +143,10 @@ export default function SolicitarReactivacionPage() {
                 position: "relative",
               }}
             >
-              <span className="lk-cta-label" style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <span
+                className="lk-cta-label"
+                style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
+              >
                 <ArrowLeft size={18} /> Volver al inicio de sesión
               </span>
             </button>
@@ -173,7 +156,6 @@ export default function SolicitarReactivacionPage() {
     );
   }
 
-  // ── Formulario principal ──
   return (
     <AuthPosterLayout backgroundSrc={loginPoster}>
       <AuthFormColumn>
@@ -181,7 +163,7 @@ export default function SolicitarReactivacionPage() {
           <AuthFormHeader
             iconSrc={logoWordmark}
             iconAlt="LogicKids"
-            title="Cuenta Suspendida"
+            title="Cuenta suspendida"
             subtitle="Solicita la reactivación de tu cuenta completando el formulario."
             variant="poster"
             iconVariant="wordmark"
@@ -205,7 +187,7 @@ export default function SolicitarReactivacionPage() {
             </p>
           </div>
 
-          {serverError && (
+          {serverError ? (
             <div
               style={{
                 background: "#FEE2E2",
@@ -219,7 +201,7 @@ export default function SolicitarReactivacionPage() {
                 {serverError}
               </p>
             </div>
-          )}
+          ) : null}
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="lk-field">
@@ -233,9 +215,7 @@ export default function SolicitarReactivacionPage() {
                 disabled
                 style={{ backgroundColor: "#f3f4f6", cursor: "not-allowed" }}
               />
-              <span className="lk-field-hint">
-                Esta es la cuenta que será reactivada
-              </span>
+              <span className="lk-field-hint">Esta es la cuenta que será reactivada</span>
             </div>
 
             <LkIconTextField

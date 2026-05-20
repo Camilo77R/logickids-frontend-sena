@@ -13,8 +13,8 @@ import AppShell from "../../components/layout/AppShell";
 import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
 import DashboardPanel from "../../components/dashboard/DashboardPanel";
 import QuickActionCard from "../../components/dashboard/QuickActionCard";
-import adminService from "../../services/adminService";
 import { useAuth } from "../../hooks/useAuth";
+import adminService from "../../services/adminService";
 import { buildAdminDashboardView } from "./adminDashboard.selectors";
 
 export default function AdminDashboardPage() {
@@ -189,7 +189,11 @@ export default function AdminDashboardPage() {
                 >
                   <div className="lk-role-list__top">
                     <span className="lk-role-list__title">{tutor.nombre}</span>
-                    <span className={`lk-role-list__meta lk-role-list__meta--${resolveTutorTone(tutor.estado)}`}>
+                    <span
+                      className={`lk-role-list__meta lk-role-list__meta--${resolveTutorTone(
+                        tutor.estado
+                      )}`}
+                    >
                       {tutor.estado}
                     </span>
                   </div>
@@ -230,9 +234,7 @@ export default function AdminDashboardPage() {
                   </article>
                 ))
               ) : (
-                <p className="lk-role-note">
-                  No hay solicitudes recientes en este momento.
-                </p>
+                <p className="lk-role-note">No hay solicitudes recientes en este momento.</p>
               )}
             </div>
           </DashboardPanel>

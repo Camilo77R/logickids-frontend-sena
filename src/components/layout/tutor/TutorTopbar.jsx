@@ -26,7 +26,7 @@ const TopbarBrand = () => (
 const TopbarGreeting = ({ firstName }) => (
   <div className="lk-tutor-topbar-greeting-container">
     <div className="lk-tutor-topbar-greeting">
-      ¡Hola, {firstName}! 👋
+      ¡Hola, {firstName}!
     </div>
     <div className="lk-tutor-topbar-subtitle">
       Revisa el progreso, resultados y tiempo de juego

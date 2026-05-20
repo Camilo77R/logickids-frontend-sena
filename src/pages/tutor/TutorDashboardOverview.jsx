@@ -4,7 +4,7 @@
  * pink como color de marca, estilo SaaS moderno con leaderboard.
  *
  * Datos:
- *   GET /grupos           → grupos + sesion_activa
+ *   GET /grupos           → grupos + sesion_activa + minijuego de sesión
  *   GET /estudiantes      → lista completa (nombre, sesion_activa, grupo_id)
  *   GET /minijuegos       → catálogo activo
  *   GET /estadisticas/grupo/:id  → precisión por habilidad
@@ -15,14 +15,14 @@ import { useNavigate } from "react-router-dom";
 import {
   BookOpen, Users, PlayCircle, PauseCircle,
   TrendingUp, Award, Clock, ChevronRight,
-  Zap, Lightbulb, BarChart2, Star, Target,
+  Zap, BarChart2, Star, Target,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import tutorGroupsService from "../../services/tutorGroupsService";
 import estudianteService from "../../services/estudianteService";
 import estadisticasService from "../../services/estadisticasService";
 import recomendacionesService from "../../services/recomendacionesService";
-import { request } from "../../services/httpClient";
+import SessionMinigameModal from "../../components/tutor/SessionMinigameModal";
 import "../../styles/tutor-ov.css";
 
 const isSesion = (v) => v === true || v === "true" || v === "t" || v === 1;
@@ -89,6 +89,11 @@ function GroupCard({ group, onToggle, loading }) {
       </div>
       <h3 className="tov-gcard__name">{group.nombre}</h3>
       <p className="tov-gcard__desc">{group.descripcion?.slice(0, 48) || "Sin descripción"}</p>
+      <p className="tov-gcard__desc">
+        {group.sesion_minijuego_titulo
+          ? `Minijuego: ${group.sesion_minijuego_titulo}`
+          : "Elige un minijuego al abrir la clase"}
+      </p>
       <div className="tov-gcard__footer">
         <button
           className={`tov-gcard__btn ${active ? "tov-gcard__btn--close" : "tov-gcard__btn--open"}`}
@@ -136,6 +141,12 @@ export default function TutorDashboardOverview() {
   const [loading,  setLoading]  = useState(true);
   const [toggling, setToggling] = useState(null);
   const [toast,    setToast]    = useState(null);
+  const [sessionPicker, setSessionPicker] = useState({
+    show: false,
+    group: null,
+    minijuegoId: "",
+    error: "",
+  });
 
   useEffect(() => {
     const boot = async () => {
@@ -143,7 +154,7 @@ export default function TutorDashboardOverview() {
         const [g, s, gms] = await Promise.all([
           tutorGroupsService.getGroups(),
           estudianteService.listEstudiantes(),
-          request("/minijuegos").then((p) => p?.data ?? (Array.isArray(p) ? p : [])),
+          tutorGroupsService.listarMinijuegosActivos(),
         ]);
         setGroups(g);
         setStudents(s);
@@ -178,24 +189,114 @@ export default function TutorDashboardOverview() {
     return aL - bL || a.nombre.localeCompare(b.nombre);
   });
 
+  const closeSessionPicker = () => {
+    setSessionPicker({
+      show: false,
+      group: null,
+      minijuegoId: "",
+      error: "",
+    });
+  };
+
+  const openSessionPicker = (group) => {
+    if (games.length === 0) {
+      flash("err", "No hay minijuegos activos disponibles para abrir la clase.");
+      return;
+    }
+
+    setSessionPicker({
+      show: true,
+      group,
+      minijuegoId: String(group.sesion_minijuego_id ?? games[0]?.id ?? ""),
+      error: "",
+    });
+  };
+
   const handleToggle = async (group) => {
-    const next = !isSesion(group.sesion_activa);
+    if (!isSesion(group.sesion_activa)) {
+      openSessionPicker(group);
+      return;
+    }
+
     setToggling(group.id);
     try {
-      if (next) await tutorGroupsService.abrirSesionClase(group.id);
-      else      await tutorGroupsService.cerrarSesionClase(group.id);
+      await tutorGroupsService.cerrarSesionClase(group.id);
       setGroups((prev) =>
-        prev.map((g) => g.id === group.id ? { ...g, sesion_activa: next } : g)
+        prev.map((item) =>
+          item.id === group.id
+            ? {
+                ...item,
+                sesion_activa: false,
+                sesion_minijuego_id: null,
+                sesion_minijuego_slug: null,
+                sesion_minijuego_titulo: null,
+              }
+            : item
+        )
       );
-      flash("ok", next ? `"${group.nombre}" abierta ✓` : `"${group.nombre}" cerrada.`);
+      flash("ok", `"${group.nombre}" cerrada.`);
     } catch (err) {
       flash("err", err?.message ?? "Error al cambiar sesión.");
-    } finally { setToggling(null); }
+    } finally {
+      setToggling(null);
+    }
   };
 
   const flash = (type, text) => {
     setToast({ type, text });
     setTimeout(() => setToast(null), 3500);
+  };
+
+  const handleConfirmOpenSession = async () => {
+    if (!sessionPicker.group) {
+      closeSessionPicker();
+      return;
+    }
+
+    if (!sessionPicker.minijuegoId) {
+      setSessionPicker((prev) => ({
+        ...prev,
+        error: "Debes elegir un minijuego antes de abrir la clase.",
+      }));
+      return;
+    }
+
+    setToggling(sessionPicker.group.id);
+
+    try {
+      await tutorGroupsService.abrirSesionClase(
+        sessionPicker.group.id,
+        Number(sessionPicker.minijuegoId)
+      );
+
+      const selectedMinigame = games.find(
+        (minijuego) => String(minijuego.id) === String(sessionPicker.minijuegoId)
+      );
+
+      setGroups((prev) =>
+        prev.map((group) =>
+          group.id === sessionPicker.group.id
+            ? {
+                ...group,
+                sesion_activa: true,
+                sesion_minijuego_id: Number(sessionPicker.minijuegoId),
+                sesion_minijuego_slug: selectedMinigame?.slug ?? null,
+                sesion_minijuego_titulo: selectedMinigame?.titulo ?? null,
+              }
+            : group
+        )
+      );
+
+      flash("ok", `"${sessionPicker.group.nombre}" abierta con ${selectedMinigame?.titulo ?? "el minijuego seleccionado"} ✓`);
+      closeSessionPicker();
+    } catch (err) {
+      setSessionPicker((prev) => ({
+        ...prev,
+        error: err?.message ?? "No fue posible abrir la clase.",
+      }));
+    } finally {
+      setToggling(null);
+    }
   };
 
   if (loading) return (
@@ -212,7 +313,7 @@ export default function TutorDashboardOverview() {
       {/* ── HERO — amarillo como acento fuerte ────────────────────────────── */}
       <div className="tov-hero">
         <div className="tov-hero__text">
-          <p className="tov-hero__eye">{getSaludo()}, {firstName} 👋</p>
+          <p className="tov-hero__eye">{getSaludo()}, {firstName}</p>
           <h1 className="tov-hero__h1">Panel del Tutor</h1>
           <p className="tov-hero__sub">
             {activeGroups > 0
@@ -266,7 +367,7 @@ export default function TutorDashboardOverview() {
               <div className="tov-empty">
                 <BookOpen size={24} />
                 <strong>Sin grupos</strong>
-                <p>Crea tu primer grupo desde "Mis Grupos".</p>
+                <p>Aún no tienes grupos disponibles.</p>
               </div>
             ) : (
               <div className="tov-gcards">
@@ -340,15 +441,14 @@ export default function TutorDashboardOverview() {
             </div>
           )}
 
-          {/* Recomendaciones IA */}
+          {/* Recomendaciones */}
           {recs.length > 0 && (
             <div className="tov-panel">
               <div className="tov-ph">
                 <div>
-                  <span className="tov-eye">IA · Gemini</span>
+                  <span className="tov-eye">Seguimiento pedagógico</span>
                   <h2 className="tov-ptitle">Recomendaciones</h2>
                 </div>
-                <Lightbulb size={15} color="#bc59b1" />
               </div>
               <div className="tov-recs">
                 {recs.slice(0, 3).map((r, i) => (
@@ -384,6 +484,24 @@ export default function TutorDashboardOverview() {
 
         </div>
       </div>
+
+      <SessionMinigameModal
+        show={sessionPicker.show}
+        groupName={sessionPicker.group?.nombre ?? "grupo"}
+        minijuegos={games}
+        selectedMinigameId={sessionPicker.minijuegoId}
+        onSelect={(value) =>
+          setSessionPicker((prev) => ({
+            ...prev,
+            minijuegoId: value,
+            error: "",
+          }))
+        }
+        onClose={closeSessionPicker}
+        onConfirm={handleConfirmOpenSession}
+        isSubmitting={Boolean(toggling)}
+        errorMessage={sessionPicker.error}
+      />
     </div>
   );
 }
