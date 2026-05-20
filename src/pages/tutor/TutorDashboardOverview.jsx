@@ -313,7 +313,7 @@ export default function TutorDashboardOverview() {
       {/* ── HERO — amarillo como acento fuerte ────────────────────────────── */}
       <div className="tov-hero">
         <div className="tov-hero__text">
-          <p className="tov-hero__eye">{getSaludo()}, {firstName} 👋</p>
+          <p className="tov-hero__eye">{getSaludo()}, {firstName}</p>
           <h1 className="tov-hero__h1">Panel del Tutor</h1>
           <p className="tov-hero__sub">
             {activeGroups > 0

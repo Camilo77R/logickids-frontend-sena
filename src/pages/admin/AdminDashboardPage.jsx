@@ -1,38 +1,48 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Activity, Clock3, ShieldAlert, UsersRound, Mail } from "lucide-react";
-import StatCard from "../../components/common/StatCard";
+import {
+  Activity,
+  Clock3,
+  Mail,
+  ShieldAlert,
+  UserCheck2,
+  UserCog2,
+  UserPlus2,
+  UsersRound,
+} from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
+import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
+import DashboardPanel from "../../components/dashboard/DashboardPanel";
+import QuickActionCard from "../../components/dashboard/QuickActionCard";
 import { useAuth } from "../../hooks/useAuth";
 import adminService from "../../services/adminService";
-import solicitudesService from "../../services/solicitudesService";
-import Notifications from "../../components/Notifications";
+import { buildAdminDashboardView } from "./adminDashboard.selectors";
 
 export default function AdminDashboardPage() {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [pendingRequests, setPendingRequests] = useState(0);
 
   useEffect(() => {
     const loadDashboard = async () => {
       try {
         setIsLoading(true);
-        const usersData = await adminService.listUsers();
-        setUsers(usersData);
-        setError("");
 
-        try {
-          const solicitudes = await solicitudesService.listSolicitudes();
-          const pendientes = solicitudes.filter((solicitud) => solicitud.estado_solicitud === "pendiente").length;
-          setPendingRequests(pendientes);
-        } catch (err) {
-          console.error("Error cargando solicitudes:", err);
-        }
+        const [usersData, requestsData] = await Promise.all([
+          adminService.listUsers(),
+          adminService.listReactivationRequests(),
+        ]);
+
+        setUsers(usersData);
+        setRequests(requestsData);
+        setPendingRequests(
+          requestsData.filter((request) => request.estado_solicitud === "pendiente").length
+        );
+        setError("");
       } catch (loadError) {
-        setError(loadError.message || "No fue posible cargar el dashboard del administrador.");
+        setError(loadError.message || "No fue posible cargar el panel institucional.");
       } finally {
         setIsLoading(false);
       }
@@ -41,235 +51,207 @@ export default function AdminDashboardPage() {
     loadDashboard();
   }, []);
 
-  const summary = useMemo(() => {
-    const tutors = users.filter((user) => user.rol === "tutor");
-    const activeTutors = tutors.filter((user) => user.estado === "activo");
-    const inactiveTutors = tutors.filter((user) => user.estado === "inactivo");
-    const suspendedTutors = tutors.filter((user) => user.estado === "suspendido");
+  const firstName = user?.nombre?.split(" ")[0] || "Profe";
 
-    return {
-      totalTutors: tutors.length,
-      activeTutors: activeTutors.length,
-      inactiveTutors: inactiveTutors.length,
-      suspendedTutors: suspendedTutors.length,
-    };
-  }, [users]);
+  const view = useMemo(
+    () =>
+      buildAdminDashboardView({
+        users,
+        pendingRequests,
+        institutionName: user?.institucion,
+      }),
+    [pendingRequests, user?.institucion, users]
+  );
+
+  const requestPreview = requests.slice(0, 4);
 
   return (
     <AppShell
-      title="Dashboard Institucional"
-      description="Gestiona los tutores de tu institución sin salir del scope permitido por el backend."
+      title={`Hola, ${firstName}`}
+      description="Supervisa tutores, activaciones y solicitudes dentro de tu institución."
+      notificationCount={pendingRequests}
     >
-      {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
+      <div className="lk-role-dashboard">
+        {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
-      <div className="lk-admin-grid">
-        <section className="lk-span-12" style={{ marginBottom: "0.5rem" }}>
-          <div
-            style={{
-              padding: "2rem",
-              borderRadius: "1.5rem",
-              background: "linear-gradient(135deg, rgba(23, 150, 237, 0.1), rgba(154, 79, 211, 0.12))",
-              border: "1px solid rgba(255, 255, 255, 0.7)",
-              backdropFilter: "blur(12px)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
+        <section className="lk-role-dashboard__hero">
+          <span className="lk-role-dashboard__hero-badge">Panel institucional</span>
+          <h2 className="lk-role-dashboard__hero-title">Tu institución bajo control</h2>
+          <p className="lk-role-dashboard__hero-subtitle">
+            Aquí concentras el pulso de tutores, activaciones y reactivaciones sin salir del
+            alcance que el backend permite para tu institución.
+          </p>
+
+          <div className="lk-role-dashboard__hero-tags">
+            {view.heroTags.map((tag) => (
+              <article key={tag.label} className="lk-role-dashboard__hero-tag">
+                <strong>{isLoading ? "..." : tag.value}</strong>
+                <span>{tag.label}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="lk-role-dashboard__metrics">
+          <DashboardMetricCard
+            icon={UsersRound}
+            label={view.metrics[0].label}
+            value={isLoading ? "..." : view.metrics[0].value}
+            description={view.metrics[0].description}
+            tone={view.metrics[0].tone}
+          />
+          <DashboardMetricCard
+            icon={UserCheck2}
+            label={view.metrics[1].label}
+            value={isLoading ? "..." : view.metrics[1].value}
+            description={view.metrics[1].description}
+            tone={view.metrics[1].tone}
+          />
+          <DashboardMetricCard
+            icon={UserPlus2}
+            label={view.metrics[2].label}
+            value={isLoading ? "..." : view.metrics[2].value}
+            description={view.metrics[2].description}
+            tone={view.metrics[2].tone}
+          />
+          <DashboardMetricCard
+            icon={ShieldAlert}
+            label={view.metrics[3].label}
+            value={isLoading ? "..." : view.metrics[3].value}
+            description={view.metrics[3].description}
+            tone={view.metrics[3].tone}
+          />
+        </section>
+
+        <section className="lk-role-dashboard__grid">
+          <DashboardPanel
+            eyebrow="Acciones rápidas"
+            title="Siguientes movimientos"
+            subtitle="Atajos para administrar las cuentas que hoy requieren atención."
           >
-            <div>
-              <h2 style={{ fontSize: "1.8rem", margin: "0 0 0.5rem", color: "#1d2737" }}>
-                Panel del administrador institucional
-              </h2>
-              <p className="lk-muted" style={{ margin: 0, fontSize: "1.05rem" }}>
-                Desde aquí activas, pausas y revisas tutores de tu colegio. La gestión global
-                de instituciones y minijuegos sigue siendo exclusiva del superadmin.
-              </p>
+            <div className="lk-role-quick-grid">
+              <QuickActionCard
+                to="/admin/usuarios"
+                icon={UsersRound}
+                title="Gestionar tutores"
+                description="Activa cuentas, revisa estados y filtra el personal de tu institución."
+                tone="purple"
+              />
+              <QuickActionCard
+                to="/admin/solicitudes"
+                icon={Mail}
+                title="Revisar solicitudes"
+                description="Atiende reactivaciones pendientes sin salir del flujo institucional."
+                tone="orange"
+              />
             </div>
-            <div style={{ color: "rgba(23, 150, 237, 0.8)" }}>
-              <Activity size={48} strokeWidth={1.5} />
+          </DashboardPanel>
+
+          <DashboardPanel
+            eyebrow="Pulso del tablero"
+            title="Salud de accesos"
+            subtitle="Indicadores clave para saber si tu institución está lista para operar."
+            aside={<Activity size={18} color="var(--lk-purple)" aria-hidden="true" />}
+          >
+            <div className="lk-role-inline-metric">
+              {view.progress.map((item) => (
+                <article key={item.key} className="lk-role-inline-metric__row">
+                  <div className="lk-role-inline-metric__label">
+                    <span>{item.label}</span>
+                    <strong>{isLoading ? "..." : item.value}</strong>
+                  </div>
+                  <div className="lk-role-inline-metric__track">
+                    <div
+                      className={`lk-role-inline-metric__fill lk-role-inline-metric__fill--${item.tone}`}
+                      style={{ width: `${isLoading ? 0 : item.percent}%` }}
+                    />
+                  </div>
+                </article>
+              ))}
             </div>
-          </div>
+          </DashboardPanel>
         </section>
 
-        <div className="lk-span-3">
-          <StatCard
-            label="Tutores registrados"
-            value={isLoading ? "..." : summary.totalTutors}
-            helpText="Cuentas de tutor visibles en tu institución."
-            tone="blue"
-          />
-        </div>
-        <div className="lk-span-3">
-          <StatCard
-            label="Tutores activos"
-            value={isLoading ? "..." : summary.activeTutors}
-            helpText="Ya pueden iniciar sesión."
-            tone="orange"
-          />
-        </div>
-        <div className="lk-span-3">
-          <StatCard
-            label="Tutores inactivos"
-            value={isLoading ? "..." : summary.inactiveTutors}
-            helpText="Aún no operan clases."
-            tone="purple"
-          />
-        </div>
-        <div className="lk-span-3">
-          <StatCard
-            label="Suspendidos"
-            value={isLoading ? "..." : summary.suspendedTutors}
-            helpText="Cuentas bloqueadas temporalmente."
-            tone="green"
-          />
-        </div>
+        <section className="lk-role-dashboard__grid">
+          <DashboardPanel
+            eyebrow="Visibilidad rápida"
+            title="Tutores que requieren contexto"
+            subtitle="Muestra breve del personal visible para el admin con el contrato actual."
+            aside={<UserCog2 size={18} color="var(--lk-purple)" aria-hidden="true" />}
+          >
+            <div className="lk-role-list">
+              {view.tutorPreview.map((tutor) => (
+                <article
+                  key={tutor.id}
+                  className={`lk-role-list__item lk-role-list__item--${resolveTutorTone(
+                    tutor.estado
+                  )}`}
+                >
+                  <div className="lk-role-list__top">
+                    <span className="lk-role-list__title">{tutor.nombre}</span>
+                    <span
+                      className={`lk-role-list__meta lk-role-list__meta--${resolveTutorTone(
+                        tutor.estado
+                      )}`}
+                    >
+                      {tutor.estado}
+                    </span>
+                  </div>
+                  <p className="lk-role-list__description">{tutor.email}</p>
+                </article>
+              ))}
+            </div>
+          </DashboardPanel>
 
-        <section className="lk-panel-card lk-span-8">
-          <h2>Accesos directos</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1rem", marginTop: "1rem" }}>
-            
-            {/* Botón existente: Gestión de Usuarios */}
-            <button
-              onClick={() => navigate("/admin/usuarios")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                padding: "1.5rem",
-                background: "#f8faff",
-                border: "1px solid var(--lk-color-border)",
-                borderRadius: "1rem",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "all 0.2s ease"
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-primary)")}
-              onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
-            >
-              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-primary)" }}>
-                <UsersRound size={32} strokeWidth={1.5} />
-              </div>
-              <div>
-                <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Gestión de Usuarios</strong>
-                <span className="lk-muted">Activa tutores, revisa institución y controla estados.</span>
-              </div>
-            </button>
-
-            {/* NUEVO BOTÓN: Solicitudes de Reactivación CON BADGE */}
-            <button
-              onClick={() => navigate("/admin/solicitudes")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                padding: "1.5rem",
-                background: "#f8faff",
-                border: "1px solid var(--lk-color-border)",
-                borderRadius: "1rem",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "all 0.2s ease",
-                position: "relative"
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-primary)")}
-              onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--lk-color-border)")}
-            >
-              <div style={{ padding: "1rem", background: "white", borderRadius: "50%", boxShadow: "var(--lk-shadow-soft)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lk-color-primary)" }}>
-                <Mail size={32} strokeWidth={1.5} />
-              </div>
-              <div>
-                <strong style={{ display: "block", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Solicitudes de Reactivación</strong>
-                <span className="lk-muted">Revisa y gestiona las solicitudes de tutores suspendidos.</span>
-              </div>
-              {pendingRequests > 0 && (
-                <div style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "15px",
-                  background: "#dc2626",
-                  color: "white",
-                  borderRadius: "20px",
-                  padding: "2px 10px",
-                  fontSize: "0.75rem",
-                  fontWeight: "bold",
-                  minWidth: "20px",
-                  textAlign: "center"
-                }}>
-                  {pendingRequests}
-                </div>
+          <DashboardPanel
+            eyebrow="Bandeja"
+            title="Solicitudes recientes"
+            subtitle="Reactivaciones visibles para que no se acumulen sin respuesta."
+            aside={<Clock3 size={18} color="var(--lk-purple)" aria-hidden="true" />}
+          >
+            <div className="lk-role-list">
+              {requestPreview.length ? (
+                requestPreview.map((request) => (
+                  <article
+                    key={request.id}
+                    className={`lk-role-list__item lk-role-list__item--${resolveRequestTone(
+                      request.estado_solicitud
+                    )}`}
+                  >
+                    <div className="lk-role-list__top">
+                      <span className="lk-role-list__title">{request.tutor_nombre}</span>
+                      <span
+                        className={`lk-role-list__meta lk-role-list__meta--${resolveRequestTone(
+                          request.estado_solicitud
+                        )}`}
+                      >
+                        {request.estado_solicitud}
+                      </span>
+                    </div>
+                    <p className="lk-role-list__description">
+                      {request.correo_contacto || request.tutor_email}
+                    </p>
+                  </article>
+                ))
+              ) : (
+                <p className="lk-role-note">No hay solicitudes recientes en este momento.</p>
               )}
-            </button>
-
-          </div>
-        </section>
-
-        <section className="lk-card lk-span-4" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-              <ShieldAlert size={20} color="var(--lk-color-text-muted)" strokeWidth={1.5} />
-              <h2 style={{ margin: 0 }}>Reglas de acceso</h2>
             </div>
-            <p className="lk-muted" style={{ marginBottom: "1.5rem" }}>
-              Este panel respeta el multitenancy del backend: solo ves tutores de tu institución.
-            </p>
-          </div>
-          
-          <ul className="lk-list" style={{ marginTop: 0 }}>
-            <li className="lk-list-item" style={{ display: "flex", alignItems: "center", gap: "0.75rem", background: "transparent", border: "none", padding: "0.5rem 0" }}>
-              <span className="lk-status-dot lk-status-dot--pulse"></span>
-              <strong>{user?.institucion || "Institución sin nombre"}</strong>
-            </li>
-            
-            <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "1rem 0" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem" }}>
-                <strong>Activación de tutores</strong>
-                <span>{summary.activeTutors} activos</span>
-              </div>
-              <div className="lk-progress-bar">
-                <div
-                  className="lk-progress-bar-fill lk-progress-bar-fill--success"
-                  style={{
-                    width: `${summary.totalTutors > 0 ? (summary.activeTutors / summary.totalTutors) * 100 : 0}%`,
-                  }}
-                ></div>
-              </div>
-            </li>
-            
-            <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "0.5rem 0" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem" }}>
-                <strong>Solicitudes de reactivación pendientes</strong>
-                <span>{pendingRequests} por revisar</span>
-              </div>
-              <div className="lk-progress-bar">
-                <div
-                  className="lk-progress-bar-fill lk-progress-bar-fill--warning"
-                  style={{
-                    width: `${summary.totalTutors > 0 ? (pendingRequests / summary.totalTutors) * 100 : 0}%`,
-                  }}
-                ></div>
-              </div>
-              {pendingRequests > 0 && (
-                 <small style={{ display: "block", color: "var(--lk-color-warning)", marginTop: "0.5rem", fontWeight: "bold" }}>
-                   Tienes {pendingRequests} solicitud(es) de reactivación pendiente(s)
-                 </small>
-              )}
-            </li>
-
-            <li className="lk-list-item" style={{ background: "transparent", border: "none", padding: "0.5rem 0" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <Clock3 size={18} color="var(--lk-color-text-muted)" strokeWidth={1.5} />
-                <span className="lk-muted">
-                  El alta de instituciones y la gestión global de minijuegos pertenecen al superadmin.
-                </span>
-              </div>
-            </li>
-          </ul>
-        </section>
-
-        <section className="lk-panel-card lk-span-12" style={{ marginTop: "1rem" }}>
-          <Notifications />
+          </DashboardPanel>
         </section>
       </div>
     </AppShell>
   );
+}
+
+function resolveTutorTone(estado) {
+  if (estado === "activo") return "gold";
+  if (estado === "inactivo") return "orange";
+  return "rose";
+}
+
+function resolveRequestTone(estado) {
+  if (estado === "aprobado") return "gold";
+  if (estado === "rechazado") return "rose";
+  return "orange";
 }
