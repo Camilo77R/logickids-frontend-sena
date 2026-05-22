@@ -11,6 +11,9 @@ export default function RoleModal({
   actions,
   children,
 }) {
+  const sizeClass =
+    width >= 720 ? " lk-role-modal--wide" : width >= 640 ? " lk-role-modal--large" : "";
+
   useEffect(() => {
     if (!open) return undefined;
 
@@ -27,8 +30,7 @@ export default function RoleModal({
   return createPortal(
     <div className="lk-role-modal-overlay" onClick={onClose}>
       <div
-        className="lk-role-modal"
-        style={{ width: `min(${width}px, calc(100vw - 2rem))` }}
+        className={`lk-role-modal${sizeClass}`}
         onClick={(event) => event.stopPropagation()}
       >
         {(eyebrow || title) ? (
@@ -46,7 +48,7 @@ export default function RoleModal({
 
         {warning ? <p className="lk-role-modal__warning">{warning}</p> : null}
 
-        {children}
+        <div className="lk-role-modal__content">{children}</div>
 
         {actions ? <div className="lk-role-modal__actions">{actions}</div> : null}
       </div>

@@ -18,11 +18,12 @@ import { useRecomendacionesEstudiante, useRecomendacionesGrupo } from "../../hoo
 import estudianteService from "../../services/estudianteService";
 import recomendacionesService from "../../services/recomendacionesService";
 import tutorGroupsService from "../../services/tutorGroupsService";
+import "../../styles/tutor-recommendations.css";
 
-const SEVERIDAD_COLOR = {
-  alta: "#ef4444",
-  media: "#f59e0b",
-  baja: "#22c55e",
+const SEVERIDAD_CLASS = {
+  alta: "trp-badge--alta",
+  media: "trp-badge--media",
+  baja: "trp-badge--baja",
 };
 
 const formatDate = (value) => {
@@ -172,32 +173,32 @@ export default function TutorRecomendacionesPage() {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <div style={styles.headerIcon}>
+    <div className="trp-page">
+      <div className="trp-page__header">
+        <div className="trp-page__header-icon">
           <Users size={28} color="#7c3aed" />
         </div>
         <div>
-          <h1 style={styles.title}>Recomendaciones</h1>
-          <p style={styles.subtitle}>
+          <h1 className="trp-page__title">Recomendaciones</h1>
+          <p className="trp-page__subtitle">
             Sugerencias pedagógicas basadas en el rendimiento individual, grupal y los registros
             disponibles.
           </p>
         </div>
       </div>
 
-      <section style={styles.section}>
-        <div style={styles.controls}>
-          <div style={styles.modeToggle}>
+      <section className="trp-section">
+        <div className="trp-controls">
+          <div className="trp-mode-toggle">
             <button
-              style={{ ...styles.modeBtn, ...(modo === "estudiante" ? styles.modeBtnActive : {}) }}
+              className={`trp-mode-btn${modo === "estudiante" ? " is-active" : ""}`}
               onClick={() => setModo("estudiante")}
               type="button"
             >
               <User size={16} /> Por estudiante
             </button>
             <button
-              style={{ ...styles.modeBtn, ...(modo === "grupo" ? styles.modeBtnActive : {}) }}
+              className={`trp-mode-btn${modo === "grupo" ? " is-active" : ""}`}
               onClick={() => setModo("grupo")}
               type="button"
             >
@@ -206,7 +207,7 @@ export default function TutorRecomendacionesPage() {
           </div>
 
           <select
-            style={styles.select}
+            className="trp-select"
             value={grupoSeleccionado ?? ""}
             onChange={(event) => setGrupoSeleccionado(Number(event.target.value))}
           >
@@ -220,7 +221,7 @@ export default function TutorRecomendacionesPage() {
 
           {modo === "estudiante" ? (
             <select
-              style={styles.select}
+              className="trp-select"
               value={estudianteSeleccionado ?? ""}
               onChange={(event) => setEstudianteSeleccionado(Number(event.target.value))}
               disabled={!grupoSeleccionado || isLoadingStudents}
@@ -235,24 +236,24 @@ export default function TutorRecomendacionesPage() {
           ) : null}
 
           <button
-            style={{ ...styles.btnGenerar, opacity: hook.generando || !canGenerate ? 0.7 : 1 }}
+            className="trp-action-btn"
             onClick={hook.generar}
             disabled={hook.generando || !canGenerate}
             type="button"
           >
             <RefreshCw
               size={16}
-              style={{ animation: hook.generando ? "spin 1s linear infinite" : "none" }}
+              className={hook.generando ? "trp-spin" : ""}
             />
             {hook.generando ? "Generando..." : "Generar recomendación"}
           </button>
         </div>
 
-        {hook.error ? <div style={styles.error}>{hook.error}</div> : null}
+        {hook.error ? <div className="trp-alert">{hook.error}</div> : null}
         {hook.loading ? (
           <LoadingState message="Cargando recomendaciones..." />
         ) : (
-          <div style={styles.list}>
+          <div className="trp-list">
             {hook.recomendaciones.length === 0 ? (
               <EmptyState
                 title="Sin recomendaciones activas"
@@ -271,21 +272,21 @@ export default function TutorRecomendacionesPage() {
         )}
       </section>
 
-      <section style={styles.section}>
-        <div style={styles.csvHeader}>
-          <div style={styles.csvHeaderTitle}>
+      <section className="trp-section">
+        <div className="trp-section__header">
+          <div className="trp-section__title">
             <FileSpreadsheet size={20} />
             <strong>Análisis complementario</strong>
           </div>
-          <p style={styles.csvSubtitle}>
+          <p className="trp-section__subtitle">
             Genera sugerencias adicionales a partir del archivo de datos filtrando por grupo o por
             estudiante.
           </p>
         </div>
 
-        <div style={styles.csvFilters}>
+        <div className="trp-controls">
           <select
-            style={styles.select}
+            className="trp-select"
             value={selectedCsvGrupoId}
             onChange={(event) => setSelectedCsvGrupoId(event.target.value)}
           >
@@ -298,7 +299,7 @@ export default function TutorRecomendacionesPage() {
           </select>
 
           <select
-            style={styles.select}
+            className="trp-select"
             value={selectedCsvEstudianteId}
             onChange={(event) => setSelectedCsvEstudianteId(event.target.value)}
             disabled={!selectedCsvGrupoId}
@@ -312,7 +313,7 @@ export default function TutorRecomendacionesPage() {
           </select>
 
           <button
-            style={{ ...styles.btnCsv, opacity: isGeneratingCsv || !selectedCsvGrupoId ? 0.7 : 1 }}
+            className="trp-action-btn trp-action-btn--gold"
             onClick={handleGenerateCsv}
             disabled={isGeneratingCsv || !selectedCsvGrupoId}
             type="button"
@@ -322,7 +323,7 @@ export default function TutorRecomendacionesPage() {
           </button>
         </div>
 
-        {csvError ? <div style={styles.error}>{csvError}</div> : null}
+        {csvError ? <div className="trp-alert">{csvError}</div> : null}
 
         {isGeneratingCsv ? (
           <LoadingState message="Procesando archivo de datos..." />
@@ -332,7 +333,7 @@ export default function TutorRecomendacionesPage() {
             description="Selecciona un grupo y genera sugerencias adicionales."
           />
         ) : (
-          <div style={styles.list}>
+          <div className="trp-list">
             {recomendacionesCsv.map((item, index) => (
               <CsvRecommendationCard
                 key={`${item.estudiante_id}-${item.habilidad_critica}-${index}`}
@@ -347,21 +348,21 @@ export default function TutorRecomendacionesPage() {
 }
 
 function RecomendacionCard({ recomendacion, onArchivar }) {
-  const color = SEVERIDAD_COLOR[recomendacion.severidad] ?? "#6b7280";
+  const severityClass = SEVERIDAD_CLASS[recomendacion.severidad] ?? "trp-badge--neutral";
 
   return (
-    <div style={styles.card}>
-      <div style={styles.cardHeader}>
-        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <span style={{ ...styles.badge, background: color }}>
+    <div className="trp-card">
+      <div className="trp-card__header">
+        <div className="trp-card__badges">
+          <span className={`trp-badge ${severityClass}`}>
             {recomendacion.severidad?.toUpperCase()}
           </span>
-          <span style={styles.habilidad}>{recomendacion.habilidad}</span>
+          <span className="trp-card__skill">{recomendacion.habilidad}</span>
         </div>
-        <div style={styles.cardMeta}>
-          <span style={styles.fecha}>{formatDate(recomendacion.generado_en)}</span>
+        <div className="trp-card__meta">
+          <span className="trp-card__date">{formatDate(recomendacion.generado_en)}</span>
           <button
-            style={styles.btnArchivar}
+            className="trp-archive-btn"
             onClick={onArchivar}
             title="Archivar recomendación"
             type="button"
@@ -370,188 +371,41 @@ function RecomendacionCard({ recomendacion, onArchivar }) {
           </button>
         </div>
       </div>
-      <p style={styles.mensaje}>{recomendacion.mensaje}</p>
+      <p className="trp-card__message">{recomendacion.mensaje}</p>
     </div>
   );
 }
 
 function CsvRecommendationCard({ item }) {
-  const color = SEVERIDAD_COLOR[item.severidad] ?? "#6b7280";
+  const severityClass = SEVERIDAD_CLASS[item.severidad] ?? "trp-badge--neutral";
 
   return (
-    <div style={styles.card}>
-      <div style={styles.cardHeader}>
-        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
-          <span style={{ ...styles.badge, background: color }}>
+    <div className="trp-card">
+      <div className="trp-card__header">
+        <div className="trp-card__badges trp-card__badges--wrap">
+          <span className={`trp-badge ${severityClass}`}>
             {(item.severidad ?? "media").toUpperCase()}
           </span>
-          <span style={styles.habilidad}>{item.nombre ?? "Estudiante sin nombre"}</span>
+          <span className="trp-card__skill">{item.nombre ?? "Estudiante sin nombre"}</span>
         </div>
-        <div style={styles.cardMeta}>
-          <span style={styles.fecha}>{formatDate(item.fecha_generacion)}</span>
+        <div className="trp-card__meta">
+          <span className="trp-card__date">{formatDate(item.fecha_generacion)}</span>
         </div>
       </div>
 
-      <div style={styles.csvMetaGrid}>
-        <p style={styles.metaLine}>
+      <div className="trp-card__stats">
+        <p className="trp-card__meta-line">
           Habilidad crítica: <strong>{item.habilidad_critica ?? "No definida"}</strong>
         </p>
-        <p style={styles.metaLine}>
+        <p className="trp-card__meta-line">
           Precisión actual: <strong>{formatPercent(item.precision_actual)}</strong>
         </p>
-        <p style={styles.metaLine}>
+        <p className="trp-card__meta-line">
           Prioridad: <strong>{item.prioridad ?? "N/D"}</strong>
         </p>
       </div>
 
-      <p style={styles.mensaje}>{item.recomendacion ?? "Sin recomendación generada."}</p>
+      <p className="trp-card__message">{item.recomendacion ?? "Sin recomendación generada."}</p>
     </div>
   );
 }
-
-const styles = {
-  container: { padding: "32px", maxWidth: "960px", margin: "0 auto" },
-  header: { display: "flex", gap: "16px", alignItems: "flex-start", marginBottom: "28px" },
-  headerIcon: { background: "#f3e8ff", borderRadius: "12px", padding: "12px", display: "flex" },
-  title: { fontSize: "24px", fontWeight: 700, color: "#1e1b4b", margin: 0 },
-  subtitle: { fontSize: "14px", color: "#6b7280", marginTop: "4px", lineHeight: 1.6 },
-  section: {
-    background: "white",
-    borderRadius: "16px",
-    padding: "24px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    border: "1px solid #f3f4f6",
-    marginBottom: "24px",
-  },
-  controls: {
-    display: "flex",
-    gap: "12px",
-    flexWrap: "wrap",
-    alignItems: "center",
-    marginBottom: "24px",
-  },
-  modeToggle: { display: "flex", background: "#f3f4f6", borderRadius: "8px", padding: "4px" },
-  modeBtn: {
-    display: "flex",
-    gap: "6px",
-    alignItems: "center",
-    padding: "8px 14px",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    background: "transparent",
-    fontSize: "14px",
-    color: "#6b7280",
-  },
-  modeBtnActive: {
-    background: "white",
-    color: "#7c3aed",
-    fontWeight: 600,
-    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-  },
-  select: {
-    padding: "8px 12px",
-    borderRadius: "8px",
-    border: "1px solid #e5e7eb",
-    fontSize: "14px",
-    minWidth: "220px",
-  },
-  btnGenerar: {
-    display: "flex",
-    gap: "8px",
-    alignItems: "center",
-    padding: "10px 18px",
-    background: "#7c3aed",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: 600,
-    fontSize: "14px",
-    marginLeft: "auto",
-  },
-  btnCsv: {
-    display: "inline-flex",
-    gap: "8px",
-    alignItems: "center",
-    padding: "10px 18px",
-    background: "#b45309",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontWeight: 600,
-    fontSize: "14px",
-  },
-  csvHeader: { marginBottom: "18px" },
-  csvHeaderTitle: {
-    display: "flex",
-    gap: "10px",
-    alignItems: "center",
-    marginBottom: "8px",
-    color: "#1f2937",
-  },
-  csvSubtitle: { margin: 0, color: "#6b7280", fontSize: "14px", lineHeight: 1.6 },
-  csvFilters: {
-    display: "flex",
-    gap: "12px",
-    flexWrap: "wrap",
-    alignItems: "center",
-    marginBottom: "18px",
-  },
-  error: {
-    background: "#fee2e2",
-    color: "#dc2626",
-    padding: "12px 16px",
-    borderRadius: "8px",
-    marginBottom: "16px",
-  },
-  list: { display: "flex", flexDirection: "column", gap: "16px" },
-  card: {
-    background: "white",
-    borderRadius: "12px",
-    padding: "20px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    border: "1px solid #f3f4f6",
-  },
-  cardHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: "12px",
-    flexWrap: "wrap",
-    gap: "8px",
-  },
-  badge: {
-    padding: "2px 10px",
-    borderRadius: "999px",
-    color: "white",
-    fontSize: "11px",
-    fontWeight: 700,
-  },
-  habilidad: { fontSize: "14px", fontWeight: 600, color: "#374151" },
-  cardMeta: { display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" },
-  fecha: { fontSize: "12px", color: "#9ca3af" },
-  btnArchivar: {
-    background: "transparent",
-    border: "none",
-    cursor: "pointer",
-    color: "#9ca3af",
-    display: "flex",
-    alignItems: "center",
-  },
-  mensaje: {
-    fontSize: "14px",
-    color: "#4b5563",
-    lineHeight: 1.7,
-    whiteSpace: "pre-wrap",
-    marginBottom: 0,
-  },
-  csvMetaGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "8px 16px",
-    marginBottom: "8px",
-  },
-  metaLine: { fontSize: "13px", color: "#4b5563", margin: 0 },
-};

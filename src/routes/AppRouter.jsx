@@ -15,6 +15,7 @@ import RecuperarAccesoPage from "../pages/auth/RecuperarAccesoPage";
 // Páginas de administrador (institucional)
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
 import UsuariosPage from "../pages/admin/UsuariosPage";
+import GruposPage from "../pages/admin/GruposPage";
 import EstudiantesPage from "../pages/admin/EstudiantesPage";
 import AdminsInstitucionalesPage from "../pages/admin/AdminsInstitucionalesPage";
 import SolicitudesPage from "../pages/admin/SolicitudesPage";
@@ -87,6 +88,7 @@ export default function AppRouter() {
         {/* ───────── RUTAS DEL ADMIN (institucional) ───────── */}
         <Route path="/admin/dashboard" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminDashboardPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/admin/usuarios" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><UsuariosPage /></RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/grupos" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><GruposPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/admin/estudiantes" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><EstudiantesPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/admin/admins" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><AdminsInstitucionalesPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/admin/solicitudes" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.ADMIN]}><SolicitudesPage /></RoleRoute></ProtectedRoute>} />

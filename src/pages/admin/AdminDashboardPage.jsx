@@ -17,6 +17,7 @@ import DashboardPanel from "../../components/dashboard/DashboardPanel";
 import QuickActionCard from "../../components/dashboard/QuickActionCard";
 import { useAuth } from "../../hooks/useAuth";
 import adminService from "../../services/adminService";
+import adminTutorsService from "../../services/adminTutorsService";
 import { buildAdminDashboardView } from "./adminDashboard.selectors";
 
 export default function AdminDashboardPage() {
@@ -33,7 +34,7 @@ export default function AdminDashboardPage() {
         setIsLoading(true);
 
         const [usersData, requestsData] = await Promise.all([
-          adminService.listUsers(),
+          adminTutorsService.listTutors(),
           adminService.listReactivationRequests(),
         ]);
 
