@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import PortalMobileNav from "./PortalMobileNav";
 import PortalSidebar from "./PortalSidebar";
 import PortalTopbar from "./PortalTopbar";
 
@@ -45,6 +46,12 @@ export default function PortalShell({
           onNotificationsClick={onNotificationsClick}
           onAccountCenter={onAccountCenter}
           actions={actions}
+        />
+
+        <PortalMobileNav
+          navigation={navigation}
+          roleLabel={roleLabel}
+          onLogout={onLogout}
         />
 
         <motion.main

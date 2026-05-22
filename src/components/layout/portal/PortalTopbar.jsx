@@ -1,6 +1,5 @@
 import { Bell, ChevronDown, Settings } from "lucide-react";
 import { motion } from "framer-motion";
-import logoWordmark from "../../../assets/imgs/logoLogickids transparente.png";
 
 /**
  * PortalTopbar
@@ -20,6 +19,8 @@ export default function PortalTopbar({
   onAccountCenter,
   actions,
 }) {
+  const shortName = userName?.trim()?.split(/\s+/)?.[0] || "Cuenta";
+
   return (
     <motion.header
       className="lk-portal-topbar"
@@ -28,11 +29,10 @@ export default function PortalTopbar({
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div className="lk-portal-topbar__left">
-        <img
-          src={logoWordmark}
-          alt="LogicKids"
-          className="lk-portal-topbar__wordmark"
-        />
+        <div className="lk-portal-topbar__brand" aria-label="LogicKids">
+          <span className="lk-portal-topbar__brand-logic">Logic</span>
+          <span className="lk-portal-topbar__brand-kids">Kids</span>
+        </div>
 
         <div className="lk-portal-topbar__copy">
           <h1 className="lk-portal-topbar__title">{title}</h1>
@@ -81,7 +81,7 @@ export default function PortalTopbar({
             {initials}
           </span>
           <span className="lk-portal-topbar__profile-copy">
-            <strong>{userName}</strong>
+            <strong>{shortName}</strong>
             <small>{roleLabel}</small>
           </span>
           <ChevronDown size={16} aria-hidden="true" />

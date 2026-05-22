@@ -117,11 +117,12 @@
   width: 44px;
   height: 44px;
   margin-bottom: 1rem;
-  border-radius: 14px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: rgba(255,255,255,0.18);
+  color: inherit;
 }
 
 .lk-role-metric__label {
@@ -188,6 +189,18 @@
   margin-bottom: 1rem;
 }
 
+.lk-role-panel__aside {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: 0 0 2.6rem;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(253, 184, 19, 0.2), rgba(255, 255, 255, 0.94));
+  border: 1px solid rgba(245, 169, 16, 0.16);
+  box-shadow: 0 10px 18px rgba(245, 169, 16, 0.12);
+}
+
 .lk-role-panel__eyebrow {
   display: inline-block;
   margin-bottom: 0.3rem;
@@ -224,8 +237,8 @@
   gap: 0.85rem;
   align-items: center;
   padding: 0.95rem 1rem;
-  border-radius: 1rem;
-  background: rgba(255,255,255,0.84);
+  border-radius: 1.1rem;
+  background: rgba(255,255,255,0.94);
   border: 1px solid rgba(139, 47, 201, 0.1);
   box-shadow: 0 10px 20px rgba(139, 47, 201, 0.06);
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
@@ -237,26 +250,15 @@
   box-shadow: 0 14px 30px rgba(139, 47, 201, 0.12);
 }
 
-.lk-role-quick-link--purple {
-  background: linear-gradient(180deg, rgba(188, 89, 177, 0.12), rgba(255, 255, 255, 0.96));
-}
-
-.lk-role-quick-link--gold {
-  background: linear-gradient(180deg, rgba(253, 184, 19, 0.16), rgba(255, 255, 255, 0.96));
-}
-
-.lk-role-quick-link--orange {
-  background: linear-gradient(180deg, rgba(255, 179, 37, 0.16), rgba(255, 255, 255, 0.96));
-}
-
-.lk-role-quick-link--rose {
-  background: linear-gradient(180deg, rgba(168, 79, 211, 0.12), rgba(255, 255, 255, 0.96));
-}
+.lk-role-quick-link--purple { border-color: rgba(188, 89, 177, 0.12); background: rgba(253, 248, 255, 0.98); }
+.lk-role-quick-link--gold { border-color: rgba(245, 169, 16, 0.16); background: rgba(255, 251, 240, 0.98); }
+.lk-role-quick-link--orange { border-color: rgba(255, 179, 37, 0.16); background: rgba(255, 246, 233, 0.98); }
+.lk-role-quick-link--rose { border-color: rgba(168, 79, 211, 0.14); background: rgba(252, 245, 255, 0.98); }
 
 .lk-role-quick-link__icon {
   width: 2.6rem;
   height: 2.6rem;
-  border-radius: 1rem;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
