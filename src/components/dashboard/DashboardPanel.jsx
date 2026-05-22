@@ -18,7 +18,7 @@ export default function DashboardPanel({
           <h2 className="lk-role-panel__title">{title}</h2>
           {subtitle ? <p className="lk-role-panel__subtitle">{subtitle}</p> : null}
         </div>
-        {aside}
+        {aside ? <div className="lk-role-panel__aside">{aside}</div> : null}
       </header>
 
       {children}

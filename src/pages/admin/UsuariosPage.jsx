@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import EmptyState from "../../components/common/EmptyState";
+import StateChangeModal from "../../components/common/StateChangeModal";
 import StatusBadge from "../../components/common/StatusBadge";
 import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
 import DashboardPanel from "../../components/dashboard/DashboardPanel";
@@ -35,6 +36,81 @@ function buildUsersSummary(users) {
   };
 }
 
+function getTutorStateCopy(nextState) {
+  if (nextState === "inactivo") {
+    return {
+      eyebrow: "Pausa operativa",
+      title: "Inactivar tutor",
+      warning: "El tutor perderá acceso al portal hasta que un admin vuelva a habilitarlo.",
+      impactTitle: "Impacto inmediato",
+      impactItems: [
+        "No podrá iniciar sesión ni abrir nuevas clases.",
+        "Sus grupos siguen asignados, pero quedan sin operación hasta que vuelva o se reasigne otro tutor.",
+        "La cuenta puede reactivarse más adelante desde este mismo módulo.",
+      ],
+      detailsTitle: "Cuándo conviene usarlo",
+      detailsItems: [
+        "Cuando el tutor está temporalmente fuera de operación.",
+        "Cuando quieres pausar su acceso sin enviarlo al flujo de suspensión formal.",
+      ],
+      confirmLabel: "Sí, inactivar tutor",
+      confirmVariant: "danger",
+    };
+  }
+
+  if (nextState === "suspendido") {
+    return {
+      eyebrow: "Medida sensible",
+      title: "Suspender tutor",
+      warning: "Suspender no es lo mismo que pausar. Esta acción bloquea la cuenta y obliga a pasar por la ruta de reactivación.",
+      impactTitle: "Lo que implica suspender",
+      impactItems: [
+        "El tutor no podrá volver por reactivación manual desde este panel.",
+        "Para recuperar acceso tendrá que solicitar reactivación y pasar revisión administrativa.",
+        "Debe reservarse para incidentes reales o bloqueos de confianza, no para ausencias normales.",
+      ],
+      detailsTitle: "Antes de confirmar",
+      detailsItems: [
+        "Si solo estará ausente unos días, usa “inactivo” en lugar de “suspendido”.",
+        "Revisa si algún grupo necesita reasignación antes de cerrar este cambio.",
+      ],
+      confirmLabel: "Sí, suspender tutor",
+      confirmVariant: "danger",
+    };
+  }
+
+  return {
+    eyebrow: "Reactivación",
+    title: "Reactivar tutor",
+    warning: "La cuenta volverá a quedar habilitada para operar clases y entrar al portal.",
+    impactTitle: "Qué recupera",
+    impactItems: [
+      "Podrá iniciar sesión nuevamente.",
+      "Volverá a operar los grupos que tenga asignados.",
+      "Las clases futuras se podrán abrir otra vez desde su panel.",
+    ],
+    detailsTitle: "Revisión recomendada",
+    detailsItems: [
+      "Confirma que siga siendo el tutor correcto para esos grupos.",
+      "Si cambió la estructura institucional, reasigna grupos antes de pedirle que retome clases.",
+    ],
+    confirmLabel: "Sí, reactivar tutor",
+    confirmVariant: "primary",
+  };
+}
+
+function getTutorStateFeedback(nextState) {
+  if (nextState === "inactivo") {
+    return "Tutor inactivado correctamente. Ya no podrá operar clases hasta nueva habilitación.";
+  }
+
+  if (nextState === "suspendido") {
+    return "Tutor suspendido correctamente. Si necesita volver, deberá pasar por la ruta de reactivación.";
+  }
+
+  return "Tutor reactivado correctamente. La cuenta vuelve a quedar disponible para operar.";
+}
+
 export default function UsuariosPage() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -42,6 +118,11 @@ export default function UsuariosPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [feedback, setFeedback] = useState(null);
+  const [stateModal, setStateModal] = useState({
+    open: false,
+    nextState: "",
+    user: null,
+  });
 
   const loadUsers = async (nextSelectedUserId) => {
     setIsLoading(true);
@@ -98,19 +179,37 @@ export default function UsuariosPage() {
         message:
           "Un tutor suspendido solo puede volver por la ruta de solicitudes de reactivación.",
       });
-      return;
+      return false;
     }
 
     try {
       await adminService.updateUserState(userId, estado);
-      setFeedback({ type: "success", message: `Estado actualizado a "${estado}".` });
+      setFeedback({ type: "success", message: getTutorStateFeedback(estado) });
       await loadUsers(userId);
+      return true;
     } catch (error) {
       setFeedback({
         type: "error",
         message: error.message || "No fue posible actualizar el estado del tutor.",
       });
+      return false;
     }
+  };
+
+  const openStateModal = (user, nextState) => {
+    setStateModal({
+      open: true,
+      nextState,
+      user,
+    });
+  };
+
+  const closeStateModal = () => {
+    setStateModal({
+      open: false,
+      nextState: "",
+      user: null,
+    });
   };
 
   const pageActions = (
@@ -154,7 +253,7 @@ export default function UsuariosPage() {
   return (
     <AppShell
       title="Tutores"
-      description="Revisa el estado institucional de cada tutor y aplica cambios dentro del alcance del admin."
+      description="Revisa el estado del equipo tutor y ajusta accesos desde el portal institucional."
       actions={pageActions}
     >
       <div className="lk-role-dashboard">
@@ -195,7 +294,7 @@ export default function UsuariosPage() {
           <DashboardPanel
             eyebrow="Directorio institucional"
             title="Tutores filtrados"
-            subtitle="La tabla se mantiene centrada en tutores porque ese es el contrato real del admin."
+            subtitle="Mantén a la vista el equipo docente de tu institución y abre cada ficha cuando necesites actuar."
             aside={<UsersRound size={18} color="var(--lk-purple)" aria-hidden="true" />}
           >
             {!isLoading && visibleUsers.length === 0 ? (
@@ -207,7 +306,7 @@ export default function UsuariosPage() {
 
             {visibleUsers.length > 0 ? (
               <>
-                <div className="lk-table-wrap">
+                <div className="lk-table-wrap lk-role-table--desktop">
                   <table className="lk-table">
                     <thead>
                       <tr>
@@ -246,6 +345,45 @@ export default function UsuariosPage() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                <div className="lk-role-mobile-list">
+                  {visibleUsers.map((user) => (
+                    <article
+                      key={user.id}
+                      className={`lk-role-mobile-card${selectedUser?.id === user.id ? " is-selected" : ""}`}
+                    >
+                      <header className="lk-role-mobile-card__header">
+                        <div>
+                          <h3 className="lk-role-mobile-card__title">{user.nombre}</h3>
+                          <p className="lk-role-mobile-card__subtitle">{user.email}</p>
+                        </div>
+                        <StatusBadge label={user.estado} variant={user.estado} />
+                      </header>
+
+                      <dl className="lk-role-entity-card__meta">
+                        <div>
+                          <dt>Rol</dt>
+                          <dd>{user.rol}</dd>
+                        </div>
+                        <div>
+                          <dt>Institución</dt>
+                          <dd>{user.institucion || "Sin institución"}</dd>
+                        </div>
+                      </dl>
+
+                      <button
+                        type="button"
+                        className="lk-btn lk-btn--secondary"
+                        onClick={async () => {
+                          const detail = await adminService.getUser(user.id);
+                          setSelectedUser(detail);
+                        }}
+                      >
+                        Ver detalle
+                      </button>
+                    </article>
+                  ))}
                 </div>
 
                 <div className="lk-role-table-footer">
@@ -311,7 +449,7 @@ export default function UsuariosPage() {
                     </strong>
                     <p className="lk-role-info-card__hint">
                       {selectedUser.institucion_ciudad
-                        ? `${selectedUser.institucion_ciudad} · Contrato visible del admin`
+                        ? `${selectedUser.institucion_ciudad} · Contexto institucional`
                         : "Sin ciudad registrada para esta cuenta."}
                     </p>
                   </article>
@@ -332,7 +470,8 @@ export default function UsuariosPage() {
                             ? "lk-btn--primary"
                             : "lk-btn--secondary"
                         }`}
-                        onClick={() => handleStateChange(selectedUser.id, option.value)}
+                        disabled={selectedUser.estado === option.value}
+                        onClick={() => openStateModal(selectedUser, option.value)}
                       >
                         Marcar {option.label.toLowerCase()}
                       </button>
@@ -341,13 +480,29 @@ export default function UsuariosPage() {
                 </div>
 
                 <p className="lk-role-text-note">
-                  <strong>Regla del backend:</strong> el admin solo gestiona tutores de su
-                  institución. La reactivación de suspendidos pasa por la página de solicitudes.
+                  Los cambios de acceso se reflejan de inmediato en el portal del tutor. Si una
+                  cuenta está suspendida, la resolución se gestiona desde solicitudes.
                 </p>
               </div>
             )}
           </DashboardPanel>
         </section>
+
+        <StateChangeModal
+          open={stateModal.open && Boolean(stateModal.user)}
+          onClose={closeStateModal}
+          onConfirm={async () => {
+            if (!stateModal.user) return;
+            const wasSuccessful = await handleStateChange(stateModal.user.id, stateModal.nextState);
+            if (wasSuccessful) {
+              closeStateModal();
+            }
+          }}
+          entityLabel={stateModal.user ? `${stateModal.user.nombre} · ${stateModal.user.email}` : ""}
+          currentState={stateModal.user?.estado || "activo"}
+          nextState={stateModal.nextState}
+          {...getTutorStateCopy(stateModal.nextState)}
+        />
       </div>
     </AppShell>
   );

@@ -2,8 +2,10 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Building2,
+  GraduationCap,
   LayoutDashboard,
   Mail,
+  ShieldCheck,
   UsersRound,
 } from "lucide-react";
 import PortalShell from "./portal/PortalShell";
@@ -15,6 +17,8 @@ const PORTAL_NAVIGATION = {
   [USER_ROLES.ADMIN]: [
     { key: "admin-dashboard", label: "Resumen", path: "/admin/dashboard", icon: LayoutDashboard },
     { key: "admin-usuarios", label: "Tutores", path: "/admin/usuarios", icon: UsersRound },
+    { key: "admin-estudiantes", label: "Estudiantes", path: "/admin/estudiantes", icon: GraduationCap },
+    { key: "admin-admins", label: "Admins", path: "/admin/admins", icon: ShieldCheck },
     { key: "admin-solicitudes", label: "Solicitudes", path: "/admin/solicitudes", icon: Mail },
   ],
   [USER_ROLES.SUPERADMIN]: [
