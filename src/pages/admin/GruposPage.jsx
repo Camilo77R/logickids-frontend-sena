@@ -507,7 +507,7 @@ export default function GruposPage() {
                             {group.tutor_nombre ? (
                               <span>{group.tutor_nombre}</span>
                             ) : (
-                              <span className="lk-muted" style={{ fontStyle: "italic" }}>Sin tutor</span>
+                              <span className="lk-muted lk-group-text-italic">Sin tutor</span>
                             )}
                           </td>
                           <td>{studentCountMap[group.id] || 0} estudiantes</td>
@@ -631,7 +631,7 @@ export default function GruposPage() {
                         <strong className="lk-role-info-card__value">{selectedGroup.tutor_nombre}</strong>
                         <p className="lk-role-info-card__hint">{selectedGroup.tutor_email}</p>
                         {selectedGroup.activo ? (
-                          <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.8rem" }}>
+                          <div className="lk-group-tutor-actions">
                             <button
                               type="button"
                               className="lk-tutor-unassign-btn"
@@ -639,10 +639,10 @@ export default function GruposPage() {
                             >
                               Quitar tutor
                             </button>
-                            <span style={{ color: "var(--lk-color-border)" }}>|</span>
+                            <span className="lk-group-divider">|</span>
                             <button
                               type="button"
-                              style={{ background: "none", border: "none", cursor: "pointer", padding: 0, textDecoration: "underline", color: "var(--lk-color-primary)", fontSize: "0.75rem" }}
+                              className="lk-group-link-btn"
                               onClick={openTutorModal}
                             >
                               Reasignar tutor
@@ -652,15 +652,14 @@ export default function GruposPage() {
                       </div>
                     ) : (
                       <div>
-                        <strong className="lk-role-info-card__value" style={{ fontStyle: "italic", fontWeight: "normal", color: "var(--lk-text-muted)" }}>
+                        <strong className="lk-role-info-card__value lk-group-empty-tutor">
                           Sin tutor asignado
                         </strong>
                         {selectedGroup.activo ? (
-                          <div style={{ marginTop: "0.5rem" }}>
+                          <div className="lk-group-tutor-assign-wrap">
                             <button
                               type="button"
-                              className="lk-btn lk-btn--secondary"
-                              style={{ minHeight: "30px", fontSize: "0.8rem", padding: "0.2rem 0.6rem" }}
+                              className="lk-btn lk-btn--secondary lk-group-assign-btn"
                               onClick={openTutorModal}
                             >
                               Asignar tutor
@@ -697,7 +696,7 @@ export default function GruposPage() {
                   </span>
                 </div>
                 {isDetailLoading ? (
-                  <p className="lk-role-text-note" style={{ fontStyle: "italic" }}>Cargando lista de estudiantes...</p>
+                  <p className="lk-role-text-note lk-group-text-italic">Cargando lista de estudiantes...</p>
                 ) : selectedGroupDetail?.estudiantes?.length > 0 ? (
                   <div className="lk-group-students-list">
                     {selectedGroupDetail.estudiantes.map((student) => (
@@ -720,12 +719,12 @@ export default function GruposPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="lk-role-text-note" style={{ fontStyle: "italic" }}>
+                  <p className="lk-role-text-note lk-group-text-italic">
                     No hay estudiantes activos en este grupo. Asigna estudiantes en el módulo de Estudiantes.
                   </p>
                 )}
                 {/* Acciones principales de grupo */}
-                <div className="lk-role-inline-actions" style={{ marginTop: "1rem" }}>
+                <div className="lk-role-inline-actions lk-group-inline-actions">
                   {selectedGroup.activo ? (
                     <>
                       <button
@@ -777,7 +776,7 @@ export default function GruposPage() {
             </>
           }
         >
-          <div className="lk-form-grid" style={{ display: "grid", gap: "1rem" }}>
+          <div className="lk-form-grid">
             <div className="lk-field">
               <label htmlFor="group-name">Nombre del grupo</label>
               <input
@@ -821,7 +820,7 @@ export default function GruposPage() {
             </>
           }
         >
-          <div className="lk-form-grid" style={{ display: "grid", gap: "1rem" }}>
+          <div className="lk-form-grid">
             <div className="lk-field">
               <label htmlFor="tutor-selection">Selecciona un tutor activo</label>
               <select
