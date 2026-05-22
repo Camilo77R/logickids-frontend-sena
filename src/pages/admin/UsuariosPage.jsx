@@ -41,20 +41,15 @@ function getTutorStateCopy(nextState) {
     return {
       eyebrow: "Pausa operativa",
       title: "Inactivar tutor",
-      warning: "El tutor perderá acceso al portal hasta que un admin vuelva a habilitarlo.",
+      warning: "El tutor dejará de entrar al portal hasta nueva habilitación.",
       impactTitle: "Impacto inmediato",
       impactItems: [
         "No podrá iniciar sesión ni abrir nuevas clases.",
         "Sus grupos siguen asignados, pero quedan sin operación hasta que vuelva o se reasigne otro tutor.",
-        "La cuenta puede reactivarse más adelante desde este mismo módulo.",
-      ],
-      detailsTitle: "Cuándo conviene usarlo",
-      detailsItems: [
-        "Cuando el tutor está temporalmente fuera de operación.",
-        "Cuando quieres pausar su acceso sin enviarlo al flujo de suspensión formal.",
+        "Podrás reactivarlo de nuevo desde este mismo panel cuando corresponda.",
       ],
       confirmLabel: "Sí, inactivar tutor",
-      confirmVariant: "danger",
+      confirmVariant: "primary",
     };
   }
 
@@ -62,17 +57,12 @@ function getTutorStateCopy(nextState) {
     return {
       eyebrow: "Medida sensible",
       title: "Suspender tutor",
-      warning: "Suspender no es lo mismo que pausar. Esta acción bloquea la cuenta y obliga a pasar por la ruta de reactivación.",
+      warning: "Esta acción bloquea la cuenta y la devuelve al flujo de reactivación.",
       impactTitle: "Lo que implica suspender",
       impactItems: [
-        "El tutor no podrá volver por reactivación manual desde este panel.",
+        "No podrá volver por reactivación manual desde este panel.",
         "Para recuperar acceso tendrá que solicitar reactivación y pasar revisión administrativa.",
-        "Debe reservarse para incidentes reales o bloqueos de confianza, no para ausencias normales.",
-      ],
-      detailsTitle: "Antes de confirmar",
-      detailsItems: [
-        "Si solo estará ausente unos días, usa “inactivo” en lugar de “suspendido”.",
-        "Revisa si algún grupo necesita reasignación antes de cerrar este cambio.",
+        "Si el caso no es crítico, usa “inactivo” en lugar de “suspendido”.",
       ],
       confirmLabel: "Sí, suspender tutor",
       confirmVariant: "danger",
@@ -82,17 +72,11 @@ function getTutorStateCopy(nextState) {
   return {
     eyebrow: "Reactivación",
     title: "Reactivar tutor",
-    warning: "La cuenta volverá a quedar habilitada para operar clases y entrar al portal.",
+    warning: "La cuenta volverá a quedar disponible para operar clases.",
     impactTitle: "Qué recupera",
     impactItems: [
       "Podrá iniciar sesión nuevamente.",
       "Volverá a operar los grupos que tenga asignados.",
-      "Las clases futuras se podrán abrir otra vez desde su panel.",
-    ],
-    detailsTitle: "Revisión recomendada",
-    detailsItems: [
-      "Confirma que siga siendo el tutor correcto para esos grupos.",
-      "Si cambió la estructura institucional, reasigna grupos antes de pedirle que retome clases.",
     ],
     confirmLabel: "Sí, reactivar tutor",
     confirmVariant: "primary",

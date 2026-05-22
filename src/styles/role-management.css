@@ -148,17 +148,30 @@
   place-items: center;
   z-index: 1080;
   padding: 1.25rem;
+  overflow-y: auto;
 }
 
 .lk-role-modal {
   width: min(520px, 100%);
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   padding: 1.4rem;
   border-radius: 1.5rem;
   background: rgba(255, 255, 255, 0.98);
   border: 1px solid rgba(139, 47, 201, 0.12);
   box-shadow: 0 20px 52px rgba(48, 21, 73, 0.24);
+  max-height: min(calc(100vh - 2.5rem), 46rem);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.lk-role-modal--large {
+  width: min(640px, 100%);
+}
+
+.lk-role-modal--wide {
+  width: min(760px, 100%);
 }
 
 .lk-role-modal__header {
@@ -166,6 +179,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 .lk-role-modal__eyebrow {
@@ -195,6 +209,15 @@
   color: #7f4d00;
   line-height: 1.6;
   font-size: 0.88rem;
+  flex-shrink: 0;
+}
+
+.lk-role-modal__content {
+  display: grid;
+  gap: 1rem;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.15rem;
 }
 
 .lk-role-modal__actions {
@@ -202,6 +225,8 @@
   justify-content: flex-end;
   gap: 0.75rem;
   flex-wrap: wrap;
+  flex-shrink: 0;
+  padding-top: 0.2rem;
 }
 
 .lk-role-page__toolbar {
@@ -212,11 +237,33 @@
   gap: 1rem;
 }
 
+.lk-role-page__toolbar--stacked {
+  width: 100%;
+  align-items: stretch;
+}
+
+.lk-role-page__toolbar-group {
+  display: flex;
+  flex: 1 1 30rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
 .lk-role-page__filters {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
   align-items: center;
+}
+
+.lk-role-page__toolbar-group .lk-role-search {
+  flex: 1 1 19rem;
+}
+
+.lk-role-page__group-filter {
+  min-width: min(260px, 100%);
 }
 
 .lk-role-page__filter {
@@ -331,6 +378,18 @@
   font-weight: 700;
 }
 
+.lk-role-table-row {
+  transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+.lk-role-table-row.is-selected {
+  background: rgba(253, 184, 19, 0.12);
+}
+
+.lk-role-table-row.is-selected td:first-child {
+  box-shadow: inset 4px 0 0 #f5a910;
+}
+
 .lk-role-text-note {
   margin: 0;
   color: var(--lk-text-soft);
@@ -392,7 +451,8 @@
 }
 
 .lk-role-mobile-card.is-selected {
-  box-shadow: 0 0 0 3px rgba(139, 47, 201, 0.1), 0 18px 28px rgba(139, 47, 201, 0.1);
+  border-color: rgba(245, 169, 16, 0.38);
+  box-shadow: 0 0 0 3px rgba(245, 169, 16, 0.16), 0 18px 28px rgba(139, 47, 201, 0.1);
 }
 
 .lk-role-mobile-card__header {
@@ -549,6 +609,12 @@
   width: fit-content;
 }
 
+@media (max-width: 1199.98px) {
+  .lk-role-section-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 991.98px) {
   .lk-role-table--desktop {
     display: none;
@@ -562,15 +628,16 @@
     align-items: stretch;
   }
 
+  .lk-role-page__toolbar-group {
+    width: 100%;
+    justify-content: stretch;
+  }
+
   .lk-role-page__filters {
     width: 100%;
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 0.2rem;
-  }
-
-  .lk-role-section-grid {
-    grid-template-columns: 1fr;
   }
 
   .lk-role-inline-actions {
@@ -583,6 +650,15 @@
 }
 
 @media (max-width: 767.98px) {
+  .lk-role-modal-overlay {
+    padding: 0.9rem;
+  }
+
+  .lk-role-modal {
+    padding: 1.05rem;
+    max-height: calc(100vh - 1.8rem);
+  }
+
   .lk-role-search {
     min-width: 100%;
   }

@@ -64,6 +64,27 @@ function resolveGroupName(student, groupsById) {
   return student?.grupo_nombre || groupsById.get(getStudentGroupId(student))?.nombre || "Sin grupo";
 }
 
+function matchesStudentSearch(student, normalizedSearch, groupsById) {
+  if (!normalizedSearch) {
+    return true;
+  }
+
+  const groupName = resolveGroupName(student, groupsById).toLowerCase();
+  const isNumericSearch = /^\d+$/.test(normalizedSearch);
+
+  if (isNumericSearch) {
+    return (
+      String(student.id ?? "") === normalizedSearch ||
+      String(student.edad ?? "") === normalizedSearch
+    );
+  }
+
+  return (
+    student.nombre?.toLowerCase().includes(normalizedSearch) ||
+    groupName.includes(normalizedSearch)
+  );
+}
+
 function getStudentStateCopy(nextState) {
   if (nextState === "inactivo") {
     return {
@@ -133,6 +154,7 @@ export default function EstudiantesPage() {
     student: null,
   });
   const hasLoadedFilters = useRef(false);
+  const detailPanelRef = useRef(null);
 
   const groupsById = useMemo(
     () =>
@@ -146,19 +168,15 @@ export default function EstudiantesPage() {
     return students.filter((student) => {
       const state = getStudentState(student);
       const matchesFilter = statusFilter === "todos" || state === statusFilter;
-      const matchesSearch =
-        !normalizedSearch ||
-        student.nombre?.toLowerCase().includes(normalizedSearch) ||
-        String(student.edad ?? "").includes(normalizedSearch) ||
-        resolveGroupName(student, groupsById).toLowerCase().includes(normalizedSearch);
+      const matchesSearch = matchesStudentSearch(student, normalizedSearch, groupsById);
 
       return matchesFilter && matchesSearch;
     });
   }, [groupsById, searchTerm, statusFilter, students]);
 
   const selectedStudent = useMemo(
-    () => visibleStudents.find((student) => student.id === selectedStudentId) || null,
-    [selectedStudentId, visibleStudents]
+    () => students.find((student) => student.id === selectedStudentId) || null,
+    [selectedStudentId, students]
   );
 
   const summary = useMemo(() => buildStudentsSummary(students), [students]);
@@ -237,6 +255,38 @@ export default function EstudiantesPage() {
     loadStudents(selectedGroupId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGroupId]);
+
+  useEffect(() => {
+    if (visibleStudents.length === 0) {
+      if (selectedStudentId !== null) {
+        setSelectedStudentId(null);
+      }
+      return;
+    }
+
+    const hasVisibleSelection = visibleStudents.some((student) => student.id === selectedStudentId);
+    if (!hasVisibleSelection) {
+      setSelectedStudentId(visibleStudents[0].id);
+    }
+  }, [selectedStudentId, visibleStudents]);
+
+  const focusDetailPanel = () => {
+    if (typeof window === "undefined" || window.innerWidth >= 1200) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      detailPanelRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
+
+  const handleSelectStudent = (studentId) => {
+    setSelectedStudentId(studentId);
+    focusDetailPanel();
+  };
 
   const openCreateModal = () => {
     setStudentModal({
@@ -440,7 +490,7 @@ export default function EstudiantesPage() {
   };
 
   const pageActions = (
-    <div className="lk-role-page__toolbar">
+    <div className="lk-role-page__toolbar lk-role-page__toolbar--stacked">
       <div className="lk-role-page__filters">
         {STATUS_FILTERS.map((filter) => (
           <button
@@ -454,13 +504,13 @@ export default function EstudiantesPage() {
         ))}
       </div>
 
-      <div className="lk-role-page__toolbar">
+      <div className="lk-role-page__toolbar-group">
         <div className="lk-role-search">
           <Search size={18} className="lk-role-search__icon" aria-hidden="true" />
           <input
             type="search"
             className="lk-role-search__input"
-            placeholder="Buscar por nombre, edad o grupo"
+            placeholder="Buscar por nombre o grupo. ID/edad exactos."
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
           />
@@ -547,7 +597,7 @@ export default function EstudiantesPage() {
                 <h3 className="lk-role-panel__title">Filtros por grupo</h3>
               </div>
 
-              <div className="lk-field" style={{ minWidth: "min(260px, 100%)" }}>
+              <div className="lk-field lk-role-page__group-filter">
                 <label htmlFor="admin-students-group-filter">Grupo</label>
                 <select
                   id="admin-students-group-filter"
@@ -587,7 +637,10 @@ export default function EstudiantesPage() {
                     </thead>
                     <tbody>
                       {visibleStudents.map((student) => (
-                        <tr key={student.id}>
+                        <tr
+                          key={student.id}
+                          className={`lk-role-table-row${selectedStudentId === student.id ? " is-selected" : ""}`}
+                        >
                           <td>
                             <strong>{student.nombre}</strong>
                             <p className="lk-muted">ID #{student.id}</p>
@@ -606,10 +659,10 @@ export default function EstudiantesPage() {
                           <td>
                             <button
                               type="button"
-                              className="lk-btn lk-btn--secondary"
-                              onClick={() => setSelectedStudentId(student.id)}
+                              className={`lk-btn ${selectedStudentId === student.id ? "lk-btn--primary" : "lk-btn--secondary"}`}
+                              onClick={() => handleSelectStudent(student.id)}
                             >
-                              Ver detalle
+                              {selectedStudentId === student.id ? "Viendo detalle" : "Ver detalle"}
                             </button>
                           </td>
                         </tr>
@@ -647,10 +700,10 @@ export default function EstudiantesPage() {
 
                       <button
                         type="button"
-                        className="lk-btn lk-btn--secondary"
-                        onClick={() => setSelectedStudentId(student.id)}
+                        className={`lk-btn ${selectedStudentId === student.id ? "lk-btn--primary" : "lk-btn--secondary"}`}
+                        onClick={() => handleSelectStudent(student.id)}
                       >
-                        Ver detalle
+                        {selectedStudentId === student.id ? "Viendo detalle" : "Ver detalle"}
                       </button>
                     </article>
                   ))}
@@ -663,106 +716,108 @@ export default function EstudiantesPage() {
             ) : null}
           </DashboardPanel>
 
-          <DashboardPanel
-            eyebrow="Gestión"
-            title={selectedStudent ? selectedStudent.nombre : "Selecciona un estudiante"}
-            subtitle="Desde aquí puedes ajustar datos básicos, moverlo de grupo o compartir su acceso QR."
-            aside={<GraduationCap size={18} color="var(--lk-purple)" aria-hidden="true" />}
-          >
-            {!selectedStudent ? (
-              <EmptyState
-                title="Aún no hay estudiante seleccionado"
-                description="Elige una fila de la lista para ver contexto y acciones disponibles."
-              />
-            ) : (
-              <div className="lk-role-detail-stack">
-                {!selectedStudent.grupo_id ? (
-                  <div className="lk-role-banner lk-role-banner--warning">
-                    <div className="lk-role-banner__content">
-                      <strong>Estudiante sin grupo</strong>
-                      <p>Asigna un grupo antes de preparar su próxima sesión de clase.</p>
+          <div ref={detailPanelRef}>
+            <DashboardPanel
+              eyebrow="Gestión"
+              title={selectedStudent ? selectedStudent.nombre : "Selecciona un estudiante"}
+              subtitle="Desde aquí puedes ajustar datos básicos, moverlo de grupo o compartir su acceso QR."
+              aside={<GraduationCap size={18} color="var(--lk-purple)" aria-hidden="true" />}
+            >
+              {!selectedStudent ? (
+                <EmptyState
+                  title="Aún no hay estudiante seleccionado"
+                  description="Elige una fila de la lista para ver contexto y acciones disponibles."
+                />
+              ) : (
+                <div className="lk-role-detail-stack">
+                  {!selectedStudent.grupo_id ? (
+                    <div className="lk-role-banner lk-role-banner--warning">
+                      <div className="lk-role-banner__content">
+                        <strong>Estudiante sin grupo</strong>
+                        <p>Asigna un grupo antes de preparar su próxima sesión de clase.</p>
+                      </div>
                     </div>
+                  ) : null}
+
+                  <div className="lk-role-info-grid">
+                    <article className="lk-role-info-card">
+                      <span className="lk-role-info-card__label">Estudiante</span>
+                      <strong className="lk-role-info-card__value">{selectedStudent.nombre}</strong>
+                      <p className="lk-role-info-card__hint">ID #{selectedStudent.id}</p>
+                    </article>
+
+                    <article className="lk-role-info-card">
+                      <span className="lk-role-info-card__label">Edad y estado</span>
+                      <strong className="lk-role-info-card__value">
+                        {selectedStudent.edad} años · {getStudentState(selectedStudent)}
+                      </strong>
+                      <p className="lk-role-info-card__hint">
+                        {selectedStudent.sesion_activa
+                          ? "Tiene sesión habilitada en este momento."
+                          : "Su sesión está cerrada por ahora."}
+                      </p>
+                    </article>
+
+                    <article className="lk-role-info-card">
+                      <span className="lk-role-info-card__label">Grupo actual</span>
+                      <strong className="lk-role-info-card__value">
+                        {resolveGroupName(selectedStudent, groupsById)}
+                      </strong>
+                      <p className="lk-role-info-card__hint">
+                        Los movimientos quedan reflejados en el historial institucional.
+                      </p>
+                    </article>
                   </div>
-                ) : null}
 
-                <div className="lk-role-info-grid">
-                  <article className="lk-role-info-card">
-                    <span className="lk-role-info-card__label">Estudiante</span>
-                    <strong className="lk-role-info-card__value">{selectedStudent.nombre}</strong>
-                    <p className="lk-role-info-card__hint">ID #{selectedStudent.id}</p>
-                  </article>
-
-                  <article className="lk-role-info-card">
-                    <span className="lk-role-info-card__label">Edad y estado</span>
-                    <strong className="lk-role-info-card__value">
-                      {selectedStudent.edad} años · {getStudentState(selectedStudent)}
-                    </strong>
-                    <p className="lk-role-info-card__hint">
-                      {selectedStudent.sesion_activa
-                        ? "Tiene sesión habilitada en este momento."
-                        : "Su sesión está cerrada por ahora."}
-                    </p>
-                  </article>
-
-                  <article className="lk-role-info-card">
-                    <span className="lk-role-info-card__label">Grupo actual</span>
-                    <strong className="lk-role-info-card__value">
-                      {resolveGroupName(selectedStudent, groupsById)}
-                    </strong>
-                    <p className="lk-role-info-card__hint">
-                      Los movimientos quedan reflejados en el historial institucional.
-                    </p>
-                  </article>
-                </div>
-
-                <div className="lk-role-inline-actions">
-                  <button
-                    type="button"
-                    className="lk-btn lk-btn--secondary"
-                    onClick={() => handleOpenQr(selectedStudent)}
-                  >
-                    <QrCode size={16} aria-hidden="true" />
-                    Ver QR
-                  </button>
-                  <button
-                    type="button"
-                    className="lk-btn lk-btn--secondary"
-                    onClick={() => openEditModal(selectedStudent)}
-                  >
-                    <PencilLine size={16} aria-hidden="true" />
-                    Editar
-                  </button>
-                  <button
-                    type="button"
-                    className="lk-btn lk-btn--secondary"
-                    onClick={() => openMoveModal(selectedStudent)}
-                  >
-                    <Shuffle size={16} aria-hidden="true" />
-                    Cambiar grupo
-                  </button>
-                  {getStudentState(selectedStudent) === "activo" ? (
+                  <div className="lk-role-inline-actions">
                     <button
                       type="button"
-                      className="lk-btn lk-btn--ghost-danger"
-                      onClick={() => openStateModal(selectedStudent, "inactivo")}
+                      className="lk-btn lk-btn--secondary"
+                      onClick={() => handleOpenQr(selectedStudent)}
                     >
-                      <UserRoundX size={16} aria-hidden="true" />
-                      Desactivar
+                      <QrCode size={16} aria-hidden="true" />
+                      Ver QR
                     </button>
-                  ) : (
                     <button
                       type="button"
-                      className="lk-btn lk-btn--primary"
-                      onClick={() => openStateModal(selectedStudent, "activo")}
+                      className="lk-btn lk-btn--secondary"
+                      onClick={() => openEditModal(selectedStudent)}
                     >
-                      <UserCheck2 size={16} aria-hidden="true" />
-                      Reactivar
+                      <PencilLine size={16} aria-hidden="true" />
+                      Editar
                     </button>
-                  )}
+                    <button
+                      type="button"
+                      className="lk-btn lk-btn--secondary"
+                      onClick={() => openMoveModal(selectedStudent)}
+                    >
+                      <Shuffle size={16} aria-hidden="true" />
+                      Cambiar grupo
+                    </button>
+                    {getStudentState(selectedStudent) === "activo" ? (
+                      <button
+                        type="button"
+                        className="lk-btn lk-btn--ghost-danger"
+                        onClick={() => openStateModal(selectedStudent, "inactivo")}
+                      >
+                        <UserRoundX size={16} aria-hidden="true" />
+                        Desactivar
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="lk-btn lk-btn--primary"
+                        onClick={() => openStateModal(selectedStudent, "activo")}
+                      >
+                        <UserCheck2 size={16} aria-hidden="true" />
+                        Reactivar
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-          </DashboardPanel>
+              )}
+            </DashboardPanel>
+          </div>
         </section>
 
         <RoleModal

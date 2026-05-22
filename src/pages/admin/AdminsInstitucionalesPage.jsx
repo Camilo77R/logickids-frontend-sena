@@ -164,8 +164,8 @@ export default function AdminsInstitucionalesPage() {
   }, [admins, searchTerm, statusFilter]);
 
   const selectedAdmin = useMemo(
-    () => visibleAdmins.find((admin) => admin.id === selectedAdminId) || null,
-    [selectedAdminId, visibleAdmins]
+    () => admins.find((admin) => admin.id === selectedAdminId) || null,
+    [admins, selectedAdminId]
   );
 
   const summary = useMemo(() => buildAdminsSummary(admins), [admins]);
@@ -206,6 +206,20 @@ export default function AdminsInstitucionalesPage() {
     loadAdmins();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (visibleAdmins.length === 0) {
+      if (selectedAdminId !== null) {
+        setSelectedAdminId(null);
+      }
+      return;
+    }
+
+    const hasVisibleSelection = visibleAdmins.some((admin) => admin.id === selectedAdminId);
+    if (!hasVisibleSelection) {
+      setSelectedAdminId(visibleAdmins[0].id);
+    }
+  }, [selectedAdminId, visibleAdmins]);
 
   const canManageAdmin = (admin) =>
     Boolean(canCreateAdmins && admin && !admin.es_admin_principal && admin.id !== user?.id);
@@ -296,7 +310,7 @@ export default function AdminsInstitucionalesPage() {
   };
 
   const pageActions = (
-    <div className="lk-role-page__toolbar">
+    <div className="lk-role-page__toolbar lk-role-page__toolbar--stacked">
       <div className="lk-role-page__filters">
         {STATUS_FILTERS.map((filter) => (
           <button
@@ -310,7 +324,7 @@ export default function AdminsInstitucionalesPage() {
         ))}
       </div>
 
-      <div className="lk-role-page__toolbar">
+      <div className="lk-role-page__toolbar-group">
         <div className="lk-role-search">
           <Search size={18} className="lk-role-search__icon" aria-hidden="true" />
           <input
