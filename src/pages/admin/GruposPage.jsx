@@ -24,7 +24,7 @@ import AppShell from "../../components/layout/AppShell";
 import { useAuth } from "../../hooks/useAuth";
 import adminGroupsService from "../../services/adminGroupsService";
 import adminStudentsService from "../../services/adminStudentsService";
-import adminService from "../../services/adminService";
+import adminTutorsService from "../../services/adminTutorsService";
 const STATUS_FILTERS = [
   { value: "todos", label: "Todos" },
   { value: "activo", label: "Activos" },
@@ -160,7 +160,7 @@ export default function GruposPage() {
       const [groupsData, studentsData, tutorsData] = await Promise.all([
         adminGroupsService.listGroups(),
         adminStudentsService.listStudents({ includeInactive: true }),
-        adminService.listUsers(), // Trae los usuarios con rol tutor de la institución
+        adminTutorsService.listTutors(),
       ]);
       setGroups(groupsData);
       setStudents(studentsData);
