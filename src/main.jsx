@@ -20,6 +20,8 @@ import './styles/auth.css'
 // 8. Shell y UI administrativa existentes
 import './styles/admin-shell.css'
 import './styles/admin-ui.css'
+import './styles/admin-grupos.css'
+
 
 import App from './App.jsx'
 
