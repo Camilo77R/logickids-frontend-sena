@@ -52,26 +52,6 @@ const tutorGroupsService = {
     return unwrapEntity(payload);
   },
 
-  crearGrupo: async (datosGrupo) => {
-    return await request("/grupos", {
-      method: "POST",
-      body: datosGrupo,
-    });
-  },
-
-  actualizarGrupo: async (grupoId, datosGrupo) => {
-    return await request(`/grupos/${grupoId}`, {
-      method: "PUT",
-      body: datosGrupo,
-    });
-  },
-
-  eliminarGrupo: async (grupoId) => {
-    return await request(`/grupos/${grupoId}`, {
-      method: "DELETE",
-    });
-  },
-
   listarMinijuegosActivos: async () => {
     const payload = await request("/minijuegos", { auth: false });
     return unwrapCollection(payload);

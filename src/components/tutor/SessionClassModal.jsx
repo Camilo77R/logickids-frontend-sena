@@ -81,10 +81,12 @@ export default function SessionClassModal({
     titulo: getSelectedMinigameTitle(minijuegos, paso.minijuegoId),
     isConfigured: Boolean(paso.minijuegoId),
   }));
+  const firstPathStepTitle = routePreview[0]?.titulo ?? "Sin seleccionar";
+  const lastPathStepTitle = routePreview[routePreview.length - 1]?.titulo ?? "Sin seleccionar";
 
   const helperCopy = useMemo(() => {
     if (draft.modo === "path") {
-      return "Configura la ruta paso a paso. Si quieres varios niveles del mismo juego, puedes repetir el minijuego en pasos distintos.";
+      return "La ruta se juega en orden, del paso 1 al último. Si necesitas varios niveles del mismo juego, repítelo en pasos consecutivos.";
     }
 
     return "Abre una actividad puntual con un solo minijuego. La adaptación posterior la decidirá el backend según desempeño.";
@@ -148,60 +150,77 @@ export default function SessionClassModal({
   };
 
   return (
-    <Modal show={show} onHide={isSubmitting ? undefined : onClose} centered size="lg">
-      <Modal.Header closeButton={!isSubmitting}>
-        <Modal.Title>Abrir actividad pedagógica</Modal.Title>
+    <Modal
+      show={show}
+      onHide={isSubmitting ? undefined : onClose}
+      centered
+      size="lg"
+      dialogClassName="tg-session-modal"
+    >
+      <Modal.Header closeButton={!isSubmitting} className="tg-session-modal__header">
+        <Modal.Title className="tg-session-modal__title">Abrir actividad pedagógica</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
-        <p className="text-muted mb-3">
+      <Modal.Body className="tg-session-modal__body">
+        <p className="tg-session-modal__intro">
           Configura cómo quieres abrir la clase del grupo <strong>{groupName}</strong>.
         </p>
 
         {errorMessage ? (
-          <Alert variant="danger" className="py-2">
+          <Alert variant="danger" className="py-2 tg-session-modal__alert">
             {errorMessage}
           </Alert>
         ) : null}
 
         {validationMessage ? (
-          <Alert variant="warning" className="py-2">
+          <Alert variant="warning" className="py-2 tg-session-modal__alert">
             {validationMessage}
           </Alert>
         ) : null}
 
         <Form.Group className="mb-3">
-          <Form.Label className="fw-semibold">Modo de sesión</Form.Label>
-          <div className="d-flex flex-column gap-2">
-            <Form.Check
-              type="radio"
-              id="session-mode-single"
-              name="session-mode"
-              label="Single: una actividad puntual con un solo minijuego"
-              checked={draft.modo === "single"}
-              onChange={() => handleModeChange("single")}
-              disabled={isSubmitting}
-            />
-            <Form.Check
-              type="radio"
-              id="session-mode-path"
-              name="session-mode"
-              label="Path: una ruta pedagógica con varios pasos secuenciales"
-              checked={draft.modo === "path"}
-              onChange={() => handleModeChange("path")}
-              disabled={isSubmitting}
-            />
+          <Form.Label className="tg-session-modal__label">Modo de sesión</Form.Label>
+          <div className="tg-session-modal__mode-list">
+            <label className={`tg-session-modal__mode-card${draft.modo === "single" ? " is-selected" : ""}`}>
+              <Form.Check
+                type="radio"
+                id="session-mode-single"
+                name="session-mode"
+                label="Single"
+                checked={draft.modo === "single"}
+                onChange={() => handleModeChange("single")}
+                disabled={isSubmitting}
+              />
+              <span className="tg-session-modal__mode-copy">
+                Una actividad puntual con un solo minijuego.
+              </span>
+            </label>
+            <label className={`tg-session-modal__mode-card${draft.modo === "path" ? " is-selected" : ""}`}>
+              <Form.Check
+                type="radio"
+                id="session-mode-path"
+                name="session-mode"
+                label="Path"
+                checked={draft.modo === "path"}
+                onChange={() => handleModeChange("path")}
+                disabled={isSubmitting}
+              />
+              <span className="tg-session-modal__mode-copy">
+                Una ruta pedagógica con varios pasos secuenciales.
+              </span>
+            </label>
           </div>
         </Form.Group>
 
-        <Alert variant="light" className="border small text-muted">
+        <div className="tg-session-modal__helper">
           {helperCopy}
-        </Alert>
+        </div>
 
         {draft.modo === "single" ? (
           <Form.Group>
-            <Form.Label className="fw-semibold">Minijuego inicial</Form.Label>
+            <Form.Label className="tg-session-modal__label">Minijuego inicial</Form.Label>
             <Form.Select
+              className="tg-session-modal__select"
               value={draft.minijuegoId}
               onChange={(event) => {
                 setDraft((prev) => ({ ...prev, minijuegoId: event.target.value }));
@@ -218,48 +237,57 @@ export default function SessionClassModal({
             </Form.Select>
           </Form.Group>
         ) : (
-          <div className="d-flex flex-column gap-3">
-            {draft.pasos.map((paso, index) => (
-              <div key={paso.localId} className="border rounded-3 p-3">
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <div>
-                    <strong>Paso {index + 1}</strong>
-                    <div className="small text-muted">
-                      Este paso se desbloquea cuando el estudiante complete el anterior.
+          <div className="tg-session-modal__path-shell">
+            <div className="tg-session-modal__path-note">
+              El estudiante empezará en el <strong>paso 1</strong> y avanzará hasta el último sin saltarse ninguno.
+            </div>
+
+            <div className="tg-session-modal__steps">
+              {draft.pasos.map((paso, index) => (
+                <div key={paso.localId} className="tg-session-modal__step">
+                  <div className="tg-session-modal__step-head">
+                    <div>
+                      <strong className="tg-session-modal__step-title">Paso {index + 1}</strong>
+                      <div className="tg-session-modal__step-copy">
+                        Se habilita cuando el estudiante complete el paso anterior.
+                      </div>
                     </div>
+
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      className="tg-session-modal__ghost-btn"
+                      onClick={() => removePathStep(paso.localId)}
+                      disabled={isSubmitting || draft.pasos.length <= 2}
+                    >
+                      Quitar
+                    </Button>
                   </div>
 
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => removePathStep(paso.localId)}
-                    disabled={isSubmitting || draft.pasos.length <= 2}
+                  <Form.Select
+                    className="tg-session-modal__select"
+                    value={paso.minijuegoId}
+                    onChange={(event) => updatePathStep(paso.localId, event.target.value)}
+                    disabled={isSubmitting}
                   >
-                    Quitar
-                  </Button>
+                    <option value="">Selecciona un minijuego</option>
+                    {minijuegos.map((minijuego) => (
+                      <option key={minijuego.id} value={minijuego.id}>
+                        {minijuego.titulo}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </div>
+              ))}
+            </div>
 
-                <Form.Select
-                  value={paso.minijuegoId}
-                  onChange={(event) => updatePathStep(paso.localId, event.target.value)}
-                  disabled={isSubmitting}
-                >
-                  <option value="">Selecciona un minijuego</option>
-                  {minijuegos.map((minijuego) => (
-                    <option key={minijuego.id} value={minijuego.id}>
-                      {minijuego.titulo}
-                    </option>
-                  ))}
-                </Form.Select>
-              </div>
-            ))}
-
-            <div className="d-flex justify-content-between align-items-center">
-              <span className="small text-muted">
+            <div className="tg-session-modal__step-footer">
+              <span className="tg-session-modal__footnote">
                 Máximo 25 pasos por sesión. Puedes repetir un minijuego para crear varios niveles.
               </span>
               <Button
-                variant="outline-primary"
+                variant="outline-secondary"
+                className="tg-session-modal__ghost-btn"
                 onClick={addPathStep}
                 disabled={isSubmitting || !canAddMoreSteps}
               >
@@ -269,11 +297,11 @@ export default function SessionClassModal({
           </div>
         )}
 
-        <div className="border rounded-3 p-3 mt-4 bg-light-subtle">
-          <div className="fw-semibold mb-2">Resumen de la actividad</div>
+        <div className="tg-session-modal__summary">
+          <div className="tg-session-modal__summary-title">Resumen de la actividad</div>
 
           {draft.modo === "single" ? (
-            <div className="small text-muted">
+            <div className="tg-session-modal__summary-copy">
               <div className="mb-1">
                 <strong>Modo:</strong> Sesión individual
               </div>
@@ -286,28 +314,40 @@ export default function SessionClassModal({
               </div>
             </div>
           ) : (
-            <div className="small text-muted">
+            <div className="tg-session-modal__summary-copy">
               <div className="mb-2">
                 <strong>Modo:</strong> Ruta pedagógica de {routePreview.length} paso
                 {routePreview.length === 1 ? "" : "s"}
               </div>
-              <ol className="mb-0 ps-3">
-                {routePreview.map((paso) => (
-                  <li key={`${paso.orden}-${paso.titulo}`} className={paso.isConfigured ? "" : "text-danger"}>
-                    {paso.titulo}
-                  </li>
-                ))}
-              </ol>
+              <div className="mb-1">
+                <strong>Inicio:</strong> {firstPathStepTitle}
+              </div>
+              <div className="mb-1">
+                <strong>Cierre:</strong> {lastPathStepTitle}
+              </div>
+              <div>
+                La ruta se jugará de forma secuencial hasta completar el último paso.
+              </div>
             </div>
           )}
         </div>
       </Modal.Body>
 
-      <Modal.Footer>
-        <Button variant="outline-secondary" onClick={onClose} disabled={isSubmitting}>
+      <Modal.Footer className="tg-session-modal__footer">
+        <Button
+          variant="outline-secondary"
+          className="tg-session-modal__footer-btn tg-session-modal__footer-btn--secondary"
+          onClick={onClose}
+          disabled={isSubmitting}
+        >
           Cancelar
         </Button>
-        <Button variant="primary" onClick={handleConfirm} disabled={isSubmitting}>
+        <Button
+          variant="primary"
+          className="tg-session-modal__footer-btn tg-session-modal__footer-btn--primary"
+          onClick={handleConfirm}
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Spinner size="sm" className="me-2" />
