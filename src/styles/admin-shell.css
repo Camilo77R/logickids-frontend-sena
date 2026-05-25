@@ -189,9 +189,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  padding: 0.9rem 1.1rem;
-  border-radius: var(--lk-radius-md);
+  padding: 0.82rem 1.08rem;
+  border-radius: 999px;
   font-weight: 800;
+  font-size: 0.84rem;
+  letter-spacing: -0.01em;
   border: 1px solid transparent;
   cursor: pointer;
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
@@ -207,15 +209,15 @@
 }
 
 .lk-btn--primary {
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--lk-purple), var(--lk-purple-dark));
-  box-shadow: 0 12px 24px var(--lk-purple-glow);
+  color: var(--lk-purple-deep);
+  background: linear-gradient(135deg, var(--lk-yellow-dark), var(--lk-yellow));
+  box-shadow: 0 12px 24px rgba(255, 202, 40, 0.26);
 }
 
 .lk-btn--secondary {
   color: var(--lk-text);
-  background: #ffffff;
-  border-color: var(--lk-color-border);
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(139, 47, 201, 0.12);
 }
 
 .lk-btn--subtle {
@@ -227,6 +229,17 @@
   color: var(--lk-danger);
   background: var(--lk-danger-soft);
   border-color: rgba(220,38,38,0.2);
+}
+
+.lk-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f5a910, #ffbd17);
+}
+
+.lk-btn--secondary:hover:not(:disabled),
+.lk-btn--subtle:hover:not(:disabled) {
+  color: var(--lk-purple);
+  background: var(--lk-surface-soft);
+  border-color: rgba(139, 47, 201, 0.18);
 }
 
 .lk-btn--full {

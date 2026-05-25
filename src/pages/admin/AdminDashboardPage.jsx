@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
   Clock3,
+  GraduationCap,
   Mail,
   ShieldAlert,
+  ShieldCheck,
   UserCheck2,
   UserCog2,
   UserPlus2,
@@ -15,6 +17,7 @@ import DashboardPanel from "../../components/dashboard/DashboardPanel";
 import QuickActionCard from "../../components/dashboard/QuickActionCard";
 import { useAuth } from "../../hooks/useAuth";
 import adminService from "../../services/adminService";
+import adminTutorsService from "../../services/adminTutorsService";
 import { buildAdminDashboardView } from "./adminDashboard.selectors";
 
 export default function AdminDashboardPage() {
@@ -31,7 +34,7 @@ export default function AdminDashboardPage() {
         setIsLoading(true);
 
         const [usersData, requestsData] = await Promise.all([
-          adminService.listUsers(),
+          adminTutorsService.listTutors(),
           adminService.listReactivationRequests(),
         ]);
 
@@ -68,7 +71,7 @@ export default function AdminDashboardPage() {
   return (
     <AppShell
       title={`Hola, ${firstName}`}
-      description="Supervisa tutores, activaciones y solicitudes dentro de tu institución."
+      description="Coordina tutores, estudiantes y accesos desde un solo punto de control institucional."
       notificationCount={pendingRequests}
     >
       <div className="lk-role-dashboard">
@@ -78,8 +81,8 @@ export default function AdminDashboardPage() {
           <span className="lk-role-dashboard__hero-badge">Panel institucional</span>
           <h2 className="lk-role-dashboard__hero-title">Tu institución bajo control</h2>
           <p className="lk-role-dashboard__hero-subtitle">
-            Aquí concentras el pulso de tutores, activaciones y reactivaciones sin salir del
-            alcance que el backend permite para tu institución.
+            Aquí concentras el pulso de tutores, estudiantes, admins y solicitudes para que la
+            operación diaria avance sin fricción.
           </p>
 
           <div className="lk-role-dashboard__hero-tags">
@@ -127,21 +130,35 @@ export default function AdminDashboardPage() {
           <DashboardPanel
             eyebrow="Acciones rápidas"
             title="Siguientes movimientos"
-            subtitle="Atajos para administrar las cuentas que hoy requieren atención."
+            subtitle="Atajos para entrar directo al módulo que hoy necesita tu atención."
           >
             <div className="lk-role-quick-grid">
               <QuickActionCard
                 to="/admin/usuarios"
                 icon={UsersRound}
                 title="Gestionar tutores"
-                description="Activa cuentas, revisa estados y filtra el personal de tu institución."
+                description="Activa cuentas, revisa estados y ordena el equipo docente."
                 tone="purple"
+              />
+              <QuickActionCard
+                to="/admin/estudiantes"
+                icon={GraduationCap}
+                title="Gestionar estudiantes"
+                description="Mueve grupos, revisa estado y comparte el acceso QR cuando haga falta."
+                tone="gold"
+              />
+              <QuickActionCard
+                to="/admin/admins"
+                icon={ShieldCheck}
+                title="Coordinar admins"
+                description="Mantén claro quién acompaña la gestión institucional contigo."
+                tone="rose"
               />
               <QuickActionCard
                 to="/admin/solicitudes"
                 icon={Mail}
                 title="Revisar solicitudes"
-                description="Atiende reactivaciones pendientes sin salir del flujo institucional."
+                description="Atiende reactivaciones pendientes sin perder el contexto del día."
                 tone="orange"
               />
             </div>
@@ -150,7 +167,7 @@ export default function AdminDashboardPage() {
           <DashboardPanel
             eyebrow="Pulso del tablero"
             title="Salud de accesos"
-            subtitle="Indicadores clave para saber si tu institución está lista para operar."
+            subtitle="Indicadores clave para saber si tu institución está lista para operar hoy."
             aside={<Activity size={18} color="var(--lk-purple)" aria-hidden="true" />}
           >
             <div className="lk-role-inline-metric">
@@ -176,7 +193,7 @@ export default function AdminDashboardPage() {
           <DashboardPanel
             eyebrow="Visibilidad rápida"
             title="Tutores que requieren contexto"
-            subtitle="Muestra breve del personal visible para el admin con el contrato actual."
+            subtitle="Muestra breve del personal docente que hoy conviene revisar con más atención."
             aside={<UserCog2 size={18} color="var(--lk-purple)" aria-hidden="true" />}
           >
             <div className="lk-role-list">

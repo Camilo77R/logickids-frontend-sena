@@ -61,24 +61,6 @@ const estudianteService = {
         return payload?.data ?? null;
     },
 
-    // Activar/desactivar sesión de un estudiante
-    async toggleSesion(estudianteId, sesionActiva) {
-        const payload = await request(`/estudiantes/${estudianteId}/sesion`, {
-            method: "PATCH",
-            body: { sesion_activa: sesionActiva },
-        });
-        return payload?.data ?? null;
-    },
-
-    // Activar/desactivar sesión en un grupo específico
-    async toggleSesionGrupo(estudianteId, grupoId, sesionActiva) {
-        const payload = await request(`/estudiantes/${estudianteId}/grupos/${grupoId}/sesion`, {
-            method: "PATCH",
-            body: { sesion_activa: sesionActiva },
-        });
-        return payload?.data ?? null;
-    },
-
     // Cambiar grupo de un estudiante
     async cambiarGrupo(estudianteId, nuevoGrupoId) {
         const payload = await request(`/estudiantes/${estudianteId}/grupo`, {

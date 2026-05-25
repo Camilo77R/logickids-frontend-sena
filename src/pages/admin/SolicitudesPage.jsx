@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
 import EmptyState from "../../components/common/EmptyState";
+import RoleModal from "../../components/common/RoleModal";
 import StatusBadge from "../../components/common/StatusBadge";
 import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
 import DashboardPanel from "../../components/dashboard/DashboardPanel";
@@ -377,70 +378,54 @@ export default function SolicitudesPage() {
           </DashboardPanel>
         </section>
 
-        {showRechazoModal ? (
-          <div className="lk-role-modal-overlay" onClick={() => setShowRechazoModal(false)}>
-            <div className="lk-role-modal" onClick={(event) => event.stopPropagation()}>
-              <header className="lk-role-modal__header">
-                <div>
-                  <span className="lk-role-modal__eyebrow">Respuesta institucional</span>
-                  <h3 className="lk-role-modal__title">Rechazar solicitud</h3>
-                </div>
-                <button
-                  type="button"
-                  className="lk-btn lk-btn--secondary"
-                  onClick={() => setShowRechazoModal(false)}
-                >
-                  Cerrar
-                </button>
-              </header>
-
-              <p className="lk-role-modal__warning">
-                Esta acción enviará al tutor el motivo del rechazo. Procura dejar una respuesta
-                clara y útil.
-              </p>
-
-              <div className="lk-role-modal__field">
-                <strong>Motivo del rechazo</strong>
-                <textarea
-                  className="lk-role-textarea"
-                  value={rechazoMotivo}
-                  onChange={(event) => setRechazoMotivo(event.target.value)}
-                  placeholder="Ejemplo: la solicitud no cumple todavía las condiciones para volver a activar la cuenta."
-                  autoFocus
-                />
-                <span className="lk-role-modal__muted">
-                  Este texto quedará asociado a la respuesta institucional.
-                </span>
-              </div>
-
-              {selectedSolicitud ? (
-                <div className="lk-role-modal__field">
-                  <strong>Solicitud seleccionada</strong>
-                  <p>
-                    {selectedSolicitud.tutor_nombre} · {selectedSolicitud.correo_contacto}
-                  </p>
-                </div>
-              ) : null}
-
-              <div className="lk-role-modal__actions">
-                <button
-                  type="button"
-                  className="lk-btn lk-btn--secondary"
-                  onClick={() => setShowRechazoModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  className="lk-btn lk-btn--ghost-danger"
-                  onClick={handleRechazar}
-                >
-                  Confirmar rechazo
-                </button>
-              </div>
-            </div>
+        <RoleModal
+          open={showRechazoModal}
+          onClose={() => setShowRechazoModal(false)}
+          eyebrow="Respuesta institucional"
+          title="Rechazar solicitud"
+          warning="Esta acción enviará al tutor el motivo del rechazo. Procura dejar una respuesta clara y útil."
+          actions={
+            <>
+              <button
+                type="button"
+                className="lk-btn lk-btn--secondary"
+                onClick={() => setShowRechazoModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="lk-btn lk-btn--ghost-danger"
+                onClick={handleRechazar}
+              >
+                Confirmar rechazo
+              </button>
+            </>
+          }
+        >
+          <div className="lk-role-modal__field">
+            <strong>Motivo del rechazo</strong>
+            <textarea
+              className="lk-role-textarea"
+              value={rechazoMotivo}
+              onChange={(event) => setRechazoMotivo(event.target.value)}
+              placeholder="Ejemplo: la solicitud no cumple todavía las condiciones para volver a activar la cuenta."
+              autoFocus
+            />
+            <span className="lk-role-modal__muted">
+              Este texto quedará asociado a la respuesta institucional.
+            </span>
           </div>
-        ) : null}
+
+          {selectedSolicitud ? (
+            <div className="lk-role-modal__field">
+              <strong>Solicitud seleccionada</strong>
+              <p>
+                {selectedSolicitud.tutor_nombre} · {selectedSolicitud.correo_contacto}
+              </p>
+            </div>
+          ) : null}
+        </RoleModal>
       </div>
     </AppShell>
   );

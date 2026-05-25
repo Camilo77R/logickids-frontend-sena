@@ -3,6 +3,33 @@ import { request } from "./httpClient";
 const unwrapCollection = (payload) => payload?.data ?? (Array.isArray(payload) ? payload : []);
 const unwrapEntity = (payload) => payload?.data ?? payload ?? null;
 
+const normalizeSessionOpenPayload = ({ modo, minijuegoId, pasos }) => {
+  const normalizedMode = modo === "path" ? "path" : "single";
+
+  if (normalizedMode === "path") {
+    const normalizedSteps = Array.isArray(pasos)
+      ? pasos
+          .map((paso) => ({
+            minijuego_id: Number(paso.minijuegoId),
+            configuracion_base: {},
+          }))
+          .filter((paso) => Number.isInteger(paso.minijuego_id) && paso.minijuego_id > 0)
+      : [];
+
+    return {
+      sesion_activa: true,
+      modo: "path",
+      pasos: normalizedSteps,
+    };
+  }
+
+  return {
+    sesion_activa: true,
+    modo: "single",
+    minijuego_id: Number(minijuegoId),
+  };
+};
+
 /**
  * Servicio para manejar la lógica de grupos del Tutor
  */
@@ -30,13 +57,10 @@ const tutorGroupsService = {
     return unwrapCollection(payload);
   },
 
-  abrirSesionClase: async (grupoId, minijuegoId) => {
+  abrirSesionClase: async (grupoId, sessionConfig) => {
     return await request(`/grupos/${grupoId}/sesion`, {
       method: "PATCH",
-      body: {
-        sesion_activa: true,
-        minijuego_id: minijuegoId,
-      },
+      body: normalizeSessionOpenPayload(sessionConfig),
     });
   },
 
