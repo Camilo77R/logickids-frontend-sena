@@ -11,6 +11,7 @@ export default function SesionesTable({
           <tr>
             <th>Fecha</th>
             {showStudentColumn && <th>Estudiante</th>}
+            <th>Actividad</th>
             <th>Minijuego</th>
             <th>Puntaje</th>
             <th>Aciertos</th>
@@ -37,7 +38,15 @@ export default function SesionesTable({
               )}
 
               <td>
+                <div className="ses-cell-primary">{s.actividad_titulo || "Actividad"}</div>
+                <div className="ses-cell-secondary">{s.actividad_detalle || "Sin detalle"}</div>
+              </td>
+
+              <td>
                 <span className="ses-tag">{s.minijuego}</span>
+                {s.habilidad ? (
+                  <div className="ses-cell-secondary">Habilidad: {s.habilidad}</div>
+                ) : null}
               </td>
 
               <td className="ses-td-bold">{s.puntaje}</td>

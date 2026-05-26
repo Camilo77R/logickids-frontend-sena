@@ -3,30 +3,27 @@ import { request } from "./httpClient";
 const unwrapCollection = (payload) => payload?.data ?? (Array.isArray(payload) ? payload : []);
 const unwrapEntity = (payload) => payload?.data ?? payload ?? null;
 
-const normalizeSessionOpenPayload = ({ modo, minijuegoId, pasos }) => {
+const normalizePositiveInt = (value, fallback = null) => {
+  const normalized = Number(value);
+  return Number.isInteger(normalized) && normalized > 0 ? normalized : fallback;
+};
+
+const normalizeSessionOpenPayload = ({ modo, minijuegoId, niveles, rutaId }) => {
   const normalizedMode = modo === "path" ? "path" : "single";
 
   if (normalizedMode === "path") {
-    const normalizedSteps = Array.isArray(pasos)
-      ? pasos
-          .map((paso) => ({
-            minijuego_id: Number(paso.minijuegoId),
-            configuracion_base: {},
-          }))
-          .filter((paso) => Number.isInteger(paso.minijuego_id) && paso.minijuego_id > 0)
-      : [];
-
     return {
       sesion_activa: true,
       modo: "path",
-      pasos: normalizedSteps,
+      ruta_id: normalizePositiveInt(rutaId),
     };
   }
 
   return {
     sesion_activa: true,
     modo: "single",
-    minijuego_id: Number(minijuegoId),
+    minijuego_id: normalizePositiveInt(minijuegoId),
+    niveles: normalizePositiveInt(niveles, 3),
   };
 };
 
@@ -54,6 +51,11 @@ const tutorGroupsService = {
 
   listarMinijuegosActivos: async () => {
     const payload = await request("/minijuegos", { auth: false });
+    return unwrapCollection(payload);
+  },
+
+  listarRutasPedagogicas: async () => {
+    const payload = await request("/rutas-pedagogicas");
     return unwrapCollection(payload);
   },
 

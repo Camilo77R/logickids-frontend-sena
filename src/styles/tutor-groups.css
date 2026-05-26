@@ -444,6 +444,7 @@
   border: 1.5px solid var(--tg-border);
   border-radius: 1.6rem;
   background: var(--tg-surface) !important;
+  opacity: 1;
   box-shadow: 0 18px 48px rgba(131, 68, 127, 0.16);
   font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
 }
@@ -456,6 +457,7 @@
 .tg-session-modal__body,
 .tg-session-modal__footer {
   background: var(--tg-surface) !important;
+  opacity: 1;
 }
 
 .tg-session-modal__header {
@@ -543,6 +545,11 @@
   box-shadow: inset 0 0 0 1px rgba(188, 89, 177, 0.14);
 }
 
+.tg-session-modal__mode-card.is-disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
 .tg-session-modal__mode-card .form-check {
   margin-bottom: 0;
 }
@@ -565,6 +572,12 @@
   line-height: 1.5;
 }
 
+.tg-session-modal__mode-hint {
+  color: var(--tg-soft);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
 .tg-session-modal__helper,
 .tg-session-modal__summary {
   padding: 0.9rem 1rem;
@@ -579,7 +592,8 @@
   line-height: 1.55;
 }
 
-.tg-session-modal__select {
+.tg-session-modal__select,
+.tg-session-modal__number {
   min-height: 46px;
   border: 1.5px solid var(--tg-border);
   border-radius: 0.9rem;
@@ -589,9 +603,109 @@
   box-shadow: none;
 }
 
-.tg-session-modal__select:focus {
+.tg-session-modal__select:focus,
+.tg-session-modal__number:focus {
   border-color: var(--tg-p);
   box-shadow: 0 0 0 3px rgba(188, 89, 177, 0.12);
+}
+
+.tg-session-modal__field-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(180px, 1fr);
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.tg-session-modal__preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
+}
+
+.tg-session-modal__preset-pill {
+  min-width: 42px;
+  min-height: 32px;
+  padding: 0.35rem 0.7rem;
+  border: 1.5px solid var(--tg-border);
+  border-radius: 999px;
+  background: var(--tg-surface);
+  color: var(--tg-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+}
+
+.tg-session-modal__preset-pill.is-selected {
+  border-color: var(--tg-p);
+  background: var(--tg-pbg);
+  color: var(--tg-pd);
+}
+
+.tg-session-modal__preset-pill:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tg-session-modal__preview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1.5px solid var(--tg-border);
+  border-radius: 1rem;
+  background: #fcfafc;
+}
+
+.tg-session-modal__preview-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tg-session-modal__preview-title {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--tg-text);
+  font-size: 0.98rem;
+  font-weight: 700;
+  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+}
+
+.tg-session-modal__preview-description {
+  margin: 0;
+  color: var(--tg-muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.tg-session-modal__meta-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.tg-session-modal__meta-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: var(--tg-ybg);
+  color: var(--tg-yd);
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tg-session-modal__meta-pill.is-soft {
+  background: var(--tg-pbg);
+  color: var(--tg-pd);
 }
 
 .tg-session-modal__steps {
@@ -616,6 +730,48 @@
   background: #fff8ea;
   color: var(--tg-soft);
   font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.tg-session-modal__route-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.tg-session-modal__route-block {
+  padding: 0.9rem 0.95rem;
+  border: 1.5px solid var(--tg-border);
+  border-radius: 0.95rem;
+  background: var(--tg-surface);
+}
+
+.tg-session-modal__route-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+  color: var(--tg-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.tg-session-modal__route-block-title {
+  margin-bottom: 0.2rem;
+  color: var(--tg-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+}
+
+.tg-session-modal__route-block-copy {
+  margin: 0;
+  color: var(--tg-muted);
+  font-size: 0.76rem;
   line-height: 1.55;
 }
 
@@ -744,11 +900,20 @@
   }
 
   .tg-session-modal__mode-list,
+  .tg-session-modal__field-grid,
   .tg-session-modal__step-head,
   .tg-session-modal__step-footer {
     grid-template-columns: 1fr;
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .tg-session-modal__preview-head {
+    flex-direction: column;
+  }
+
+  .tg-session-modal__meta-list {
+    justify-content: flex-start;
   }
 
   .tg-group-item__header,
