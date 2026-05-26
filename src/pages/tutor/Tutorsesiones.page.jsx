@@ -12,6 +12,7 @@ import {
 import tutorGroupsService from "../../services/tutorGroupsService";
 
 const normalizeId = (value) => String(value ?? "");
+const resolveActivityKey = (session) => session?.actividad_clave || `sesion-${session?.id ?? "sin-clave"}`;
 
 export default function SesionesPage() {
   const [tipo, setTipo] = useState("estudiante");
@@ -107,17 +108,26 @@ export default function SesionesPage() {
 
   /* ── Totales ── */
   const summary = useMemo(
-    () =>
-      data.reduce(
+    () => {
+      const activityKeys = new Set();
+
+      const totals = data.reduce(
         (acc, s) => {
           acc.sesiones += 1;
           acc.puntaje  += Number(s.puntaje  || 0);
           acc.aciertos += Number(s.aciertos || 0);
           acc.errores  += Number(s.errores  || 0);
+          activityKeys.add(resolveActivityKey(s));
           return acc;
         },
         { sesiones: 0, puntaje: 0, aciertos: 0, errores: 0 }
-      ),
+      );
+
+      return {
+        ...totals,
+        actividades: activityKeys.size,
+      };
+    },
     [data]
   );
 
@@ -159,16 +169,16 @@ export default function SesionesPage() {
       <div className="ses-stats-grid">
         <div className="ses-stat-card ses-stat-card--orange">
           <div className="ses-stat-info">
-            <span className="ses-stat-label">Sesiones encontradas</span>
-            <span className="ses-stat-value">{summary.sesiones}</span>
+            <span className="ses-stat-label">Actividades detectadas</span>
+            <span className="ses-stat-value">{summary.actividades}</span>
           </div>
           <span className="ses-stat-icon">⏱️</span>
         </div>
 
         <div className="ses-stat-card ses-stat-card--purple">
           <div className="ses-stat-info">
-            <span className="ses-stat-label">Puntaje acumulado</span>
-            <span className="ses-stat-value">{summary.puntaje}</span>
+            <span className="ses-stat-label">Sesiones / niveles</span>
+            <span className="ses-stat-value">{summary.sesiones}</span>
           </div>
           <span className="ses-stat-icon">🏆</span>
         </div>
@@ -217,6 +227,9 @@ export default function SesionesPage() {
                 <History size={16} />
                 Historial de sesiones
               </div>
+              <p className="ses-history-note">
+                Cada fila es una sesión hija. Las que comparten la misma actividad muestran el mismo bloque de contexto pedagógico.
+              </p>
               <SesionesTable
                 data={data}
                 onSelectSession={handleSelectSession}
@@ -246,6 +259,14 @@ export default function SesionesPage() {
                 </p>
               ) : (
                 <div className="ses-eventos-list">
+                  <div className="ses-activity-summary">
+                    <div className="ses-cell-primary">
+                      {selectedSession.actividad_titulo || "Actividad seleccionada"}
+                    </div>
+                    <div className="ses-cell-secondary">
+                      {selectedSession.actividad_detalle || "Sin detalle de actividad"}
+                    </div>
+                  </div>
                   {eventosSesion.map((evento) => (
                     <div key={evento.id} className="ses-evento-item">
                       <div className="ses-evento-header">

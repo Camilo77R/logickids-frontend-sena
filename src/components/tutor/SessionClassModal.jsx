@@ -1,151 +1,147 @@
 import { useEffect, useMemo, useState } from "react";
 import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 
-let localStepSeed = 0;
+const DEFAULT_SINGLE_LEVELS = 3;
 
-const createLocalStepId = () => {
-  if (globalThis.crypto?.randomUUID) {
-    return globalThis.crypto.randomUUID();
-  }
+const getFirstCatalogId = (items) => (items[0]?.id ? String(items[0].id) : "");
 
-  localStepSeed += 1;
-  return `session-step-${Date.now()}-${localStepSeed}`;
+const buildInitialDraft = (minijuegos, rutasPedagogicas) => {
+  const hasSingleCatalog = minijuegos.length > 0;
+  const defaultMode = hasSingleCatalog ? "single" : "path";
+
+  return {
+    modo: defaultMode,
+    minijuegoId: getFirstCatalogId(minijuegos),
+    niveles: String(DEFAULT_SINGLE_LEVELS),
+    rutaId: getFirstCatalogId(rutasPedagogicas),
+  };
 };
 
-const createStepDraft = (minijuegoId = "") => ({
-  localId: createLocalStepId(),
-  minijuegoId: String(minijuegoId || ""),
-});
-
-const buildDefaultPathSteps = (minijuegos) => {
-  const firstId = minijuegos[0]?.id ? String(minijuegos[0].id) : "";
-  const secondId = minijuegos[1]?.id ? String(minijuegos[1].id) : firstId;
-
-  return [createStepDraft(firstId), createStepDraft(secondId)];
+const parsePositiveInt = (value) => {
+  const normalized = Number(value);
+  return Number.isInteger(normalized) && normalized > 0 ? normalized : null;
 };
 
-const buildInitialDraft = (minijuegos) => ({
-  modo: "single",
-  minijuegoId: minijuegos[0]?.id ? String(minijuegos[0].id) : "",
-  pasos: buildDefaultPathSteps(minijuegos),
-});
-
-const validateDraft = (draft) => {
+const validateDraft = (draft, { hasSingleCatalog, hasRouteCatalog }) => {
   if (draft.modo === "path") {
-    if (!Array.isArray(draft.pasos) || draft.pasos.length < 2) {
-      return "Una ruta pedagógica necesita al menos dos pasos.";
+    if (!hasRouteCatalog) {
+      return "No hay rutas pedagógicas publicadas para abrir esta clase.";
     }
 
-    if (draft.pasos.some((paso) => !paso.minijuegoId)) {
-      return "Cada paso de la ruta debe tener un minijuego seleccionado.";
+    if (!draft.rutaId) {
+      return "Debes seleccionar una ruta pedagógica para abrir la clase.";
     }
 
     return "";
+  }
+
+  if (!hasSingleCatalog) {
+    return "No hay minijuegos publicados para abrir una actividad individual.";
   }
 
   if (!draft.minijuegoId) {
     return "Debes seleccionar un minijuego para abrir la clase.";
   }
 
+  if (!parsePositiveInt(draft.niveles)) {
+    return "Debes indicar una cantidad de niveles mayor a cero.";
+  }
+
   return "";
 };
 
-const getSelectedMinigameTitle = (minijuegos, minijuegoId) =>
-  minijuegos.find((minijuego) => String(minijuego.id) === String(minijuegoId))?.titulo ??
-  "Sin seleccionar";
+const getSelectedMinigame = (minijuegos, minijuegoId) =>
+  minijuegos.find((minijuego) => String(minijuego.id) === String(minijuegoId)) ?? null;
+
+const getSelectedRoute = (rutasPedagogicas, rutaId) =>
+  rutasPedagogicas.find((ruta) => String(ruta.id) === String(rutaId)) ?? null;
+
+const formatLevelsCopy = (levels) => `${levels} nivel${levels === 1 ? "" : "es"}`;
+const LEVEL_PRESETS = [1, 2, 3, 4];
 
 export default function SessionClassModal({
   show,
   groupName,
   minijuegos,
+  rutasPedagogicas,
   onClose,
   onConfirm,
   isSubmitting,
   errorMessage,
 }) {
-  const [draft, setDraft] = useState(() => buildInitialDraft(minijuegos));
+  const [draft, setDraft] = useState(() => buildInitialDraft(minijuegos, rutasPedagogicas));
   const [validationMessage, setValidationMessage] = useState("");
+
+  const hasSingleCatalog = minijuegos.length > 0;
+  const hasRouteCatalog = rutasPedagogicas.length > 0;
 
   useEffect(() => {
     if (!show) {
       return;
     }
 
-    setDraft(buildInitialDraft(minijuegos));
+    setDraft(buildInitialDraft(minijuegos, rutasPedagogicas));
     setValidationMessage("");
-  }, [show, minijuegos]);
+  }, [show, minijuegos, rutasPedagogicas]);
 
-  const canAddMoreSteps = draft.pasos.length < 25;
-  const routePreview = draft.pasos.map((paso, index) => ({
-    orden: index + 1,
-    titulo: getSelectedMinigameTitle(minijuegos, paso.minijuegoId),
-    isConfigured: Boolean(paso.minijuegoId),
-  }));
-  const firstPathStepTitle = routePreview[0]?.titulo ?? "Sin seleccionar";
-  const lastPathStepTitle = routePreview[routePreview.length - 1]?.titulo ?? "Sin seleccionar";
+  const selectedMinigame = useMemo(
+    () => getSelectedMinigame(minijuegos, draft.minijuegoId),
+    [minijuegos, draft.minijuegoId]
+  );
+
+  const selectedRoute = useMemo(
+    () => getSelectedRoute(rutasPedagogicas, draft.rutaId),
+    [rutasPedagogicas, draft.rutaId]
+  );
+
+  const selectedLevels = parsePositiveInt(draft.niveles) ?? DEFAULT_SINGLE_LEVELS;
 
   const helperCopy = useMemo(() => {
     if (draft.modo === "path") {
-      return "La ruta se juega en orden, del paso 1 al último. Si necesitas varios niveles del mismo juego, repítelo en pasos consecutivos.";
+      return "La ruta oficial ya viene definida desde backend. El estudiante avanza bloque por bloque y el sistema decide la configuración real de cada nivel cuando le toque jugarlo.";
     }
 
-    return "Abre una actividad puntual con un solo minijuego. La adaptación posterior la decidirá el backend según desempeño.";
+    return "Elige un solo minijuego y cuántos niveles jugará esta clase. Si es su primera vez, el backend arranca desde un nivel base y luego ajusta los siguientes con el desempeño real.";
   }, [draft.modo]);
 
   const handleModeChange = (nextMode) => {
-    setDraft((prev) => ({
-      ...prev,
-      modo: nextMode,
-      pasos:
-        nextMode === "path" && prev.pasos.length < 2
-          ? buildDefaultPathSteps(minijuegos)
-          : prev.pasos,
-    }));
-    setValidationMessage("");
-  };
+    const canUseMode =
+      nextMode === "path" ? hasRouteCatalog : hasSingleCatalog;
 
-  const updatePathStep = (localId, minijuegoId) => {
-    setDraft((prev) => ({
-      ...prev,
-      pasos: prev.pasos.map((paso) =>
-        paso.localId === localId ? { ...paso, minijuegoId } : paso
-      ),
-    }));
-    setValidationMessage("");
-  };
+    if (!canUseMode) {
+      return;
+    }
 
-  const addPathStep = () => {
-    setDraft((prev) => ({
-      ...prev,
-      pasos: [
-        ...prev.pasos,
-        createStepDraft(prev.pasos[prev.pasos.length - 1]?.minijuegoId ?? ""),
-      ],
-    }));
-    setValidationMessage("");
-  };
-
-  const removePathStep = (localId) => {
-    setDraft((prev) => ({
-      ...prev,
-      pasos: prev.pasos.filter((paso) => paso.localId !== localId),
-    }));
+    setDraft((prev) => ({ ...prev, modo: nextMode }));
     setValidationMessage("");
   };
 
   const handleConfirm = () => {
-    const validationError = validateDraft(draft);
+    const validationError = validateDraft(draft, {
+      hasSingleCatalog,
+      hasRouteCatalog,
+    });
+
     if (validationError) {
       setValidationMessage(validationError);
       return;
     }
 
+    if (draft.modo === "path") {
+      onConfirm({
+        modo: "path",
+        rutaId: Number(draft.rutaId),
+        rutaNombre: selectedRoute?.nombre ?? "Ruta pedagógica",
+        totalPasos: Number(selectedRoute?.total_pasos ?? 0),
+      });
+      return;
+    }
+
     onConfirm({
-      modo: draft.modo,
-      minijuegoId: draft.minijuegoId ? Number(draft.minijuegoId) : null,
-      pasos: draft.pasos.map((paso) => ({
-        minijuegoId: Number(paso.minijuegoId),
-      })),
+      modo: "single",
+      minijuegoId: Number(draft.minijuegoId),
+      minijuegoTitulo: selectedMinigame?.titulo ?? "Minijuego",
+      niveles: selectedLevels,
     });
   };
 
@@ -158,7 +154,7 @@ export default function SessionClassModal({
       dialogClassName="tg-session-modal"
     >
       <Modal.Header closeButton={!isSubmitting} className="tg-session-modal__header">
-        <Modal.Title className="tg-session-modal__title">Abrir actividad pedagógica</Modal.Title>
+        <Modal.Title className="tg-session-modal__title">Configurar actividad pedagógica</Modal.Title>
       </Modal.Header>
 
       <Modal.Body className="tg-session-modal__body">
@@ -179,120 +175,207 @@ export default function SessionClassModal({
         ) : null}
 
         <Form.Group className="mb-3">
-          <Form.Label className="tg-session-modal__label">Modo de sesión</Form.Label>
+          <Form.Label className="tg-session-modal__label">Tipo de actividad</Form.Label>
           <div className="tg-session-modal__mode-list">
-            <label className={`tg-session-modal__mode-card${draft.modo === "single" ? " is-selected" : ""}`}>
+            <label
+              className={`tg-session-modal__mode-card${draft.modo === "single" ? " is-selected" : ""}${
+                !hasSingleCatalog ? " is-disabled" : ""
+              }`}
+            >
               <Form.Check
                 type="radio"
                 id="session-mode-single"
                 name="session-mode"
-                label="Single"
+                label="Actividad de un juego"
                 checked={draft.modo === "single"}
                 onChange={() => handleModeChange("single")}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !hasSingleCatalog}
               />
               <span className="tg-session-modal__mode-copy">
-                Una actividad puntual con un solo minijuego.
+                Un solo minijuego con varios niveles consecutivos.
               </span>
+              {!hasSingleCatalog ? (
+                <span className="tg-session-modal__mode-hint">No hay minijuegos visibles en catálogo.</span>
+              ) : null}
             </label>
-            <label className={`tg-session-modal__mode-card${draft.modo === "path" ? " is-selected" : ""}`}>
+
+            <label
+              className={`tg-session-modal__mode-card${draft.modo === "path" ? " is-selected" : ""}${
+                !hasRouteCatalog ? " is-disabled" : ""
+              }`}
+            >
               <Form.Check
                 type="radio"
                 id="session-mode-path"
                 name="session-mode"
-                label="Path"
+                label="Ruta pedagógica"
                 checked={draft.modo === "path"}
                 onChange={() => handleModeChange("path")}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !hasRouteCatalog}
               />
               <span className="tg-session-modal__mode-copy">
-                Una ruta pedagógica con varios pasos secuenciales.
+                Una secuencia oficial de bloques y niveles en orden.
               </span>
+              {!hasRouteCatalog ? (
+                <span className="tg-session-modal__mode-hint">No hay rutas publicadas todavía.</span>
+              ) : null}
             </label>
           </div>
         </Form.Group>
 
-        <div className="tg-session-modal__helper">
-          {helperCopy}
-        </div>
+        <div className="tg-session-modal__helper">{helperCopy}</div>
 
         {draft.modo === "single" ? (
-          <Form.Group>
-            <Form.Label className="tg-session-modal__label">Minijuego inicial</Form.Label>
-            <Form.Select
-              className="tg-session-modal__select"
-              value={draft.minijuegoId}
-              onChange={(event) => {
-                setDraft((prev) => ({ ...prev, minijuegoId: event.target.value }));
-                setValidationMessage("");
-              }}
-              disabled={isSubmitting}
-            >
-              <option value="">Selecciona un minijuego</option>
-              {minijuegos.map((minijuego) => (
-                <option key={minijuego.id} value={minijuego.id}>
-                  {minijuego.titulo}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
+          <>
+            <div className="tg-session-modal__field-grid">
+              <Form.Group>
+                <Form.Label className="tg-session-modal__label">Minijuego</Form.Label>
+                <Form.Select
+                  className="tg-session-modal__select"
+                  value={draft.minijuegoId}
+                  onChange={(event) => {
+                    setDraft((prev) => ({ ...prev, minijuegoId: event.target.value }));
+                    setValidationMessage("");
+                  }}
+                  disabled={isSubmitting || !hasSingleCatalog}
+                >
+                  <option value="">Selecciona un minijuego</option>
+                  {minijuegos.map((minijuego) => (
+                    <option key={minijuego.id} value={minijuego.id}>
+                      {minijuego.titulo}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label className="tg-session-modal__label">Cantidad de niveles</Form.Label>
+                <Form.Control
+                  type="number"
+                  min="1"
+                  step="1"
+                  className="tg-session-modal__number"
+                  value={draft.niveles}
+                  onChange={(event) => {
+                    setDraft((prev) => ({ ...prev, niveles: event.target.value }));
+                    setValidationMessage("");
+                  }}
+                  disabled={isSubmitting || !hasSingleCatalog}
+                />
+                <div className="tg-session-modal__preset-row">
+                  {LEVEL_PRESETS.map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      className={`tg-session-modal__preset-pill${
+                        selectedLevels === preset ? " is-selected" : ""
+                      }`}
+                      onClick={() => {
+                        setDraft((prev) => ({ ...prev, niveles: String(preset) }));
+                        setValidationMessage("");
+                      }}
+                      disabled={isSubmitting || !hasSingleCatalog}
+                    >
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+              </Form.Group>
+            </div>
+
+            <div className="tg-session-modal__preview-card">
+              <div className="tg-session-modal__preview-head">
+                <div>
+                  <strong className="tg-session-modal__preview-title">
+                    {selectedMinigame?.titulo ?? "Sin minijuego seleccionado"}
+                  </strong>
+                  <p className="tg-session-modal__preview-description">
+                    {selectedMinigame?.descripcion ??
+                      "Selecciona un minijuego para revisar el enfoque pedagógico de esta actividad."}
+                  </p>
+                </div>
+                <div className="tg-session-modal__meta-list">
+                  <span className="tg-session-modal__meta-pill">
+                    {formatLevelsCopy(selectedLevels)}
+                  </span>
+                  {selectedMinigame?.habilidad ? (
+                    <span className="tg-session-modal__meta-pill is-soft">
+                      {selectedMinigame.habilidad}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </>
         ) : (
           <div className="tg-session-modal__path-shell">
-            <div className="tg-session-modal__path-note">
-              El estudiante empezará en el <strong>paso 1</strong> y avanzará hasta el último sin saltarse ninguno.
-            </div>
-
-            <div className="tg-session-modal__steps">
-              {draft.pasos.map((paso, index) => (
-                <div key={paso.localId} className="tg-session-modal__step">
-                  <div className="tg-session-modal__step-head">
-                    <div>
-                      <strong className="tg-session-modal__step-title">Paso {index + 1}</strong>
-                      <div className="tg-session-modal__step-copy">
-                        Se habilita cuando el estudiante complete el paso anterior.
-                      </div>
-                    </div>
-
-                    <Button
-                      variant="outline-secondary"
-                      size="sm"
-                      className="tg-session-modal__ghost-btn"
-                      onClick={() => removePathStep(paso.localId)}
-                      disabled={isSubmitting || draft.pasos.length <= 2}
-                    >
-                      Quitar
-                    </Button>
-                  </div>
-
-                  <Form.Select
-                    className="tg-session-modal__select"
-                    value={paso.minijuegoId}
-                    onChange={(event) => updatePathStep(paso.localId, event.target.value)}
-                    disabled={isSubmitting}
-                  >
-                    <option value="">Selecciona un minijuego</option>
-                    {minijuegos.map((minijuego) => (
-                      <option key={minijuego.id} value={minijuego.id}>
-                        {minijuego.titulo}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </div>
-              ))}
-            </div>
-
-            <div className="tg-session-modal__step-footer">
-              <span className="tg-session-modal__footnote">
-                Máximo 25 pasos por sesión. Puedes repetir un minijuego para crear varios niveles.
-              </span>
-              <Button
-                variant="outline-secondary"
-                className="tg-session-modal__ghost-btn"
-                onClick={addPathStep}
-                disabled={isSubmitting || !canAddMoreSteps}
+            <Form.Group>
+              <Form.Label className="tg-session-modal__label">Ruta oficial</Form.Label>
+              <Form.Select
+                className="tg-session-modal__select"
+                value={draft.rutaId}
+                onChange={(event) => {
+                  setDraft((prev) => ({ ...prev, rutaId: event.target.value }));
+                  setValidationMessage("");
+                }}
+                disabled={isSubmitting || !hasRouteCatalog}
               >
-                Agregar paso
-              </Button>
+                <option value="">Selecciona una ruta pedagógica</option>
+                {rutasPedagogicas.map((ruta) => (
+                  <option key={ruta.id} value={ruta.id}>
+                    {ruta.nombre}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <div className="tg-session-modal__path-note">
+              El estudiante inicia en el primer bloque y avanza hasta el último sin saltarse ninguno. Cada bloque puede contener uno o más niveles del mismo minijuego.
+            </div>
+
+            <div className="tg-session-modal__preview-card">
+              <div className="tg-session-modal__preview-head">
+                <div>
+                  <strong className="tg-session-modal__preview-title">
+                    {selectedRoute?.nombre ?? "Sin ruta seleccionada"}
+                  </strong>
+                  <p className="tg-session-modal__preview-description">
+                    {selectedRoute?.descripcion ??
+                      "Selecciona una ruta publicada para revisar el orden de minijuegos y niveles."}
+                  </p>
+                </div>
+
+                {selectedRoute ? (
+                  <div className="tg-session-modal__meta-list">
+                    <span className="tg-session-modal__meta-pill">
+                      {selectedRoute.total_bloques} bloque{selectedRoute.total_bloques === 1 ? "" : "s"}
+                    </span>
+                    <span className="tg-session-modal__meta-pill is-soft">
+                      {formatLevelsCopy(Number(selectedRoute.total_pasos ?? 0))}
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+
+              {selectedRoute?.bloques?.length ? (
+                <div className="tg-session-modal__route-blocks">
+                  {selectedRoute.bloques.map((bloque) => (
+                    <div key={bloque.id} className="tg-session-modal__route-block">
+                      <div className="tg-session-modal__route-block-head">
+                        <strong>Bloque {bloque.orden}</strong>
+                        <span>{formatLevelsCopy(Number(bloque.niveles ?? 1))}</span>
+                      </div>
+                      <div className="tg-session-modal__route-block-title">
+                        {bloque.minijuego_titulo}
+                      </div>
+                      <p className="tg-session-modal__route-block-copy">
+                        {bloque.habilidad ? `Enfoque: ${bloque.habilidad}. ` : ""}
+                        Se habilita cuando el estudiante complete el bloque anterior.
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </div>
         )}
@@ -303,30 +386,36 @@ export default function SessionClassModal({
           {draft.modo === "single" ? (
             <div className="tg-session-modal__summary-copy">
               <div className="mb-1">
-                <strong>Modo:</strong> Sesión individual
+                <strong>Tipo:</strong> Actividad de un juego
               </div>
               <div className="mb-1">
-                <strong>Juego seleccionado:</strong>{" "}
-                {getSelectedMinigameTitle(minijuegos, draft.minijuegoId)}
+                <strong>Juego:</strong> {selectedMinigame?.titulo ?? "Sin seleccionar"}
+              </div>
+              <div className="mb-1">
+                <strong>Recorrido:</strong> {formatLevelsCopy(selectedLevels)}
               </div>
               <div>
-                El estudiante jugará este único minijuego y el backend decidirá la configuración final de la partida.
+                El backend traducirá esta actividad a niveles secuenciales del mismo minijuego y decidirá la configuración real de cada uno.
               </div>
             </div>
           ) : (
             <div className="tg-session-modal__summary-copy">
-              <div className="mb-2">
-                <strong>Modo:</strong> Ruta pedagógica de {routePreview.length} paso
-                {routePreview.length === 1 ? "" : "s"}
+              <div className="mb-1">
+                <strong>Tipo:</strong> Ruta pedagógica
               </div>
               <div className="mb-1">
-                <strong>Inicio:</strong> {firstPathStepTitle}
+                <strong>Ruta:</strong> {selectedRoute?.nombre ?? "Sin seleccionar"}
               </div>
               <div className="mb-1">
-                <strong>Cierre:</strong> {lastPathStepTitle}
+                <strong>Alcance:</strong>{" "}
+                {selectedRoute
+                  ? `${selectedRoute.total_bloques} bloque${selectedRoute.total_bloques === 1 ? "" : "s"} · ${formatLevelsCopy(
+                      Number(selectedRoute.total_pasos ?? 0)
+                    )}`
+                  : "Sin ruta configurada"}
               </div>
               <div>
-                La ruta se jugará de forma secuencial hasta completar el último paso.
+                La clase seguirá el orden oficial de la ruta hasta completar el último bloque disponible.
               </div>
             </div>
           )}
@@ -346,7 +435,7 @@ export default function SessionClassModal({
           variant="primary"
           className="tg-session-modal__footer-btn tg-session-modal__footer-btn--primary"
           onClick={handleConfirm}
-          disabled={isSubmitting}
+          disabled={isSubmitting || (!hasSingleCatalog && !hasRouteCatalog)}
         >
           {isSubmitting ? (
             <>
@@ -354,7 +443,7 @@ export default function SessionClassModal({
               Abriendo...
             </>
           ) : (
-            "Abrir clase"
+            "Confirmar apertura"
           )}
         </Button>
       </Modal.Footer>

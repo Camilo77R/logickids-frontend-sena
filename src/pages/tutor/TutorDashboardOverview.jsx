@@ -31,6 +31,8 @@ import estudianteService from "../../services/estudianteService";
 import estadisticasService from "../../services/estadisticasService";
 import recomendacionesService from "../../services/recomendacionesService";
 import {
+  getSessionHeadline,
+  getSessionOpenSuccessMessage,
   getSessionModeLabel,
   getSessionStepsLabel,
   getSessionSummaryText,
@@ -148,6 +150,7 @@ export default function TutorDashboardOverview() {
   const [groups, setGroups] = useState([]);
   const [students, setStudents] = useState([]);
   const [games, setGames] = useState([]);
+  const [routes, setRoutes] = useState([]);
   const [skills, setSkills] = useState([]);
   const [recs, setRecs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -168,15 +171,17 @@ export default function TutorDashboardOverview() {
     try {
       setLoading(true);
 
-      const [loadedGroups, loadedStudents, loadedGames] = await Promise.all([
+      const [loadedGroups, loadedStudents, loadedGames, loadedRoutes] = await Promise.all([
         tutorGroupsService.getGroups(),
         estudianteService.listEstudiantes(),
         tutorGroupsService.listarMinijuegosActivos(),
+        tutorGroupsService.listarRutasPedagogicas(),
       ]);
 
       setGroups(loadedGroups);
       setStudents(loadedStudents);
       setGames(loadedGames);
+      setRoutes(loadedRoutes);
 
       const focusGroup = loadedGroups.find((group) => isSessionActive(group.sesion_activa)) ?? loadedGroups[0];
       if (!focusGroup?.id) {
@@ -234,8 +239,8 @@ export default function TutorDashboardOverview() {
 
   const handleToggle = async (group) => {
     if (!isSessionActive(group.sesion_activa)) {
-      if (!games.length) {
-        flash("err", "No hay minijuegos activos disponibles para abrir la clase.");
+      if (!games.length && !routes.length) {
+        flash("err", "No hay actividades pedagógicas disponibles para abrir la clase.");
         return;
       }
 
@@ -272,9 +277,7 @@ export default function TutorDashboardOverview() {
 
       flash(
         "ok",
-        sessionPlan.modo === "path"
-          ? `La ruta pedagógica de "${sessionModal.group.nombre}" quedó abierta con ${sessionPlan.pasos.length} pasos.`
-          : `La sesión individual de "${sessionModal.group.nombre}" quedó abierta correctamente.`
+        getSessionOpenSuccessMessage(sessionModal.group.nombre, sessionPlan)
       );
       closeSessionModal();
     } catch (error) {
@@ -296,9 +299,7 @@ export default function TutorDashboardOverview() {
     );
   }
 
-  const spotlightTitle = isSessionActive(focusGroup?.sesion_activa)
-    ? focusGroup?.sesion_minijuego_titulo || "Actividad en curso"
-    : "Diseña la próxima actividad";
+  const spotlightTitle = getSessionHeadline(focusGroup);
 
   const spotlightDescription = isSessionActive(focusGroup?.sesion_activa)
     ? getSessionSummaryText(focusGroup)
@@ -489,6 +490,7 @@ export default function TutorDashboardOverview() {
         show={sessionModal.open}
         groupName={sessionModal.group?.nombre ?? "grupo"}
         minijuegos={games}
+        rutasPedagogicas={routes}
         onClose={closeSessionModal}
         onConfirm={handleConfirmOpenSession}
         isSubmitting={Boolean(toggling)}

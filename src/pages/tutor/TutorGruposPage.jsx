@@ -3,6 +3,7 @@ import { BookOpen, Eye, Play, Route, Square, Users } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
 import tutorGroupsService from "../../services/tutorGroupsService";
 import {
+  getSessionOpenSuccessMessage,
   getSessionModeLabel,
   getSessionStepsLabel,
   getSessionSummaryText,
@@ -75,6 +76,7 @@ function DetailMetric({ label, value, helper }) {
 export default function TutorGruposPage() {
   const [grupos, setGrupos] = useState([]);
   const [minijuegos, setMinijuegos] = useState([]);
+  const [rutasPedagogicas, setRutasPedagogicas] = useState([]);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [selectedGroupDetail, setSelectedGroupDetail] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -106,13 +108,15 @@ export default function TutorGruposPage() {
   const loadGroupsAndCatalog = async (nextSelectedGroupId = selectedGroupId) => {
     try {
       setCargando(true);
-      const [loadedGroups, loadedGames] = await Promise.all([
+      const [loadedGroups, loadedGames, loadedRoutes] = await Promise.all([
         tutorGroupsService.getGroups(),
         tutorGroupsService.listarMinijuegosActivos(),
+        tutorGroupsService.listarRutasPedagogicas(),
       ]);
 
       setGrupos(loadedGroups);
       setMinijuegos(loadedGames);
+      setRutasPedagogicas(loadedRoutes);
       setError(null);
 
       if (!loadedGroups.length) {
@@ -172,10 +176,10 @@ export default function TutorGruposPage() {
   };
 
   const openSessionModal = (grupo) => {
-    if (!minijuegos.length) {
+    if (!minijuegos.length && !rutasPedagogicas.length) {
       setFeedback({
         type: "danger",
-        message: "No hay minijuegos activos disponibles para abrir la clase.",
+        message: "No hay actividades pedagógicas disponibles para abrir la clase.",
       });
       return;
     }
@@ -230,10 +234,7 @@ export default function TutorGruposPage() {
 
       setFeedback({
         type: "success",
-        message:
-          sessionPlan.modo === "path"
-            ? `La ruta pedagógica de "${sessionModal.group.nombre}" quedó abierta con ${sessionPlan.pasos.length} pasos.`
-            : `La sesión individual de "${sessionModal.group.nombre}" quedó abierta correctamente.`,
+        message: getSessionOpenSuccessMessage(sessionModal.group.nombre, sessionPlan),
       });
       closeSessionModal();
     } catch (openError) {
@@ -420,6 +421,7 @@ export default function TutorGruposPage() {
         show={sessionModal.open}
         groupName={sessionModal.group?.nombre ?? "grupo"}
         minijuegos={minijuegos}
+        rutasPedagogicas={rutasPedagogicas}
         onClose={closeSessionModal}
         onConfirm={handleConfirmOpenSession}
         isSubmitting={Boolean(cargandoAccion)}
