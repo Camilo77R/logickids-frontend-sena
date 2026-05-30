@@ -10,7 +10,8 @@
   display: grid;
   grid-template-columns: 92px minmax(0, 1fr);
   gap: 1rem;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   padding: 0.9rem;
   background:
     radial-gradient(circle at top left, rgba(255, 202, 40, 0.16), transparent 20%),
@@ -19,7 +20,7 @@
 }
 
 .lk-portal-sidebar {
-  min-height: calc(100vh - 1.8rem);
+  height: 100%;
   border-radius: 2.4rem;
   background: #bc59b1;
   border: none;
@@ -203,7 +204,8 @@
 }
 
 .lk-portal-shell__main {
-  min-height: calc(100vh - 1.8rem);
+  height: 100%;
+  min-height: 0;
   border-radius: 2.15rem;
   background: rgba(255, 255, 255, 0.58);
   border: 1px solid rgba(255, 255, 255, 0.62);
