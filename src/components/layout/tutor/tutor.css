@@ -1,0 +1,1590 @@
+/* tutor.css - Premium Light Dashboard Layout */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Fondo principal muy suave, no es blanco puro (evita lo genérico) */
+  --lk-tutor-bg: #f4f7f9; 
+  /* Superficies de cristal (Glassmorphism) */
+  --lk-tutor-surface: rgba(255, 255, 255, 0.75);
+  --lk-tutor-surface-hover: rgba(255, 255, 255, 0.95);
+  --lk-tutor-border: rgba(15, 23, 42, 0.08);
+  
+  /* Colores vibrantes y profesionales */
+  --lk-tutor-primary: #4f46e5; /* Índigo vibrante */
+  --lk-tutor-primary-hover: #4338ca;
+  --lk-tutor-accent-blue: #0ea5e9; /* Azul cielo */
+  --lk-tutor-accent-green: #10b981; /* Verde esmeralda */
+  --lk-tutor-accent-yellow: #f59e0b; /* Amarillo ámbar */
+  
+  /* Textos oscuros (Azul pizarra oscuro, no negro puro) */
+  --lk-tutor-text: #1e293b;
+  --lk-tutor-text-muted: #64748b;
+  --lk-tutor-glow: rgba(79, 70, 229, 0.15);
+}
+
+.tutor-layout-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--lk-tutor-bg);
+  color: var(--lk-tutor-text);
+  font-family: 'Outfit', -apple-system, sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background Blobs (Premium Vibe Light) */
+.tutor-bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.blob-1 {
+  width: 600px;
+  height: 600px;
+  background: var(--lk-tutor-accent-blue);
+  top: -200px;
+  left: -200px;
+}
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  background: var(--lk-tutor-accent-green);
+  bottom: -150px;
+  right: -100px;
+}
+
+/* Sidebar */
+.tutor-sidebar {
+  width: 260px;
+  height: 100%;
+  background: var(--lk-tutor-surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid var(--lk-tutor-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.03);
+}
+
+.tutor-brand {
+  padding: 32px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.tutor-brand-logo {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-tutor-accent-blue));
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 6px 16px var(--lk-tutor-glow);
+}
+.tutor-brand-text h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--lk-tutor-text);
+}
+.tutor-brand-text span {
+  font-size: 12px;
+  color: var(--lk-tutor-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tutor-nav {
+  flex: 1;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tutor-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: var(--lk-tutor-text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.tutor-nav-item:hover {
+  color: var(--lk-tutor-primary);
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.tutor-nav-item.active {
+  color: white;
+}
+
+.tutor-nav-active-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-tutor-accent-blue));
+  border-radius: 10px;
+  z-index: -1;
+  box-shadow: 0 4px 12px var(--lk-tutor-glow);
+}
+
+.tutor-sidebar-footer {
+  padding: 24px;
+  border-top: 1px solid var(--lk-tutor-border);
+}
+
+.tutor-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid var(--lk-tutor-border);
+  color: var(--lk-tutor-text-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.tutor-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.05);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Main Area */
+.tutor-main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+/* Topbar */
+.tutor-topbar {
+  height: 80px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--lk-tutor-border);
+  background: rgba(244, 247, 249, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+.tutor-topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--lk-tutor-surface);
+  border: 1px solid var(--lk-tutor-border);
+  padding: 10px 16px;
+  border-radius: 12px;
+  width: 320px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+.tutor-topbar-search:focus-within {
+  border-color: var(--lk-tutor-primary);
+  box-shadow: 0 0 0 3px var(--lk-tutor-glow);
+}
+.tutor-topbar-search input {
+  background: transparent;
+  border: none;
+  color: var(--lk-tutor-text);
+  width: 100%;
+  outline: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+.tutor-topbar-search input::placeholder {
+  color: #94a3b8;
+}
+.search-icon {
+  color: var(--lk-tutor-text-muted);
+}
+
+.tutor-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.tutor-icon-btn {
+  background: var(--lk-tutor-surface);
+  border: 1px solid var(--lk-tutor-border);
+  color: var(--lk-tutor-text);
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+.tutor-icon-btn:hover {
+  background: var(--lk-tutor-surface-hover);
+  color: var(--lk-tutor-primary);
+  transform: translateY(-1px);
+}
+.tutor-badge {
+  position: absolute;
+  top: -2px; right: -2px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--lk-tutor-surface);
+}
+
+.tutor-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--lk-tutor-border);
+  background: transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  cursor: pointer;
+  text-align: left;
+}
+.tutor-profile:hover {
+  opacity: 0.9;
+}
+.tutor-profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.tutor-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--lk-tutor-text);
+}
+.tutor-role {
+  font-size: 12px;
+  color: var(--lk-tutor-primary);
+  font-weight: 600;
+}
+.tutor-avatar {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--lk-tutor-accent-yellow), #f97316);
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 15px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+}
+
+/* Main Content Area */
+.tutor-main-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+/* Placeholder Page Styles */
+.tutor-placeholder-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--lk-tutor-surface);
+  border: 1px dashed var(--lk-tutor-primary);
+  border-radius: 20px;
+  text-align: center;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.tutor-placeholder-icon {
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(14,165,233,0.1));
+  color: var(--lk-tutor-primary);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  box-shadow: inset 0 0 0 1px rgba(79,70,229,0.2);
+}
+
+.tutor-placeholder-page h1 {
+  font-size: 28px;
+  margin-bottom: 12px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.tutor-placeholder-page p {
+  color: var(--lk-tutor-text-muted);
+  max-width: 450px;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.tutor-team-badge {
+  margin-top: 24px;
+  padding: 10px 20px;
+  background: var(--lk-tutor-primary);
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px var(--lk-tutor-glow);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   Tutor Estudiantes Page Styles
+   ============================================ */
+
+.tutor-page-container {
+    padding: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.tutor-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.tutor-header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.tutor-page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--lk-tutor-text);
+    margin: 0;
+}
+
+.tutor-page-subtitle {
+    font-size: 14px;
+    color: var(--lk-tutor-text-muted);
+    margin: 4px 0 0 0;
+}
+
+/* Grid Layout */
+.tutor-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+}
+
+.tutor-card {
+    background: var(--lk-tutor-surface);
+    border: 1px solid var(--lk-tutor-border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.tutor-card--span-4 {
+    grid-column: span 4;
+}
+
+.tutor-card--span-8 {
+    grid-column: span 8;
+}
+
+.tutor-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--lk-tutor-text);
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Form Fields */
+.tutor-field {
+    margin-bottom: 16px;
+}
+
+.tutor-field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lk-tutor-text-muted);
+    margin-bottom: 6px;
+}
+
+.tutor-input,
+.tutor-select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--lk-tutor-text);
+    background: white;
+    border: 1px solid var(--lk-tutor-border);
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.tutor-input:focus,
+.tutor-select:focus {
+    border-color: var(--lk-tutor-primary);
+    box-shadow: 0 0 0 3px var(--lk-tutor-glow);
+}
+
+.tutor-field--error .tutor-input {
+    border-color: #ef4444;
+}
+
+.tutor-field-error {
+    display: block;
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: 4px;
+}
+
+/* Color Picker */
+.tutor-color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tutor-color-option {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tutor-color-option:hover {
+    transform: scale(1.1);
+}
+
+.tutor-color-option--selected {
+    border-color: var(--lk-tutor-text);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--lk-tutor-primary);
+}
+
+/* Buttons */
+.tutor-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tutor-btn--primary {
+    background: var(--lk-tutor-primary);
+    color: white;
+}
+
+.tutor-btn--primary:hover {
+    background: var(--lk-tutor-primary-hover);
+}
+
+.tutor-btn--primary:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.tutor-btn--secondary {
+    background: white;
+    color: var(--lk-tutor-text);
+    border: 1px solid var(--lk-tutor-border);
+}
+
+.tutor-btn--secondary:hover {
+    background: #f8fafc;
+    border-color: var(--lk-tutor-primary);
+    color: var(--lk-tutor-primary);
+}
+
+.tutor-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Table */
+.tutor-table-wrap {
+    overflow-x: auto;
+}
+
+.tutor-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tutor-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--lk-tutor-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--lk-tutor-border);
+}
+
+.tutor-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--lk-tutor-border);
+    font-size: 14px;
+    color: var(--lk-tutor-text);
+}
+
+.tutor-table tr:last-child td {
+    border-bottom: none;
+}
+
+.tutor-table tr:hover {
+    background: rgba(79, 70, 229, 0.02);
+}
+
+/* Student Cell */
+.tutor-student-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tutor-student-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+}
+
+.tutor-student-name {
+    font-weight: 500;
+}
+
+/* Badges */
+.tutor-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-transform: capitalize;
+}
+
+.tutor-badge--success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.tutor-badge--muted {
+    background: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+}
+
+.tutor-badge--inactivo {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Action Buttons */
+.tutor-actions-row {
+    display: flex;
+    gap: 8px;
+}
+
+.tutor-btn-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid var(--lk-tutor-border);
+    border-radius: 8px;
+    color: var(--lk-tutor-text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tutor-btn-icon:hover {
+    background: #f8fafc;
+    color: var(--lk-tutor-primary);
+    border-color: var(--lk-tutor-primary);
+}
+
+.tutor-btn-icon--active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-color: #10b981;
+}
+
+.tutor-btn-icon--danger:hover {
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+/* Empty & Loading States */
+.tutor-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    color: var(--lk-tutor-text-muted);
+    text-align: center;
+}
+
+.tutor-empty p {
+    margin: 16px 0 0 0;
+    font-size: 14px;
+}
+
+.tutor-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    color: var(--lk-tutor-text-muted);
+    font-size: 14px;
+}
+
+/* Alert */
+.tutor-alert {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.tutor-alert--success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.tutor-alert--error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Modal */
+.tutor-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.tutor-modal {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.tutor-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--lk-tutor-border);
+}
+
+.tutor-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--lk-tutor-text);
+}
+
+.tutor-modal-close {
+    background: none;
+    border: none;
+    color: var(--lk-tutor-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+}
+
+.tutor-modal-close:hover {
+    color: var(--lk-tutor-text);
+}
+
+.tutor-modal-body {
+    padding: 24px;
+}
+
+.tutor-modal-text {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: var(--lk-tutor-text-muted);
+}
+
+.tutor-modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* QR Content */
+.tutor-qr-content {
+    text-align: center;
+}
+
+.tutor-qr-code {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+}
+
+.tutor-qr-code img {
+    max-width: 200px;
+    height: auto;
+}
+
+.tutor-qr-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--lk-tutor-text-muted);
+}
+
+.tutor-qr-info {
+    font-size: 14px;
+    color: var(--lk-tutor-text-muted);
+    margin: 0;
+}
+
+.tutor-qr-info strong {
+    color: var(--lk-tutor-text);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tutor-card--span-4 {
+        grid-column: span 12;
+    }
+    .tutor-card--span-8 {
+        grid-column: span 12;
+    }
+}
+
+@media (max-width: 768px) {
+    .tutor-page-header { 
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .tutor-grid {
+        gap: 16px;
+    }
+    
+    .tutor-card {
+        padding: 16px;
+    }
+}
+
+.ses-filters-card {
+  margin-bottom: 20px;
+
+  background: linear-gradient(
+    135deg,
+    #8F3E90,
+    #8F3E90
+  );
+}
+
+.ses-filters-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ses-select {
+  flex: 1;
+  min-width: 180px;
+  padding: 12px 40px 12px 14px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(180, 85, 178, 0.18);
+
+  background: rgba(255, 255, 255, 0.88);
+
+  font-size: 14px;
+  font-family: 'Outfit', sans-serif;
+
+  color: #3d2b40;
+
+  outline: none;
+
+  transition: all 0.2s ease;
+
+  appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B455B2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.ses-select:focus {
+  border-color: #B455B2;
+
+  box-shadow:
+    0 0 0 4px rgba(180, 85, 178, 0.12);
+}
+
+.ses-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* --- Stat Cards Grid --- */
+.ses-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.ses-stat-card {
+  border-radius: 16px;
+  padding: 25px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  min-height: 96px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ses-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+  position: relative;
+}
+
+.ses-stat-label {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ses-stat-value {
+  font-size: 35px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 2;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ses-stat-icon {
+  font-size: 50px; 
+  opacity: 0.9; 
+  position: absolute;
+  right: -1px;
+  bottom: 5px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ses-stat-card--orange { background: linear-gradient(135deg, #F97316, #FFA500); }
+.ses-stat-card--purple { background: linear-gradient(135deg, #8B30C9, #9B3DD4); }
+.ses-stat-card--green  { background: linear-gradient(135deg, #F97316, #FFA500); }
+.ses-stat-card--red    { background: linear-gradient(135deg, #8B30C9, #9B3DD4); }
+
+/* --- Charts --- */
+.ses-charts-card {
+  margin-bottom: 20px;
+}
+
+.ses-charts-container {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.ses-donut-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ses-donut-canvas {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.ses-donut-canvas canvas {
+  width: 160px !important;
+  height: 160px !important;
+}
+
+.ses-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ses-donut-pct {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--lk-tutor-text);
+  line-height: 1;
+}
+
+.ses-donut-label {
+  font-size: 11px;
+  color: var(--lk-tutor-text-muted);
+  margin-top: 2px;
+}
+
+.ses-chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.ses-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lk-tutor-text-muted);
+}
+
+.ses-legend-item strong {
+  margin-left: auto;
+  color: var(--lk-tutor-text);
+  font-weight: 700;
+}
+
+.ses-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ses-legend-dot--green { background: #10b981; }
+.ses-legend-dot--red   { background: #ef4444; }
+
+.ses-bar-wrapper {
+  height: 200px;
+  overflow-x: auto;
+}
+
+.ses-bar-wrapper canvas {
+  height: 200px !important;
+}
+
+/* --- Bottom grid: tabla + detalle --- */
+.ses-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+.ses-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--lk-tutor-text);
+  margin-bottom: 16px;
+}
+
+/* --- Tabla --- */
+.ses-table-wrapper {
+  overflow-x: auto;
+}
+
+.ses-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ses-table thead th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--lk-tutor-text-muted);
+  border-bottom: 1.5px solid var(--lk-tutor-border);
+}
+
+.ses-table-row {
+  border-bottom: 1px solid var(--lk-tutor-border);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.ses-table-row td {
+  padding: 11px 14px;
+  color: var(--lk-tutor-text);
+  vertical-align: middle;
+}
+
+.ses-cell-primary {
+  color: var(--lk-tutor-text);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.ses-cell-secondary {
+  margin-top: 4px;
+  color: var(--lk-tutor-text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.ses-table-row:hover {
+  background: rgba(79, 70, 229, 0.04);
+}
+
+.ses-table-row--selected {
+  background: rgba(79, 70, 229, 0.07) !important;
+}
+
+.ses-table-row--selected td {
+  color: var(--lk-tutor-primary);
+}
+
+.ses-td-bold  { font-weight: 700; }
+.ses-td-green { color: #059669; font-weight: 700; }
+.ses-td-red   { color: #dc2626; font-weight: 700; }
+
+/* Pill para minijuego */
+.ses-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(79, 70, 229, 0.09);
+  color: var(--lk-tutor-primary);
+}
+
+/* Badge estado */
+.ses-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.ses-badge--green {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.ses-badge--blue {
+  background: rgba(14, 165, 233, 0.1);
+  color: #0284c7;
+}
+
+/* --- Detalle de eventos --- */
+.ses-detalle-card {
+  align-self: start;
+}
+
+.ses-detalle-empty {
+  font-size: 13px;
+  color: var(--lk-tutor-text-muted);
+  margin: 0;
+}
+
+.ses-history-note {
+  margin: -2px 0 4px;
+  color: var(--lk-tutor-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ses-activity-summary {
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(79, 70, 229, 0.14);
+  background: rgba(79, 70, 229, 0.04);
+}
+
+.ses-eventos-list {
+  max-height: 460px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.ses-eventos-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ses-eventos-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ses-eventos-list::-webkit-scrollbar-thumb {
+  background: var(--lk-tutor-border);
+  border-radius: 4px;
+}
+
+.ses-evento-item {
+  background: var(--lk-tutor-bg);
+  border: 1px solid var(--lk-tutor-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.ses-evento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+
+.ses-evento-header strong {
+  font-size: 13px;
+  color: var(--lk-tutor-text);
+}
+
+.ses-evento-header small {
+  font-size: 11px;
+  color: var(--lk-tutor-text-muted);
+  white-space: nowrap;
+}
+
+.ses-evento-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ses-evento-meta span {
+  font-size: 12px;
+  color: var(--lk-tutor-text-muted);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1100px) {
+  .ses-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .ses-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ses-charts-container {
+    grid-template-columns: 1fr;
+  }
+
+  .ses-donut-wrapper {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .ses-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ses-stat-value {
+    font-size: 28px;
+  }
+}
+/* ================================================================
+   LOGICKIDS — MEJORAS GLOBALES v2
+   Añadir al FINAL de tutor.css después del bloque de sesiones.
+   Prefijo "lk-v2-" para total aislamiento. No toca nada existente.
+   Inspirado en el estilo vibrante de ilogiK.
+   ================================================================ */
+
+/* ────────────────────────────────────────────────
+   1. VARIABLES NUEVAS (amplían las existentes)
+      Añaden naranja, gris suave y sombras de color
+   ──────────────────────────────────────────────── */
+:root {
+  --lk-orange:        #f97316;
+  --lk-orange-dark:   #ea580c;
+  --lk-orange-glow:   rgba(249, 115, 22, 0.2);
+  --lk-card-shadow:   0 2px 8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  --lk-card-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(79, 70, 229, 0.1);
+  --lk-scrollbar-w:   5px;
+}
+
+/* ────────────────────────────────────────────────
+   2. SIDEBAR — Item activo más vibrante
+      El item activo ya tiene .tutor-nav-active-bg con gradiente.
+      Aquí solo añadimos el ícono blanco y pill más redondo.
+   ──────────────────────────────────────────────── */
+.tutor-nav-item.active {
+  font-weight: 700;
+  letter-spacing: -0.1px;
+}
+
+/* Ícono del item activo: blanco puro */
+.tutor-nav-item.active svg,
+.tutor-nav-item.active .lucide {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+/* Pill activo más redondeado, como ilogiK */
+.tutor-nav-active-bg {
+  border-radius: 12px !important;
+}
+
+/* Item inactivo: el ícono tiene más contraste */
+.tutor-nav-item:not(.active) svg,
+.tutor-nav-item:not(.active) .lucide {
+  opacity: 0.65;
+  transition: opacity 0.2s;
+}
+
+.tutor-nav-item:not(.active):hover svg,
+.tutor-nav-item:not(.active):hover .lucide {
+  opacity: 1;
+}
+
+/* Separador visual sutil en nav */
+.tutor-nav {
+  gap: 4px !important;
+}
+
+/* ────────────────────────────────────────────────
+   3. SIDEBAR — Brand logo con color naranja/primario
+   ──────────────────────────────────────────────── */
+.tutor-brand-logo {
+  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-orange)) !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3) !important;
+  border-radius: 14px !important;
+}
+
+/* ────────────────────────────────────────────────
+   4. TOPBAR — Avatar con color naranja vibrante
+   ──────────────────────────────────────────────── */
+.tutor-avatar {
+  background: linear-gradient(135deg, var(--lk-orange), #fbbf24) !important;
+  box-shadow: 0 4px 14px var(--lk-orange-glow) !important;
+  font-weight: 800 !important;
+  border: 2.5px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Badge de notificaciones: rojo más vivo */
+.tutor-badge {
+  background: #ef4444 !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  border: 2px solid white !important;
+  min-width: 17px;
+  min-height: 17px;
+}
+
+/* Icono btn: hover con naranja opcional */
+.tutor-icon-btn:hover {
+  border-color: rgba(79, 70, 229, 0.3) !important;
+  box-shadow: 0 0 0 3px var(--lk-tutor-glow) !important;
+}
+
+/* ────────────────────────────────────────────────
+   5. CARDS — Hover con elevación suave
+      ilogiK: cards se elevan al hacer hover
+   ──────────────────────────────────────────────── */
+.tutor-card {
+  box-shadow: var(--lk-card-shadow) !important;
+  transition: box-shadow 0.22s ease, transform 0.22s ease !important;
+}
+
+.tutor-card:hover {
+  box-shadow: var(--lk-card-shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+/* Evitar hover en cards que contienen tablas o charts grandes */
+.tutor-card:has(table):hover,
+.tutor-card:has(canvas):hover {
+  transform: none;
+  box-shadow: var(--lk-card-shadow-hover) !important;
+}
+
+/* ────────────────────────────────────────────────
+   6. PAGE HEADER — Título con icono alineado
+      Como ilogiK: icono + h1 en la misma línea, subtítulo abajo
+   ──────────────────────────────────────────────── */
+.tutor-page-header {
+  margin-bottom: 28px !important;
+}
+
+/* Contenedor título: icono + texto en fila */
+.tutor-page-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+  color: var(--lk-tutor-text) !important;
+  margin: 0 !important;
+}
+
+/* El icono en el título hereda el color primario */
+.tutor-page-title svg,
+.tutor-page-title .lucide {
+  color: var(--lk-tutor-primary);
+  flex-shrink: 0;
+}
+
+.tutor-page-subtitle {
+  font-size: 14px !important;
+  color: var(--lk-tutor-text-muted) !important;
+  margin: 6px 0 0 0 !important;
+  line-height: 1.5 !important;
+}
+
+/* ────────────────────────────────────────────────
+   7. BOTONES — Estilo premium con sombra de color
+      Gradiente + sombra coloreada, como ilogiK
+   ──────────────────────────────────────────────── */
+.lk-v2-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-tutor-accent-blue));
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.lk-v2-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+  color: #fff;
+}
+
+.lk-v2-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+/* Botón secundario (outline) */
+.lk-v2-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  color: var(--lk-tutor-text);
+  border: 1.5px solid var(--lk-tutor-border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.lk-v2-btn-secondary:hover {
+  border-color: var(--lk-tutor-primary);
+  color: var(--lk-tutor-primary);
+  background: rgba(79, 70, 229, 0.04);
+  transform: translateY(-1px);
+}
+
+/* ────────────────────────────────────────────────
+   8. SCROLLBAR — Delgado y con color primario
+      ilogiK tiene scrollbars muy finos y elegantes
+   ──────────────────────────────────────────────── */
+.tutor-main-content::-webkit-scrollbar,
+.ses-eventos-list::-webkit-scrollbar {
+  width: var(--lk-scrollbar-w);
+}
+
+.tutor-main-content::-webkit-scrollbar-track,
+.ses-eventos-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tutor-main-content::-webkit-scrollbar-thumb,
+.ses-eventos-list::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 229, 0.25);
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.tutor-main-content::-webkit-scrollbar-thumb:hover,
+.ses-eventos-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.5);
+}
+
+/* ────────────────────────────────────────────────
+   9. ESTADO VACÍO — Más visual, menos genérico
+      Icono centrado con fondo suave, como ilogiK
+   ──────────────────────────────────────────────── */
+.tutor-empty {
+  padding: 56px 32px !important;
+}
+
+.tutor-empty svg,
+.tutor-empty .lucide {
+  color: var(--lk-tutor-primary);
+  opacity: 0.4;
+  margin-bottom: 16px;
+}
+
+.tutor-empty p {
+  font-size: 14px !important;
+  color: var(--lk-tutor-text-muted) !important;
+  max-width: 320px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────
+   10. TOPBAR SEARCH — Más definida y elegante
+       ilogiK tiene la búsqueda muy prominente arriba
+   ──────────────────────────────────────────────── */
+.tutor-topbar-search {
+  width: 360px !important;
+  border-radius: 14px !important;
+  padding: 11px 18px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
+}
+
+.tutor-topbar-search:focus-within {
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 0 0 3px var(--lk-tutor-glow), 0 4px 16px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* ────────────────────────────────────────────────
+   11. SIDEBAR FOOTER — Logout más elegante
+   ──────────────────────────────────────────────── */
+.tutor-logout-btn {
+  border-radius: 12px !important;
+  font-size: 13.5px !important;
+  padding: 11px 14px !important;
+}
+
+/* ────────────────────────────────────────────────
+   12. RESPONSIVE ajustes globales
+   ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .tutor-topbar-search {
+    width: 240px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutor-topbar-search {
+    width: 180px !important;
+  }
+
+  .tutor-page-title {
+    font-size: 22px !important;
+  }
+}

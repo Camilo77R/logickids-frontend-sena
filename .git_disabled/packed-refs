@@ -1,0 +1,9 @@
+# pack-refs with: peeled fully-peeled sorted 
+5f20958cbe1026e27ee2089109e26213648d28c8 refs/remotes/origin/develop
+77540335346ab328c3e52f8951d087c3001fe721 refs/remotes/origin/feat/tutor-dashboard
+9250db42d208a8d20fdbb9db560fac1e1099350d refs/remotes/origin/feat/tutor-grupos-inicio
+d3aee990a0c46a3b4add18aca01cb084f8b7b8f0 refs/remotes/origin/feature/admin-dashboard
+00112f794fd2760e3ace51667049ffa858b61c03 refs/remotes/origin/feature/auth-tutor-screens
+7293037c09c1d69c9f801d45c4e02dbf8c9beccd refs/remotes/origin/feature/jonathan/notificaciones
+7a96bed0577401544be8bf0349a3f3b9592bad0d refs/remotes/origin/feature/tutor-dashboard
+d111e36182d0cb6f6483236f2b8e8c3c2ab69530 refs/remotes/origin/main
