@@ -11,9 +11,7 @@
   gap: 1.25rem;
   padding: 1.6rem;
   border-radius: var(--lk-radius-2xl);
-  background:
-    radial-gradient(circle at top left, rgba(255, 234, 0, 0.38), transparent 28%),
-    linear-gradient(135deg, rgba(255, 177, 30, 0.96), rgba(255, 154, 32, 0.96));
+  background: var(--lk-purple);
   box-shadow: var(--lk-shadow-panel);
   overflow: hidden;
 }
@@ -29,13 +27,7 @@
 }
 
 .lk-rec-hero__glow {
-  position: absolute;
-  inset: 14% auto auto 44%;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 72%);
-  pointer-events: none;
+  display: none;
 }
 
 .lk-rec-hero__copy,
@@ -54,7 +46,7 @@
   background: rgba(255, 255, 255, 0.16);
   color: #fffdf7;
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
 
@@ -89,8 +81,8 @@
   align-items: center;
   padding: 1rem;
   border-radius: var(--lk-radius-xl);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 12px 30px rgba(128, 55, 8, 0.12);
 }
 
@@ -104,7 +96,7 @@
 }
 
 .lk-rec-stat--purple .lk-rec-stat__icon {
-  background: rgba(139, 47, 201, 0.12);
+  background: var(--lk-purple-soft);
   color: var(--lk-purple);
 }
 
@@ -127,7 +119,7 @@
   margin-bottom: 0.2rem;
   color: var(--lk-text-soft);
   font-size: 0.74rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -136,28 +128,24 @@
   display: block;
   color: var(--lk-text);
   font-size: 1.02rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
 .lk-rec-panel {
   padding: 1.3rem;
   border-radius: var(--lk-radius-xl);
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(139, 47, 201, 0.1);
+  background: #fff;
+  border: 1px solid var(--lk-border);
   box-shadow: var(--lk-shadow-card);
 }
 
 .lk-rec-panel--builder {
-  background:
-    radial-gradient(circle at top right, rgba(255, 202, 40, 0.16), transparent 20%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 246, 255, 0.96));
+  background: #fff;
 }
 
 .lk-rec-panel--history {
-  background:
-    radial-gradient(circle at top left, rgba(139, 47, 201, 0.08), transparent 22%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 242, 251, 0.96));
+  background: #fff;
 }
 
 .lk-rec-panel__header {
@@ -174,7 +162,7 @@
   margin-bottom: 0.38rem;
   color: var(--lk-purple);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -183,7 +171,7 @@
   margin: 0;
   color: var(--lk-text);
   font-size: 1.18rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
@@ -200,11 +188,11 @@
   align-items: center;
   gap: 0.55rem;
   padding: 0.8rem 0.95rem;
-  border-radius: var(--lk-radius-lg);
+  border-radius: 999px;
   background: rgba(255, 127, 0, 0.1);
   color: #a85700;
   font-size: 0.82rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-rec-form {
@@ -223,15 +211,15 @@
 .lk-rec-field__label {
   color: var(--lk-text-soft);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .lk-rec-select {
   min-height: 52px;
   padding: 0.9rem 1rem;
-  border-radius: var(--lk-radius-lg);
-  border: 1px solid rgba(139, 47, 201, 0.16);
+  border-radius: var(--lk-radius-xl);
+  border: 1px solid var(--lk-border);
   background: rgba(255, 255, 255, 0.96);
   color: var(--lk-text);
   font-size: 0.98rem;
@@ -241,7 +229,7 @@
 
 .lk-rec-select:focus {
   outline: none;
-  border-color: rgba(139, 47, 201, 0.4);
+  border-color: var(--lk-purple);
   box-shadow: 0 0 0 4px rgba(139, 47, 201, 0.08);
 }
 
@@ -254,13 +242,13 @@
   min-height: 52px;
   padding: 0.9rem 1.2rem;
   border: none;
-  border-radius: var(--lk-radius-lg);
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
   font-size: 0.94rem;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
   transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
 }
@@ -274,9 +262,9 @@
 }
 
 .lk-rec-button--primary {
-  background: linear-gradient(135deg, #c76c0b, #ff9d2c);
+  background: var(--lk-purple);
   color: white;
-  box-shadow: 0 12px 26px rgba(255, 127, 0, 0.24);
+  box-shadow: 0 12px 26px rgba(142, 53, 213, 0.18);
 }
 
 .lk-rec-button--ghost {
@@ -288,9 +276,9 @@
 .lk-rec-alert {
   padding: 0.92rem 1rem;
   margin-bottom: 1rem;
-  border-radius: var(--lk-radius-lg);
+  border-radius: var(--lk-radius-xl);
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .lk-rec-alert--error {
@@ -317,13 +305,13 @@
 .lk-rec-card {
   padding: 1.1rem 1.15rem;
   border-radius: var(--lk-radius-xl);
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(139, 47, 201, 0.1);
+  background: #fff;
+  border: 1px solid var(--lk-border);
   box-shadow: 0 10px 28px rgba(139, 47, 201, 0.08);
 }
 
 .lk-rec-card--history {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 244, 255, 0.96));
+  background: #fff;
 }
 
 .lk-rec-card__header {
@@ -346,14 +334,14 @@
 .lk-rec-card__student {
   color: var(--lk-text-soft);
   font-size: 0.84rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .lk-rec-card__title {
   margin: 0;
   color: var(--lk-text);
   font-size: 1rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.025em;
 }
 
@@ -376,7 +364,7 @@
   padding: 0.3rem 0.62rem;
   border-radius: 999px;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -411,7 +399,7 @@
   background: rgba(139, 47, 201, 0.08);
   color: var(--lk-purple-dark);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .lk-rec-sections {
@@ -421,9 +409,9 @@
 
 .lk-rec-section {
   padding: 0.9rem 0.95rem;
-  border-radius: var(--lk-radius-lg);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 242, 251, 0.88));
-  border: 1px solid rgba(139, 47, 201, 0.08);
+  border-radius: var(--lk-radius-xl);
+  background: var(--lk-purple-soft);
+  border: 1px solid var(--lk-border);
 }
 
 .lk-rec-section__title {
@@ -431,7 +419,7 @@
   margin-bottom: 0.28rem;
   color: var(--lk-purple);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

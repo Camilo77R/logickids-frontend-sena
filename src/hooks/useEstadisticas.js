@@ -21,7 +21,7 @@ import estadisticasService from "../services/estadisticasService";
  * @param {number|null} estudianteId - ID del estudiante (null = no carga)
  * @returns {{ stats: Array, loading: boolean, error: string|null }}
  */
-export function useEstadisticasEstudiante(estudianteId) {
+export function useEstadisticasEstudiante(estudianteId, refreshKey = 0) {
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -50,7 +50,7 @@ export function useEstadisticasEstudiante(estudianteId) {
 
     // Cleanup: evita memory leaks si el componente se desmonta antes de que termine
     return () => { cancelled = true; };
-  }, [estudianteId]);
+  }, [estudianteId, refreshKey]);
 
   return { stats, loading, error };
 }
@@ -61,7 +61,7 @@ export function useEstadisticasEstudiante(estudianteId) {
  * @param {number|null} grupoId - ID del grupo (null = no carga)
  * @returns {{ stats: Array, loading: boolean, error: string|null }}
  */
-export function useEstadisticasGrupo(grupoId) {
+export function useEstadisticasGrupo(grupoId, refreshKey = 0) {
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -88,7 +88,7 @@ export function useEstadisticasGrupo(grupoId) {
     cargar();
 
     return () => { cancelled = true; };
-  }, [grupoId]);
+  }, [grupoId, refreshKey]);
 
   return { stats, loading, error };
 }

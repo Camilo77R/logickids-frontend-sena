@@ -58,7 +58,7 @@
   gap: 1.5rem;
   padding: 1.8rem 2rem;
   border-radius: var(--lk-radius-2xl);
-  background: linear-gradient(135deg, var(--lk-yellow-dark) 0%, var(--lk-yellow) 60%, var(--lk-yellow-bright) 100%);
+  background: var(--lk-yellow-dark);
   box-shadow: 0 10px 32px rgba(249, 168, 37, 0.40);
   overflow: hidden;
   position: relative;
@@ -226,25 +226,25 @@
 
 /* Tonos — sólidos, sin transparencias */
 .ov-stat-card--purple {
-  background: linear-gradient(135deg, var(--lk-purple-dark) 0%, var(--lk-purple) 100%);
+  background: var(--lk-purple);
   box-shadow: 0 8px 24px rgba(107, 33, 168, 0.32);
 }
 .ov-stat-card--green {
-  background: linear-gradient(135deg, #14532d 0%, var(--lk-success) 100%);
+  background: var(--lk-success);
   box-shadow: 0 8px 24px rgba(22, 163, 74, 0.30);
 }
 .ov-stat-card--yellow {
-  background: linear-gradient(135deg, var(--lk-yellow-dark) 0%, var(--lk-yellow) 100%);
+  background: var(--lk-yellow-dark);
   box-shadow: 0 8px 24px rgba(249, 168, 37, 0.32);
   color: #3d2100;
 }
 .ov-stat-card--yellow .ov-stat-card__icon-wrap { background: rgba(0,0,0,0.12); }
 .ov-stat-card--blue {
-  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  background: #1e40af;
   box-shadow: 0 8px 24px rgba(59, 130, 246, 0.30);
 }
 .ov-stat-card--orange {
-  background: linear-gradient(135deg, var(--lk-orange) 0%, #ff9d2c 100%);
+  background: var(--lk-orange);
   box-shadow: 0 8px 24px rgba(255, 127, 0, 0.30);
 }
 
@@ -410,7 +410,7 @@
   border-color: rgba(22, 163, 74, 0.22);
 }
 .ov-status--idle {
-  background: linear-gradient(135deg, #fffbeb, #fff);
+  background: #fffbeb;
   border-color: rgba(249, 168, 37, 0.28);
 }
 

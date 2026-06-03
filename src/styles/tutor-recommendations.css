@@ -17,9 +17,9 @@
   justify-content: center;
   padding: 0.75rem;
   border-radius: 1rem;
-  background: rgba(188, 89, 177, 0.12);
+  background: rgba(142, 53, 213, 0.12);
   color: var(--lk-purple);
-  box-shadow: 0 10px 22px rgba(180, 85, 178, 0.12);
+  box-shadow: 0 10px 22px rgba(142, 53, 213, 0.12);
 }
 
 .trp-page__title {
@@ -43,7 +43,7 @@
   padding: 1.5rem;
   border-radius: 1.35rem;
   background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(188, 89, 177, 0.12);
+  border: 1px solid rgba(142, 53, 213, 0.12);
   box-shadow: 0 16px 30px rgba(91, 54, 131, 0.08);
 }
 
@@ -81,7 +81,7 @@
   gap: 0.25rem;
   padding: 0.25rem;
   border-radius: 999px;
-  background: rgba(188, 89, 177, 0.08);
+  background: rgba(142, 53, 213, 0.08);
 }
 
 .trp-mode-btn {
@@ -114,7 +114,7 @@
   min-width: 220px;
   padding: 0.72rem 0.95rem;
   border-radius: 0.9rem;
-  border: 1px solid rgba(188, 89, 177, 0.16);
+  border: 1px solid rgba(142, 53, 213, 0.16);
   background: #ffffff;
   color: var(--lk-text);
   font-size: 0.88rem;
@@ -135,18 +135,18 @@
   padding: 0.78rem 1.1rem;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(135deg, #bc59b1, #d37bc8);
+  background: #8E35D5;
   color: #ffffff;
   font-size: 0.88rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 14px 28px rgba(188, 89, 177, 0.2);
+  box-shadow: 0 14px 28px rgba(142, 53, 213, 0.2);
   transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
 }
 
 .trp-action-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 18px 30px rgba(188, 89, 177, 0.24);
+  box-shadow: 0 18px 30px rgba(142, 53, 213, 0.24);
 }
 
 .trp-action-btn:disabled {
@@ -156,7 +156,7 @@
 
 .trp-action-btn--gold {
   margin-left: 0;
-  background: linear-gradient(135deg, #f5a910, #fdb813);
+  background: #f5a910;
   color: var(--lk-purple-deep);
   box-shadow: 0 14px 28px rgba(253, 184, 19, 0.22);
 }
@@ -185,7 +185,7 @@
   padding: 1.2rem;
   border-radius: 1.15rem;
   background: #ffffff;
-  border: 1px solid rgba(188, 89, 177, 0.1);
+  border: 1px solid rgba(142, 53, 213, 0.1);
   box-shadow: 0 12px 24px rgba(91, 54, 131, 0.07);
 }
 
@@ -262,14 +262,14 @@
   height: 34px;
   border: none;
   border-radius: 999px;
-  background: rgba(188, 89, 177, 0.08);
+  background: rgba(142, 53, 213, 0.08);
   color: var(--lk-text-muted);
   cursor: pointer;
   transition: background 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .trp-archive-btn:hover {
-  background: rgba(188, 89, 177, 0.16);
+  background: rgba(142, 53, 213, 0.16);
   color: var(--lk-purple);
   transform: translateY(-1px);
 }

@@ -10,16 +10,16 @@
   --lk-tutor-border: rgba(15, 23, 42, 0.08);
   
   /* Colores vibrantes y profesionales */
-  --lk-tutor-primary: #4f46e5; /* Índigo vibrante */
-  --lk-tutor-primary-hover: #4338ca;
-  --lk-tutor-accent-blue: #0ea5e9; /* Azul cielo */
+  --lk-tutor-primary: #8E35D5;
+  --lk-tutor-primary-hover: #2B173D;
+  --lk-tutor-accent-blue: #8E35D5;
   --lk-tutor-accent-green: #10b981; /* Verde esmeralda */
   --lk-tutor-accent-yellow: #f59e0b; /* Amarillo ámbar */
   
   /* Textos oscuros (Azul pizarra oscuro, no negro puro) */
   --lk-tutor-text: #1e293b;
   --lk-tutor-text-muted: #64748b;
-  --lk-tutor-glow: rgba(79, 70, 229, 0.15);
+  --lk-tutor-glow: rgba(142, 53, 213, 0.15);
 }
 
 .tutor-layout-container {
@@ -80,7 +80,7 @@
 .tutor-brand-logo {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-tutor-accent-blue));
+  background: var(--lk-tutor-primary);
   color: white;
   border-radius: 12px;
   display: flex;
@@ -130,7 +130,7 @@
 
 .tutor-nav-item:hover {
   color: var(--lk-tutor-primary);
-  background: rgba(79, 70, 229, 0.05);
+  background: rgba(142, 53, 213, 0.05);
 }
 
 .tutor-nav-item.active {
@@ -140,7 +140,7 @@
 .tutor-nav-active-bg {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-tutor-accent-blue));
+  background: var(--lk-tutor-primary);
   border-radius: 10px;
   z-index: -1;
   box-shadow: 0 4px 12px var(--lk-tutor-glow);
@@ -296,7 +296,7 @@
 }
 .tutor-avatar {
   width: 44px; height: 44px;
-  background: linear-gradient(135deg, var(--lk-tutor-accent-yellow), #f97316);
+  background: var(--lk-tutor-accent-yellow);
   border: 2px solid white;
   border-radius: 50%;
   display: flex;
@@ -332,14 +332,14 @@
 
 .tutor-placeholder-icon {
   width: 80px; height: 80px;
-  background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(14,165,233,0.1));
+  background: rgba(142, 53, 213, 0.1);
   color: var(--lk-tutor-primary);
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 24px;
-  box-shadow: inset 0 0 0 1px rgba(79,70,229,0.2);
+  box-shadow: inset 0 0 0 1px rgba(142, 53, 213, 0.2);
 }
 
 .tutor-placeholder-page h1 {
@@ -587,7 +587,7 @@
 }
 
 .tutor-table tr:hover {
-    background: rgba(79, 70, 229, 0.02);
+    background: rgba(142, 53, 213, 0.02);
 }
 
 /* Student Cell */
@@ -851,11 +851,7 @@
 .ses-filters-card {
   margin-bottom: 20px;
 
-  background: linear-gradient(
-    135deg,
-    #8F3E90,
-    #8F3E90
-  );
+  background: #8E35D5;
 }
 
 .ses-filters-row {
@@ -872,7 +868,7 @@
 
   border-radius: 12px;
 
-  border: 1px solid rgba(180, 85, 178, 0.18);
+  border: 1px solid rgba(142, 53, 213, 0.18);
 
   background: rgba(255, 255, 255, 0.88);
 
@@ -887,17 +883,17 @@
 
   appearance: none;
 
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B455B2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E35D5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
 
   background-repeat: no-repeat;
   background-position: right 14px center;
 }
 
 .ses-select:focus {
-  border-color: #B455B2;
+  border-color: #8E35D5;
 
   box-shadow:
-    0 0 0 4px rgba(180, 85, 178, 0.12);
+    0 0 0 4px rgba(142, 53, 213, 0.12);
 }
 
 .ses-select:disabled {
@@ -960,10 +956,10 @@
   z-index: 1;
 }
 
-.ses-stat-card--orange { background: linear-gradient(135deg, #F97316, #FFA500); }
-.ses-stat-card--purple { background: linear-gradient(135deg, #8B30C9, #9B3DD4); }
-.ses-stat-card--green  { background: linear-gradient(135deg, #F97316, #FFA500); }
-.ses-stat-card--red    { background: linear-gradient(135deg, #8B30C9, #9B3DD4); }
+.ses-stat-card--orange { background: #F97316; }
+.ses-stat-card--purple { background: #8E35D5; }
+.ses-stat-card--green  { background: #10b981; }
+.ses-stat-card--red    { background: #8E35D5; }
 
 /* --- Charts --- */
 .ses-charts-card {
@@ -1125,11 +1121,11 @@
 }
 
 .ses-table-row:hover {
-  background: rgba(79, 70, 229, 0.04);
+  background: rgba(142, 53, 213, 0.04);
 }
 
 .ses-table-row--selected {
-  background: rgba(79, 70, 229, 0.07) !important;
+  background: rgba(142, 53, 213, 0.07) !important;
 }
 
 .ses-table-row--selected td {
@@ -1147,7 +1143,7 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
-  background: rgba(79, 70, 229, 0.09);
+  background: rgba(142, 53, 213, 0.09);
   color: var(--lk-tutor-primary);
 }
 
@@ -1192,8 +1188,8 @@
   padding: 12px 14px;
   margin-bottom: 12px;
   border-radius: 12px;
-  border: 1px solid rgba(79, 70, 229, 0.14);
-  background: rgba(79, 70, 229, 0.04);
+  border: 1px solid rgba(142, 53, 213, 0.14);
+  background: rgba(142, 53, 213, 0.04);
 }
 
 .ses-eventos-list {
@@ -1302,7 +1298,7 @@
   --lk-orange-dark:   #ea580c;
   --lk-orange-glow:   rgba(249, 115, 22, 0.2);
   --lk-card-shadow:   0 2px 8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.04);
-  --lk-card-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(79, 70, 229, 0.1);
+  --lk-card-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(142, 53, 213, 0.1);
   --lk-scrollbar-w:   5px;
 }
 
@@ -1349,8 +1345,8 @@
    3. SIDEBAR — Brand logo con color naranja/primario
    ──────────────────────────────────────────────── */
 .tutor-brand-logo {
-  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-orange)) !important;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3) !important;
+  background: var(--lk-tutor-primary) !important;
+  box-shadow: 0 4px 14px rgba(142, 53, 213, 0.3) !important;
   border-radius: 14px !important;
 }
 
@@ -1358,7 +1354,7 @@
    4. TOPBAR — Avatar con color naranja vibrante
    ──────────────────────────────────────────────── */
 .tutor-avatar {
-  background: linear-gradient(135deg, var(--lk-orange), #fbbf24) !important;
+  background: var(--lk-orange) !important;
   box-shadow: 0 4px 14px var(--lk-orange-glow) !important;
   font-weight: 800 !important;
   border: 2.5px solid rgba(255, 255, 255, 0.9) !important;
@@ -1376,7 +1372,7 @@
 
 /* Icono btn: hover con naranja opcional */
 .tutor-icon-btn:hover {
-  border-color: rgba(79, 70, 229, 0.3) !important;
+  border-color: rgba(142, 53, 213, 0.3) !important;
   box-shadow: 0 0 0 3px var(--lk-tutor-glow) !important;
 }
 
@@ -1436,15 +1432,14 @@
 }
 
 /* ────────────────────────────────────────────────
-   7. BOTONES — Estilo premium con sombra de color
-      Gradiente + sombra coloreada, como ilogiK
+   7. BOTONES — Estilo premium con sombra de color sólido
    ──────────────────────────────────────────────── */
 .lk-v2-btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: linear-gradient(135deg, var(--lk-tutor-primary), var(--lk-tutor-accent-blue));
+  background: var(--lk-tutor-primary);
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -1453,20 +1448,20 @@
   font-family: 'Outfit', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 4px 14px rgba(142, 53, 213, 0.35);
   text-decoration: none;
   white-space: nowrap;
 }
 
 .lk-v2-btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+  box-shadow: 0 6px 20px rgba(142, 53, 213, 0.45);
   color: #fff;
 }
 
 .lk-v2-btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 2px 8px rgba(142, 53, 213, 0.3);
 }
 
 /* Botón secundario (outline) */
@@ -1491,7 +1486,7 @@
 .lk-v2-btn-secondary:hover {
   border-color: var(--lk-tutor-primary);
   color: var(--lk-tutor-primary);
-  background: rgba(79, 70, 229, 0.04);
+  background: rgba(142, 53, 213, 0.04);
   transform: translateY(-1px);
 }
 
@@ -1511,14 +1506,14 @@
 
 .tutor-main-content::-webkit-scrollbar-thumb,
 .ses-eventos-list::-webkit-scrollbar-thumb {
-  background: rgba(79, 70, 229, 0.25);
+  background: rgba(142, 53, 213, 0.25);
   border-radius: 20px;
   transition: background 0.2s;
 }
 
 .tutor-main-content::-webkit-scrollbar-thumb:hover,
 .ses-eventos-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 70, 229, 0.5);
+  background: rgba(142, 53, 213, 0.5);
 }
 
 /* ────────────────────────────────────────────────

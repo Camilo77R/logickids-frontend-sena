@@ -14,12 +14,12 @@
   --lk-display-font: 'Fredoka', 'Plus Jakarta Sans', system-ui, sans-serif;
 
   /* ── Paleta Brand LogicKids (del mockup) ────────── */
-  --lk-purple: #8B2FC9;
-  --lk-purple-dark: #6B21A8;
-  --lk-purple-deep: #2D1B69;
-  --lk-purple-light: #A855F7;
-  --lk-purple-soft: rgba(139, 47, 201, 0.10);
-  --lk-purple-glow: rgba(139, 47, 201, 0.22);
+  --lk-purple: #8E35D5;
+  --lk-purple-dark: #2B173D;
+  --lk-purple-deep: #2B173D;
+  --lk-purple-light: #8E35D5;
+  --lk-purple-soft: #F3E8FA;
+  --lk-purple-glow: rgba(142, 53, 213, 0.22);
 
   --lk-yellow: #FFCA28;
   --lk-yellow-bright: #FFEA00;
@@ -46,13 +46,13 @@
   --lk-bg: #F8F4FF;
   --lk-surface: #FFFFFF;
   --lk-surface-soft: #F5F3FF;
-  --lk-border: rgba(139, 47, 201, 0.12);
-  --lk-border-strong: rgba(139, 47, 201, 0.28);
+  --lk-border: rgba(142, 53, 213, 0.12);
+  --lk-border-strong: rgba(142, 53, 213, 0.28);
 
   /* ── Sombras ────────────────────────────────────── */
-  --lk-shadow-sm: 0 2px 8px rgba(139, 47, 201, 0.07);
-  --lk-shadow-md: 0 8px 24px rgba(139, 47, 201, 0.11);
-  --lk-shadow-lg: 0 16px 48px rgba(139, 47, 201, 0.15);
+  --lk-shadow-sm: 0 2px 8px rgba(142, 53, 213, 0.07);
+  --lk-shadow-md: 0 8px 24px rgba(142, 53, 213, 0.11);
+  --lk-shadow-lg: 0 16px 48px rgba(142, 53, 213, 0.15);
   --lk-shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
   --lk-shadow-panel: 0 20px 52px rgba(109, 70, 150, 0.14);
 
@@ -71,7 +71,7 @@
 
   /* ── Layout: Sidebar ────────────────────────────── */
   --lk-sidebar-width: 256px;
-  --lk-sidebar-bg: linear-gradient(180deg, #7B37D6 0%, #8B2FC9 46%, #6428A2 100%);
+  --lk-sidebar-bg: #8E35D5;
   --lk-sidebar-border: rgba(255, 255, 255, 0.08);
   --lk-sidebar-text: rgba(255, 255, 255, 0.72);
 
@@ -81,7 +81,7 @@
 
   /* ── Bootstrap 5 overrides ──────────────────────── */
   --bs-primary: var(--lk-purple);
-  --bs-primary-rgb: 139, 47, 201;
+  --bs-primary-rgb: 142, 53, 213;
   --bs-body-font-family: var(--lk-font);
   --bs-body-bg: var(--lk-bg);
   --bs-body-color: var(--lk-text);

@@ -16,10 +16,7 @@
 body {
   margin: 0;
   font-family: var(--lk-font);
-  background:
-    radial-gradient(circle at top left, rgba(255, 234, 0, 0.16), transparent 18%),
-    radial-gradient(circle at right center, rgba(139, 47, 201, 0.12), transparent 24%),
-    var(--lk-bg);
+  background: var(--lk-bg);
   color: var(--lk-text);
   -webkit-font-smoothing: antialiased;
 }
@@ -45,10 +42,10 @@ a {
   width: 92px;
   flex-shrink: 0;
   height: calc(100vh - 2rem);
-  --tutor-sidebar-purple: #bc59b1;
-  --tutor-sidebar-purple-dark: #a64e9c;
-  --tutor-sidebar-purple-soft: #c86bc0;
-  --tutor-sidebar-purple-soft-2: #d17ac9;
+  --tutor-sidebar-purple: #8E35D5;
+  --tutor-sidebar-purple-dark: #2B173D;
+  --tutor-sidebar-purple-soft: rgba(255, 255, 255, 0.16);
+  --tutor-sidebar-purple-soft-2: rgba(255, 255, 255, 0.28);
   --tutor-sidebar-text: #ffffff;
   --tutor-sidebar-yellow: #fdb813;
   --tutor-sidebar-yellow-deep: #f5a910;
@@ -60,7 +57,7 @@ a {
   z-index: 20;
   overflow: hidden;
   border-radius: 2.4rem;
-  box-shadow: 0 22px 44px rgba(131, 68, 127, 0.35);
+  box-shadow: 0 22px 44px rgba(111, 34, 181, 0.35);
 }
 
 /* Halo decorativo superior */
@@ -148,9 +145,7 @@ a {
 }
 
 .lk-tutor-nav-link.active {
-  background: linear-gradient(135deg,
-      var(--tutor-sidebar-yellow-deep),
-      var(--tutor-sidebar-yellow));
+  background: var(--tutor-sidebar-yellow);
   color: var(--tutor-sidebar-purple-dark);
   font-weight: 800;
   box-shadow: 0 12px 26px rgba(253, 184, 19, 0.4);
@@ -263,7 +258,7 @@ a {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--lk-yellow), var(--lk-orange));
+  background: var(--lk-orange);
   color: #ffffff;
   font-weight: 800;
   font-size: 0.82rem;
@@ -502,28 +497,28 @@ a {
 }
 
 .lk-stat-card--purple {
-  background: linear-gradient(135deg, #8B2FC9 0%, #A855F7 100%);
+  background: var(--lk-purple);
   box-shadow: 0 8px 24px rgba(139, 47, 201, 0.30);
 }
 
 .lk-stat-card--yellow {
-  background: linear-gradient(135deg, #F9A825 0%, #FFCA28 100%);
+  background: var(--lk-yellow-dark);
   box-shadow: 0 8px 24px rgba(249, 168, 37, 0.28);
   color: var(--lk-purple-deep);
 }
 
 .lk-stat-card--green {
-  background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%);
+  background: var(--lk-success);
   box-shadow: 0 8px 24px rgba(22, 163, 74, 0.28);
 }
 
 .lk-stat-card--blue {
-  background: linear-gradient(135deg, #0369A1 0%, #0EA5E9 100%);
+  background: #0369A1;
   box-shadow: 0 8px 24px rgba(3, 105, 161, 0.26);
 }
 
 .lk-stat-card--orange {
-  background: linear-gradient(135deg, #EA580C 0%, #FB923C 100%);
+  background: #EA580C;
   box-shadow: 0 8px 24px rgba(234, 88, 12, 0.26);
 }
 
