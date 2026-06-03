@@ -1,7 +1,7 @@
 .lk-tutor-dashboard-grid {
-  --lk-dashboard-pink: #bc59b1;
-  --lk-dashboard-pink-dark: #a64e9c;
-  --lk-dashboard-pink-soft: #e6b8df;
+  --lk-dashboard-pink: #8E35D5;
+  --lk-dashboard-pink-dark: #2B173D;
+  --lk-dashboard-pink-soft: #F3E8FA;
   --lk-dashboard-yellow: #fdb813;
   --lk-dashboard-yellow-deep: #f5a910;
   --lk-dashboard-yellow-soft: #ffe3a3;
@@ -32,22 +32,14 @@
   gap: 1.25rem;
   padding: 1.6rem;
   border-radius: var(--lk-radius-2xl);
-  background:
-    radial-gradient(circle at top left, rgba(255, 234, 0, 0.36), transparent 28%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 250, 255, 0.92));
+  background: #fff;
   border: 1px solid rgba(139, 47, 201, 0.12);
   box-shadow: var(--lk-shadow-panel);
   overflow: hidden;
 }
 
 .lk-dashboard-hero__glow {
-  position: absolute;
-  inset: auto auto -80px -60px;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 47, 201, 0.18), transparent 70%);
-  pointer-events: none;
+  display: none;
 }
 
 .lk-dashboard-hero__copy,
@@ -127,7 +119,7 @@
   width: 100%;
   padding: 1rem;
   border-radius: var(--lk-radius-xl);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 244, 255, 0.95));
+  background: #fff;
   border: 1px solid rgba(139, 47, 201, 0.1);
   box-shadow: var(--lk-shadow-card);
   display: flex;
@@ -142,9 +134,7 @@
   width: 118px;
   height: 118px;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at center, white 0 55%, transparent 56%),
-    conic-gradient(var(--lk-purple) 0 42%, var(--lk-orange) 42% 74%, var(--lk-yellow) 74% 100%);
+  background: var(--lk-purple-soft);
   box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.72);
   display: flex;
   align-items: center;
@@ -287,15 +277,15 @@
 }
 
 .lk-metric-card--purple {
-  background: linear-gradient(135deg, var(--lk-purple-dark), var(--lk-purple));
+  background: var(--lk-purple);
 }
 
 .lk-metric-card--green {
-  background: linear-gradient(135deg, #1fa34a, var(--lk-green));
+  background: var(--lk-green);
 }
 
 .lk-metric-card--orange {
-  background: linear-gradient(135deg, #ff9d2c, var(--lk-orange));
+  background: var(--lk-orange);
 }
 
 .lk-dashboard-panel--status {
@@ -315,15 +305,15 @@
 }
 
 .lk-dashboard-panel--active {
-  background: linear-gradient(135deg, rgba(57, 211, 83, 0.14), rgba(255, 255, 255, 0.95));
+  background: var(--lk-green-soft);
 }
 
 .lk-dashboard-panel--paused {
-  background: linear-gradient(135deg, rgba(255, 127, 0, 0.12), rgba(255, 255, 255, 0.95));
+  background: var(--lk-orange-soft);
 }
 
 .lk-dashboard-panel--idle {
-  background: linear-gradient(135deg, rgba(0, 123, 255, 0.12), rgba(255, 255, 255, 0.95));
+  background: var(--lk-blue-soft);
 }
 
 .lk-dashboard-status {
@@ -336,7 +326,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--lk-purple), var(--lk-yellow));
+  background: var(--lk-purple);
   box-shadow: 0 0 0 8px rgba(139, 47, 201, 0.08);
   flex-shrink: 0;
 }
@@ -357,7 +347,7 @@
   padding: 1rem;
   border-radius: var(--lk-radius-lg);
   border: 1px solid rgba(139, 47, 201, 0.1);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 242, 251, 0.9));
+  background: #fff;
 }
 
 .lk-dashboard-group-card__top {

@@ -1,227 +1,376 @@
 /**
  * TutorEstadisticasPage
  *
- * Panel de estadísticas de habilidades cognitivas.
- * Muestra precisión y velocidad de reacción por habilidad,
- * tanto a nivel individual (estudiante) como grupal (grupo).
- *
- * Flujo de datos:
- *  useEstadisticas → estadisticasService → GET /api/estadisticas/*
+ * POR QUE:
+ * - la DB es la fuente de verdad para intentos, aciertos, errores y reacción
+ * - la UI no debe inventar estadísticas cuando el backend no trae datos
+ * - separa presentación de lectura de datos para que la pantalla sea mantenible
  */
-import { useState, useEffect } from "react";
-import { BarChart2, User, Users } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { BarChart2, RefreshCw, User, Users } from "lucide-react";
 import { useEstadisticasEstudiante, useEstadisticasGrupo } from "../../hooks/useEstadisticas";
-import tutorGroupsService from "../../services/tutorGroupsService";
 import estudianteService from "../../services/estudianteService";
+import tutorGroupsService from "../../services/tutorGroupsService";
+import "../../styles/tutor-estadisticas.css";
 
-/** Color según el porcentaje de precisión */
-const getPrecisionColor = (pct) => {
-  const val = Number(pct);
-  if (val >= 75) return "#22c55e";
-  if (val >= 50) return "#f59e0b";
-  return "#ef4444";
+const normalizeId = (value) => String(value ?? "");
+const normalizeSkillKey = (value) => String(value ?? "").trim().toLowerCase();
+
+const resolveGameTitle = (game) =>
+  game?.titulo ?? game?.nombre ?? game?.nombre_minijuego ?? game?.slug ?? "";
+
+const clampPercent = (value) => {
+  if (value === null || value === undefined || value === "") return null;
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return null;
+  return Math.min(100, Math.max(0, numeric));
+};
+
+const formatPercent = (value) => {
+  const percent = clampPercent(value);
+  return percent === null ? "Sin dato" : `${percent.toFixed(1)}%`;
+};
+
+const formatNumber = (value) => {
+  if (value === null || value === undefined || value === "") return "—";
+  return Number.isFinite(Number(value)) ? Number(value).toLocaleString("es-CO") : String(value);
+};
+
+const formatReaction = (value) => {
+  if (value === null || value === undefined || value === "") return "—";
+  return `${formatNumber(value)} ms`;
+};
+
+const getPrecisionTone = (value) => {
+  const percent = clampPercent(value);
+  if (percent === null) return "muted";
+  if (percent >= 75) return "success";
+  if (percent >= 50) return "warning";
+  return "danger";
 };
 
 export default function TutorEstadisticasPage() {
   const [modo, setModo] = useState("estudiante");
   const [grupos, setGrupos] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
-  const [grupoId, setGrupoId] = useState(null);
-  const [estudianteId, setEstudianteId] = useState(null);
+  const [minijuegosActivos, setMinijuegosActivos] = useState([]);
+  const [grupoId, setGrupoId] = useState("");
+  const [estudianteId, setEstudianteId] = useState("");
+  const [loadingCatalog, setLoadingCatalog] = useState(true);
+  const [catalogError, setCatalogError] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // Cargar grupos al montar
   useEffect(() => {
-    const loadGroups = async () => {
-      try {
-        const data = await tutorGroupsService.getGroups();
-        setGrupos(data ?? []);
+    let cancelled = false;
 
-        if (data?.length > 0) {
-          const id = data[0].id_grupo ?? data[0].id;
-          setGrupoId(id);
+    const loadGroups = async () => {
+      setLoadingCatalog(true);
+      setCatalogError("");
+
+      try {
+        const [data, gamesCatalog] = await Promise.all([
+          tutorGroupsService.getGroups(),
+          tutorGroupsService.listarMinijuegosActivos(),
+        ]);
+        if (cancelled) return;
+
+        const normalizedGroups = (data ?? []).map((group) => ({
+          ...group,
+          id: group.id_grupo ?? group.id,
+        }));
+
+        setGrupos(normalizedGroups);
+        setMinijuegosActivos(gamesCatalog ?? []);
+        setGrupoId((current) =>
+          current && normalizedGroups.some((group) => normalizeId(group.id) === current)
+            ? current
+            : normalizeId(normalizedGroups[0]?.id)
+        );
+      } catch (error) {
+        if (!cancelled) {
+          setGrupos([]);
+          setMinijuegosActivos([]);
+          setGrupoId("");
+          setCatalogError(error?.message ?? "No fue posible cargar los grupos.");
         }
-      } catch {
-        setGrupos([]);
+      } finally {
+        if (!cancelled) setLoadingCatalog(false);
       }
     };
 
     loadGroups();
-  }, []);
 
-  // Cargar estudiantes del grupo seleccionado
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshKey]);
+
   useEffect(() => {
-    if (!grupoId) return;
-    estudianteService.listEstudiantes(grupoId).then((data) => {
-      setEstudiantes(data ?? []);
-      if (data?.length > 0) {
-        const id = data[0].id_estudiante ?? data[0].id;
-        setEstudianteId(id);
-      } else {
-        setEstudianteId(null);
-      }
-    });
-  }, [grupoId]);
+    let cancelled = false;
 
-  // Hooks que cargan los datos según el modo
+    const loadStudents = async () => {
+      if (!grupoId) {
+        setEstudiantes([]);
+        setEstudianteId("");
+        return;
+      }
+
+      try {
+        const data = await estudianteService.listEstudiantes(Number(grupoId));
+        if (cancelled) return;
+
+        const normalizedStudents = (data ?? []).map((student) => ({
+          ...student,
+          id: student.id_estudiante ?? student.id,
+        }));
+
+        setEstudiantes(normalizedStudents);
+        setEstudianteId((current) =>
+          current && normalizedStudents.some((student) => normalizeId(student.id) === current)
+            ? current
+            : normalizeId(normalizedStudents[0]?.id)
+        );
+      } catch (error) {
+        if (!cancelled) {
+          setEstudiantes([]);
+          setEstudianteId("");
+          setCatalogError(error?.message ?? "No fue posible cargar los estudiantes del grupo.");
+        }
+      }
+    };
+
+    loadStudents();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [grupoId, refreshKey]);
+
   const { stats: statsEstudiante, loading: loadingEst, error: errorEst } =
-    useEstadisticasEstudiante(modo === "estudiante" ? estudianteId : null);
+    useEstadisticasEstudiante(modo === "estudiante" ? estudianteId : null, refreshKey);
 
   const { stats: statsGrupo, loading: loadingGrupo, error: errorGrupo } =
-    useEstadisticasGrupo(modo === "grupo" ? grupoId : null);
+    useEstadisticasGrupo(modo === "grupo" ? grupoId : null, refreshKey);
 
   const stats = modo === "estudiante" ? statsEstudiante : statsGrupo;
-  const loading = modo === "estudiante" ? loadingEst : loadingGrupo;
-  const error = modo === "estudiante" ? errorEst : errorGrupo;
+  const loadingStats = modo === "estudiante" ? loadingEst : loadingGrupo;
+  const statsError = modo === "estudiante" ? errorEst : errorGrupo;
+  const pageError = catalogError || statsError;
+  const selectedGroup = useMemo(
+    () => grupos.find((group) => normalizeId(group.id) === grupoId),
+    [grupoId, grupos]
+  );
+  const selectedStudent = useMemo(
+    () => estudiantes.find((student) => normalizeId(student.id) === estudianteId),
+    [estudianteId, estudiantes]
+  );
+
+  const loading = loadingCatalog || loadingStats;
+  const habilidadesOficiales = useMemo(() => {
+    const bySkill = new Map();
+
+    minijuegosActivos.forEach((game) => {
+      const habilidad = game.habilidad ?? game.habilidad_nombre ?? game.nombre_habilidad;
+      const catalogKey = normalizeSkillKey(habilidad);
+
+      if (!catalogKey || bySkill.has(catalogKey)) return;
+
+      bySkill.set(catalogKey, {
+        catalogKey,
+        id_habilidad: game.id_habilidad ?? game.habilidad_id,
+        habilidad,
+        juego: resolveGameTitle(game),
+      });
+    });
+
+    return [...bySkill.values()];
+  }, [minijuegosActivos]);
+
+  const statsVisibles = useMemo(() => {
+    if (!habilidadesOficiales.length) return [];
+
+    const statsBySkill = new Map();
+    (stats ?? []).forEach((stat) => {
+      const statKey = normalizeSkillKey(stat.habilidad);
+      if (statKey) statsBySkill.set(statKey, stat);
+    });
+
+    return habilidadesOficiales.map((habilidadOficial) => {
+      const savedStat = statsBySkill.get(habilidadOficial.catalogKey);
+
+      return {
+        ...habilidadOficial,
+        ...(savedStat ?? {}),
+        catalogKey: habilidadOficial.catalogKey,
+        id_habilidad: savedStat?.id_habilidad ?? savedStat?.id ?? habilidadOficial.id_habilidad,
+        habilidad: savedStat?.habilidad ?? habilidadOficial.habilidad,
+        juego: habilidadOficial.juego,
+        sin_datos: !savedStat,
+      };
+    });
+  }, [habilidadesOficiales, stats]);
 
   return (
-    <div style={styles.container}>
-      {/* Encabezado */}
-      <div style={styles.header}>
-        <div style={styles.headerIcon}><BarChart2 size={28} color="#2563eb" /></div>
-        <div>
-          <h1 style={styles.title}>Estadísticas de Habilidades</h1>
-          <p style={styles.subtitle}>Precisión y velocidad de reacción por habilidad cognitiva</p>
+    <section className="lk-stats-page">
+      <header className="lk-stats-hero">
+        <div className="lk-stats-hero__icon">
+          <BarChart2 size={28} aria-hidden="true" />
         </div>
-      </div>
+        <div className="lk-stats-hero__copy">
+          <span>Progreso pedagógico</span>
+          <h1>Estadísticas de habilidades</h1>
+          <p>
+            Lectura real de precisión, intentos y reacción según los resultados guardados en la
+            base de datos.
+          </p>
+        </div>
+        <button
+          className="lk-stats-refresh"
+          type="button"
+          onClick={() => setRefreshKey((current) => current + 1)}
+          disabled={loading}
+        >
+          <RefreshCw size={16} aria-hidden="true" />
+          Actualizar
+        </button>
+      </header>
 
-      {/* Controles */}
-      <div style={styles.controls}>
-        <div style={styles.modeToggle}>
+      <section className="lk-stats-controls" aria-label="Filtros de estadísticas">
+        <div className="lk-stats-toggle" role="tablist" aria-label="Modo de consulta">
           <button
-            style={{ ...styles.modeBtn, ...(modo === "estudiante" ? styles.modeBtnActive : {}) }}
+            type="button"
+            className={modo === "estudiante" ? "active" : ""}
             onClick={() => setModo("estudiante")}
           >
-            <User size={16} /> Por Estudiante
+            <User size={16} aria-hidden="true" />
+            Por estudiante
           </button>
           <button
-            style={{ ...styles.modeBtn, ...(modo === "grupo" ? styles.modeBtnActive : {}) }}
+            type="button"
+            className={modo === "grupo" ? "active" : ""}
             onClick={() => setModo("grupo")}
           >
-            <Users size={16} /> Por Grupo
+            <Users size={16} aria-hidden="true" />
+            Por grupo
           </button>
         </div>
 
-        <select style={styles.select} value={grupoId ?? ""} onChange={(e) => setGrupoId(Number(e.target.value))}>
-          <option value="">-- Selecciona grupo --</option>
-          {grupos.map((g) => (
-            <option key={g.id_grupo ?? g.id} value={g.id_grupo ?? g.id}>{g.nombre}</option>
-          ))}
-        </select>
-
-        {modo === "estudiante" && (
-          <select style={styles.select} value={estudianteId ?? ""} onChange={(e) => setEstudianteId(Number(e.target.value))}>
-            <option value="">-- Selecciona estudiante --</option>
-            {estudiantes.map((e) => (
-              <option key={e.id_estudiante ?? e.id} value={e.id_estudiante ?? e.id}>{e.nombre}</option>
+        <label className="lk-stats-field">
+          <span>Grupo</span>
+          <select value={grupoId} onChange={(event) => setGrupoId(event.target.value)}>
+            <option value="">Selecciona grupo</option>
+            {grupos.map((group) => (
+              <option key={group.id} value={group.id}>
+                {group.nombre}
+              </option>
             ))}
           </select>
-        )}
+        </label>
+
+        {modo === "estudiante" ? (
+          <label className="lk-stats-field">
+            <span>Estudiante</span>
+            <select
+              value={estudianteId}
+              onChange={(event) => setEstudianteId(event.target.value)}
+              disabled={!estudiantes.length}
+            >
+              <option value="">Selecciona estudiante</option>
+              {estudiantes.map((student) => (
+                <option key={student.id} value={student.id}>
+                  {student.nombre}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+      </section>
+
+      <div className="lk-stats-context">
+        <span>{selectedGroup?.nombre ?? "Sin grupo seleccionado"}</span>
+        <strong>
+          {modo === "estudiante"
+            ? selectedStudent?.nombre ?? "Selecciona un estudiante"
+            : "Promedio del grupo"}
+        </strong>
       </div>
 
-      {/* Estados de carga y error */}
-      {error && <div style={styles.error}>{error}</div>}
-      {loading && <div style={styles.loading}>Cargando estadísticas...</div>}
+      {pageError ? <div className="lk-stats-alert">{pageError}</div> : null}
 
-      {/* Tabla de estadísticas */}
-      {!loading && !error && (
-        <>
-          {stats.length === 0 ? (
-            <div style={styles.empty}>
-              <BarChart2 size={48} color="#d1d5db" />
-              <p>Sin estadísticas aún. El estudiante debe completar partidas primero.</p>
-            </div>
-          ) : (
-            <div style={styles.grid}>
-              {stats.map((stat, idx) => (
-                <HabilidadCard key={idx} stat={stat} modo={modo} />
-              ))}
-            </div>
-          )}
-        </>
+      {loading ? (
+        <div className="lk-stats-state">
+          <div className="lk-stats-spinner" />
+          <p>Cargando estadísticas reales...</p>
+        </div>
+      ) : statsVisibles.length === 0 ? (
+        <div className="lk-stats-empty">
+          <BarChart2 size={42} aria-hidden="true" />
+          <strong>Sin estadísticas todavía</strong>
+          <p>
+            Cuando el estudiante complete partidas de los minijuegos oficiales, aquí aparecerán sus
+            resultados por habilidad.
+          </p>
+        </div>
+      ) : (
+        <div className="lk-stats-grid">
+          {statsVisibles.map((stat) => (
+            <SkillStatsCard
+              key={stat.catalogKey ?? stat.id ?? stat.id_habilidad ?? stat.habilidad}
+              stat={stat}
+              modo={modo}
+            />
+          ))}
+        </div>
       )}
-    </div>
+    </section>
   );
 }
 
-/**
- * Tarjeta de estadísticas por habilidad.
- * Muestra una barra de progreso de precisión y los datos numéricos.
- */
-function HabilidadCard({ stat, modo }) {
-  const precision = modo === "estudiante"
-    ? Number(stat.precision_pct)
-    : Number(stat.precision_promedio);
-
-  const color = getPrecisionColor(precision);
+function SkillStatsCard({ stat, modo }) {
+  const rawPrecision = modo === "estudiante" ? stat.precision_pct : stat.precision_promedio;
+  const precision = clampPercent(rawPrecision);
+  const tone = getPrecisionTone(rawPrecision);
 
   return (
-    <div style={styles.card}>
-      <div style={styles.cardTop}>
-        <span style={styles.habilidadNombre}>{stat.habilidad}</span>
-        <span style={{ ...styles.precisionBadge, background: color }}>
-          {precision.toFixed(1)}%
-        </span>
+    <article className={`lk-stats-card lk-stats-card--${tone} ${stat.sin_datos ? "lk-stats-card--empty" : ""}`}>
+      <div className="lk-stats-card__head">
+        <div>
+          <span>Habilidad</span>
+          <h2>{stat.habilidad ?? "Habilidad sin nombre"}</h2>
+          {stat.juego ? <small>Juego: {stat.juego}</small> : null}
+        </div>
+        <strong>{formatPercent(rawPrecision)}</strong>
       </div>
 
-      {/* Barra de progreso */}
-      <div style={styles.barBg}>
-        <div style={{ ...styles.barFill, width: `${precision}%`, background: color }} />
+      <div className="lk-stats-progress" aria-hidden="true">
+        <i style={{ width: `${precision ?? 0}%` }} />
       </div>
 
-      {/* Métricas */}
-      <div style={styles.metricas}>
+      <div className="lk-stats-metrics">
         {modo === "estudiante" ? (
           <>
-            <Metrica label="Intentos" value={stat.total_intentos ?? 0} />
-            <Metrica label="Aciertos" value={stat.aciertos ?? 0} />
-            <Metrica label="Errores" value={stat.errores ?? 0} />
-            <Metrica label="Reacción" value={stat.promedio_reaccion_ms ? `${stat.promedio_reaccion_ms}ms` : "—"} />
+            <Metric label="Intentos" value={formatNumber(stat.total_intentos)} />
+            <Metric label="Aciertos" value={formatNumber(stat.aciertos)} />
+            <Metric label="Errores" value={formatNumber(stat.errores)} />
+            <Metric label="Reacción" value={formatReaction(stat.promedio_reaccion_ms)} />
           </>
         ) : (
           <>
-            <Metrica label="Precisión prom." value={`${precision.toFixed(1)}%`} />
-            <Metrica label="Reacción prom." value={stat.reaccion_promedio ? `${stat.reaccion_promedio}ms` : "—"} />
-            <Metrica label="Evaluados" value={stat.estudiantes_evaluados ?? 0} />
+            <Metric label="Precisión prom." value={formatPercent(stat.precision_promedio)} />
+            <Metric label="Reacción prom." value={formatReaction(stat.reaccion_promedio)} />
+            <Metric label="Evaluados" value={formatNumber(stat.estudiantes_evaluados)} />
           </>
         )}
       </div>
-    </div>
+    </article>
   );
 }
 
-/** Componente atómico para mostrar una métrica con su etiqueta */
-function Metrica({ label, value }) {
+function Metric({ label, value }) {
   return (
-    <div style={styles.metrica}>
-      <span style={styles.metricaLabel}>{label}</span>
-      <span style={styles.metricaValue}>{value}</span>
+    <div className="lk-stats-metric">
+      <span>{label}</span>
+      <strong>{value}</strong>
     </div>
   );
 }
-
-const styles = {
-  container: { padding: "32px", maxWidth: "1000px", margin: "0 auto" },
-  header: { display: "flex", gap: "16px", alignItems: "flex-start", marginBottom: "28px" },
-  headerIcon: { background: "#eff6ff", borderRadius: "12px", padding: "12px", display: "flex" },
-  title: { fontSize: "24px", fontWeight: 700, color: "#1e1b4b", margin: 0 },
-  subtitle: { fontSize: "14px", color: "#6b7280", marginTop: "4px" },
-  controls: { display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center", marginBottom: "28px" },
-  modeToggle: { display: "flex", background: "#f3f4f6", borderRadius: "8px", padding: "4px" },
-  modeBtn: { display: "flex", gap: "6px", alignItems: "center", padding: "8px 14px", border: "none", borderRadius: "6px", cursor: "pointer", background: "transparent", fontSize: "14px", color: "#6b7280" },
-  modeBtnActive: { background: "white", color: "#2563eb", fontWeight: 600, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" },
-  select: { padding: "8px 12px", borderRadius: "8px", border: "1px solid #e5e7eb", fontSize: "14px" },
-  error: { background: "#fee2e2", color: "#dc2626", padding: "12px 16px", borderRadius: "8px", marginBottom: "16px" },
-  loading: { textAlign: "center", color: "#6b7280", padding: "40px" },
-  empty: { textAlign: "center", color: "#9ca3af", padding: "60px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" },
-  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" },
-  card: { background: "white", borderRadius: "12px", padding: "20px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", border: "1px solid #f3f4f6" },
-  cardTop: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" },
-  habilidadNombre: { fontWeight: 700, color: "#1e1b4b", fontSize: "15px" },
-  precisionBadge: { color: "white", padding: "2px 10px", borderRadius: "999px", fontSize: "13px", fontWeight: 700 },
-  barBg: { background: "#f3f4f6", borderRadius: "999px", height: "8px", marginBottom: "16px", overflow: "hidden" },
-  barFill: { height: "100%", borderRadius: "999px", transition: "width 0.5s ease" },
-  metricas: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" },
-  metrica: { display: "flex", flexDirection: "column" },
-  metricaLabel: { fontSize: "11px", color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.05em" },
-  metricaValue: { fontSize: "16px", fontWeight: 700, color: "#374151" },
-};

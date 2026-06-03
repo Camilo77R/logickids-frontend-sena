@@ -168,7 +168,7 @@ export default function TutorProfilePage() {
                 width: '100px',
                 height: '100px',
                 borderRadius: '50%',
-                background: `linear-gradient(135deg, ${avatarColor}, ${avatarColor}dd)`,
+                background: avatarColor,
                 boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)'
               }}
             >
@@ -189,7 +189,7 @@ export default function TutorProfilePage() {
           {/* Tarjeta */}
           <Card className="border-0 shadow-sm" style={{ borderRadius: '20px' }}>
             <div style={{ 
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
+              background: '#8E35D5',
               padding: '14px 24px',
               borderTopLeftRadius: '20px',
               borderTopRightRadius: '20px',

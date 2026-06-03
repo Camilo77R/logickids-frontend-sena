@@ -30,7 +30,7 @@
   gap: 10px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, var(--lk-purple) 0%, var(--lk-purple-dark) 100%);
+  background: var(--lk-purple);
   box-shadow: var(--lk-shadow-md);
 }
 
@@ -447,7 +447,7 @@
 
 .lk-progress-cell .progress-bar {
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--students-purple), #8a35ee);
+  background: var(--students-purple);
 }
 
 .lk-progress-cell span {
@@ -788,9 +788,9 @@ body:has(.lk-students-page) .tutor-main-content {
 }
 
 .lk-students-page {
-  --students-pink: #bc59b1;
-  --students-pink-dark: #9b4d96;
-  --students-pink-soft: rgba(188, 89, 177, 0.14);
+  --students-pink: #8E35D5;
+  --students-pink-dark: #2B173D;
+  --students-pink-soft: #F3E8FA;
   --students-purple: var(--students-pink);
   --students-purple-dark: var(--students-pink-dark);
   --students-purple-soft: var(--students-pink-soft);
@@ -820,9 +820,7 @@ body:has(.lk-students-page) .tutor-main-content {
   grid-template-columns: minmax(0, 1fr) 190px;
   align-items: stretch;
   border-radius: var(--lk-radius-lg);
-  background:
-    radial-gradient(circle at 86% 18%, rgba(255, 202, 40, 0.24), transparent 34%),
-    linear-gradient(135deg, var(--students-pink) 0%, var(--students-pink-dark) 100%);
+  background: var(--students-pink);
   box-shadow: var(--lk-shadow-card);
 }
 
@@ -926,12 +924,12 @@ body:has(.lk-students-page) .tutor-main-content {
 }
 
 .lk-students-table thead th {
-  background: rgba(188, 89, 177, 0.07);
+  background: rgba(142, 53, 213, 0.07);
   color: var(--students-pink-dark);
 }
 
 .lk-progress-cell .progress-bar {
-  background: linear-gradient(90deg, var(--students-pink), var(--lk-purple-light));
+  background: var(--students-pink);
 }
 
 .lk-pagination .active .page-link {
@@ -949,9 +947,7 @@ body:has(.lk-students-page) .tutor-main-content {
 .lk-students-page .modal-header {
   padding: 18px 20px 8px;
   border-bottom: 0;
-  background:
-    radial-gradient(circle at 92% 0%, rgba(255, 202, 40, 0.24), transparent 32%),
-    linear-gradient(135deg, rgba(188, 89, 177, 0.12), rgba(255, 255, 255, 1) 58%);
+  background: #fff;
 }
 
 .lk-students-page .modal-header .modal-title {
@@ -970,32 +966,32 @@ body:has(.lk-students-page) .tutor-main-content {
 .lk-students-page .modal-body .form-control,
 .lk-students-page .modal-body .form-select {
   min-height: 40px;
-  border-color: rgba(188, 89, 177, 0.18);
+  border-color: rgba(142, 53, 213, 0.18);
   border-radius: 8px;
   background: #fff;
 }
 
 .lk-students-page .modal-body .form-control:focus,
 .lk-students-page .modal-body .form-select:focus {
-  border-color: rgba(188, 89, 177, 0.48);
+  border-color: rgba(142, 53, 213, 0.48);
   box-shadow: 0 0 0 4px var(--students-pink-soft);
 }
 
 .lk-submit-button {
-  background: linear-gradient(135deg, var(--students-pink), var(--students-pink-dark)) !important;
+  background: var(--students-pink) !important;
   border: 0 !important;
   color: #fff !important;
-  box-shadow: 0 8px 18px rgba(188, 89, 177, 0.2);
+  box-shadow: 0 8px 18px rgba(142, 53, 213, 0.2);
 }
 
 .lk-students-page .modal-body .btn-outline-secondary {
-  border-color: rgba(188, 89, 177, 0.22) !important;
+  border-color: rgba(142, 53, 213, 0.22) !important;
   color: var(--students-pink-dark);
 }
 
 .lk-students-page .modal-body .btn-outline-secondary:hover {
   background: var(--students-pink-soft);
-  border-color: rgba(188, 89, 177, 0.34) !important;
+  border-color: rgba(142, 53, 213, 0.34) !important;
   color: var(--students-pink-dark);
 }
 
@@ -1069,7 +1065,7 @@ body:has(.lk-students-page) .tutor-main-content {
   padding: 18px 24px;
   border-radius: 8px;
   grid-template-columns: minmax(0, 1fr) 220px;
-  background: linear-gradient(135deg, var(--lk-purple) 0%, var(--lk-purple-dark) 100%);
+  background: var(--lk-purple);
   box-shadow: var(--lk-shadow-sm);
 }
 
@@ -1301,11 +1297,11 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 }
 
 .lk-students-page {
-  --students-pink: #bc59b1;
-  --students-pink-dark: #9b4d96;
-  --students-pink-soft: rgba(188, 89, 177, 0.14);
-  --students-salmon: #d76aa8;
-  --students-salmon-soft: rgba(215, 106, 168, 0.16);
+  --students-pink: #8E35D5;
+  --students-pink-dark: #2B173D;
+  --students-pink-soft: #F3E8FA;
+  --students-salmon: #8E35D5;
+  --students-salmon-soft: rgba(142, 53, 213, 0.16);
   --students-purple: var(--students-pink);
   --students-purple-dark: var(--students-pink-dark);
   --students-purple-soft: var(--students-pink-soft);
@@ -1337,9 +1333,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   grid-template-columns: minmax(0, 1fr) 184px !important;
   align-items: stretch !important;
   border-radius: 8px !important;
-  background:
-    radial-gradient(circle at 86% 12%, rgba(255, 202, 40, 0.24), transparent 30%),
-    linear-gradient(135deg, var(--students-salmon) 0%, var(--students-pink) 48%, var(--students-pink-dark) 100%) !important;
+  background: var(--students-pink) !important;
   box-shadow: none !important;
 }
 
@@ -1447,7 +1441,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 .lk-students-table thead th {
   padding: 8px 12px !important;
-  background: rgba(188, 89, 177, 0.07) !important;
+  background: rgba(142, 53, 213, 0.07) !important;
   color: var(--students-pink-dark) !important;
 }
 
@@ -1467,15 +1461,13 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   border: 0 !important;
   border-radius: 18px !important;
   overflow: hidden !important;
-  box-shadow: 0 20px 50px rgba(155, 77, 150, 0.24) !important;
+  box-shadow: 0 20px 50px rgba(111, 34, 181, 0.24) !important;
 }
 
 .lk-students-page .lk-student-form-modal .modal-header {
   padding: 20px 22px 10px !important;
   border-bottom: 0 !important;
-  background:
-    radial-gradient(circle at 92% 8%, rgba(255, 202, 40, 0.28), transparent 30%),
-    linear-gradient(135deg, rgba(215, 106, 168, 0.22), rgba(255, 255, 255, 1) 62%) !important;
+  background: #fff !important;
 }
 
 .lk-students-page .lk-student-form-modal .modal-title {
@@ -1517,7 +1509,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-student-form .form-control,
 .lk-student-form .form-select {
   min-height: 42px !important;
-  border: 1px solid rgba(188, 89, 177, 0.22) !important;
+  border: 1px solid rgba(142, 53, 213, 0.22) !important;
   border-radius: 10px !important;
   background: #fff !important;
   color: var(--lk-text) !important;
@@ -1527,7 +1519,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 .lk-student-form .form-control:focus,
 .lk-student-form .form-select:focus {
-  border-color: rgba(188, 89, 177, 0.58) !important;
+  border-color: rgba(142, 53, 213, 0.58) !important;
   box-shadow: 0 0 0 4px var(--students-pink-soft) !important;
 }
 
@@ -1542,19 +1534,19 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   min-height: 42px !important;
   border: 0 !important;
   border-radius: 10px !important;
-  background: linear-gradient(135deg, var(--students-salmon), var(--students-pink-dark)) !important;
+  background: var(--students-pink) !important;
   color: #fff !important;
   font-weight: 900 !important;
-  box-shadow: 0 10px 20px rgba(188, 89, 177, 0.22) !important;
+  box-shadow: 0 10px 20px rgba(142, 53, 213, 0.22) !important;
 }
 
 .lk-student-form .btn-outline-secondary,
 .lk-student-form .btn-outline-secondary:hover,
 .lk-student-form .btn-outline-secondary:focus {
   min-height: 42px !important;
-  border: 1px solid rgba(188, 89, 177, 0.26) !important;
+  border: 1px solid rgba(142, 53, 213, 0.26) !important;
   border-radius: 10px !important;
-  background: rgba(188, 89, 177, 0.08) !important;
+  background: rgba(142, 53, 213, 0.08) !important;
   color: var(--students-pink-dark) !important;
   font-weight: 900 !important;
 }
@@ -1574,19 +1566,19 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   }
 }
 
-/* Ajuste de paleta exacta del tutor: sidebar #bc59b1/#a64e9c y amarillo #fdb813. */
+/* Ajuste de paleta exacta del tutor: sidebar #8E35D5 y amarillo #fdb813. */
 .lk-students-page {
-  --students-pink: #bc59b1 !important;
-  --students-pink-dark: #a64e9c !important;
-  --students-pink-soft: rgba(188, 89, 177, 0.14) !important;
-  --students-pink-light: #c86bc0 !important;
-  --students-pink-light-2: #d17ac9 !important;
+  --students-pink: #8E35D5 !important;
+  --students-pink-dark: #2B173D !important;
+  --students-pink-soft: #F3E8FA !important;
+  --students-pink-light: #8E35D5 !important;
+  --students-pink-light-2: #8E35D5 !important;
   --students-yellow: #fdb813 !important;
   --students-yellow-dark: #f5a910 !important;
 }
 
 .lk-students-hero {
-  background: linear-gradient(135deg, #d17ac9 0%, #bc59b1 46%, #a64e9c 100%) !important;
+  background: #8E35D5 !important;
 }
 
 .lk-tutor-profile-placeholder {
@@ -1627,14 +1619,14 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-student-form .lk-submit-button:focus,
 .lk-student-form .lk-submit-button:active,
 .lk-student-form .lk-submit-button:disabled {
-  background: linear-gradient(135deg, #d17ac9 0%, #bc59b1 48%, #a64e9c 100%) !important;
-  border: 1px solid #bc59b1 !important;
+  background: #8E35D5 !important;
+  border: 1px solid #8E35D5 !important;
   color: #ffffff !important;
   opacity: 1 !important;
   min-height: 42px !important;
   border-radius: 10px !important;
   font-weight: 900 !important;
-  box-shadow: 0 10px 18px rgba(188, 89, 177, 0.24) !important;
+  box-shadow: 0 10px 18px rgba(142, 53, 213, 0.24) !important;
 }
 
 .lk-student-form .lk-submit-button * {
@@ -1644,18 +1636,18 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-student-form .btn-outline-secondary,
 .lk-student-form .btn-outline-secondary:hover,
 .lk-student-form .btn-outline-secondary:focus {
-  background: rgba(188, 89, 177, 0.08) !important;
-  border-color: rgba(188, 89, 177, 0.28) !important;
-  color: #a64e9c !important;
+  background: rgba(142, 53, 213, 0.08) !important;
+  border-color: rgba(142, 53, 213, 0.28) !important;
+  color: #2B173D !important;
 }
 
 .lk-student-form .form-control,
 .lk-student-form .form-select {
-  border-color: rgba(188, 89, 177, 0.28) !important;
+  border-color: rgba(142, 53, 213, 0.28) !important;
 }
 
 .lk-student-form .form-control:focus,
 .lk-student-form .form-select:focus {
-  border-color: #bc59b1 !important;
-  box-shadow: 0 0 0 4px rgba(188, 89, 177, 0.14) !important;
+  border-color: #8E35D5 !important;
+  box-shadow: 0 0 0 4px rgba(142, 53, 213, 0.14) !important;
 }
