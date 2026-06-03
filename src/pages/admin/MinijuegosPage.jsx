@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
+import { Gamepad2, Layers3, PlayCircle, PauseCircle, RefreshCcw } from "lucide-react";
 import EmptyState from "../../components/common/EmptyState";
 import StatusBadge from "../../components/common/StatusBadge";
 import AppShell from "../../components/layout/AppShell";
+import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
+import DashboardPanel from "../../components/dashboard/DashboardPanel";
 import adminService from "../../services/adminService";
 
 const toSkillLabel = (value) => {
   const labels = {
     secuencias: "Secuencias",
-    clasificacion: "Clasificación",
+    clasificacion: "Clasificacion",
     espacial: "Espacial",
-    logica_booleana: "Lógica booleana",
+    logica_booleana: "Logica booleana",
     memoria: "Memoria",
   };
 
@@ -41,14 +44,18 @@ export default function MinijuegosPage() {
     loadMinigames();
   }, []);
 
-  const summary = useMemo(
-    () => ({
+  const summary = useMemo(() => {
+    const active = minigames.filter((minigame) => minigame.activo);
+    const paused = minigames.filter((minigame) => !minigame.activo);
+    const skills = new Set(minigames.map((minigame) => minigame.habilidad).filter(Boolean)).size;
+
+    return {
       total: minigames.length,
-      activos: minigames.filter((minigame) => minigame.activo).length,
-      pausados: minigames.filter((minigame) => !minigame.activo).length,
-    }),
-    [minigames]
-  );
+      active: active.length,
+      paused: paused.length,
+      skills,
+    };
+  }, [minigames]);
 
   const handleToggle = async (minigame) => {
     try {
@@ -71,58 +78,144 @@ export default function MinijuegosPage() {
   return (
     <AppShell
       title="Minijuegos"
-      description="Gestiona la disponibilidad del catálogo."
+      description="Administra la disponibilidad del catalogo sin mezclarlo con las metricas institucionales."
       actions={
         <button type="button" className="lk-btn lk-btn--secondary" onClick={loadMinigames}>
-          Recargar
+          <RefreshCcw size={16} /> Recargar
         </button>
       }
     >
-      <div className="lk-dashboard-grid">
-        <div className="lk-span-4">
-          <div className="lk-stat-card lk-stat-card--blue">
-            <span>Catálogo total</span>
-            <strong>{isLoading ? "..." : summary.total}</strong>
-            <small>Minijuegos registrados en la plataforma.</small>
-          </div>
-        </div>
-        <div className="lk-span-4">
-          <div className="lk-stat-card lk-stat-card--green">
-            <span>Activos</span>
-            <strong>{isLoading ? "..." : summary.activos}</strong>
-            <small>Disponibles para la experiencia del niño.</small>
-          </div>
-        </div>
-        <div className="lk-span-4">
-          <div className="lk-stat-card lk-stat-card--orange">
-            <span>Pausados</span>
-            <strong>{isLoading ? "..." : summary.pausados}</strong>
-            <small>Actualmente fuera de circulación.</small>
-          </div>
-        </div>
+      <div className="lk-role-dashboard">
+        <section className="lk-role-dashboard__hero">
+          <span className="lk-role-dashboard__hero-badge">Catalogo global</span>
+          <h2 className="lk-role-dashboard__hero-title">Disponibilidad de minijuegos</h2>
+          <p className="lk-role-dashboard__hero-subtitle">
+            Este modulo controla que experiencias estan activas para la plataforma. El foco aqui
+            es disponibilidad pedagogica, no gobierno institucional.
+          </p>
 
-        <section className="lk-table-card lk-span-12">
-          <h2>Catálogo de minijuegos</h2>
+          <div className="lk-role-dashboard__hero-tags">
+            <article className="lk-role-dashboard__hero-tag">
+              <strong>{isLoading ? "..." : summary.total}</strong>
+              <span>Catalogo total</span>
+            </article>
+            <article className="lk-role-dashboard__hero-tag">
+              <strong>{isLoading ? "..." : summary.active}</strong>
+              <span>Activos</span>
+            </article>
+            <article className="lk-role-dashboard__hero-tag">
+              <strong>{isLoading ? "..." : summary.paused}</strong>
+              <span>Pausados</span>
+            </article>
+          </div>
+        </section>
 
-          {feedback ? (
-            <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
-          ) : null}
+        {feedback ? (
+          <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
+        ) : null}
 
+        <section className="lk-role-dashboard__metrics">
+          <DashboardMetricCard
+            icon={Gamepad2}
+            label="Minijuegos"
+            value={isLoading ? "..." : summary.total}
+            description="Experiencias registradas en el catalogo global."
+            tone="purple"
+          />
+          <DashboardMetricCard
+            icon={PlayCircle}
+            label="Activos"
+            value={isLoading ? "..." : summary.active}
+            description="Disponibles actualmente para el flujo del estudiante."
+            tone="gold"
+          />
+          <DashboardMetricCard
+            icon={PauseCircle}
+            label="Pausados"
+            value={isLoading ? "..." : summary.paused}
+            description="Fuera de circulacion hasta nueva activacion."
+            tone="rose"
+          />
+          <DashboardMetricCard
+            icon={Layers3}
+            label="Habilidades"
+            value={isLoading ? "..." : summary.skills}
+            description="Cobertura de habilidades visibles en el catalogo actual."
+            tone="orange"
+          />
+        </section>
+
+        <section className="lk-role-dashboard__grid">
+          <DashboardPanel
+            eyebrow="Regla del modulo"
+            title="Como leer este espacio"
+            subtitle="Aqui solo se decide si un minijuego esta disponible o pausado."
+          >
+            <div className="lk-role-list">
+              <article className="lk-role-list__item lk-role-list__item--gold">
+                <div className="lk-role-list__top">
+                  <span className="lk-role-list__title">Activo</span>
+                  <span className="lk-role-list__meta lk-role-list__meta--gold">Visible</span>
+                </div>
+                <p className="lk-role-list__description">
+                  El minijuego puede entrar en los flujos de uso definidos por la plataforma.
+                </p>
+              </article>
+
+              <article className="lk-role-list__item lk-role-list__item--rose">
+                <div className="lk-role-list__top">
+                  <span className="lk-role-list__title">Pausado</span>
+                  <span className="lk-role-list__meta lk-role-list__meta--rose">Oculto</span>
+                </div>
+                <p className="lk-role-list__description">
+                  Se retira temporalmente del circuito sin mezclar esta decision con el panel institucional.
+                </p>
+              </article>
+            </div>
+          </DashboardPanel>
+
+          <DashboardPanel
+            eyebrow="Cobertura"
+            title="Lectura rapida del catalogo"
+            subtitle="Contexto suficiente para operar sin convertir esta pantalla en otro dashboard global."
+          >
+            <div className="lk-role-info-grid">
+              <article className="lk-role-info-card">
+                <span className="lk-role-info-card__label">Catalogo total</span>
+                <strong className="lk-role-info-card__value">{isLoading ? "..." : summary.total}</strong>
+                <p className="lk-role-info-card__hint">Base actual de experiencias registradas.</p>
+              </article>
+              <article className="lk-role-info-card">
+                <span className="lk-role-info-card__label">Habilidades cubiertas</span>
+                <strong className="lk-role-info-card__value">{isLoading ? "..." : summary.skills}</strong>
+                <p className="lk-role-info-card__hint">Categorias visibles con el contrato disponible.</p>
+              </article>
+            </div>
+          </DashboardPanel>
+        </section>
+
+        <DashboardPanel
+          eyebrow="Catalogo operativo"
+          title="Minijuegos registrados"
+          subtitle="Acciones directas de activacion y pausa sobre cada experiencia."
+        >
           {!isLoading && !minigames.length ? (
             <EmptyState
               title="No hay minijuegos disponibles"
-              description="Cuando el catálogo tenga registros, podrás controlarlos desde aquí."
+              description="Cuando el catalogo tenga registros, podras controlarlos desde aqui."
             />
           ) : null}
 
           {!!minigames.length ? (
-            <div className="lk-page-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
+            <div className="lk-role-entity-grid">
               {minigames.map((minigame) => (
-                <article key={minigame.id} className="lk-switch-card">
-                  <div className="lk-switch-card__head">
-                    <div className="lk-switch-card__title">
-                      <h3>{minigame.titulo}</h3>
-                      <p className="lk-muted">{minigame.descripcion || "Sin descripción disponible."}</p>
+                <article key={minigame.id} className="lk-role-entity-card">
+                  <div className="lk-role-entity-card__header">
+                    <div>
+                      <h3 className="lk-role-entity-card__title">{minigame.titulo}</h3>
+                      <p className="lk-role-entity-card__subtitle">
+                        {minigame.descripcion || "Sin descripcion disponible."}
+                      </p>
                     </div>
                     <StatusBadge
                       label={minigame.activo ? "Activo" : "Pausado"}
@@ -130,20 +223,28 @@ export default function MinijuegosPage() {
                     />
                   </div>
 
-                  <div className="lk-chip-row">
-                    <span className="lk-chip">Habilidad: {toSkillLabel(minigame.habilidad)}</span>
-                    <span className="lk-chip">Dificultad: {minigame.dificultad_maxima}</span>
-                    <span className="lk-chip">{minigame.slug}</span>
-                  </div>
+                  <dl className="lk-role-entity-card__meta">
+                    <div>
+                      <dt>Habilidad</dt>
+                      <dd>{toSkillLabel(minigame.habilidad)}</dd>
+                    </div>
+                    <div>
+                      <dt>Dificultad maxima</dt>
+                      <dd>{minigame.dificultad_maxima}</dd>
+                    </div>
+                    <div>
+                      <dt>Slug</dt>
+                      <dd>{minigame.slug}</dd>
+                    </div>
+                  </dl>
 
-                  <div className="lk-switch-card__actions">
+                  <div className="lk-role-entity-card__actions">
                     <button
                       type="button"
-                      className={`lk-mini-switch ${
-                        minigame.activo ? "lk-mini-switch--off" : "lk-mini-switch--on"
-                      }`}
+                      className={`lk-btn ${minigame.activo ? "lk-btn--secondary" : "lk-btn--primary"}`}
                       onClick={() => handleToggle(minigame)}
                     >
+                      {minigame.activo ? <PauseCircle size={16} /> : <PlayCircle size={16} />}
                       {minigame.activo ? "Pausar" : "Activar"}
                     </button>
                   </div>
@@ -151,7 +252,7 @@ export default function MinijuegosPage() {
               ))}
             </div>
           ) : null}
-        </section>
+        </DashboardPanel>
       </div>
     </AppShell>
   );

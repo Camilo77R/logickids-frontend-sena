@@ -86,6 +86,7 @@ export const buildSuperadminDashboardView = ({
         tone: "rose",
       },
     ],
+    attentionInstitutions: inactiveInstitutions.slice(0, 4),
     institutionsPreview: institutions.slice(0, 3),
     totalActiveTutors,
   };
