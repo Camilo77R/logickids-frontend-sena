@@ -22,7 +22,7 @@
 .lk-portal-sidebar {
   height: 100%;
   border-radius: 2.4rem;
-  background: #bc59b1;
+  background: #832578;
   border: none;
   box-shadow: 0 22px 44px rgba(131, 68, 127, 0.35);
   display: flex;
@@ -46,7 +46,7 @@
   width: 54px;
   height: 54px;
   border-radius: 1.25rem;
-  background: #c86bc0;
+  background: #f7f1f6;
   display: flex;
   align-items: center;
   justify-content: center;
