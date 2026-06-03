@@ -151,10 +151,10 @@
   opacity: 0.85;
 }
 
-.lk-role-metric--purple { background: linear-gradient(135deg, #8f3b92, #bc59b1); }
-.lk-role-metric--gold { background: linear-gradient(135deg, #f5a910, #fdb813); color: #5a3262; }
-.lk-role-metric--orange { background: linear-gradient(135deg, #f29b11, #ffb325); color: #5a3262; }
-.lk-role-metric--rose { background: linear-gradient(135deg, #a84fd3, #cf79c6); }
+.lk-role-metric--purple { background: linear-gradient(135deg, #401842ab, #821875); }
+.lk-role-metric--gold { background: linear-gradient(135deg, #b47f147a, #e2a519); color: #441b4c; }
+.lk-role-metric--orange { background: linear-gradient(135deg, #a76d0f9c, #ffb325); color: #401a48; }
+.lk-role-metric--rose { background: linear-gradient(135deg, #461260a4, #611c5a); }
 
 .lk-role-dashboard__grid {
   display: grid;

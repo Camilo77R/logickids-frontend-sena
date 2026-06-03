@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Building2,
   FolderClosed,
+  Gamepad2,
   GraduationCap,
   LayoutDashboard,
   Mail,
@@ -26,6 +27,7 @@ const PORTAL_NAVIGATION = {
   [USER_ROLES.SUPERADMIN]: [
     { key: "superadmin-dashboard", label: "Resumen global", path: "/superadmin/dashboard", icon: LayoutDashboard },
     { key: "superadmin-instituciones", label: "Instituciones", path: "/superadmin/instituciones", icon: Building2 },
+    { key: "superadmin-minijuegos", label: "Minijuegos", path: "/superadmin/minijuegos", icon: Gamepad2 },
   ],
 };
 

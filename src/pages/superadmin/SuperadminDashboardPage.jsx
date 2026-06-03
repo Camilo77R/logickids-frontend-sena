@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
   Building2,
-  Globe2,
+  Gamepad2,
   MapPinned,
+  Power,
   ShieldCheck,
   UsersRound,
 } from "lucide-react";
@@ -52,17 +53,17 @@ export default function SuperadminDashboardPage() {
   return (
     <AppShell
       title={`Hola, ${firstName}`}
-      description="Supervisa instituciones, tutores activos y salud operativa de toda la plataforma."
+      description="Monitorea la plataforma completa y entra solo a los modulos que necesitan accion."
     >
       <div className="lk-role-dashboard">
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
         <section className="lk-role-dashboard__hero">
-          <span className="lk-role-dashboard__hero-badge">Centro global</span>
-          <h2 className="lk-role-dashboard__hero-title">Salud completa de la plataforma</h2>
+          <span className="lk-role-dashboard__hero-badge">Resumen global</span>
+          <h2 className="lk-role-dashboard__hero-title">Panorama ejecutivo de LogicKids</h2>
           <p className="lk-role-dashboard__hero-subtitle">
-            Desde aquí controlas presencia territorial, instituciones activas y el pulso global
-            de la red LogicKids sin salirte de lo que hoy entrega el backend.
+            Este panel concentra lectura global. Las acciones operativas viven en los modulos de
+            Instituciones y Minijuegos para evitar duplicidad y mezclar decision con ejecucion.
           </p>
 
           <div className="lk-role-dashboard__hero-tags">
@@ -108,32 +109,32 @@ export default function SuperadminDashboardPage() {
 
         <section className="lk-role-dashboard__grid">
           <DashboardPanel
-            eyebrow="Acciones rápidas"
-            title="Gobierno de plataforma"
-            subtitle="Los puntos de entrada principales para operar a nivel global."
+            eyebrow="Modulos"
+            title="Entradas principales de gobierno"
+            subtitle="Cada espacio tiene una responsabilidad unica para que el superadmin no repita trabajo."
           >
             <div className="lk-role-quick-grid">
               <QuickActionCard
                 to="/superadmin/instituciones"
                 icon={Building2}
-                title="Gestionar instituciones"
-                description="Crea, ajusta, desactiva o reactiva colegios desde un solo lugar."
+                title="Instituciones"
+                description="CRUD, congelamiento, reactivacion y directorio operativo de colegios."
                 tone="purple"
               />
               <QuickActionCard
-                to="/superadmin/instituciones"
-                icon={ShieldCheck}
-                title="Congelar o reactivar acceso"
-                description="Desactivar una institución congela el acceso y corta sesiones activas de estudiantes."
+                to="/superadmin/minijuegos"
+                icon={Gamepad2}
+                title="Minijuegos"
+                description="Disponibilidad del catalogo y control de experiencia a nivel de plataforma."
                 tone="gold"
               />
             </div>
           </DashboardPanel>
 
           <DashboardPanel
-            eyebrow="Monitoreo"
+            eyebrow="Cobertura"
             title="Pulso operacional"
-            subtitle="Indicadores para ver si la plataforma está balanceada y disponible."
+            subtitle="Lectura rapida de disponibilidad y expansion sin entrar al detalle del CRUD."
             aside={<Activity size={18} color="var(--lk-purple)" aria-hidden="true" />}
           >
             <div className="lk-role-inline-metric">
@@ -157,65 +158,69 @@ export default function SuperadminDashboardPage() {
 
         <section className="lk-role-dashboard__grid">
           <DashboardPanel
-            eyebrow="Vista rápida"
-            title="Instituciones recientes"
-            subtitle="Muestra corta para revisar presencia sin ir aún al CRUD completo."
-            aside={<Globe2 size={18} color="var(--lk-purple)" aria-hidden="true" />}
+            eyebrow="Atencion inmediata"
+            title="Instituciones que requieren seguimiento"
+            subtitle="Se listan solo las que hoy estan congeladas para que esta vista no replique el directorio completo."
+            aside={<Power size={18} color="var(--lk-purple)" aria-hidden="true" />}
           >
             <div className="lk-role-list">
-              {view.institutionsPreview.length ? (
-                view.institutionsPreview.map((institution) => {
-                  const tone = institution.activo ? "gold" : "rose";
-
-                  return (
-                    <article
-                      key={institution.id ?? institution.id_institucion}
-                      className={`lk-role-list__item lk-role-list__item--${tone}`}
-                    >
-                      <div className="lk-role-list__top">
-                        <span className="lk-role-list__title">{institution.nombre}</span>
-                        <span className={`lk-role-list__meta lk-role-list__meta--${tone}`}>
-                          {institution.activo ? "Activa" : "Desactivada"}
-                        </span>
-                      </div>
-                      <p className="lk-role-list__description">
-                        {institution.ciudad || "Sin ciudad"} · {institution.tutores_activos ?? 0} tutor(es) activos
-                      </p>
-                    </article>
-                  );
-                })
+              {view.attentionInstitutions.length ? (
+                view.attentionInstitutions.map((institution) => (
+                  <article
+                    key={institution.id ?? institution.id_institucion}
+                    className="lk-role-list__item lk-role-list__item--rose"
+                  >
+                    <div className="lk-role-list__top">
+                      <span className="lk-role-list__title">{institution.nombre}</span>
+                      <span className="lk-role-list__meta lk-role-list__meta--rose">Congelada</span>
+                    </div>
+                    <p className="lk-role-list__description">
+                      {institution.ciudad || "Sin ciudad"} · {institution.tutores_activos ?? 0} tutor(es) activos impactados
+                    </p>
+                  </article>
+                ))
               ) : (
                 <p className="lk-role-note">
-                  Aún no hay instituciones visibles para construir esta vista global.
+                  No hay instituciones congeladas en este momento. El acceso institucional luce estable.
                 </p>
               )}
             </div>
           </DashboardPanel>
 
           <DashboardPanel
-            eyebrow="Gobierno"
-            title="Qué puede hacer realmente el superadmin"
-            subtitle="Este panel se mantiene pegado al contrato actual del backend, sin inventar acciones ni datos."
+            eyebrow="Alcance"
+            title="Que debe vivir en cada pestaña"
+            subtitle="Este bloque define el contrato UX del modulo para no mezclar resumen con operacion."
             aside={<ShieldCheck size={18} color="var(--lk-purple)" aria-hidden="true" />}
           >
             <div className="lk-role-list">
               <article className="lk-role-list__item lk-role-list__item--gold">
                 <div className="lk-role-list__top">
-                  <span className="lk-role-list__title">Instituciones activas o congeladas</span>
-                  <span className="lk-role-list__meta lk-role-list__meta--gold">Control real</span>
+                  <span className="lk-role-list__title">Resumen global</span>
+                  <span className="lk-role-list__meta lk-role-list__meta--gold">Leer</span>
                 </div>
                 <p className="lk-role-list__description">
-                  Puede activar, desactivar, editar o eliminar instituciones desde la plataforma global.
+                  KPIs, cobertura, alertas e indicadores de salud. No debe cargar formularios ni directorios completos.
                 </p>
               </article>
 
-              <article className="lk-role-list__item lk-role-list__item--rose">
+              <article className="lk-role-list__item lk-role-list__item--orange">
                 <div className="lk-role-list__top">
-                  <span className="lk-role-list__title">Sin listado global de admins</span>
-                  <span className="lk-role-list__meta lk-role-list__meta--rose">Contrato pendiente</span>
+                  <span className="lk-role-list__title">Instituciones</span>
+                  <span className="lk-role-list__meta lk-role-list__meta--orange">Gestionar</span>
                 </div>
                 <p className="lk-role-list__description">
-                  El backend actual no expone todavía un endpoint para listar a todos los admins institucionales.
+                  Altas, ediciones, congelamiento, reactivacion y busqueda operativa de colegios.
+                </p>
+              </article>
+
+              <article className="lk-role-list__item lk-role-list__item--orange">
+                <div className="lk-role-list__top">
+                  <span className="lk-role-list__title">Minijuegos</span>
+                  <span className="lk-role-list__meta lk-role-list__meta--orange">Operar</span>
+                </div>
+                <p className="lk-role-list__description">
+                  Control del catalogo y disponibilidad pedagogica sin contaminar el tablero ejecutivo.
                 </p>
               </article>
             </div>

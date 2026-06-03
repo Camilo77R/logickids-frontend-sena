@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  Building2,
   Check,
   Copy,
   Pencil,
@@ -9,10 +8,8 @@ import {
   Search,
   ShieldCheck,
   Trash2,
-  UsersRound,
 } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
-import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
 import DashboardPanel from "../../components/dashboard/DashboardPanel";
 import EmptyState from "../../components/common/EmptyState";
 import adminService from "../../services/adminService";
@@ -80,16 +77,17 @@ export default function InstitucionesPage() {
   const summary = useMemo(() => {
     const activeInstitutions = institutions.filter((institution) => institution.activo);
     const inactiveInstitutions = institutions.filter((institution) => !institution.activo);
-    const activeTutors = institutions.reduce(
-      (sum, institution) => sum + Number(institution.tutores_activos ?? 0),
-      0
-    );
 
     return {
       total: institutions.length,
       active: activeInstitutions.length,
       inactive: inactiveInstitutions.length,
-      activeTutors,
+      cities: new Set(
+        institutions
+          .map((institution) => institution.ciudad?.trim())
+          .filter(Boolean)
+      ).size,
+      recentInactive: inactiveInstitutions.slice(0, 3),
     };
   }, [institutions]);
 
@@ -146,7 +144,7 @@ export default function InstitucionesPage() {
 
       if (editingId) {
         await adminService.updateInstitution(editingId, payload);
-        showFeedback("success", "Institución actualizada correctamente.");
+        showFeedback("success", "Institucion actualizada correctamente.");
         handleCancelEdit();
       } else {
         const result = await adminService.createInstitution(payload);
@@ -154,13 +152,13 @@ export default function InstitucionesPage() {
         setForm(EMPTY_FORM);
         showFeedback(
           "success",
-          "Institución creada. Guarda las credenciales del administrador antes de cerrar el modal."
+          "Institucion creada. Guarda las credenciales del administrador antes de cerrar el modal."
         );
       }
 
       await loadInstitutions();
     } catch (error) {
-      showFeedback("error", error.message || "No fue posible guardar la institución.");
+      showFeedback("error", error.message || "No fue posible guardar la institucion.");
     } finally {
       setIsSaving(false);
     }
@@ -168,19 +166,19 @@ export default function InstitucionesPage() {
 
   const handleDelete = async (institution) => {
     const confirmed = window.confirm(
-      `¿Eliminar la institución "${institution.nombre}"? Esta acción no se puede deshacer.`
+      `Eliminar la institucion "${institution.nombre}"? Esta accion no se puede deshacer.`
     );
 
     if (!confirmed) return;
 
     try {
       await adminService.deleteInstitution(institution.id ?? institution.id_institucion);
-      showFeedback("success", `Institución "${institution.nombre}" eliminada.`);
+      showFeedback("success", `Institucion "${institution.nombre}" eliminada.`);
       await loadInstitutions();
     } catch (error) {
       showFeedback(
         "error",
-        error.message || "No fue posible eliminar la institución. Verifica que no tenga usuarios asociados."
+        error.message || "No fue posible eliminar la institucion. Verifica que no tenga usuarios asociados."
       );
     }
   };
@@ -189,8 +187,8 @@ export default function InstitucionesPage() {
     const isActive = Boolean(institution.activo);
     const confirmed = window.confirm(
       isActive
-        ? `¿Desactivar "${institution.nombre}"? Esto congela el acceso institucional y cierra sesiones activas de estudiantes.`
-        : `¿Reactivar "${institution.nombre}"? Esto vuelve a habilitar el acceso de la institución.`
+        ? `Desactivar "${institution.nombre}"? Esto congela el acceso institucional y cierra sesiones activas de estudiantes.`
+        : `Reactivar "${institution.nombre}"? Esto vuelve a habilitar el acceso de la institucion.`
     );
 
     if (!confirmed) return;
@@ -200,24 +198,24 @@ export default function InstitucionesPage() {
         await adminService.deactivateInstitution(institution.id ?? institution.id_institucion);
         showFeedback(
           "success",
-          `Institución "${institution.nombre}" desactivada. El acceso quedó congelado.`
+          `Institucion "${institution.nombre}" desactivada. El acceso quedo congelado.`
         );
       } else {
         await adminService.reactivateInstitution(institution.id ?? institution.id_institucion);
-        showFeedback("success", `Institución "${institution.nombre}" reactivada.`);
+        showFeedback("success", `Institucion "${institution.nombre}" reactivada.`);
       }
 
       await loadInstitutions();
     } catch (error) {
       showFeedback(
         "error",
-        error.message || "No fue posible actualizar el estado de la institución."
+        error.message || "No fue posible actualizar el estado de la institucion."
       );
     }
   };
 
   const handleCopyCredentials = async () => {
-    const content = `Email: ${credentials.email}\nContraseña temporal: ${credentials.contrasena_temporal}`;
+    const content = `Email: ${credentials.email}\nContrasena temporal: ${credentials.contrasena_temporal}`;
     await navigator.clipboard.writeText(content);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
@@ -226,28 +224,27 @@ export default function InstitucionesPage() {
   return (
     <AppShell
       title="Instituciones"
-      description="Controla el estado global de los colegios y congela o reactiva acceso cuando sea necesario."
+      description="Gestiona el directorio institucional y aplica acciones operativas sin duplicar el tablero global."
     >
       <div className="lk-role-dashboard">
         {feedback ? <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div> : null}
 
         <section className="lk-role-dashboard__hero">
-          <span className="lk-role-dashboard__hero-badge">Gobierno institucional</span>
-          <h2 className="lk-role-dashboard__hero-title">Mapa completo de colegios</h2>
+          <span className="lk-role-dashboard__hero-badge">Operacion institucional</span>
+          <h2 className="lk-role-dashboard__hero-title">Directorio y control de colegios</h2>
           <p className="lk-role-dashboard__hero-subtitle">
-            El superadmin crea, corrige, congela o reactiva instituciones. Cuando una institución
-            se desactiva, el backend corta sesiones activas de estudiantes y bloquea el acceso
-            institucional.
+            Aqui vive el trabajo operativo del superadmin: crear, editar, congelar, reactivar y
+            revisar instituciones. El resumen global queda fuera para que esta pantalla siga enfocada.
           </p>
 
           <div className="lk-role-dashboard__hero-tags">
             <article className="lk-role-dashboard__hero-tag">
               <strong>{summary.total}</strong>
-              <span>Instituciones</span>
+              <span>Registradas</span>
             </article>
             <article className="lk-role-dashboard__hero-tag">
               <strong>{summary.active}</strong>
-              <span>Activas</span>
+              <span>Habilitadas</span>
             </article>
             <article className="lk-role-dashboard__hero-tag">
               <strong>{summary.inactive}</strong>
@@ -256,42 +253,11 @@ export default function InstitucionesPage() {
           </div>
         </section>
 
-        <section className="lk-role-dashboard__metrics">
-          <DashboardMetricCard
-            icon={Building2}
-            label="Instituciones"
-            value={isLoading ? "..." : summary.total}
-            description="Total de colegios visibles en la plataforma."
-            tone="purple"
-          />
-          <DashboardMetricCard
-            icon={ShieldCheck}
-            label="Activas"
-            value={isLoading ? "..." : summary.active}
-            description="Hoy pueden operar con normalidad."
-            tone="gold"
-          />
-          <DashboardMetricCard
-            icon={Power}
-            label="Congeladas"
-            value={isLoading ? "..." : summary.inactive}
-            description="Acceso institucional bloqueado temporalmente."
-            tone="rose"
-          />
-          <DashboardMetricCard
-            icon={UsersRound}
-            label="Tutores activos"
-            value={isLoading ? "..." : summary.activeTutors}
-            description="Suma global de docentes activos en la red."
-            tone="orange"
-          />
-        </section>
-
         <section className="lk-role-dashboard__grid">
           <DashboardPanel
             eyebrow={editingId ? "Editar" : "Crear"}
-            title={editingId ? "Actualizar institución" : "Nueva institución"}
-            subtitle="Formulario limpio para crear o corregir el registro global del colegio."
+            title={editingId ? "Actualizar institucion" : "Nueva institucion"}
+            subtitle="Formulario centralizado para abrir o corregir el registro oficial del colegio."
           >
             <form className="lk-role-form" onSubmit={handleSubmit}>
               <div className={`lk-field${formErrors.nombre ? " lk-field--error" : ""}`}>
@@ -301,7 +267,7 @@ export default function InstitucionesPage() {
                   name="nombre"
                   value={form.nombre}
                   onChange={handleChange}
-                  placeholder="Colegio San José"
+                  placeholder="Colegio San Jose"
                 />
                 {formErrors.nombre ? <span className="lk-field-error">{formErrors.nombre}</span> : null}
               </div>
@@ -314,12 +280,12 @@ export default function InstitucionesPage() {
                     name="ciudad"
                     value={form.ciudad}
                     onChange={handleChange}
-                    placeholder="Bogotá"
+                    placeholder="Bogota"
                   />
                 </div>
 
                 <div className="lk-field">
-                  <label htmlFor="institution-phone">Teléfono</label>
+                  <label htmlFor="institution-phone">Telefono</label>
                   <input
                     id="institution-phone"
                     name="telefono"
@@ -331,7 +297,7 @@ export default function InstitucionesPage() {
               </div>
 
               <div className="lk-field">
-                <label htmlFor="institution-address">Dirección</label>
+                <label htmlFor="institution-address">Direccion</label>
                 <input
                   id="institution-address"
                   name="direccion"
@@ -343,7 +309,7 @@ export default function InstitucionesPage() {
 
               <div className="lk-role-form__actions">
                 <button type="submit" className="lk-btn lk-btn--primary" disabled={isSaving}>
-                  {isSaving ? "Guardando..." : editingId ? "Guardar cambios" : "Crear institución"}
+                  {isSaving ? "Guardando..." : editingId ? "Guardar cambios" : "Crear institucion"}
                 </button>
 
                 {editingId ? (
@@ -356,29 +322,43 @@ export default function InstitucionesPage() {
           </DashboardPanel>
 
           <DashboardPanel
-            eyebrow="Regla crítica"
-            title="Qué significa congelar una institución"
-            subtitle="Aquí no estamos decorando: esta pantalla debe comunicar el impacto real del backend."
+            eyebrow="Estado del modulo"
+            title="Lectura operativa"
+            subtitle="Solo el contexto necesario para gestionar instituciones desde esta pantalla."
             aside={<ShieldCheck size={18} color="var(--lk-purple)" aria-hidden="true" />}
           >
+            <div className="lk-role-info-grid">
+              <article className="lk-role-info-card">
+                <span className="lk-role-info-card__label">Instituciones visibles</span>
+                <strong className="lk-role-info-card__value">{isLoading ? "..." : summary.total}</strong>
+                <p className="lk-role-info-card__hint">Base actual del directorio institucional.</p>
+              </article>
+
+              <article className="lk-role-info-card">
+                <span className="lk-role-info-card__label">Ciudades cubiertas</span>
+                <strong className="lk-role-info-card__value">{isLoading ? "..." : summary.cities}</strong>
+                <p className="lk-role-info-card__hint">Alcance territorial medido solo desde instituciones registradas.</p>
+              </article>
+            </div>
+
             <div className="lk-role-list">
               <article className="lk-role-list__item lk-role-list__item--gold">
                 <div className="lk-role-list__top">
-                  <span className="lk-role-list__title">Institución activa</span>
+                  <span className="lk-role-list__title">Institucion activa</span>
                   <span className="lk-role-list__meta lk-role-list__meta--gold">Operando</span>
                 </div>
                 <p className="lk-role-list__description">
-                  Tutores y estudiantes pueden seguir trabajando bajo las reglas normales de acceso.
+                  El colegio puede operar normalmente y su acceso institucional permanece habilitado.
                 </p>
               </article>
 
               <article className="lk-role-list__item lk-role-list__item--rose">
                 <div className="lk-role-list__top">
-                  <span className="lk-role-list__title">Institución congelada</span>
-                  <span className="lk-role-list__meta lk-role-list__meta--rose">Acceso bloqueado</span>
+                  <span className="lk-role-list__title">Institucion congelada</span>
+                  <span className="lk-role-list__meta lk-role-list__meta--rose">Impacto real</span>
                 </div>
                 <p className="lk-role-list__description">
-                  El backend desactiva la institución y cierra sesiones activas de estudiantes. Es una acción de impacto global.
+                  El backend bloquea el acceso institucional y corta sesiones activas de estudiantes.
                 </p>
               </article>
             </div>
@@ -386,9 +366,9 @@ export default function InstitucionesPage() {
         </section>
 
         <DashboardPanel
-          eyebrow="Directorio global"
+          eyebrow="Directorio institucional"
           title="Instituciones registradas"
-          subtitle="Bento institucional con búsqueda rápida y acciones reales sobre cada colegio."
+          subtitle="Busqueda rapida y acciones reales sobre cada colegio."
           aside={
             <div className="lk-role-search">
               <Search size={16} className="lk-role-search__icon" aria-hidden="true" />
@@ -396,7 +376,7 @@ export default function InstitucionesPage() {
                 type="search"
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Buscar por nombre, ciudad o dirección..."
+                placeholder="Buscar por nombre, ciudad o direccion..."
                 className="lk-role-search__input"
               />
             </div>
@@ -404,11 +384,11 @@ export default function InstitucionesPage() {
         >
           {!isLoading && !filteredInstitutions.length ? (
             <EmptyState
-              title="No hay instituciones para esta búsqueda"
+              title="No hay instituciones para esta busqueda"
               description={
                 searchTerm
-                  ? "Ajusta el término de búsqueda para explorar mejor el directorio."
-                  : "Crea la primera institución para comenzar a poblar la plataforma."
+                  ? "Ajusta el termino de busqueda para explorar mejor el directorio."
+                  : "Crea la primera institucion para comenzar a poblar la plataforma."
               }
             />
           ) : (
@@ -437,12 +417,12 @@ export default function InstitucionesPage() {
 
                     <dl className="lk-role-entity-card__meta">
                       <div>
-                        <dt>Dirección</dt>
-                        <dd>{institution.direccion || "Sin dirección"}</dd>
+                        <dt>Direccion</dt>
+                        <dd>{institution.direccion || "Sin direccion"}</dd>
                       </div>
                       <div>
-                        <dt>Teléfono</dt>
-                        <dd>{institution.telefono || "Sin teléfono"}</dd>
+                        <dt>Telefono</dt>
+                        <dd>{institution.telefono || "Sin telefono"}</dd>
                       </div>
                       <div>
                         <dt>Tutores activos</dt>
@@ -482,6 +462,31 @@ export default function InstitucionesPage() {
             </div>
           )}
         </DashboardPanel>
+
+        {summary.recentInactive.length ? (
+          <DashboardPanel
+            eyebrow="Seguimiento"
+            title="Congeladas recientemente visibles"
+            subtitle="Pequeno radar operativo para no salir del modulo cuando necesitas reaccionar rapido."
+          >
+            <div className="lk-role-list">
+              {summary.recentInactive.map((institution) => (
+                <article
+                  key={institution.id ?? institution.id_institucion}
+                  className="lk-role-list__item lk-role-list__item--rose"
+                >
+                  <div className="lk-role-list__top">
+                    <span className="lk-role-list__title">{institution.nombre}</span>
+                    <span className="lk-role-list__meta lk-role-list__meta--rose">Congelada</span>
+                  </div>
+                  <p className="lk-role-list__description">
+                    {institution.ciudad || "Sin ciudad"} · {institution.tutores_activos ?? 0} tutor(es) activos asociados
+                  </p>
+                </article>
+              ))}
+            </div>
+          </DashboardPanel>
+        ) : null}
       </div>
 
       {credentials ? (
@@ -495,7 +500,7 @@ export default function InstitucionesPage() {
             </div>
 
             <p className="lk-role-modal__warning">
-              Guarda estas credenciales ahora. El backend solo las devuelve una vez al crear la institución.
+              Guarda estas credenciales ahora. El backend solo las devuelve una vez al crear la institucion.
             </p>
 
             <div className="lk-role-list">
@@ -508,7 +513,7 @@ export default function InstitucionesPage() {
 
               <article className="lk-role-list__item">
                 <div className="lk-role-list__top">
-                  <span className="lk-role-list__title">Contraseña temporal</span>
+                  <span className="lk-role-list__title">Contrasena temporal</span>
                 </div>
                 <p className="lk-role-list__description">{credentials.contrasena_temporal}</p>
               </article>
