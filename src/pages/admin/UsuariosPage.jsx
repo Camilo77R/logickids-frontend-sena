@@ -467,7 +467,7 @@ export default function UsuariosPage() {
           </div>
         </RoleModal>
 
-        {/* MODAL DE DETALLE - CORREGIDO */}
+        {/* MODAL DE DETALLE - CON BOTÓN SUSPENDER */}
         <RoleModal
           open={showDetailModal}
           onClose={() => setShowDetailModal(false)}
@@ -480,16 +480,29 @@ export default function UsuariosPage() {
                 Cerrar
               </button>
               {selectedTutorDetail?.estado !== "suspendido" && (
-                <button 
-                  className="lk-btn lk-btn--primary" 
-                  onClick={() => {
-                    const nextState = selectedTutorDetail.estado === "activo" ? "inactivo" : "activo";
-                    openStateModal(selectedTutorDetail, nextState);
-                    setShowDetailModal(false);
-                  }}
-                >
-                  {selectedTutorDetail?.estado === "activo" ? "Desactivar" : "Reactivar"}
-                </button>
+                <>
+                  {selectedTutorDetail?.estado === "activo" && (
+                    <button 
+                      className="lk-btn lk-btn--ghost-danger" 
+                      onClick={() => {
+                        openStateModal(selectedTutorDetail, "suspendido");
+                        setShowDetailModal(false);
+                      }}
+                    >
+                      Suspender
+                    </button>
+                  )}
+                  <button 
+                    className="lk-btn lk-btn--primary" 
+                    onClick={() => {
+                      const nextState = selectedTutorDetail.estado === "activo" ? "inactivo" : "activo";
+                      openStateModal(selectedTutorDetail, nextState);
+                      setShowDetailModal(false);
+                    }}
+                  >
+                    {selectedTutorDetail?.estado === "activo" ? "Desactivar" : "Reactivar"}
+                  </button>
+                </>
               )}
             </div>
           }
