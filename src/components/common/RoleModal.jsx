@@ -39,7 +39,10 @@ export default function RoleModal({
               {eyebrow ? <span className="lk-role-modal__eyebrow">{eyebrow}</span> : null}
               {title ? <h3 className="lk-role-modal__title">{title}</h3> : null}
             </div>
-            {/* Botón de cerrar ELIMINADO del header */}
+
+            <button type="button" className="lk-btn lk-btn--secondary" onClick={onClose}>
+              Cerrar
+            </button>
           </header>
         ) : null}
 
