@@ -21,8 +21,8 @@ import AdminsInstitucionalesPage from "../pages/admin/AdminsInstitucionalesPage"
 import SolicitudesPage from "../pages/admin/SolicitudesPage";
 
 // Páginas de superadmin (plataforma global)
-import InstitucionesPage from "../pages/admin/InstitucionesPage";
-import MinijuegosPage from "../pages/admin/MinijuegosPage";
+import InstitucionesPage from "../pages/superadmin/InstitucionesPage";
+import MinijuegosPage from "../pages/superadmin/MinijuegosPage";
 import SuperadminDashboardPage from "../pages/superadmin/SuperadminDashboardPage";
 import SuperadminUsersDirectoryPage from "../pages/superadmin/SuperadminUsersDirectoryPage";
 
