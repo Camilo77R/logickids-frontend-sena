@@ -18,8 +18,8 @@ import AccountCenterModal from "../../account/AccountCenterModal";
 
 const TopbarBrand = () => (
   <div className="lk-tutor-topbar-brand">
-    <span style={{ color: "var(--lk-purple)" }}>Logic</span>
-    <span style={{ color: "var(--lk-yellow)" }}>Kids</span>
+    <span style={{ color: "var(--lk-brand)" }}>Logic</span>
+    <span style={{ color: "var(--lk-accent)" }}>Kids</span>
   </div>
 );
 

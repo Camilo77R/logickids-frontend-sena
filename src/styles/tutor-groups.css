@@ -1,13 +1,13 @@
 .tutor-page-container,
 .tg-session-modal {
-  --tg-p: #8E35D5;
-  --tg-pd: #2B173D;
-  --tg-pbg: #F4EAFE;
-  --tg-y: #f9a825;
+  --tg-p: var(--lk-brand);
+  --tg-pd: var(--lk-brand-dark);
+  --tg-pbg: var(--lk-brand-soft);
+  --tg-y: var(--lk-accent);
   --tg-yd: #e8920a;
   --tg-ybg: #fff8e1;
   --tg-surface: #ffffff;
-  --tg-border: #e8e2f0;
+  --tg-border: var(--lk-border);
   --tg-text: #1c1730;
   --tg-soft: #5e5a72;
   --tg-muted: #9896a8;
@@ -90,7 +90,7 @@
 
 .tg-group-item {
   border: 1.5px solid var(--tg-border);
-  border-radius: 18px;
+  border-radius: var(--lk-radius-lg);
   background: var(--tg-surface);
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
@@ -139,7 +139,7 @@
 .tg-group-item__status {
   flex-shrink: 0;
   padding: 7px 12px;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--tg-pbg);
   color: var(--tg-pd);
   font-size: 12px;
@@ -163,7 +163,7 @@
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   border: 1px solid var(--tg-border);
   background: var(--tg-surface);
   color: var(--tg-soft);
@@ -209,7 +209,7 @@
   min-height: 42px;
   padding: 10px 16px;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-sm);
   background: var(--tg-y);
   color: #2d1600;
   font-size: 14px;
@@ -254,7 +254,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px;
-  border-radius: 16px;
+  border-radius: var(--lk-radius-lg);
   background: var(--tg-surface);
   border: 1.5px solid var(--tg-border);
 }
@@ -280,7 +280,7 @@
   align-items: center;
   justify-content: center;
   padding: 7px 12px;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   font-size: 12px;
   font-weight: 700;
   font-family: inherit;
@@ -310,7 +310,7 @@
 
 .tg-detail-metric {
   padding: 14px 16px;
-  border-radius: 16px;
+  border-radius: var(--lk-radius-md);
   background: var(--tg-surface);
   border: 1.5px solid var(--tg-border);
 }
@@ -351,7 +351,7 @@
 
 .tg-students-panel {
   padding: 16px;
-  border-radius: 16px;
+  border-radius: var(--lk-radius-lg);
   background: var(--tg-surface);
   border: 1.5px solid var(--tg-border);
 }
@@ -374,7 +374,7 @@
 .tg-students-panel__head span {
   min-width: 32px;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--tg-pbg);
   color: var(--tg-pd);
   font-size: 12px;
@@ -394,7 +394,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px;
-  border-radius: 14px;
+  border-radius: var(--lk-radius-sm);
   background: #fbf8fc;
 }
 
@@ -422,7 +422,7 @@
 .tg-student-row__avatar {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-icon);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -442,7 +442,7 @@
 .tg-session-modal .modal-content {
   overflow: hidden;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1.6rem;
+  border-radius: var(--lk-radius-lg);
   background: var(--tg-surface) !important;
   opacity: 1;
   box-shadow: 0 18px 48px rgba(131, 68, 127, 0.16);
@@ -466,7 +466,7 @@
 }
 
 .tg-session-modal .btn-close {
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background-color: var(--tg-pbg);
   opacity: 1;
   box-shadow: none;
@@ -496,7 +496,7 @@
 }
 
 .tg-session-modal__alert {
-  border-radius: 1rem;
+  border-radius: var(--lk-radius-sm);
   font-size: 0.82rem;
   font-weight: 600;
 }
@@ -533,7 +533,7 @@
   gap: 0.35rem;
   padding: 0.95rem 1rem;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1rem;
+  border-radius: var(--lk-radius-md);
   background: var(--tg-surface);
   cursor: pointer;
   transition: border-color 0.18s ease, background-color 0.18s ease;
@@ -542,7 +542,7 @@
 .tg-session-modal__mode-card.is-selected {
   border-color: var(--tg-p);
   background: var(--tg-pbg);
-  box-shadow: inset 0 0 0 1px rgba(142, 53, 213, 0.14);
+  box-shadow: inset 0 0 0 1px var(--lk-brand-border);
 }
 
 .tg-session-modal__mode-card.is-disabled {
@@ -582,8 +582,8 @@
 .tg-session-modal__summary {
   padding: 0.9rem 1rem;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1rem;
-  background: #fcfafc;
+  border-radius: var(--lk-radius-md);
+  background: var(--lk-surface-soft);
 }
 
 .tg-session-modal__helper {
@@ -596,7 +596,7 @@
 .tg-session-modal__number {
   min-height: 46px;
   border: 1.5px solid var(--tg-border);
-  border-radius: 0.9rem;
+  border-radius: var(--lk-radius-sm);
   color: var(--tg-text);
   font-size: 0.9rem;
   font-weight: 500;
@@ -606,7 +606,7 @@
 .tg-session-modal__select:focus,
 .tg-session-modal__number:focus {
   border-color: var(--tg-p);
-  box-shadow: 0 0 0 3px rgba(142, 53, 213, 0.12);
+  box-shadow: 0 0 0 3px var(--lk-brand-glow);
 }
 
 .tg-session-modal__field-grid {
@@ -628,7 +628,7 @@
   min-height: 32px;
   padding: 0.35rem 0.7rem;
   border: 1.5px solid var(--tg-border);
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--tg-surface);
   color: var(--tg-soft);
   font-size: 0.74rem;
@@ -655,8 +655,8 @@
   gap: 0.9rem;
   padding: 1rem;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1rem;
-  background: #fcfafc;
+  border-radius: var(--lk-radius-md);
+  background: var(--lk-surface-soft);
 }
 
 .tg-session-modal__preview-head {
@@ -695,7 +695,7 @@
   justify-content: center;
   min-height: 30px;
   padding: 0.35rem 0.75rem;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--tg-ybg);
   color: var(--tg-yd);
   font-size: 0.74rem;
@@ -726,7 +726,7 @@
 .tg-session-modal__path-note {
   padding: 0.85rem 1rem;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1rem;
+  border-radius: var(--lk-radius-md);
   background: #fff8ea;
   color: var(--tg-soft);
   font-size: 0.8rem;
@@ -745,7 +745,7 @@
 .tg-session-modal__route-block {
   padding: 0.9rem 0.95rem;
   border: 1.5px solid var(--tg-border);
-  border-radius: 0.95rem;
+  border-radius: var(--lk-radius-md);
   background: var(--tg-surface);
 }
 
@@ -782,14 +782,14 @@
 
 .tg-session-modal__steps::-webkit-scrollbar-thumb,
 .tg-session-modal__body::-webkit-scrollbar-thumb {
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: #d8cfe3;
 }
 
 .tg-session-modal__step {
   padding: 1rem;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1rem;
+  border-radius: var(--lk-radius-md);
   background: #fffdfd;
 }
 
@@ -820,7 +820,7 @@
 }
 
 .tg-session-modal__ghost-btn {
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   border-color: var(--tg-border);
   color: var(--tg-pd);
   font-size: 0.8rem;
@@ -858,7 +858,7 @@
 .tg-session-modal__footer-btn {
   min-width: 132px;
   min-height: 42px;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-sm);
   font-size: 0.84rem;
   font-weight: 700;
   font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
@@ -932,4 +932,83 @@
   .tg-students-panel__head span {
     align-self: flex-start;
   }
+}
+
+/* Alineacion con AGENTS.md: grupos y modal de sesion usan bordes/radios del sistema. */
+.tg-group-item,
+.tg-detail-hero,
+.tg-students-panel {
+  border: 1.5px solid var(--lk-border-strong);
+  border-radius: var(--lk-radius-lg);
+}
+
+.tg-detail-metric,
+.tg-student-row,
+.tg-session-modal__mode-card,
+.tg-session-modal__helper,
+.tg-session-modal__summary,
+.tg-session-modal__preview-card,
+.tg-session-modal__path-note,
+.tg-session-modal__route-block,
+.tg-session-modal__step {
+  border: 1.5px solid var(--lk-border);
+  border-radius: var(--lk-radius-md);
+}
+
+.tg-primary-btn,
+.tg-session-modal__footer-btn,
+.tg-session-modal__ghost-btn {
+  border-radius: var(--lk-radius-sm);
+}
+
+.tg-pill,
+.tg-group-item__status,
+.tg-status-chip,
+.tg-students-panel__head span,
+.tg-session-modal__preset-pill,
+.tg-session-modal__meta-pill,
+.tg-session-modal .btn-close {
+  border-radius: var(--lk-radius-pill);
+}
+
+.tg-student-row__avatar {
+  border-radius: var(--lk-radius-icon);
+}
+
+.tg-session-modal .modal-content {
+  border: 1.5px solid var(--lk-border);
+  border-radius: var(--lk-radius-lg);
+  box-shadow: var(--lk-shadow-panel);
+}
+
+.tg-session-modal__select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--lk-space-5) 0 var(--lk-space-2);
+  border: 1.5px solid var(--lk-border);
+  border-radius: var(--lk-radius-sm);
+  background:
+    var(--lk-surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")
+    no-repeat right 0.75rem center / 16px;
+  color: var(--lk-text);
+  font: 500 0.88rem var(--lk-font);
+  appearance: none;
+  cursor: pointer;
+}
+
+.tg-session-modal__number {
+  min-height: 44px;
+  padding: 0 var(--lk-space-2);
+  border: 1.5px solid var(--lk-border);
+  border-radius: var(--lk-radius-sm);
+  background: var(--lk-surface);
+  color: var(--lk-text);
+  font: 500 0.88rem var(--lk-font);
+}
+
+.tg-session-modal__select:focus,
+.tg-session-modal__number:focus {
+  border-color: var(--lk-brand);
+  box-shadow: 0 0 0 4px var(--lk-brand-glow);
 }

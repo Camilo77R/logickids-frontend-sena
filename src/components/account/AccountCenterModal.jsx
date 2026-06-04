@@ -83,21 +83,21 @@ export default function AccountCenterModal({ show, onHide }) {
     width: '100%',
     padding: '0.7rem 1rem',
     borderRadius: '999px',
-    border: '1.5px solid #e8e8ed',
+    border: '1.5px solid var(--lk-border)',
     fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
     fontSize: '0.9rem',
     fontWeight: 500,
-    color: '#333',
+    color: 'var(--lk-text)',
     outline: 'none',
     marginBottom: '0.9rem',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+    boxShadow: 'var(--lk-shadow-sm)'
   };
 
   const labelStyle = {
     display: 'block',
     fontSize: '0.8rem',
     fontWeight: 700,
-    color: '#444',
+    color: 'var(--lk-text-soft)',
     marginBottom: '0.3rem',
     paddingLeft: '0.5rem'
   };
@@ -107,24 +107,24 @@ export default function AccountCenterModal({ show, onHide }) {
       <Modal.Body style={{ padding: '2rem', fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
         {/* Cabecera / Info de Usuario */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.8rem' }}>
-          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#8E35D5', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 800 }}>
+          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--lk-brand)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 700 }}>
             {initials}
           </div>
           <div style={{ minWidth: 0 }}>
-            <h2 style={{ margin: 0, fontFamily: '"Fredoka", system-ui, sans-serif', fontSize: '1.4rem', fontWeight: 600, color: '#333', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <h2 style={{ margin: 0, fontFamily: '"Fredoka", system-ui, sans-serif', fontSize: '1.4rem', fontWeight: 600, color: 'var(--lk-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Mi Perfil
             </h2>
-            <div style={{ fontSize: '0.9rem', color: '#555', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontSize: '0.9rem', color: 'var(--lk-text-soft)', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {user?.email}
             </div>
-            <div style={{ display: 'inline-block', marginTop: '5px', padding: '0.2rem 0.6rem', borderRadius: '999px', background: 'rgba(142, 53, 213, 0.1)', color: '#8E35D5', fontSize: '0.75rem', fontWeight: 700 }}>
+            <div style={{ display: 'inline-block', marginTop: '5px', padding: '0.2rem 0.6rem', borderRadius: '999px', background: 'var(--lk-brand-soft)', color: 'var(--lk-brand)', fontSize: '0.75rem', fontWeight: 700 }}>
               Rol: {roleLabel}
             </div>
           </div>
         </div>
 
         {feedback && (
-          <div style={{ padding: '0.6rem 1rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 600, textAlign: 'center', marginBottom: '1rem', background: feedback.type === 'success' ? '#ecfdf5' : '#fef2f2', color: feedback.type === 'success' ? '#059669' : '#dc2626' }}>
+          <div style={{ padding: '0.6rem 1rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 600, textAlign: 'center', marginBottom: '1rem', background: feedback.type === 'success' ? 'var(--lk-success-soft)' : 'var(--lk-danger-soft)', color: feedback.type === 'success' ? 'var(--lk-success)' : 'var(--lk-danger)' }}>
             {feedback.msg}
           </div>
         )}
@@ -141,7 +141,7 @@ export default function AccountCenterModal({ show, onHide }) {
             />
           </div>
 
-          <div style={{ margin: '1rem 0 0.5rem', fontSize: '0.75rem', fontWeight: 700, color: '#8E35D5', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ margin: '1rem 0 0.5rem', fontSize: '0.75rem', fontWeight: 700, color: 'var(--lk-brand)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Cambiar Contraseña (Opcional)
           </div>
 
@@ -180,14 +180,14 @@ export default function AccountCenterModal({ show, onHide }) {
             <button 
               type="button" 
               onClick={onHide}
-              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: '#f4f1fa', color: '#777', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}
+              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: 'var(--lk-surface-soft)', color: 'var(--lk-text-soft)', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}
             >
               Cancelar
             </button>
             <button 
               type="submit" 
               disabled={isLoading}
-              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: '#8E35D5', color: '#fff', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(142, 53, 213, 0.22)' }}
+              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: 'var(--lk-brand)', color: '#fff', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', boxShadow: '0 4px 12px var(--lk-brand-glow)' }}
             >
               {isLoading ? <Spinner size="sm" /> : "Guardar"}
             </button>

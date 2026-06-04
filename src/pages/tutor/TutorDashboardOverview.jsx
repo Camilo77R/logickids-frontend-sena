@@ -47,7 +47,14 @@ const getSaludo = () => {
   return "Buenas noches";
 };
 
-const AVATAR_COLORS = ["#8E35D5", "#2B173D", "#F9A825", "#e8920a", "#7a3575", "#f0b429"];
+const AVATAR_COLORS = [
+  "var(--lk-brand)",
+  "var(--lk-brand-dark)",
+  "var(--lk-accent)",
+  "var(--lk-accent-dark)",
+  "var(--lk-orange)",
+  "var(--lk-green)",
+];
 const avatarColor = (index) => AVATAR_COLORS[index % AVATAR_COLORS.length];
 
 const resolveGroupId = (group) => group?.id ?? group?.id_grupo;
@@ -376,12 +383,12 @@ export default function TutorDashboardOverview() {
       </div>
 
       <div className="tov-kpis">
-        <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} accent="#8E35D5" />
-        <KpiCard value={activeGroups} label="Clases abiertas" sublabel="Sesión activa" Icon={PlayCircle} accent="#F9A825" />
-        <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} accent="#8E35D5" />
-        <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} accent="#8E35D5" />
-        <KpiCard value={liveStudents} label="Jugando ahora" sublabel="Con sesión activa" Icon={Target} accent="#F9A825" />
-        <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} accent="#8E35D5" />
+        <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} accent="var(--lk-brand)" />
+        <KpiCard value={activeGroups} label="Clases abiertas" sublabel="Sesión activa" Icon={PlayCircle} accent="var(--lk-accent)" />
+        <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} accent="var(--lk-brand)" />
+        <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} accent="var(--lk-brand)" />
+        <KpiCard value={liveStudents} label="Jugando ahora" sublabel="Con sesión activa" Icon={Target} accent="var(--lk-accent)" />
+        <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} accent="var(--lk-brand)" />
       </div>
 
       <div className="tov-bento">
@@ -486,7 +493,7 @@ export default function TutorDashboardOverview() {
                   <span className="tov-eye">IA · Gemini</span>
                   <h2 className="tov-ptitle">Recomendaciones</h2>
                 </div>
-                <Lightbulb size={15} color="#8E35D5" />
+                <Lightbulb size={15} color="var(--lk-brand)" />
               </div>
               <div className="tov-recs">
                 {recs.slice(0, 3).map((rec, index) => (

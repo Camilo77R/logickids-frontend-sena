@@ -4,69 +4,67 @@
  * Filosofía de color:
  *   - Fondo general: #f4f2f8 (gris lavanda muy suave)
  *   - Panels/cards: #ffffff
- *   - Amarillo (#F9A825): SOLO hero + acentos puntuales
- *   - Morado (#8E35D5): color de marca, iconos, eyebrows, bordes activos
- *   - Morado oscuro (#2B173D): texto principal y acentos
+ *   - Acento: SOLO hero + acentos puntuales
+ *   - Brand: color de marca, iconos, eyebrows, bordes activos
+ *   - Brand dark: texto principal y acentos
  * CERO transparencias. Sólido siempre.
  */
 
-:root {
-  --p:       #8E35D5;   /* morado principal */
-  --pd:      #2B173D;   /* morado oscuro */
-  --pbg:     #F4EAFE;   /* morado background */
-  --y:       #F9A825;   /* yellow */
-  --yd:      #e8920a;   /* yellow dark */
-  --ybg:     #fff8e1;   /* yellow background */
-  --bg:      #f4f2f8;   /* página */
-  --surface: #ffffff;
-  --border:  #e8e2f0;
-  --text:    #1c1730;
-  --soft:    #5e5a72;
-  --muted:   #9896a8;
-}
 
 /* ── Base ───────────────────────────────────────────────────────────── */
 .tov {
+  --tov-brand: var(--lk-brand);
+  --tov-brand-dark: var(--lk-brand-dark);
+  --tov-brand-soft: var(--lk-brand-soft);
+  --tov-accent: var(--lk-accent);
+  --tov-accent-dark: var(--lk-accent-dark);
+  --tov-accent-soft: var(--lk-accent-soft);
+  --tov-bg: var(--lk-bg);
+  --tov-surface: var(--lk-surface);
+  --tov-border: var(--lk-border);
+  --tov-text: var(--lk-text);
+  --tov-text-soft: var(--lk-text-soft);
+  --tov-text-muted: var(--lk-text-muted);
   display: flex; flex-direction: column; gap: 1.25rem;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-  color: var(--text);
+  color: var(--tov-text);
 }
 
 /* ── Loading ────────────────────────────────────────────────────────── */
 .tov-loading {
   min-height: 300px; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 0.85rem;
-  font-size: 0.86rem; color: var(--muted);
+  font-size: 0.86rem; color: var(--tov-text-muted);
 }
 .tov-loading__ring {
   width: 40px; height: 40px; border-radius: 50%;
-  border: 3px solid var(--pbg); border-top-color: var(--p);
+  border: 3px solid var(--tov-brand-soft); border-top-color: var(--tov-brand);
   animation: lk-spin 0.85s linear infinite;
 }
 
 /* ── Toast ──────────────────────────────────────────────────────────── */
 .tov-toast {
   position: fixed; bottom: 1.4rem; right: 1.4rem; z-index: 999;
-  padding: 0.55rem 1.2rem; border-radius: 999px;
+  padding: 0.55rem 1.2rem; border-radius: var(--lk-radius-pill);
   font-size: 0.79rem; font-weight: 700;
 }
-.tov-toast--ok  { background: var(--pd); color: #fff; }
-.tov-toast--err { background: var(--yd); color: #fff; }
+.tov-toast--ok  { background: var(--tov-brand-dark); color: #fff; }
+.tov-toast--err { background: var(--tov-accent-dark); color: #fff; }
 
 /* ══════════════════════════════════════════════════════════════════════
    HERO — único bloque amarillo grande
    ══════════════════════════════════════════════════════════════════════ */
 .tov-hero {
   display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
-  padding: 1.75rem 2rem; border-radius: 1.8rem;
-  background: var(--y); position: relative; overflow: hidden;
+  padding: 1.75rem 2rem; border-radius: var(--lk-radius-xl);
+  background: var(--tov-accent); position: relative; overflow: hidden;
 }
 /* círculo decorativo sólido */
 .tov-hero::after {
   content: ""; position: absolute;
   bottom: -30px; right: 70px;
   width: 100px; height: 100px; border-radius: 50%;
-  background: var(--yd); pointer-events: none;
+  background: var(--tov-accent-dark); pointer-events: none;
 }
 .tov-hero__text { position: relative; z-index: 1; }
 .tov-hero__eye  {
@@ -84,8 +82,8 @@
 }
 .tov-hero__pills { display: flex; gap: 0.6rem; flex-shrink: 0; position: relative; z-index: 1; }
 .tov-hero__pill {
-  padding: 0.6rem 0.9rem; border-radius: 1.1rem;
-  background: var(--yd); text-align: center; min-width: 66px;
+  padding: 0.6rem 0.9rem; border-radius: var(--lk-radius-lg);
+  background: var(--tov-accent-dark); text-align: center; min-width: 66px;
 }
 .tov-hero__pill strong {
   display: block; font-family: "Fredoka", system-ui, sans-serif;
@@ -106,19 +104,19 @@
   gap: 0.85rem;
 }
 .tov-kpi {
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 1.4rem; padding: 1.1rem 1.15rem;
+  background: var(--tov-surface); border: 1.5px solid var(--tov-border);
+  border-radius: var(--lk-radius-lg); padding: 1.1rem 1.15rem;
   display: flex; align-items: center;
   justify-content: space-between; gap: 0.7rem;
 }
 .tov-kpi__left { display: flex; align-items: center; gap: 0.65rem; }
 .tov-kpi__ico {
-  width: 36px; height: 36px; border-radius: 0.8rem;
+  width: 36px; height: 36px; border-radius: var(--lk-radius-icon);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; color: #fff;
 }
-.tov-kpi__lbl  { display: block; font-size: 0.72rem; font-weight: 600; color: var(--soft); }
-.tov-kpi__sub  { display: block; font-size: 0.64rem; font-weight: 400; color: var(--muted); margin-top: 1px; }
+.tov-kpi__lbl  { display: block; font-size: 0.72rem; font-weight: 600; color: var(--tov-text-soft); }
+.tov-kpi__sub  { display: block; font-size: 0.64rem; font-weight: 400; color: var(--tov-text-muted); margin-top: 1px; }
 .tov-kpi__val  {
   font-family: "Fredoka", system-ui, sans-serif;
   font-size: 2.2rem; font-weight: 700; line-height: 1; flex-shrink: 0;
@@ -138,8 +136,8 @@
 
 /* Panel blanco genérico */
 .tov-panel {
-  background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: 1.6rem; padding: 1.25rem 1.35rem;
+  background: var(--tov-surface); border: 1.5px solid var(--tov-border);
+  border-radius: var(--lk-radius-lg); padding: 1.25rem 1.35rem;
 }
 .tov-ph {
   display: flex; align-items: flex-start;
@@ -147,17 +145,17 @@
 }
 .tov-eye {
   display: block; font-size: 0.63rem; font-weight: 700;
-  color: var(--p); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 2px;
+  color: var(--tov-brand); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 2px;
 }
 .tov-ptitle {
   font-family: "Fredoka", system-ui, sans-serif;
-  font-size: 1.05rem; font-weight: 600; color: var(--text); margin: 0;
+  font-size: 1.05rem; font-weight: 600; color: var(--tov-text); margin: 0;
   letter-spacing: -0.02em;
 }
 .tov-ilink {
   display: inline-flex; align-items: center; gap: 3px;
-  padding: 0.28rem 0.7rem; border-radius: 999px;
-  background: var(--pbg); color: var(--pd);
+  padding: 0.28rem 0.7rem; border-radius: var(--lk-radius-pill);
+  background: var(--tov-brand-soft); color: var(--tov-brand-dark);
   border: none; font-size: 0.72rem; font-weight: 600;
   cursor: pointer; font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   white-space: nowrap; transition: filter 0.12s;
@@ -171,49 +169,49 @@
   gap: 0.75rem;
 }
 .tov-gcard {
-  border-radius: 1.3rem; padding: 1rem 1.1rem;
-  border: 1.5px solid var(--border); background: var(--bg);
+  border-radius: var(--lk-radius-lg); padding: 1rem 1.1rem;
+  border: 1.5px solid var(--tov-border); background: var(--tov-bg);
   display: flex; flex-direction: column; gap: 0.35rem;
   transition: border-color 0.15s;
 }
-.tov-gcard--on { background: var(--ybg); border-color: var(--y); }
+.tov-gcard--on { background: var(--tov-accent-soft); border-color: var(--tov-accent); }
 
 .tov-gcard__header { display: flex; align-items: center; gap: 0.45rem; }
 .tov-gcard__dot {
   width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
 }
-.tov-gcard__dot--on  { background: var(--y); }
-.tov-gcard__dot--off { background: var(--p); }
+.tov-gcard__dot--on  { background: var(--tov-accent); }
+.tov-gcard__dot--off { background: var(--tov-brand); }
 .tov-gcard__status {
-  font-size: 0.66rem; font-weight: 700; color: var(--muted);
+  font-size: 0.66rem; font-weight: 700; color: var(--tov-text-muted);
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .tov-gcard__name {
   font-family: "Fredoka", system-ui, sans-serif;
-  font-size: 1rem; font-weight: 600; color: var(--text);
+  font-size: 1rem; font-weight: 600; color: var(--tov-text);
   margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .tov-gcard__desc {
-  font-size: 0.71rem; font-weight: 400; color: var(--muted);
+  font-size: 0.71rem; font-weight: 400; color: var(--tov-text-muted);
   margin: 0; line-height: 1.4; flex: 1;
 }
 .tov-gcard__footer { display: flex; gap: 0.4rem; align-items: center; margin-top: 0.25rem; }
 .tov-gcard__btn {
-  flex: 1; padding: 0.4rem 0.7rem; border-radius: 999px; border: none;
+  flex: 1; padding: 0.4rem 0.7rem; border-radius: var(--lk-radius-pill); border: none;
   font-size: 0.71rem; font-weight: 600; cursor: pointer;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif; transition: filter 0.12s;
 }
 .tov-gcard__btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.tov-gcard__btn--open  { background: var(--y);   color: #2d1600; }
-.tov-gcard__btn--close { background: var(--pbg); color: var(--pd); }
+.tov-gcard__btn--open  { background: var(--tov-accent);   color: #2d1600; }
+.tov-gcard__btn--close { background: var(--tov-brand-soft); color: var(--tov-brand-dark); }
 .tov-gcard__btn:hover:not(:disabled) { filter: brightness(0.93); }
 .tov-gcard__arrow {
-  width: 30px; height: 30px; border-radius: 999px; border: none;
-  background: var(--border); color: var(--soft); flex-shrink: 0;
+  width: 30px; height: 30px; border-radius: var(--lk-radius-pill); border: none;
+  background: var(--tov-border); color: var(--tov-text-soft); flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: background 0.12s;
 }
-.tov-gcard__arrow:hover { background: var(--pbg); color: var(--pd); }
+.tov-gcard__arrow:hover { background: var(--tov-brand-soft); color: var(--tov-brand-dark); }
 
 /* ── Student Ranking ─────────────────────────────────────────────────── */
 .tov-students { display: flex; flex-direction: column; gap: 0; }
@@ -221,17 +219,17 @@
 .tov-student {
   display: flex; align-items: center; gap: 0.75rem;
   padding: 0.68rem 0.5rem;
-  border-bottom: 1px solid var(--border);
-  transition: background 0.1s; border-radius: 0.5rem;
+  border-bottom: 1px solid var(--tov-border);
+  transition: background 0.1s; border-radius: var(--lk-radius-sm);
 }
 .tov-student:last-child { border-bottom: none; }
-.tov-student:hover { background: var(--pbg); }
-.tov-student--live { background: var(--ybg); }
-.tov-student--live:hover { background: var(--ybg); filter: brightness(0.97); }
+.tov-student:hover { background: var(--tov-brand-soft); }
+.tov-student--live { background: var(--tov-accent-soft); }
+.tov-student--live:hover { background: var(--tov-accent-soft); filter: brightness(0.97); }
 
 .tov-student__rank {
   font-family: "Fredoka", system-ui, sans-serif;
-  font-size: 0.82rem; font-weight: 600; color: var(--muted);
+  font-size: 0.82rem; font-weight: 600; color: var(--tov-text-muted);
   min-width: 22px; text-align: center;
 }
 .tov-student__avatar {
@@ -242,42 +240,42 @@
 }
 .tov-student__info { flex: 1; min-width: 0; }
 .tov-student__name {
-  display: block; font-size: 0.84rem; font-weight: 600; color: var(--text);
+  display: block; font-size: 0.84rem; font-weight: 600; color: var(--tov-text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .tov-student__meta {
-  display: block; font-size: 0.68rem; font-weight: 400; color: var(--muted);
+  display: block; font-size: 0.68rem; font-weight: 400; color: var(--tov-text-muted);
   margin-top: 1px;
 }
 .tov-student__live {
-  padding: 0.18rem 0.5rem; border-radius: 999px;
-  background: var(--y); color: #2d1600;
+  padding: 0.18rem 0.5rem; border-radius: var(--lk-radius-pill);
+  background: var(--tov-accent); color: #2d1600;
   font-size: 0.63rem; font-weight: 700; flex-shrink: 0;
 }
 .tov-more {
   text-align: center; font-size: 0.74rem; font-weight: 400;
-  color: var(--muted); margin: 0.5rem 0 0;
+  color: var(--tov-text-muted); margin: 0.5rem 0 0;
 }
 
 /* ── Spotlight — actividad pedagógica en foco ───────────────────────── */
 .tov-spotlight {
   background: #fff;
-  color: var(--text);
-  border: 1px solid rgba(142, 53, 213, 0.16);
+  color: var(--tov-text);
+  border: 1px solid var(--lk-border);
   box-shadow: 0 16px 34px rgba(43, 23, 61, 0.08);
-  border-radius: 1.6rem; padding: 1.25rem 1.35rem;
+  border-radius: var(--lk-radius-lg); padding: 1.25rem 1.35rem;
   display: flex; flex-direction: column; gap: 0.3rem;
 }
 .tov-spotlight__ico {
-  width: 38px; height: 38px; border-radius: 0.8rem;
-  background: var(--p); color: #fff;
+  width: 38px; height: 38px; border-radius: var(--lk-radius-icon);
+  background: var(--tov-brand); color: #fff;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 0.3rem;
 }
 .tov-spotlight__tag {
   font-size: 0.63rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--p);
+  color: var(--tov-brand);
 }
 .tov-spotlight__game {
   font-family: "Fredoka", system-ui, sans-serif;
@@ -285,12 +283,12 @@
 }
 .tov-spotlight__desc {
   font-size: 0.76rem; font-weight: 400;
-  color: var(--soft); line-height: 1.5; margin: 0.2rem 0 0.6rem;
+  color: var(--tov-text-soft); line-height: 1.5; margin: 0.2rem 0 0.6rem;
 }
 .tov-spotlight__btn {
   display: inline-flex; align-items: center; gap: 4px;
-  padding: 0.42rem 0.9rem; border-radius: 999px;
-  background: var(--p); color: #fff; border: none;
+  padding: 0.42rem 0.9rem; border-radius: var(--lk-radius-pill);
+  background: var(--tov-brand); color: #fff; border: none;
   font-size: 0.76rem; font-weight: 600;
   cursor: pointer; font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   align-self: flex-start; transition: background 0.12s;
@@ -302,65 +300,65 @@
 .tov-sbar  { display: flex; flex-direction: column; gap: 0.28rem; }
 .tov-sbar__info { display: flex; justify-content: space-between; align-items: center; }
 .tov-sbar__name {
-  font-size: 0.76rem; font-weight: 500; color: var(--soft);
+  font-size: 0.76rem; font-weight: 500; color: var(--tov-text-soft);
 }
 .tov-sbar__pct {
   font-family: "Fredoka", system-ui, sans-serif;
-  font-size: 0.82rem; font-weight: 700; color: var(--text);
+  font-size: 0.82rem; font-weight: 700; color: var(--tov-text);
 }
 .tov-sbar__track {
-  height: 8px; border-radius: 999px; background: var(--pbg); overflow: hidden;
+  height: 8px; border-radius: var(--lk-radius-pill); background: var(--tov-brand-soft); overflow: hidden;
 }
 .tov-sbar__fill {
-  height: 100%; border-radius: 999px; transition: width 0.6s ease;
+  height: 100%; border-radius: var(--lk-radius-pill); transition: width 0.6s ease;
 }
-.tov-sbar__fill--high { background: var(--pd); }
-.tov-sbar__fill--mid  { background: var(--y);  }
+.tov-sbar__fill--high { background: var(--tov-brand-dark); }
+.tov-sbar__fill--mid  { background: var(--tov-accent);  }
 .tov-sbar__fill--low  { background: #d4a0d0;   }
 .tov-snote {
-  margin: 0.4rem 0 0; font-size: 0.72rem; font-weight: 400; color: var(--muted);
+  margin: 0.4rem 0 0; font-size: 0.72rem; font-weight: 400; color: var(--tov-text-muted);
 }
 
 /* ── Recomendaciones ────────────────────────────────────────────────── */
 .tov-recs { display: flex; flex-direction: column; gap: 0.5rem; }
 .tov-rec {
-  padding: 0.65rem 0.8rem; border-radius: 0.9rem;
-  background: var(--pbg); border-left: 3px solid var(--p);
+  padding: 0.65rem 0.8rem; border-radius: var(--lk-radius-sm);
+  background: var(--tov-brand-soft); border-left: 3px solid var(--tov-brand);
 }
 .tov-rec__tag {
   display: block; font-size: 0.62rem; font-weight: 700;
-  color: var(--pd); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px;
+  color: var(--tov-brand-dark); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px;
 }
 .tov-rec__msg {
-  font-size: 0.76rem; font-weight: 400; color: var(--soft); line-height: 1.5; margin: 0;
+  font-size: 0.76rem; font-weight: 400; color: var(--tov-text-soft); line-height: 1.5; margin: 0;
 }
 
 /* ── Acciones ────────────────────────────────────────────────────────── */
 .tov-actions { display: flex; flex-direction: column; gap: 0.35rem; }
 .tov-act {
   display: flex; align-items: center; gap: 0.65rem;
-  padding: 0.6rem 0.75rem; border-radius: 0.9rem;
-  background: var(--bg); border: 1px solid var(--border);
+  padding: 0.6rem 0.75rem; border-radius: var(--lk-radius-sm);
+  background: var(--tov-bg); border: 1px solid var(--tov-border);
   cursor: pointer; text-align: left; width: 100%;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 0.8rem; font-weight: 600; color: var(--text);
+  font-size: 0.8rem; font-weight: 600; color: var(--tov-text);
   transition: background 0.12s, border-color 0.12s;
 }
-.tov-act:hover { background: var(--pbg); border-color: var(--pbg); }
+.tov-act:hover { background: var(--tov-brand-soft); border-color: var(--tov-brand-soft); }
 .tov-act__ico {
-  width: 28px; height: 28px; border-radius: 0.6rem;
-  background: var(--pd); color: #fff;
+  width: 28px; height: 28px; border-radius: var(--lk-radius-icon);
+  background: var(--tov-brand-dark); color: #fff;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.tov-act__arr { margin-left: auto; color: var(--muted); }
+.tov-act__arr { margin-left: auto; color: var(--tov-text-muted); }
 
 /* ── Empty ──────────────────────────────────────────────────────────── */
 .tov-empty {
-  padding: 1.4rem; text-align: center; border-radius: 1.1rem;
-  border: 1.5px dashed var(--border); background: var(--bg); color: var(--soft);
+  padding: 1.4rem; text-align: center; border-radius: var(--lk-radius-lg);
+  border: 1.5px dashed var(--tov-border); background: var(--tov-bg); color: var(--tov-text-soft);
 }
-.tov-empty svg { color: var(--p); margin-bottom: 0.4rem; }
-.tov-empty strong { display: block; font-family: "Fredoka", system-ui, sans-serif; font-size: 0.96rem; color: var(--text); margin-bottom: 0.2rem; }
+.tov-empty svg { color: var(--tov-brand); margin-bottom: 0.4rem; }
+.tov-empty strong { display: block; font-family: "Fredoka", system-ui, sans-serif; font-size: 0.96rem; color: var(--tov-text); margin-bottom: 0.2rem; }
 .tov-empty p { margin: 0; font-size: 0.77rem; line-height: 1.5; }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -379,4 +377,50 @@
   .tov-hero__pill  { flex: 1; min-width: 58px; }
   .tov-hero__h1    { font-size: 1.75rem; }
   .tov-kpis { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Alineacion con AGENTS.md: dashboard tutor con radios y bordes del sistema. */
+.tov-hero {
+  border: 1.5px solid var(--lk-border-strong);
+  border-radius: var(--lk-radius-xl);
+}
+
+.tov-hero__pill,
+.tov-kpi,
+.tov-panel,
+.tov-gcard,
+.tov-spotlight,
+.tov-empty {
+  border-radius: var(--lk-radius-lg);
+}
+
+.tov-kpi,
+.tov-panel,
+.tov-gcard,
+.tov-spotlight {
+  border: 1.5px solid var(--lk-border);
+}
+
+.tov-kpi__ico,
+.tov-spotlight__ico,
+.tov-act__ico {
+  border-radius: var(--lk-radius-icon);
+}
+
+.tov-gcard__btn,
+.tov-gcard__arrow,
+.tov-student__live,
+.tov-ilink,
+.tov-spotlight__btn {
+  border-radius: var(--lk-radius-pill);
+}
+
+.tov-student,
+.tov-rec,
+.tov-act {
+  border-radius: var(--lk-radius-sm);
+}
+
+.tov-empty {
+  border: 1.5px dashed var(--lk-border-strong);
 }

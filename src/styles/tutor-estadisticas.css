@@ -1,6 +1,6 @@
 .lk-stats-page {
   display: grid;
-  gap: 1.2rem;
+  gap: var(--lk-space-3);
   max-width: none;
   margin: 0;
   padding: 0;
@@ -10,11 +10,11 @@
 .lk-stats-hero {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 1rem;
+  gap: var(--lk-space-2);
   align-items: center;
-  padding: 1.35rem;
-  border: 1px solid var(--lk-border);
-  border-radius: var(--lk-radius-2xl);
+  padding: var(--lk-space-3);
+  border: 1.5px solid var(--lk-border-strong);
+  border-radius: var(--lk-radius-xl);
   background: var(--lk-surface);
   box-shadow: var(--lk-shadow-card);
 }
@@ -24,9 +24,9 @@
   place-items: center;
   width: 62px;
   height: 62px;
-  border-radius: 22px;
-  background: var(--lk-purple-soft);
-  color: var(--lk-purple);
+  border-radius: var(--lk-radius-md);
+  background: var(--lk-brand-soft);
+  color: var(--lk-brand);
 }
 
 .lk-stats-hero__copy span,
@@ -67,7 +67,7 @@
   gap: 0.5rem;
   min-height: 44px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   font-weight: 700;
   cursor: pointer;
 }
@@ -86,15 +86,19 @@
 .lk-stats-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.85rem;
+  gap: var(--lk-space-2);
   align-items: end;
+  padding: var(--lk-space-2);
+  border: 1.5px solid var(--lk-border);
+  border-radius: var(--lk-radius-lg);
+  background: var(--lk-surface-soft);
 }
 
 .lk-stats-toggle {
   display: inline-flex;
   gap: 0.35rem;
   padding: 0.3rem;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--lk-purple-soft);
 }
 
@@ -112,24 +116,35 @@
 
 .lk-stats-field {
   display: grid;
-  gap: 0.4rem;
+  gap: var(--lk-space-1);
   min-width: min(280px, 100%);
 }
 
 .lk-stats-field select {
-  min-height: 48px;
-  border: 1px solid var(--lk-border);
-  border-radius: var(--lk-radius-lg);
-  background: var(--lk-surface);
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--lk-space-5) 0 var(--lk-space-2);
+  border: 1.5px solid var(--lk-border);
+  border-radius: var(--lk-radius-sm);
+  background:
+    var(--lk-surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")
+    no-repeat right 0.75rem center / 16px;
   color: var(--lk-text);
-  font: 600 0.94rem var(--lk-font);
-  padding: 0 0.95rem;
+  font: 500 0.88rem var(--lk-font);
   outline: 0;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lk-stats-field select:hover:not(:disabled) {
+  border-color: var(--lk-brand-border-strong);
 }
 
 .lk-stats-field select:focus {
-  border-color: var(--lk-purple);
-  box-shadow: 0 0 0 4px rgba(142, 53, 213, 0.1);
+  border-color: var(--lk-brand);
+  box-shadow: 0 0 0 4px var(--lk-brand-glow);
 }
 
 .lk-stats-context {
@@ -163,8 +178,8 @@
   gap: 0.7rem;
   min-height: 300px;
   padding: 2rem;
-  border: 1px solid var(--lk-border);
-  border-radius: var(--lk-radius-2xl);
+  border: 1.5px solid var(--lk-border);
+  border-radius: var(--lk-radius-xl);
   background: var(--lk-surface);
   color: var(--lk-text-soft);
   text-align: center;
@@ -193,23 +208,23 @@
   height: 42px;
   border: 3px solid var(--lk-purple-soft);
   border-top-color: var(--lk-purple);
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   animation: lk-spin 0.85s linear infinite;
 }
 
 .lk-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
-  gap: 1rem;
+  gap: var(--lk-space-2);
 }
 
 .lk-stats-card {
   display: grid;
-  gap: 1rem;
+  gap: var(--lk-space-2);
   min-height: 230px;
-  padding: 1.15rem;
-  border: 1px solid var(--lk-border);
-  border-radius: var(--lk-radius-xl);
+  padding: var(--lk-space-3);
+  border: 1.5px solid var(--lk-border-strong);
+  border-radius: var(--lk-radius-lg);
   background: var(--lk-surface);
   box-shadow: var(--lk-shadow-card);
 }
@@ -243,7 +258,7 @@
   min-width: 74px;
   min-height: 34px;
   padding: 0 0.7rem;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--lk-purple);
   color: #fff;
   font-size: 0.9rem;
@@ -278,7 +293,7 @@
 .lk-stats-progress {
   height: 10px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--lk-surface-soft);
 }
 

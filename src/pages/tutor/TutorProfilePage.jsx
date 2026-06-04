@@ -44,7 +44,7 @@ export default function TutorProfilePage() {
     loadProfile();
   }, []);
 
-  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'];
+  const colors = ['var(--lk-brand)', 'var(--lk-accent)', 'var(--lk-success)', 'var(--lk-info)', 'var(--lk-orange)', 'var(--lk-brand-dark)'];
   const colorIndex = (profile?.nombre?.length || 0) % colors.length;
   const avatarColor = colors[colorIndex];
 
@@ -169,10 +169,10 @@ export default function TutorProfilePage() {
                 height: '100px',
                 borderRadius: '50%',
                 background: avatarColor,
-                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)'
+                boxShadow: 'var(--lk-shadow-md)'
               }}
             >
-              <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'white' }}>
+              <span style={{ fontSize: '2.5rem', fontWeight: 700, color: 'white' }}>
                 {initials}
               </span>
             </div>
@@ -189,7 +189,7 @@ export default function TutorProfilePage() {
           {/* Tarjeta */}
           <Card className="border-0 shadow-sm" style={{ borderRadius: '20px' }}>
             <div style={{ 
-              background: '#8E35D5',
+              background: 'var(--lk-brand)',
               padding: '14px 24px',
               borderTopLeftRadius: '20px',
               borderTopRightRadius: '20px',
@@ -216,8 +216,8 @@ export default function TutorProfilePage() {
                       style={{
                         padding: '10px 16px',
                         borderRadius: '12px',
-                        border: '1px solid #e0e0e0',
-                        backgroundColor: isEditing ? '#fff' : '#f8f9fa'
+                        border: '1px solid var(--lk-border)',
+                        backgroundColor: isEditing ? 'var(--lk-surface)' : 'var(--lk-surface-soft)'
                       }}
                     />
                     {!isEditing && (
@@ -229,7 +229,7 @@ export default function TutorProfilePage() {
                           right: '12px',
                           top: '50%',
                           transform: 'translateY(-50%)',
-                          color: '#667eea',
+                          color: 'var(--lk-brand)',
                           textDecoration: 'none'
                         }}
                       >
@@ -247,7 +247,7 @@ export default function TutorProfilePage() {
                     type="email" 
                     value={profile?.email || ''} 
                     disabled 
-                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: '#f8f9fa' }}
+                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: 'var(--lk-surface-soft)' }}
                   />
                 </Form.Group>
 
@@ -259,7 +259,7 @@ export default function TutorProfilePage() {
                     type="text" 
                     value="Tutor" 
                     disabled 
-                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: '#f8f9fa' }}
+                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: 'var(--lk-surface-soft)' }}
                   />
                 </Form.Group>
 
@@ -271,7 +271,7 @@ export default function TutorProfilePage() {
                     type="text" 
                     value={profile?.creado_en ? new Date(profile.creado_en).toLocaleDateString('es-ES') : 'fecha no disponible'} 
                     disabled 
-                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: '#f8f9fa' }}
+                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: 'var(--lk-surface-soft)' }}
                   />
                 </Form.Group>
 
@@ -280,7 +280,7 @@ export default function TutorProfilePage() {
                     <Button variant="outline-secondary" onClick={handleCancel} className="px-4 py-2 rounded-pill">
                       <X size={16} className="me-1" /> Cancelar
                     </Button>
-                    <Button variant="primary" type="submit" disabled={saving} className="px-4 py-2 rounded-pill" style={{ background: '#667eea', border: 'none' }}>
+                    <Button variant="primary" type="submit" disabled={saving} className="px-4 py-2 rounded-pill" style={{ background: 'var(--lk-brand)', border: 'none' }}>
                       <Save size={16} className="me-1" /> {saving ? 'Guardando...' : 'Guardar cambios'}
                     </Button>
                   </div>
@@ -333,7 +333,7 @@ export default function TutorProfilePage() {
                     top: '50%',
                     transform: 'translateY(-50%)',
                     padding: '4px 8px',
-                    color: '#667eea'
+                    color: 'var(--lk-brand)'
                   }}
                 >
                   {showActual ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -362,7 +362,7 @@ export default function TutorProfilePage() {
                     top: '50%',
                     transform: 'translateY(-50%)',
                     padding: '4px 8px',
-                    color: '#667eea'
+                    color: 'var(--lk-brand)'
                   }}
                 >
                   {showNueva ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -392,7 +392,7 @@ export default function TutorProfilePage() {
                     top: '50%',
                     transform: 'translateY(-50%)',
                     padding: '4px 8px',
-                    color: '#667eea'
+                    color: 'var(--lk-brand)'
                   }}
                 >
                   {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -404,7 +404,7 @@ export default function TutorProfilePage() {
               <Button variant="secondary" onClick={() => setShowPasswordModal(false)}>
                 Cancelar
               </Button>
-              <Button variant="primary" type="submit" disabled={passwordSaving} style={{ background: '#667eea', border: 'none' }}>
+              <Button variant="primary" type="submit" disabled={passwordSaving} style={{ background: 'var(--lk-brand)', border: 'none' }}>
                 {passwordSaving ? 'Actualizando...' : 'Actualizar contraseña'}
               </Button>
             </div>

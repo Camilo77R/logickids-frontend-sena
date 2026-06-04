@@ -13,17 +13,46 @@
   --lk-font: 'Plus Jakarta Sans', system-ui, sans-serif;
   --lk-display-font: 'Fredoka', 'Plus Jakarta Sans', system-ui, sans-serif;
 
-  /* ── Paleta Brand LogicKids (del mockup) ────────── */
-  --lk-purple: #8E35D5;
-  --lk-purple-dark: #2B173D;
-  --lk-purple-deep: #2B173D;
-  --lk-purple-light: #8E35D5;
-  --lk-purple-soft: #F3E8FA;
-  --lk-purple-glow: rgba(142, 53, 213, 0.22);
+  /* ── Brand LogicKids: única fuente de verdad ────── */
+  --lk-brand: #8E35D5;
+  --lk-brand-dark: #2B173D;
+  --lk-brand-soft: #F3E8FA;
+  --lk-brand-glow: rgba(142, 53, 213, 0.18);
+  --lk-brand-border: rgba(142, 53, 213, 0.14);
+  --lk-brand-border-strong: rgba(142, 53, 213, 0.30);
+  --lk-brand-shadow: rgba(142, 53, 213, 0.12);
 
-  --lk-yellow: #FFCA28;
+  /* ── Tema Tutor v2: azul + amarillo ────────────── */
+  --lk-tutor-theme-brand: #0093FF;
+  --lk-tutor-theme-brand-rgb: 0, 147, 255;
+  --lk-tutor-theme-brand-dark: #004D8F;
+  --lk-tutor-theme-brand-soft: #E6F4FF;
+  --lk-tutor-theme-brand-glow: rgba(0, 147, 255, 0.18);
+  --lk-tutor-theme-brand-border: rgba(0, 147, 255, 0.16);
+  --lk-tutor-theme-brand-border-strong: rgba(0, 147, 255, 0.34);
+  --lk-tutor-theme-brand-shadow: rgba(0, 147, 255, 0.16);
+  --lk-tutor-theme-panel-shadow: rgba(0, 77, 143, 0.14);
+  --lk-tutor-theme-bg: #F4F9FF;
+  --lk-tutor-theme-surface-soft: #F8FBFF;
+
+  /* ── Aliases legacy: mantener compatibilidad mientras se migra ── */
+  --lk-purple: var(--lk-brand);
+  --lk-purple-dark: var(--lk-brand-dark);
+  --lk-purple-deep: var(--lk-brand-dark);
+  --lk-purple-light: var(--lk-brand);
+  --lk-purple-soft: var(--lk-brand-soft);
+  --lk-purple-glow: var(--lk-brand-glow);
+
+  /* ── Acento ─────────────────────────────────────── */
+  --lk-accent: #F9A825;
+  --lk-accent-bright: #FFCA28;
+  --lk-accent-dark: #E8920A;
+  --lk-accent-soft: rgba(249, 168, 37, 0.15);
+
+  /* ── Aliases legacy de acento ───────────────────── */
+  --lk-yellow: var(--lk-accent-bright);
   --lk-yellow-bright: #FFEA00;
-  --lk-yellow-dark: #F9A825;
+  --lk-yellow-dark: var(--lk-accent);
   --lk-yellow-soft: rgba(255, 202, 40, 0.15);
   --lk-orange: #FF7F00;
   --lk-orange-soft: rgba(255, 127, 0, 0.14);
@@ -43,7 +72,7 @@
   --lk-info-soft: rgba(14, 165, 233, 0.12);
 
   /* ── Superficies ────────────────────────────────── */
-  --lk-bg: #F8F4FF;
+  --lk-bg: #F7F4FB;
   --lk-surface: #FFFFFF;
   --lk-surface-soft: #F5F3FF;
   --lk-border: rgba(142, 53, 213, 0.12);
@@ -61,17 +90,27 @@
   --lk-text-soft: #4B4B6B;
   --lk-text-muted: #9CA3AF;
 
+  /* ── Espaciado: escala 8pt ─────────────────────── */
+  --lk-space-1: 0.5rem;
+  --lk-space-2: 1rem;
+  --lk-space-3: 1.5rem;
+  --lk-space-4: 2rem;
+  --lk-space-5: 2.5rem;
+  --lk-space-6: 3rem;
+
   /* ── Radios ─────────────────────────────────────── */
+  --lk-radius-pill: 999px;
+  --lk-radius-icon: 0.75rem;
   --lk-radius-xs: 0.5rem;
-  --lk-radius-sm: 0.75rem;
-  --lk-radius-md: 1rem;
-  --lk-radius-lg: 1.25rem;
-  --lk-radius-xl: 1.75rem;
-  --lk-radius-2xl: 2.5rem;
+  --lk-radius-sm: 1rem;
+  --lk-radius-md: 1.25rem;
+  --lk-radius-lg: 1.5rem;
+  --lk-radius-xl: 2rem;
+  --lk-radius-2xl: 2.4rem;
 
   /* ── Layout: Sidebar ────────────────────────────── */
   --lk-sidebar-width: 256px;
-  --lk-sidebar-bg: #8E35D5;
+  --lk-sidebar-bg: var(--lk-brand);
   --lk-sidebar-border: rgba(255, 255, 255, 0.08);
   --lk-sidebar-text: rgba(255, 255, 255, 0.72);
 
@@ -80,7 +119,7 @@
   --lk-topbar-bg: rgba(255, 255, 255, 0.92);
 
   /* ── Bootstrap 5 overrides ──────────────────────── */
-  --bs-primary: var(--lk-purple);
+  --bs-primary: var(--lk-brand);
   --bs-primary-rgb: 142, 53, 213;
   --bs-body-font-family: var(--lk-font);
   --bs-body-bg: var(--lk-bg);

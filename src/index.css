@@ -48,12 +48,7 @@ a { color: inherit; text-decoration: none; }
   --lk-color-warning:        var(--lk-yellow-dark);
   --lk-color-danger:         var(--lk-danger);
   --lk-color-danger-soft:    var(--lk-danger-soft);
-  --lk-radius-sm:            var(--lk-radius-sm);
-  --lk-radius-md:            var(--lk-radius-md);
-  --lk-radius-lg:            var(--lk-radius-lg);
-  --lk-radius-xl:            var(--lk-radius-xl);
   --lk-shadow-soft:          var(--lk-shadow-sm);
-  --lk-shadow-card:          var(--lk-shadow-card);
   --lk-font-sans:            var(--lk-font);
 }
 

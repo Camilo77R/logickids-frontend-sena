@@ -6,25 +6,22 @@
  */
 
 .lk-portal-shell {
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
   display: grid;
   grid-template-columns: 92px minmax(0, 1fr);
   gap: 1rem;
   height: 100vh;
   overflow: hidden;
   padding: 0.9rem;
-  background:
-    radial-gradient(circle at top left, rgba(255, 202, 40, 0.16), transparent 20%),
-    radial-gradient(circle at bottom right, rgba(139, 47, 201, 0.14), transparent 22%),
-    var(--lk-bg);
+  background: var(--lk-bg);
 }
 
 .lk-portal-sidebar {
   height: 100%;
-  border-radius: 2.4rem;
-  background: #832578;
+  border-radius: var(--lk-radius-2xl);
+  background: var(--lk-brand);
   border: none;
-  box-shadow: 0 22px 44px rgba(131, 68, 127, 0.35);
+  box-shadow: var(--lk-shadow-lg);
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -45,12 +42,12 @@
 .lk-portal-sidebar__brand {
   width: 54px;
   height: 54px;
-  border-radius: 1.25rem;
-  background: #f7f1f6;
+  border-radius: var(--lk-radius-md);
+  background: var(--lk-surface);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #d17ac9;
+  border: 1px solid var(--lk-sidebar-border);
   box-shadow: none;
 }
 
@@ -100,14 +97,14 @@
 
 .lk-portal-sidebar__link:hover {
   transform: translateY(-1px);
-  background: #c86bc0;
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
 }
 
 .lk-portal-sidebar__link.active {
-  background: linear-gradient(135deg, #f5a910, #fdb813);
-  color: #a64e9c;
-  box-shadow: 0 12px 26px rgba(253, 184, 19, 0.4);
+  background: var(--lk-accent);
+  color: var(--lk-brand-dark);
+  box-shadow: var(--lk-shadow-md);
 }
 
 .lk-portal-sidebar__link-icon {
@@ -136,7 +133,7 @@
   justify-content: center;
   width: 100%;
   padding: 0.9rem 0.4rem 1.1rem;
-  border-top: 1px solid #d17ac9;
+  border-top: 1px solid var(--lk-sidebar-border);
   margin-top: auto;
 }
 
@@ -150,15 +147,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #d17ac9;
+  border: 1px solid var(--lk-sidebar-border);
 }
 
 .lk-portal-sidebar__avatar {
   width: 38px;
   height: 38px;
-  background: #c86bc0;
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.03em;
   flex-shrink: 0;
 }
@@ -172,7 +169,7 @@
 .lk-portal-sidebar__profile-copy strong {
   color: #ffffff;
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-portal-sidebar__profile-copy small {
@@ -186,16 +183,16 @@
   min-height: 46px;
   height: 46px;
   gap: 0;
-  background: #c86bc0;
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
   cursor: pointer;
   font-size: 0.88rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-portal-sidebar__power:hover {
   color: #ffffff;
-  background: #d17ac9;
+  background: rgba(255, 255, 255, 0.24);
   transform: translateY(-1px);
 }
 
@@ -206,10 +203,10 @@
 .lk-portal-shell__main {
   height: 100%;
   min-height: 0;
-  border-radius: 2.15rem;
-  background: rgba(255, 255, 255, 0.58);
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  box-shadow: 0 18px 42px rgba(91, 54, 131, 0.12);
+  border-radius: var(--lk-radius-xl);
+  background: var(--lk-surface);
+  border: 1px solid var(--lk-border);
+  box-shadow: var(--lk-shadow-panel);
   backdrop-filter: blur(12px);
   overflow: hidden;
   display: flex;
@@ -223,8 +220,8 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.95rem 1.45rem;
-  background: rgba(255, 255, 255, 0.88);
-  border-bottom: 1px solid rgba(139, 47, 201, 0.08);
+  background: var(--lk-topbar-bg);
+  border-bottom: 1px solid var(--lk-border);
 }
 
 .lk-portal-topbar__left,
@@ -248,9 +245,9 @@
   align-items: center;
   gap: 0.05rem;
   margin-right: 0.2rem;
-  font-family: "Fredoka", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-display-font);
   font-size: 1.62rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.05em;
   line-height: 1;
   white-space: nowrap;
@@ -258,11 +255,11 @@
 }
 
 .lk-portal-topbar__brand-logic {
-  color: var(--lk-purple);
+  color: var(--lk-brand);
 }
 
 .lk-portal-topbar__brand-kids {
-  color: var(--lk-yellow);
+  color: var(--lk-accent);
 }
 
 .lk-portal-topbar__copy {
@@ -273,9 +270,9 @@
 
 .lk-portal-topbar__title {
   margin: 0;
-  font-family: "Fredoka", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-display-font);
   font-size: clamp(1.45rem, 3vw, 1.9rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.05em;
   color: var(--lk-text);
 }
@@ -285,7 +282,7 @@
   color: var(--lk-text-muted);
   font-size: 0.82rem;
   line-height: 1.48;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .lk-portal-topbar__actions {
@@ -299,9 +296,9 @@
   position: relative;
   width: 40px;
   height: 40px;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--lk-surface);
   color: var(--lk-text-soft);
   display: inline-flex;
   align-items: center;
@@ -312,7 +309,7 @@
 }
 
 .lk-portal-topbar__icon-btn:hover {
-  color: var(--lk-purple);
+  color: var(--lk-brand);
   background: var(--lk-surface-soft);
   transform: translateY(-1px);
 }
@@ -324,11 +321,11 @@
   min-width: 17px;
   height: 17px;
   padding: 0 0.22rem;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   background: var(--lk-orange);
   color: #ffffff;
   font-size: 0.6rem;
-  font-weight: 900;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -340,17 +337,17 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.25rem 0.62rem 0.25rem 0.25rem;
-  border-radius: 999px;
+  border-radius: var(--lk-radius-pill);
   border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--lk-surface);
   cursor: pointer;
   box-shadow: var(--lk-shadow-sm);
   transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
 .lk-portal-topbar__profile:hover {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: rgba(0, 0, 0, 0.05);
+  background: var(--lk-surface-soft);
+  border-color: var(--lk-border);
   transform: translateY(-1px);
 }
 
@@ -361,11 +358,11 @@
   border-radius: 50%;
   display: inline-grid;
   place-items: center;
-  background: linear-gradient(135deg, #f5a910 0%, #ffb325 100%);
-  color: #4f2c67;
-  font-weight: 900;
+  background: var(--lk-accent);
+  color: var(--lk-brand-dark);
+  font-weight: 700;
   line-height: 1;
-  box-shadow: 0 10px 18px rgba(255, 179, 37, 0.22);
+  box-shadow: var(--lk-shadow-sm);
 }
 
 .lk-portal-topbar__profile-copy {
@@ -378,12 +375,12 @@
 .lk-portal-topbar__profile-copy strong {
   color: var(--lk-text);
   font-size: 0.84rem;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .lk-portal-topbar__profile-copy small {
-  color: var(--lk-purple);
+  color: var(--lk-brand);
   font-size: 0.7rem;
   font-weight: 700;
 }
@@ -458,8 +455,8 @@
   .lk-portal-mobile-nav {
     display: block;
     padding: 0 1rem 0.95rem;
-    background: rgba(255, 255, 255, 0.88);
-    border-bottom: 1px solid rgba(139, 47, 201, 0.08);
+    background: var(--lk-topbar-bg);
+    border-bottom: 1px solid var(--lk-border);
   }
 
   .lk-portal-mobile-nav__track {
@@ -494,36 +491,36 @@
     border-radius: 50%;
     display: inline-grid;
     place-items: center;
-    background: rgba(255, 255, 255, 0.96);
-    border: 1px solid rgba(139, 47, 201, 0.1);
+    background: var(--lk-surface);
+    border: 1px solid var(--lk-border);
     box-shadow: var(--lk-shadow-sm);
     transition: background 160ms ease, color 160ms ease, transform 160ms ease;
   }
 
   .lk-portal-mobile-nav__label {
     font-size: 0.68rem;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.1;
     white-space: nowrap;
   }
 
   .lk-portal-mobile-nav__link.active,
   .lk-portal-mobile-nav__power:hover {
-    color: var(--lk-purple-deep);
+    color: var(--lk-brand-dark);
   }
 
   .lk-portal-mobile-nav__link.active .lk-portal-mobile-nav__icon {
-    background: linear-gradient(135deg, #f5a910, #fdb813);
+    background: var(--lk-accent);
     border-color: transparent;
-    color: var(--lk-purple-deep);
-    box-shadow: 0 10px 20px rgba(253, 184, 19, 0.22);
+    color: var(--lk-brand-dark);
+    box-shadow: var(--lk-shadow-sm);
   }
 
   .lk-portal-mobile-nav__link:hover .lk-portal-mobile-nav__icon,
   .lk-portal-mobile-nav__power:hover .lk-portal-mobile-nav__icon {
     transform: translateY(-1px);
-    border-color: rgba(139, 47, 201, 0.18);
-    color: var(--lk-purple);
+    border-color: var(--lk-brand-border-strong);
+    color: var(--lk-brand);
   }
 
   .lk-portal-shell__content {

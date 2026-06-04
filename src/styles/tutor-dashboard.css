@@ -1,9 +1,9 @@
 .lk-tutor-dashboard-grid {
-  --lk-dashboard-pink: #8E35D5;
-  --lk-dashboard-pink-dark: #2B173D;
-  --lk-dashboard-pink-soft: #F3E8FA;
-  --lk-dashboard-yellow: #fdb813;
-  --lk-dashboard-yellow-deep: #f5a910;
+  --lk-dashboard-pink: var(--lk-brand);
+  --lk-dashboard-pink-dark: var(--lk-brand-dark);
+  --lk-dashboard-pink-soft: var(--lk-brand-soft);
+  --lk-dashboard-yellow: var(--lk-accent-bright);
+  --lk-dashboard-yellow-deep: var(--lk-accent);
   --lk-dashboard-yellow-soft: #ffe3a3;
   display: grid;
   gap: 1.5rem;
@@ -33,7 +33,7 @@
   padding: 1.6rem;
   border-radius: var(--lk-radius-2xl);
   background: #fff;
-  border: 1px solid rgba(139, 47, 201, 0.12);
+  border: 1px solid var(--lk-border);
   box-shadow: var(--lk-shadow-panel);
   overflow: hidden;
 }
@@ -55,17 +55,17 @@
   padding: 0.42rem 0.72rem;
   margin-bottom: 0.9rem;
   border-radius: 999px;
-  background: rgba(139, 47, 201, 0.12);
+  background: var(--lk-brand-soft);
   color: var(--lk-purple);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .lk-dashboard-hero__title {
   margin: 0;
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.055em;
   color: var(--lk-text);
 }
@@ -89,16 +89,16 @@
   min-width: 106px;
   padding: 0.8rem 0.92rem;
   border-radius: var(--lk-radius-lg);
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(139, 47, 201, 0.1);
-  box-shadow: 0 10px 24px rgba(139, 47, 201, 0.08);
+  background: #fff;
+  border: 1px solid var(--lk-border);
+  box-shadow: var(--lk-shadow-card);
 }
 
 .lk-dashboard-hero__tag strong {
   display: block;
   color: var(--lk-text);
   font-size: 1.25rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.04em;
 }
 
@@ -120,7 +120,7 @@
   padding: 1rem;
   border-radius: var(--lk-radius-xl);
   background: #fff;
-  border: 1px solid rgba(139, 47, 201, 0.1);
+  border: 1px solid var(--lk-border);
   box-shadow: var(--lk-shadow-card);
   display: flex;
   flex-direction: column;
@@ -144,7 +144,7 @@
 .lk-dashboard-hero__meter-ring span {
   color: var(--lk-text);
   font-size: 1.3rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.04em;
 }
 
@@ -155,7 +155,7 @@
   background: rgba(0, 123, 255, 0.1);
   color: var(--lk-blue);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -168,7 +168,7 @@
 .lk-dashboard-hero__meter-copy strong {
   color: var(--lk-text);
   font-size: 1.06rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-hero__meter-copy p {
@@ -181,8 +181,8 @@
 .lk-dashboard-panel {
   padding: 1.25rem 1.3rem;
   border-radius: var(--lk-radius-xl);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(139, 47, 201, 0.1);
+  background: #fff;
+  border: 1px solid var(--lk-border);
   box-shadow: var(--lk-shadow-card);
 }
 
@@ -199,7 +199,7 @@
   margin-bottom: 0.38rem;
   color: var(--lk-purple);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -208,7 +208,7 @@
   margin: 0;
   color: var(--lk-text);
   font-size: 1.12rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
@@ -254,7 +254,7 @@
   display: block;
   margin-bottom: 0.4rem;
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   opacity: 0.86;
@@ -263,7 +263,7 @@
 .lk-metric-card__value {
   display: block;
   font-size: 2.5rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.07em;
   line-height: 1;
 }
@@ -327,7 +327,7 @@
   height: 14px;
   border-radius: 50%;
   background: var(--lk-purple);
-  box-shadow: 0 0 0 8px rgba(139, 47, 201, 0.08);
+  box-shadow: 0 0 0 8px var(--lk-brand-glow);
   flex-shrink: 0;
 }
 
@@ -346,7 +346,7 @@
 .lk-dashboard-group-card {
   padding: 1rem;
   border-radius: var(--lk-radius-lg);
-  border: 1px solid rgba(139, 47, 201, 0.1);
+  border: 1px solid var(--lk-border);
   background: #fff;
 }
 
@@ -361,7 +361,7 @@
   margin: 0;
   color: var(--lk-text);
   font-size: 0.96rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-group-card__description {
@@ -390,7 +390,7 @@
   padding: 0.32rem 0.62rem;
   border-radius: 999px;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -416,16 +416,16 @@
   align-items: flex-start;
   padding: 0.95rem 1rem;
   border-radius: var(--lk-radius-lg);
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(139, 47, 201, 0.1);
-  box-shadow: 0 8px 20px rgba(139, 47, 201, 0.06);
+  background: #fff;
+  border: 1px solid var(--lk-border);
+  box-shadow: var(--lk-shadow-card);
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 
 .lk-dashboard-action:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(139, 47, 201, 0.12);
-  border-color: rgba(139, 47, 201, 0.18);
+  box-shadow: var(--lk-shadow-md);
+  border-color: var(--lk-border-strong);
 }
 
 .lk-dashboard-action__icon {
@@ -443,7 +443,7 @@
   margin-bottom: 0.22rem;
   color: var(--lk-text);
   font-size: 0.87rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-action__description {
@@ -454,7 +454,7 @@
 }
 
 .lk-dashboard-action--purple .lk-dashboard-action__icon {
-  background: rgba(139, 47, 201, 0.12);
+  background: var(--lk-brand-soft);
   color: var(--lk-purple);
 }
 
@@ -476,8 +476,8 @@
 .lk-dashboard-empty {
   padding: 1rem;
   border-radius: var(--lk-radius-lg);
-  border: 1px dashed rgba(139, 47, 201, 0.2);
-  background: rgba(247, 242, 251, 0.7);
+  border: 1px dashed var(--lk-border-strong);
+  background: var(--lk-surface-soft);
 }
 
 .lk-dashboard-empty strong {
@@ -485,7 +485,7 @@
   margin-bottom: 0.3rem;
   color: var(--lk-text);
   font-size: 0.9rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-empty p {
@@ -505,8 +505,8 @@
   width: min(100%, 480px);
   padding: 1.6rem;
   border-radius: var(--lk-radius-2xl);
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(139, 47, 201, 0.12);
+  background: #fff;
+  border: 1px solid var(--lk-border);
   box-shadow: var(--lk-shadow-panel);
   text-align: center;
 }
@@ -516,7 +516,7 @@
   height: 52px;
   margin: 0 auto 1rem;
   border-radius: 50%;
-  border: 4px solid rgba(139, 47, 201, 0.12);
+  border: 4px solid var(--lk-brand-soft);
   border-top-color: var(--lk-purple);
   animation: lk-spin 0.9s linear infinite;
 }
@@ -525,7 +525,7 @@
   margin: 0 0 0.4rem;
   color: var(--lk-text);
   font-size: 1.18rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-state__message {

@@ -28,6 +28,31 @@ a {
 
 /* ── Shell (contenedor raíz del dashboard) ───────────────────────── */
 .lk-tutor-shell {
+  --lk-brand: var(--lk-tutor-theme-brand);
+  --lk-brand-dark: var(--lk-tutor-theme-brand-dark);
+  --lk-brand-soft: var(--lk-tutor-theme-brand-soft);
+  --lk-brand-glow: var(--lk-tutor-theme-brand-glow);
+  --lk-brand-border: var(--lk-tutor-theme-brand-border);
+  --lk-brand-border-strong: var(--lk-tutor-theme-brand-border-strong);
+  --lk-brand-shadow: var(--lk-tutor-theme-brand-shadow);
+  --lk-bg: var(--lk-tutor-theme-bg);
+  --lk-surface-soft: var(--lk-tutor-theme-surface-soft);
+  --lk-border: var(--lk-tutor-theme-brand-border);
+  --lk-border-strong: var(--lk-tutor-theme-brand-border-strong);
+  --lk-shadow-sm: 0 2px 8px var(--lk-brand-shadow);
+  --lk-shadow-md: 0 8px 24px var(--lk-brand-shadow);
+  --lk-shadow-lg: 0 16px 48px var(--lk-brand-shadow);
+  --lk-shadow-panel: 0 20px 52px var(--lk-tutor-theme-panel-shadow);
+  --lk-purple: var(--lk-brand);
+  --lk-purple-dark: var(--lk-brand-dark);
+  --lk-purple-deep: var(--lk-brand-dark);
+  --lk-purple-light: var(--lk-brand);
+  --lk-purple-soft: var(--lk-brand-soft);
+  --lk-purple-glow: var(--lk-brand-glow);
+  --lk-blue: var(--lk-brand);
+  --lk-blue-soft: var(--lk-brand-soft);
+  --bs-primary: var(--lk-brand);
+  --bs-primary-rgb: var(--lk-tutor-theme-brand-rgb);
   display: flex;
   height: 100vh;
   width: 100vw;
@@ -42,13 +67,13 @@ a {
   width: 92px;
   flex-shrink: 0;
   height: calc(100vh - 2rem);
-  --tutor-sidebar-purple: #8E35D5;
-  --tutor-sidebar-purple-dark: #2B173D;
+  --tutor-sidebar-purple: var(--lk-brand);
+  --tutor-sidebar-purple-dark: var(--lk-brand-dark);
   --tutor-sidebar-purple-soft: rgba(255, 255, 255, 0.16);
   --tutor-sidebar-purple-soft-2: rgba(255, 255, 255, 0.28);
   --tutor-sidebar-text: #ffffff;
-  --tutor-sidebar-yellow: #fdb813;
-  --tutor-sidebar-yellow-deep: #f5a910;
+  --tutor-sidebar-yellow: var(--lk-accent);
+  --tutor-sidebar-yellow-deep: var(--lk-accent-dark);
   background: var(--tutor-sidebar-purple);
   display: flex;
   flex-direction: column;
@@ -56,8 +81,8 @@ a {
   position: relative;
   z-index: 20;
   overflow: hidden;
-  border-radius: 2.4rem;
-  box-shadow: 0 22px 44px rgba(111, 34, 181, 0.35);
+  border-radius: var(--lk-radius-2xl);
+  box-shadow: var(--lk-shadow-lg);
 }
 
 /* Halo decorativo superior */
@@ -81,7 +106,7 @@ a {
 .lk-tutor-sidebar-brand-mark {
   width: 54px;
   height: 54px;
-  border-radius: 1.25rem;
+  border-radius: var(--lk-radius-md);
   background: var(--tutor-sidebar-purple-soft);
   display: flex;
   align-items: center;
@@ -147,7 +172,7 @@ a {
 .lk-tutor-nav-link.active {
   background: var(--tutor-sidebar-yellow);
   color: var(--tutor-sidebar-purple-dark);
-  font-weight: 800;
+  font-weight: 700;
   box-shadow: 0 12px 26px rgba(253, 184, 19, 0.4);
 }
 
@@ -207,7 +232,7 @@ a {
   gap: 0.625rem;
   padding: 0.65rem 0.72rem;
   margin-bottom: 0.68rem;
-  border-radius: 1rem;
+  border-radius: var(--lk-radius-sm);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -258,7 +283,7 @@ a {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: var(--lk-orange);
+  background: var(--lk-brand);
   color: #ffffff;
   font-weight: 800;
   font-size: 0.82rem;
@@ -307,7 +332,7 @@ a {
 
 .lk-tutor-topbar-brand {
   font-size: 1.6rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.05em;
   margin-right: 1rem;
 }
@@ -485,7 +510,7 @@ a {
 
 .lk-stat-card__value {
   font-size: 2.4rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 1;
 }
@@ -564,7 +589,7 @@ a {
 /* ── Page header ─────────────────────────────────────────────────── */
 .lk-page-title {
   font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 900;
+  font-weight: 700;
   color: var(--lk-text);
   margin: 0 0 0.25rem;
   letter-spacing: -0.04em;

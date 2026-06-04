@@ -84,7 +84,7 @@
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  background: rgba(139, 47, 201, 0.14);
+  background: var(--lk-brand-glow);
   pointer-events: none;
 }
 
@@ -96,7 +96,7 @@
   gap: 0.35rem;
   padding: 0.28rem 0.75rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.30);
+  background: #fff;
   font-size: 0.75rem;
   font-weight: 700;
   color: #5c3200;
@@ -134,23 +134,22 @@
   min-width: 74px;
   padding: 0.75rem 1rem;
   border-radius: var(--lk-radius-lg);
-  background: rgba(255, 255, 255, 0.30);
+  background: #fff;
   text-align: center;
-  backdrop-filter: blur(4px);
 }
 .ov-hero__pill strong {
   display: block;
   font-family: var(--lk-display-font);
   font-size: 1.85rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--lk-text);
   line-height: 1;
 }
 .ov-hero__pill span {
   display: block;
   font-size: 0.68rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--lk-text-soft);
   text-transform: uppercase;
   letter-spacing: 0.055em;
   margin-top: 3px;
@@ -204,7 +203,7 @@
 
 .ov-stat-card__label {
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   opacity: 0.88;
@@ -227,7 +226,7 @@
 /* Tonos — sólidos, sin transparencias */
 .ov-stat-card--purple {
   background: var(--lk-purple);
-  box-shadow: 0 8px 24px rgba(107, 33, 168, 0.32);
+  box-shadow: var(--lk-shadow-md);
 }
 .ov-stat-card--green {
   background: var(--lk-success);
@@ -240,8 +239,8 @@
 }
 .ov-stat-card--yellow .ov-stat-card__icon-wrap { background: rgba(0,0,0,0.12); }
 .ov-stat-card--blue {
-  background: #1e40af;
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.30);
+  background: var(--lk-brand);
+  box-shadow: var(--lk-shadow-md);
 }
 .ov-stat-card--orange {
   background: var(--lk-orange);
@@ -275,7 +274,7 @@
 .ov-panel__eyebrow {
   display: block;
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--lk-purple);
   text-transform: uppercase;
   letter-spacing: 0.07em;
