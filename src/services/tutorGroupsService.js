@@ -2,6 +2,13 @@ import { request } from "./httpClient";
 
 const unwrapCollection = (payload) => payload?.data ?? (Array.isArray(payload) ? payload : []);
 const unwrapEntity = (payload) => payload?.data ?? payload ?? null;
+const resolveCatalogOrder = (item) => {
+  const value = Number(item?.orden_catalogo ?? item?.orden ?? Number.MAX_SAFE_INTEGER);
+  return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+};
+
+const sortCatalogByOrder = (items) =>
+  [...items].sort((left, right) => resolveCatalogOrder(left) - resolveCatalogOrder(right));
 
 const normalizePositiveInt = (value, fallback = null) => {
   const normalized = Number(value);
@@ -50,8 +57,8 @@ const tutorGroupsService = {
   },
 
   listarMinijuegosActivos: async () => {
-    const payload = await request("/minijuegos", { auth: false });
-    return unwrapCollection(payload);
+    const payload = await request("/minijuegos");
+    return sortCatalogByOrder(unwrapCollection(payload));
   },
 
   listarRutasPedagogicas: async () => {
