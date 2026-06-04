@@ -467,7 +467,7 @@ export default function UsuariosPage() {
           </div>
         </RoleModal>
 
-        {/* MODAL DE DETALLE */}
+        {/* MODAL DE DETALLE - CORREGIDO */}
         <RoleModal
           open={showDetailModal}
           onClose={() => setShowDetailModal(false)}
@@ -479,12 +479,16 @@ export default function UsuariosPage() {
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
                 Cerrar
               </button>
-              {selectedTutorDetail?.estado !== "suspendido" && selectedTutorDetail?.estado !== "inactivo" && (
-                <button className="lk-btn lk-btn--primary" onClick={() => {
-                  openStateModal(selectedTutorDetail, "inactivo");
-                  setShowDetailModal(false);
-                }}>
-                  Cambiar estado
+              {selectedTutorDetail?.estado !== "suspendido" && (
+                <button 
+                  className="lk-btn lk-btn--primary" 
+                  onClick={() => {
+                    const nextState = selectedTutorDetail.estado === "activo" ? "inactivo" : "activo";
+                    openStateModal(selectedTutorDetail, nextState);
+                    setShowDetailModal(false);
+                  }}
+                >
+                  {selectedTutorDetail?.estado === "activo" ? "Desactivar" : "Reactivar"}
                 </button>
               )}
             </div>
