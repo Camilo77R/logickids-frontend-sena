@@ -5,15 +5,15 @@
  *   - Fondo general: #f4f2f8 (gris lavanda muy suave)
  *   - Panels/cards: #ffffff
  *   - Amarillo (#F9A825): SOLO hero + acentos puntuales
- *   - Pink (#bc59b1): color de marca, iconos, eyebrows, bordes activos
- *   - Pink dark (#9b4d96): spotlight card, acentos oscuros
+ *   - Morado (#8E35D5): color de marca, iconos, eyebrows, bordes activos
+ *   - Morado oscuro (#2B173D): texto principal y acentos
  * CERO transparencias. Sólido siempre.
  */
 
 :root {
-  --p:       #bc59b1;   /* pink principal */
-  --pd:      #bc59b1;   /* pink dark (reemplazado por pink principal) */
-  --pbg:     #f5eaf4;   /* pink background */
+  --p:       #8E35D5;   /* morado principal */
+  --pd:      #2B173D;   /* morado oscuro */
+  --pbg:     #F4EAFE;   /* morado background */
   --y:       #F9A825;   /* yellow */
   --yd:      #e8920a;   /* yellow dark */
   --ybg:     #fff8e1;   /* yellow background */
@@ -261,20 +261,23 @@
 
 /* ── Spotlight — actividad pedagógica en foco ───────────────────────── */
 .tov-spotlight {
-  background: var(--pd); color: #fff;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid rgba(142, 53, 213, 0.16);
+  box-shadow: 0 16px 34px rgba(43, 23, 61, 0.08);
   border-radius: 1.6rem; padding: 1.25rem 1.35rem;
   display: flex; flex-direction: column; gap: 0.3rem;
 }
 .tov-spotlight__ico {
   width: 38px; height: 38px; border-radius: 0.8rem;
-  background: rgba(0,0,0,0.18); color: #fff;
+  background: var(--p); color: #fff;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 0.3rem;
 }
 .tov-spotlight__tag {
   font-size: 0.63rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.7);
+  color: var(--p);
 }
 .tov-spotlight__game {
   font-family: "Fredoka", system-ui, sans-serif;
@@ -282,17 +285,17 @@
 }
 .tov-spotlight__desc {
   font-size: 0.76rem; font-weight: 400;
-  color: rgba(255,255,255,0.76); line-height: 1.5; margin: 0.2rem 0 0.6rem;
+  color: var(--soft); line-height: 1.5; margin: 0.2rem 0 0.6rem;
 }
 .tov-spotlight__btn {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 0.42rem 0.9rem; border-radius: 999px;
-  background: rgba(255,255,255,0.18); color: #fff; border: none;
+  background: var(--p); color: #fff; border: none;
   font-size: 0.76rem; font-weight: 600;
   cursor: pointer; font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   align-self: flex-start; transition: background 0.12s;
 }
-.tov-spotlight__btn:hover { background: rgba(255,255,255,0.28); }
+.tov-spotlight__btn:hover { background: #7b26c1; }
 
 /* ── Skill Bars ──────────────────────────────────────────────────────── */
 .tov-sbars { display: flex; flex-direction: column; gap: 0.75rem; }

@@ -1,11 +1,63 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Card, Col, Container, Row, Spinner } from "react-bootstrap";
-import { Award, Medal, Sparkles, Trophy } from "lucide-react";
+import { Alert, Spinner } from "react-bootstrap";
+import {
+  Award,
+  Download,
+  Lock,
+  Medal,
+  Rocket,
+  Search,
+  Share2,
+  Star,
+  Trophy,
+  Zap,
+} from "lucide-react";
 import estudianteService from "../../services/estudianteService";
 import logrosService from "../../services/logrosService";
 import tutorGroupsService from "../../services/tutorGroupsService";
+import "../../styles/tutor-logros.css";
 
 const normalizeId = (value) => String(value ?? "");
+
+const ACHIEVEMENT_FILTERS = [
+  { id: "todos", label: "Todos" },
+  { id: "completados", label: "Completados" },
+  { id: "pendientes", label: "Pendientes" },
+];
+
+const formatDate = (value) => {
+  if (!value) {
+    return "Fecha pendiente";
+  }
+
+  return new Intl.DateTimeFormat("es-CO", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(value));
+};
+
+const resolveAchievementXp = (achievement) =>
+  achievement?.xp ?? achievement?.puntos_xp ?? achievement?.puntos ?? null;
+
+const resolveCatalogKey = (achievement) =>
+  achievement?.clave ?? achievement?.clave_logro ?? achievement?.id_catalogo_logro;
+
+const resolveIcon = (achievement, unlocked) => {
+  if (achievement?.icono) {
+    return achievement.icono;
+  }
+
+  return unlocked ? "★" : "☆";
+};
+
+const buildInitials = (name = "") =>
+  name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "LK";
 
 export default function TutorLogrosPage() {
   const [grupos, setGrupos] = useState([]);
@@ -16,6 +68,8 @@ export default function TutorLogrosPage() {
   const [logros, setLogros] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [filtro, setFiltro] = useState("todos");
+  const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
     const cargarGrupos = async () => {
@@ -57,7 +111,7 @@ export default function TutorLogrosPage() {
         setEstudianteId((current) =>
           current && normalizedStudents.some((student) => normalizeId(student.id) === current)
             ? current
-            : normalizeId(normalizedStudents[0]?.id)
+            : normalizeId(normalizedStudents[0]?.id),
         );
       } catch (loadError) {
         setError(loadError.message || "No fue posible cargar los estudiantes.");
@@ -99,214 +153,278 @@ export default function TutorLogrosPage() {
     cargarLogros();
   }, [estudianteId]);
 
-  const studentName = useMemo(
-    () => estudiantes.find((student) => normalizeId(student.id) === estudianteId)?.nombre ?? "",
-    [estudianteId, estudiantes]
+  const grupoActual = useMemo(
+    () => grupos.find((grupo) => normalizeId(grupo.id) === grupoId),
+    [grupoId, grupos],
   );
 
+  const estudianteActual = useMemo(
+    () => estudiantes.find((student) => normalizeId(student.id) === estudianteId),
+    [estudianteId, estudiantes],
+  );
+
+  const studentName = estudianteActual?.nombre ?? "";
+
   const logrosByKey = useMemo(
+    () => new Map(logros.map((logro) => [logro.clave_logro, logro])),
+    [logros],
+  );
+
+  const catalogoEnriquecido = useMemo(
     () =>
-      new Map(logros.map((logro) => [logro.clave_logro, logro])),
-    [logros]
+      catalogo.map((item, index) => {
+        const key = resolveCatalogKey(item);
+        const unlocked = logrosByKey.get(key) ?? null;
+        const desbloqueado = Boolean(item.desbloqueado || unlocked);
+
+        return {
+          ...item,
+          key,
+          desbloqueado,
+          unlocked,
+          xp: resolveAchievementXp(item),
+          iconoFinal: resolveIcon(item, desbloqueado),
+        };
+      }),
+    [catalogo, logrosByKey],
   );
 
   const resumen = useMemo(() => {
-    const desbloqueados = catalogo.filter((logro) => logro.desbloqueado).length;
+    const desbloqueados = catalogoEnriquecido.filter((logro) => logro.desbloqueado).length;
 
     return {
-      total: catalogo.length,
+      total: catalogoEnriquecido.length,
       desbloqueados,
-      pendientes: Math.max(catalogo.length - desbloqueados, 0),
-      progreso: catalogo.length ? Math.round((desbloqueados / catalogo.length) * 100) : 0,
+      pendientes: Math.max(catalogoEnriquecido.length - desbloqueados, 0),
+      progreso: catalogoEnriquecido.length
+        ? Math.round((desbloqueados / catalogoEnriquecido.length) * 100)
+        : 0,
     };
-  }, [catalogo]);
+  }, [catalogoEnriquecido]);
+
+  const catalogoFiltrado = useMemo(() => {
+    const texto = busqueda.trim().toLowerCase();
+
+    return catalogoEnriquecido.filter((item) => {
+      const coincideFiltro =
+        filtro === "todos" ||
+        (filtro === "completados" && item.desbloqueado) ||
+        (filtro === "pendientes" && !item.desbloqueado);
+
+      const coincideBusqueda =
+        !texto ||
+        item.nombre?.toLowerCase().includes(texto) ||
+        item.descripcion?.toLowerCase().includes(texto);
+
+      return coincideFiltro && coincideBusqueda;
+    });
+  }, [busqueda, catalogoEnriquecido, filtro]);
+
+  const actividadReciente = useMemo(
+    () =>
+      [...logros]
+        .sort((a, b) => new Date(b.desbloqueado_en ?? 0) - new Date(a.desbloqueado_en ?? 0))
+        .slice(0, 4),
+    [logros],
+  );
 
   return (
-    <Container fluid className="py-4">
-      <div className="mb-4">
-        <div className="d-flex align-items-center gap-2 mb-2">
-          <Trophy size={28} className="text-warning" />
-          <h1 className="m-0">Logros y Gamificación</h1>
+    <section className="lk-achievements-page">
+      <header className="lk-achievements-topbar">
+        <label className="lk-achievements-search">
+          <Search size={18} aria-hidden="true" />
+          <input
+            type="search"
+            value={busqueda}
+            onChange={(event) => setBusqueda(event.target.value)}
+            placeholder="Buscar logros o desafios..."
+          />
+        </label>
+
+        <div className="lk-achievements-toolbar">
+          <select value={grupoId} onChange={(event) => setGrupoId(event.target.value)}>
+            <option value="">Selecciona un grupo</option>
+            {grupos.map((grupo) => (
+              <option key={grupo.id} value={grupo.id}>
+                {grupo.nombre}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={estudianteId}
+            onChange={(event) => setEstudianteId(event.target.value)}
+            disabled={!estudiantes.length}
+          >
+            <option value="">Selecciona un estudiante</option>
+            {estudiantes.map((student) => (
+              <option key={student.id} value={student.id}>
+                {student.nombre}
+              </option>
+            ))}
+          </select>
+
+          <div className="lk-achievements-user">
+            <span>{studentName || "Estudiante"}</span>
+            <small>
+              {grupoActual?.nombre ?? "Grupo"} · {resumen.desbloqueados}/{resumen.total} logros
+            </small>
+            <div aria-hidden="true">{buildInitials(studentName)}</div>
+          </div>
         </div>
-        <p className="text-muted mb-0">
-          Consulta el progreso real de cada estudiante sobre el catálogo de trofeos del backend.
-        </p>
-      </div>
+      </header>
 
       {error ? <Alert variant="danger">{error}</Alert> : null}
 
-      <Card className="mb-4">
-        <Card.Body>
-          <div className="d-flex flex-wrap gap-3">
-            <select value={grupoId} onChange={(event) => setGrupoId(event.target.value)}>
-              <option value="">Selecciona un grupo</option>
-              {grupos.map((grupo) => (
-                <option key={grupo.id} value={grupo.id}>
-                  {grupo.nombre}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={estudianteId}
-              onChange={(event) => setEstudianteId(event.target.value)}
-              disabled={!estudiantes.length}
-            >
-              <option value="">Selecciona un estudiante</option>
-              {estudiantes.map((student) => (
-                <option key={student.id} value={student.id}>
-                  {student.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
-        </Card.Body>
-      </Card>
-
       {isLoading ? (
-        <div className="text-center py-5">
+        <div className="lk-achievements-loading">
           <Spinner animation="border" variant="primary" />
-          <p className="mt-3 text-muted mb-0">Cargando logros...</p>
+          <p>Cargando logros...</p>
         </div>
       ) : !estudianteId ? (
-        <Card>
-          <Card.Body className="text-center py-5">
-            <Trophy size={44} className="text-muted mb-3" />
-            <p className="text-muted mb-0">
-              Selecciona un estudiante para revisar su progreso.
-            </p>
-          </Card.Body>
-        </Card>
+        <div className="lk-achievements-empty">
+          <Trophy size={48} aria-hidden="true" />
+          <strong>Selecciona un estudiante</strong>
+          <span>El catálogo de logros aparecerá cuando elijas un perfil.</span>
+        </div>
       ) : (
         <>
-          <Row className="g-4 mb-4">
-            <Col md={3}>
-              <Card className="h-100">
-                <Card.Body>
-                  <small className="text-muted">Estudiante</small>
-                  <h2 className="mt-2 mb-0">{studentName || "Sin nombre"}</h2>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="h-100">
-                <Card.Body>
-                  <small className="text-muted">Logros desbloqueados</small>
-                  <h2 className="mt-2 mb-0 text-success">{resumen.desbloqueados}</h2>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="h-100">
-                <Card.Body>
-                  <small className="text-muted">Pendientes</small>
-                  <h2 className="mt-2 mb-0 text-warning">{resumen.pendientes}</h2>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="h-100">
-                <Card.Body>
-                  <small className="text-muted">Progreso</small>
-                  <h2 className="mt-2 mb-0">{resumen.progreso}%</h2>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+          <div className="lk-achievements-kpis">
+            <article className="lk-achievements-kpi lk-achievements-kpi--highlight">
+              <div className="lk-achievements-kpi__icon">
+                <Trophy size={42} aria-hidden="true" />
+              </div>
+              <div>
+                <span>Logros totales</span>
+                <strong>{resumen.desbloqueados}</strong>
+              </div>
+            </article>
 
-          <Row className="g-4">
-            <Col lg={8}>
-              <Card>
-                <Card.Body>
-                  <div className="d-flex align-items-center gap-2 mb-3">
-                    <Sparkles size={18} className="text-primary" />
-                    <h2 className="h5 mb-0">Catálogo</h2>
-                  </div>
+            <article className="lk-achievements-kpi">
+              <div className="lk-achievements-kpi__icon lk-achievements-kpi__icon--lock">
+                <Lock size={40} aria-hidden="true" />
+              </div>
+              <div>
+                <span>Pendientes</span>
+                <strong>{resumen.pendientes}</strong>
+              </div>
+            </article>
 
-                  {!catalogo.length ? (
-                    <p className="text-muted mb-0">
-                      Este estudiante aún no tiene logros visibles en el catálogo.
-                    </p>
-                  ) : (
-                    <Row className="g-3">
-                      {catalogo.map((item) => {
-                        const unlocked = logrosByKey.get(item.clave);
+          </div>
 
-                        return (
-                          <Col md={6} key={item.id_catalogo_logro}>
-                            <div
-                              className="border rounded p-3 h-100"
-                              style={{
-                                backgroundColor: item.desbloqueado ? "#ecfdf3" : "#f8fafc",
-                                borderColor: item.desbloqueado ? "#22c55e" : "#e2e8f0",
-                              }}
-                            >
-                              <div className="d-flex align-items-center justify-content-between gap-2 mb-2">
-                                <div className="d-flex align-items-center gap-2">
-                                  <span style={{ fontSize: "1.4rem" }}>{item.icono || "🏆"}</span>
-                                  <strong>{item.nombre}</strong>
-                                </div>
-                                <span className={`badge ${item.desbloqueado ? "bg-success" : "bg-secondary"}`}>
-                                  {item.desbloqueado ? "Desbloqueado" : "Pendiente"}
-                                </span>
-                              </div>
+          <div className="lk-achievements-layout">
+            <main>
+              <div className="lk-achievements-section-head">
+                <div>
+                  <h1>Catálogo de Logros</h1>
+                  <p>{studentName || "Este estudiante"} tiene {resumen.total} desafíos disponibles.</p>
+                </div>
 
-                              <p className="text-muted small mb-2">{item.descripcion}</p>
+                <div className="lk-achievements-tabs" role="tablist" aria-label="Filtro de logros">
+                  {ACHIEVEMENT_FILTERS.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={filtro === item.id ? "active" : ""}
+                      onClick={() => setFiltro(item.id)}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                              {unlocked ? (
-                                <small className="text-success">
-                                  Desbloqueado el{" "}
-                                  {new Date(unlocked.desbloqueado_en).toLocaleDateString("es-CO")}
-                                </small>
-                              ) : (
-                                <small className="text-muted">Aún no alcanzado.</small>
-                              )}
-                            </div>
-                          </Col>
-                        );
-                      })}
-                    </Row>
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col lg={4}>
-              <Card className="h-100">
-                <Card.Body>
-                  <div className="d-flex align-items-center gap-2 mb-3">
-                    <Award size={18} className="text-warning" />
-                    <h2 className="h5 mb-0">Últimos desbloqueos</h2>
-                  </div>
-
-                  {!logros.length ? (
-                    <p className="text-muted mb-0">
-                      Este estudiante todavía no ha desbloqueado logros.
-                    </p>
-                  ) : (
-                    logros.map((logro) => (
-                      <div
-                        key={logro.id}
-                        className="border rounded p-3 mb-2"
-                        style={{ backgroundColor: "#fffdf5" }}
-                      >
-                        <div className="d-flex align-items-center gap-2 mb-1">
-                          <Medal size={16} className="text-warning" />
-                          <strong>{logro.nombre_logro}</strong>
+              {!catalogoFiltrado.length ? (
+                <div className="lk-achievements-empty lk-achievements-empty--inline">
+                  <Star size={34} aria-hidden="true" />
+                  <strong>No hay logros con ese filtro</strong>
+                  <span>Prueba con otra búsqueda o cambia el estado.</span>
+                </div>
+              ) : (
+                <div className="lk-achievements-grid">
+                  {catalogoFiltrado.map((item, index) => (
+                    <article
+                      key={item.id_catalogo_logro ?? item.key}
+                      className={`lk-achievement-card ${
+                        item.desbloqueado ? "is-unlocked" : "is-locked"
+                      }`}
+                    >
+                      <div className="lk-achievement-card__top">
+                        <div className="lk-achievement-card__icon" aria-hidden="true">
+                          {item.desbloqueado ? item.iconoFinal : <Lock size={20} />}
                         </div>
-                        <small className="text-muted d-block">{logro.descripcion}</small>
-                        <small className="text-success d-block mt-2">
-                          {new Date(logro.desbloqueado_en).toLocaleDateString("es-CO")}
-                        </small>
+                        <span>{item.desbloqueado ? "Desbloqueado" : "Pendiente"}</span>
                       </div>
-                    ))
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+
+                      <h2>{item.nombre}</h2>
+                      <p>{item.descripcion}</p>
+
+                      <footer>
+                        <strong>{item.xp != null ? `+${item.xp} XP` : "Logro pedagógico"}</strong>
+                        {item.desbloqueado ? (
+                          <small>{formatDate(item.unlocked?.desbloqueado_en)}</small>
+                        ) : (
+                          <small>Aún no desbloqueado</small>
+                        )}
+                      </footer>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </main>
+
+            <aside className="lk-achievements-activity">
+              <h2>Actividad Reciente</h2>
+
+              {!actividadReciente.length ? (
+                <div className="lk-achievements-activity__empty">
+                  <Award size={28} aria-hidden="true" />
+                  <span>Sin desbloqueos todavía</span>
+                </div>
+              ) : (
+                <div className="lk-achievements-timeline">
+                  {actividadReciente.map((logro) => (
+                    <article key={logro.id}>
+                      <div className="lk-achievements-timeline__dot">
+                        <Medal size={16} aria-hidden="true" />
+                      </div>
+                      <span>{formatDate(logro.desbloqueado_en)}</span>
+                      <strong>{logro.nombre_logro}</strong>
+                      <p>{logro.descripcion}</p>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </aside>
+          </div>
+
+          <section className="lk-achievements-banner">
+            <div>
+              <span>Potencial LogicKids</span>
+              <h2>¡Tu progreso está despegando!</h2>
+              <p>
+                {studentName || "El estudiante"} ya desbloqueó {resumen.desbloqueados} logros.
+                Usa esta lectura para celebrar avances y orientar el siguiente reto.
+              </p>
+              <div className="lk-achievements-banner__actions">
+                <button type="button">
+                  <Download size={17} aria-hidden="true" />
+                  Descargar reporte
+                </button>
+                <button type="button">
+                  <Share2 size={17} aria-hidden="true" />
+                  Compartir logros
+                </button>
+              </div>
+            </div>
+
+            <div className="lk-achievements-rocket" aria-hidden="true">
+              <Rocket size={82} />
+              <Zap size={28} />
+            </div>
+          </section>
         </>
       )}
-    </Container>
+    </section>
   );
 }

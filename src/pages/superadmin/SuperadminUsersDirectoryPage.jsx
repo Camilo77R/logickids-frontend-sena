@@ -250,39 +250,6 @@ export default function SuperadminUsersDirectoryPage({ type }) {
               </>
             ) : null}
           </DashboardPanel>
-
-          <DashboardPanel
-            eyebrow="Busqueda"
-            title="Filtro aplicado"
-            subtitle="Este panel se concentra solo en registros activos para lectura operativa rapida."
-            aside={<Search size={18} color="var(--lk-purple)" aria-hidden="true" />}
-          >
-            <div className="lk-role-list">
-              <article className="lk-role-list__item lk-role-list__item--gold">
-                <div className="lk-role-list__top">
-                  <span className="lk-role-list__title">Termino actual</span>
-                  <span className="lk-role-list__meta lk-role-list__meta--gold">
-                    {searchTerm ? "Filtrando" : "Todos"}
-                  </span>
-                </div>
-                <p className="lk-role-list__description">
-                  {searchTerm || "Sin busqueda activa. Se muestran todos los registros activos."}
-                </p>
-              </article>
-
-              <article className="lk-role-list__item lk-role-list__item--orange">
-                <div className="lk-role-list__top">
-                  <span className="lk-role-list__title">Resultados visibles</span>
-                  <span className="lk-role-list__meta lk-role-list__meta--orange">
-                    {visibleItems.length}
-                  </span>
-                </div>
-                <p className="lk-role-list__description">
-                  La barra superior busca dentro de nombre, institucion y datos clave del registro.
-                </p>
-              </article>
-            </div>
-          </DashboardPanel>
         </section>
       </div>
     </AppShell>

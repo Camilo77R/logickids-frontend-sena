@@ -1,8 +1,8 @@
 .tutor-page-container,
 .tg-session-modal {
-  --tg-p: #bc59b1;
-  --tg-pd: #9b4d96;
-  --tg-pbg: #f5eaf4;
+  --tg-p: #8E35D5;
+  --tg-pd: #2B173D;
+  --tg-pbg: #F4EAFE;
   --tg-y: #f9a825;
   --tg-yd: #e8920a;
   --tg-ybg: #fff8e1;
@@ -542,7 +542,7 @@
 .tg-session-modal__mode-card.is-selected {
   border-color: var(--tg-p);
   background: var(--tg-pbg);
-  box-shadow: inset 0 0 0 1px rgba(188, 89, 177, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(142, 53, 213, 0.14);
 }
 
 .tg-session-modal__mode-card.is-disabled {
@@ -606,7 +606,7 @@
 .tg-session-modal__select:focus,
 .tg-session-modal__number:focus {
   border-color: var(--tg-p);
-  box-shadow: 0 0 0 3px rgba(188, 89, 177, 0.12);
+  box-shadow: 0 0 0 3px rgba(142, 53, 213, 0.12);
 }
 
 .tg-session-modal__field-grid {

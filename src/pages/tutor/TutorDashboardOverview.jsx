@@ -47,8 +47,45 @@ const getSaludo = () => {
   return "Buenas noches";
 };
 
-const AVATAR_COLORS = ["#bc59b1", "#9b4d96", "#F9A825", "#e8920a", "#7a3575", "#f0b429"];
+const AVATAR_COLORS = ["#8E35D5", "#2B173D", "#F9A825", "#e8920a", "#7a3575", "#f0b429"];
 const avatarColor = (index) => AVATAR_COLORS[index % AVATAR_COLORS.length];
+
+const resolveGroupId = (group) => group?.id ?? group?.id_grupo;
+const resolveStudentId = (student) => student?.id ?? student?.id_estudiante ?? student?.estudiante_id;
+
+const normalizeGroup = (group) => ({
+  ...group,
+  id: resolveGroupId(group),
+});
+
+const normalizeStudent = (student, groupId) => ({
+  ...student,
+  id: resolveStudentId(student),
+  grupo_id: student?.grupo_id ?? student?.id_grupo ?? groupId,
+});
+
+const loadStudentsForTutorGroups = async (groups) => {
+  const requests = await Promise.allSettled(
+    groups.map(async (group) => {
+      if (!group.id) return [];
+      const students = await estudianteService.listEstudiantes(Number(group.id));
+      return (students ?? []).map((student) => normalizeStudent(student, group.id));
+    })
+  );
+
+  const uniqueStudents = new Map();
+
+  requests.forEach((request) => {
+    if (request.status !== "fulfilled") return;
+
+    request.value.forEach((student) => {
+      if (!student.id) return;
+      uniqueStudents.set(String(student.id), student);
+    });
+  });
+
+  return [...uniqueStudents.values()];
+};
 
 function KpiCard({ value, label, sublabel, Icon, accent }) {
   return (
@@ -171,12 +208,14 @@ export default function TutorDashboardOverview() {
     try {
       setLoading(true);
 
-      const [loadedGroups, loadedStudents, loadedGames, loadedRoutes] = await Promise.all([
+      const [loadedGroupsRaw, loadedGames, loadedRoutes] = await Promise.all([
         tutorGroupsService.getGroups(),
-        estudianteService.listEstudiantes(),
         tutorGroupsService.listarMinijuegosActivos(),
         tutorGroupsService.listarRutasPedagogicas(),
       ]);
+
+      const loadedGroups = (loadedGroupsRaw ?? []).map(normalizeGroup);
+      const loadedStudents = await loadStudentsForTutorGroups(loadedGroups);
 
       setGroups(loadedGroups);
       setStudents(loadedStudents);
@@ -337,12 +376,12 @@ export default function TutorDashboardOverview() {
       </div>
 
       <div className="tov-kpis">
-        <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} accent="#bc59b1" />
+        <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} accent="#8E35D5" />
         <KpiCard value={activeGroups} label="Clases abiertas" sublabel="Sesión activa" Icon={PlayCircle} accent="#F9A825" />
-        <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} accent="#bc59b1" />
-        <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} accent="#bc59b1" />
+        <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} accent="#8E35D5" />
+        <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} accent="#8E35D5" />
         <KpiCard value={liveStudents} label="Jugando ahora" sublabel="Con sesión activa" Icon={Target} accent="#F9A825" />
-        <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} accent="#bc59b1" />
+        <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} accent="#8E35D5" />
       </div>
 
       <div className="tov-bento">
@@ -447,7 +486,7 @@ export default function TutorDashboardOverview() {
                   <span className="tov-eye">IA · Gemini</span>
                   <h2 className="tov-ptitle">Recomendaciones</h2>
                 </div>
-                <Lightbulb size={15} color="#bc59b1" />
+                <Lightbulb size={15} color="#8E35D5" />
               </div>
               <div className="tov-recs">
                 {recs.slice(0, 3).map((rec, index) => (

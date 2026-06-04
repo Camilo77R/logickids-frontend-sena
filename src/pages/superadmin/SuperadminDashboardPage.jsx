@@ -15,6 +15,7 @@ import QuickActionCard from "../../components/dashboard/QuickActionCard";
 import adminService from "../../services/adminService";
 import { useAuth } from "../../hooks/useAuth";
 import { buildSuperadminDashboardView } from "./superadminDashboard.selectors";
+import logoWordmark from "../../assets/imgs/logoLogickids transparente.png";
 
 export default function SuperadminDashboardPage() {
   const { user } = useAuth();
@@ -62,12 +63,30 @@ export default function SuperadminDashboardPage() {
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
         <section className="lk-role-dashboard__hero">
-          <span className="lk-role-dashboard__hero-badge">Resumen global</span>
-          <h2 className="lk-role-dashboard__hero-title">Panorama ejecutivo de LogicKids</h2>
-          <p className="lk-role-dashboard__hero-subtitle">
-            Este panel concentra lectura global. Las acciones operativas viven en los modulos de
-            Instituciones y Minijuegos para evitar duplicidad y mezclar decision con ejecucion.
-          </p>
+          <div className="lk-role-dashboard__hero-header">
+            <div>
+              <span className="lk-role-dashboard__hero-badge">Resumen global</span>
+              <h2 className="lk-role-dashboard__hero-title">Panorama ejecutivo de LogicKids</h2>
+              <p className="lk-role-dashboard__hero-subtitle">
+                Este panel concentra lectura global. Las acciones operativas viven en los modulos de
+                Instituciones y Minijuegos para evitar duplicidad y mezclar decision con ejecucion.
+              </p>
+            </div>
+            <div className="lk-role-dashboard__hero-logo" style={{ marginLeft: "auto" }}>
+              <img
+                src={logoWordmark}
+                alt="LogicKids"
+                className="lk-hero-logo"
+                style={{
+                  width: "400px",
+                  height: "auto",
+                  display: "block",
+                  transform: "scale(1.6)",
+                  transformOrigin: "center",
+                }}
+              />
+            </div>
+          </div>
 
           <div className="lk-role-dashboard__hero-tags">
             {view.heroTags.map((tag) => (
