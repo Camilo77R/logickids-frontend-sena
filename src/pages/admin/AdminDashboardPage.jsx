@@ -19,6 +19,7 @@ import { useAuth } from "../../hooks/useAuth";
 import adminService from "../../services/adminService";
 import adminTutorsService from "../../services/adminTutorsService";
 import { buildAdminDashboardView } from "./adminDashboard.selectors";
+import logoWordmark from "../../assets/imgs/logoLogickids transparente.png";
 
 export default function AdminDashboardPage() {
   const { user } = useAuth();
@@ -78,12 +79,30 @@ export default function AdminDashboardPage() {
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
         <section className="lk-role-dashboard__hero">
-          <span className="lk-role-dashboard__hero-badge">Panel institucional</span>
-          <h2 className="lk-role-dashboard__hero-title">Tu institución bajo control</h2>
-          <p className="lk-role-dashboard__hero-subtitle">
-            Aquí concentras el pulso de tutores, estudiantes, admins y solicitudes para que la
-            operación diaria avance sin fricción.
-          </p>
+          <div className="lk-role-dashboard__hero-header">
+            <div>
+              <span className="lk-role-dashboard__hero-badge">Panel institucional</span>
+              <h2 className="lk-role-dashboard__hero-title">Tu institución bajo control</h2>
+              <p className="lk-role-dashboard__hero-subtitle">
+                Aquí concentras el pulso de tutores, estudiantes, admins y solicitudes para que la
+                operación diaria avance sin fricción.
+              </p>
+            </div>
+            <div className="lk-role-dashboard__hero-logo" style={{ marginLeft: "auto" }}>
+              <img 
+                src={logoWordmark} 
+                alt="LogicKids"
+                className="lk-hero-logo" 
+                style={{ 
+                  width: "400px", 
+                  height: "auto",
+                  display: "block",
+                  transform: "scale(1.6)",
+                  transformOrigin: "center"
+                }}
+              />
+            </div>
+          </div>
 
           <div className="lk-role-dashboard__hero-tags">
             {view.heroTags.map((tag) => (

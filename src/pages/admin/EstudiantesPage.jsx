@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  BarChart3,
   GraduationCap,
   PencilLine,
   QrCode,
@@ -21,6 +22,7 @@ import DashboardPanel from "../../components/dashboard/DashboardPanel";
 import AppShell from "../../components/layout/AppShell";
 import StudentQrPreview from "../../components/account/StudentQrPreview";
 import adminStudentsService from "../../services/adminStudentsService";
+import "../../styles/role-dashboard.css";
 
 const STATUS_FILTERS = [
   { value: "todos", label: "Todos" },
@@ -131,11 +133,13 @@ export default function EstudiantesPage() {
   const [groups, setGroups] = useState([]);
   const [students, setStudents] = useState([]);
   const [selectedGroupId, setSelectedGroupId] = useState("");
-  const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [statusFilter, setStatusFilter] = useState("todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [feedback, setFeedback] = useState(null);
+  const [showMetricsModal, setShowMetricsModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedStudentDetail, setSelectedStudentDetail] = useState(null);
   const [studentModal, setStudentModal] = useState({
     open: false,
     mode: "create",
@@ -154,60 +158,35 @@ export default function EstudiantesPage() {
     student: null,
   });
   const hasLoadedFilters = useRef(false);
-  const detailPanelRef = useRef(null);
 
   const groupsById = useMemo(
-    () =>
-      new Map(groups.map((group) => [String(group.id_grupo ?? group.id ?? ""), group])),
+    () => new Map(groups.map((group) => [String(group.id_grupo ?? group.id ?? ""), group])),
     [groups]
   );
 
   const visibleStudents = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
-
     return students.filter((student) => {
       const state = getStudentState(student);
       const matchesFilter = statusFilter === "todos" || state === statusFilter;
       const matchesSearch = matchesStudentSearch(student, normalizedSearch, groupsById);
-
       return matchesFilter && matchesSearch;
     });
   }, [groupsById, searchTerm, statusFilter, students]);
 
-  const selectedStudent = useMemo(
-    () => students.find((student) => student.id === selectedStudentId) || null,
-    [selectedStudentId, students]
-  );
-
   const summary = useMemo(() => buildStudentsSummary(students), [students]);
-
-  const syncSelectedStudent = (nextStudents) => {
-    if (nextStudents.length === 0) {
-      setSelectedStudentId(null);
-      return;
-    }
-
-    const hasCurrentSelection = nextStudents.some((student) => student.id === selectedStudentId);
-    if (!hasCurrentSelection) {
-      setSelectedStudentId(nextStudents[0].id);
-    }
-  };
 
   const loadStudents = async (groupId = selectedGroupId) => {
     setIsLoading(true);
-
     try {
       const data = await adminStudentsService.listStudents({
         groupId: groupId ? Number(groupId) : undefined,
         includeInactive: true,
       });
-
       setStudents(data);
-      syncSelectedStudent(data);
       setFeedback(null);
     } catch (error) {
       setStudents([]);
-      setSelectedStudentId(null);
       setFeedback({
         type: "error",
         message: error.message || "No fue posible cargar los estudiantes de la institución.",
@@ -219,18 +198,13 @@ export default function EstudiantesPage() {
 
   const loadInitialData = async () => {
     setIsLoading(true);
-
     try {
       const [groupsData, studentsData] = await Promise.all([
         adminStudentsService.listGroups(),
         adminStudentsService.listStudents({ includeInactive: true }),
       ]);
-
       setGroups(groupsData);
       setStudents(studentsData);
-      if (studentsData.length > 0) {
-        setSelectedStudentId(studentsData[0].id);
-      }
       setFeedback(null);
     } catch (error) {
       setFeedback({
@@ -251,42 +225,8 @@ export default function EstudiantesPage() {
       hasLoadedFilters.current = true;
       return;
     }
-
     loadStudents(selectedGroupId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGroupId]);
-
-  useEffect(() => {
-    if (visibleStudents.length === 0) {
-      if (selectedStudentId !== null) {
-        setSelectedStudentId(null);
-      }
-      return;
-    }
-
-    const hasVisibleSelection = visibleStudents.some((student) => student.id === selectedStudentId);
-    if (!hasVisibleSelection) {
-      setSelectedStudentId(visibleStudents[0].id);
-    }
-  }, [selectedStudentId, visibleStudents]);
-
-  const focusDetailPanel = () => {
-    if (typeof window === "undefined" || window.innerWidth >= 1200) {
-      return;
-    }
-
-    window.requestAnimationFrame(() => {
-      detailPanelRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    });
-  };
-
-  const handleSelectStudent = (studentId) => {
-    setSelectedStudentId(studentId);
-    focusDetailPanel();
-  };
 
   const openCreateModal = () => {
     setStudentModal({
@@ -327,7 +267,6 @@ export default function EstudiantesPage() {
 
   const handleStudentSubmit = async () => {
     const { nombre, edad } = studentModal.form;
-
     if (!nombre.trim() || !edad) {
       setFeedback({
         type: "error",
@@ -335,7 +274,6 @@ export default function EstudiantesPage() {
       });
       return;
     }
-
     try {
       if (studentModal.mode === "create") {
         const createdStudent = await adminStudentsService.createStudent(
@@ -345,8 +283,8 @@ export default function EstudiantesPage() {
           type: "success",
           message: `Estudiante ${createdStudent?.nombre || nombre.trim()} creado correctamente.`,
         });
-      } else if (selectedStudent) {
-        await adminStudentsService.updateStudent(selectedStudent.id, {
+      } else if (selectedStudentDetail) {
+        await adminStudentsService.updateStudent(selectedStudentDetail.id, {
           nombre: nombre.trim(),
           edad: Number(edad),
         });
@@ -355,7 +293,6 @@ export default function EstudiantesPage() {
           message: "Datos del estudiante actualizados correctamente.",
         });
       }
-
       closeStudentModal();
       await loadStudents();
     } catch (error) {
@@ -378,8 +315,7 @@ export default function EstudiantesPage() {
   };
 
   const handleMoveStudent = async () => {
-    if (!selectedStudent) return;
-
+    if (!selectedStudentDetail) return;
     if (!moveModal.groupId) {
       setFeedback({
         type: "error",
@@ -387,9 +323,8 @@ export default function EstudiantesPage() {
       });
       return;
     }
-
     try {
-      await adminStudentsService.changeStudentGroup(selectedStudent.id, Number(moveModal.groupId));
+      await adminStudentsService.changeStudentGroup(selectedStudentDetail.id, Number(moveModal.groupId));
       setFeedback({
         type: "success",
         message: "El estudiante fue movido al nuevo grupo.",
@@ -407,7 +342,6 @@ export default function EstudiantesPage() {
   const handleStudentStateChange = async (student, nextState) => {
     try {
       const shouldResetFilter = statusFilter !== "todos" && statusFilter !== nextState;
-
       if (nextState === "activo") {
         await adminStudentsService.reactivateStudent(student.id);
       } else if (nextState === "inactivo") {
@@ -419,21 +353,15 @@ export default function EstudiantesPage() {
         });
         return false;
       }
-
       if (shouldResetFilter) {
         setStatusFilter("todos");
       }
-
       setFeedback({
         type: "success",
-        message:
-          nextState === "activo"
-            ? "Estudiante reactivado correctamente."
-            : shouldResetFilter
-              ? "Estudiante desactivado correctamente. La vista volvió a “Todos” para que sigas viendo el cambio."
-              : "Estudiante desactivado correctamente.",
+        message: nextState === "activo"
+          ? "Estudiante reactivado correctamente."
+          : "Estudiante desactivado correctamente.",
       });
-
       await loadStudents();
       return true;
     } catch (error) {
@@ -446,19 +374,11 @@ export default function EstudiantesPage() {
   };
 
   const openStateModal = (student, nextState) => {
-    setStateModal({
-      open: true,
-      nextState,
-      student,
-    });
+    setStateModal({ open: true, nextState, student });
   };
 
   const closeStateModal = () => {
-    setStateModal({
-      open: false,
-      nextState: "",
-      student: null,
-    });
+    setStateModal({ open: false, nextState: "", student: null });
   };
 
   const handleOpenQr = async (student) => {
@@ -468,7 +388,6 @@ export default function EstudiantesPage() {
       studentName: student.nombre || "estudiante",
       isLoading: true,
     });
-
     try {
       const qrData = await adminStudentsService.getStudentQr(student.id);
       setQrModal((current) => ({
@@ -489,14 +408,19 @@ export default function EstudiantesPage() {
     }
   };
 
-  const pageActions = (
-    <div className="lk-role-page__toolbar lk-role-page__toolbar--stacked">
+  const handleViewDetail = (student) => {
+    setSelectedStudentDetail(student);
+    setShowDetailModal(true);
+  };
+
+  const toolbar = (
+    <div className="lk-role-page__toolbar">
       <div className="lk-role-page__filters">
         {STATUS_FILTERS.map((filter) => (
           <button
             key={filter.value}
             type="button"
-            className={`lk-role-page__filter${statusFilter === filter.value ? " is-active" : ""}`}
+            className={`lk-role-page__filter ${statusFilter === filter.value ? "is-active" : ""}`}
             onClick={() => setStatusFilter(filter.value)}
           >
             {filter.label}
@@ -504,38 +428,48 @@ export default function EstudiantesPage() {
         ))}
       </div>
 
-      <div className="lk-role-page__toolbar-group">
-        <div className="lk-role-search">
-          <Search size={18} className="lk-role-search__icon" aria-hidden="true" />
-          <input
-            type="search"
-            className="lk-role-search__input"
-            placeholder="Buscar por nombre o grupo. ID/edad exactos."
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-          />
-          {searchTerm ? (
-            <button
-              type="button"
-              className="lk-input-action"
-              onClick={() => setSearchTerm("")}
-              aria-label="Limpiar búsqueda"
-            >
-              <X size={16} aria-hidden="true" />
-            </button>
-          ) : null}
-        </div>
+      <div className="lk-field" style={{ margin: 0, width: "180px" }}>
+        <select
+          value={selectedGroupId}
+          onChange={(e) => setSelectedGroupId(e.target.value)}
+          style={{ padding: "6px 12px", borderRadius: "2rem", fontSize: "0.85rem", width: "100%" }}
+        >
+          <option value="">Todos los grupos</option>
+          {groups.map((group) => (
+            <option key={String(group.id_grupo ?? group.id)} value={String(group.id_grupo ?? group.id)}>
+              {group.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        <div className="lk-role-inline-actions">
-          <button type="button" className="lk-btn lk-btn--secondary" onClick={() => loadStudents()}>
-            <RefreshCw size={16} aria-hidden="true" />
-            Recargar
+      <div className="lk-role-page__search">
+        <Search size={18} className="lk-search-icon" />
+        <input
+          type="search"
+          className="lk-search-input"
+          placeholder="Buscar por nombre o grupo. ID/edad exactos."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {searchTerm && (
+          <button className="lk-search-clear" onClick={() => setSearchTerm("")}>
+            <X size={16} />
           </button>
-          <button type="button" className="lk-btn lk-btn--primary" onClick={openCreateModal}>
-            <UserPlus2 size={16} aria-hidden="true" />
-            Nuevo estudiante
-          </button>
-        </div>
+        )}
+      </div>
+
+      <div className="lk-role-page__actions">
+        <button className="lk-btn lk-btn--icon" onClick={() => loadStudents()} title="Recargar">
+          <RefreshCw size={16} />
+        </button>
+        <button className="lk-btn lk-btn--icon" onClick={() => setShowMetricsModal(true)} title="Ver estadísticas">
+          <BarChart3 size={16} />
+        </button>
+        <button className="lk-btn lk-btn--primary" onClick={openCreateModal}>
+          <UserPlus2 size={16} />
+          <span>Nuevo estudiante</span>
+        </button>
       </div>
     </div>
   );
@@ -544,281 +478,213 @@ export default function EstudiantesPage() {
     <AppShell
       title="Estudiantes"
       description="Organiza el alumnado de tu institución, mueve grupos cuando haga falta y comparte QR sin salir del portal."
-      actions={pageActions}
     >
       <div className="lk-role-dashboard">
-        {feedback ? <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div> : null}
+        {toolbar}
 
-        <section className="lk-role-dashboard__metrics">
-          <DashboardMetricCard
-            icon={UsersRound}
-            label="Total del contexto"
-            value={isLoading ? "..." : summary.total}
-            description="Cuenta total del grupo o institución cargada, sin perder de vista a los inactivos."
-            tone="purple"
-          />
-          <DashboardMetricCard
-            icon={UserCheck2}
-            label="Activos"
-            value={isLoading ? "..." : summary.activeStudents}
-            description="Listos para entrar al juego cuando la clase se abra."
-            tone="gold"
-          />
-          <DashboardMetricCard
-            icon={UserRoundX}
-            label="Sin grupo"
-            value={isLoading ? "..." : summary.withoutGroup}
-            description="Conviene ubicarlos antes de la próxima sesión."
-            tone="orange"
-          />
-          <DashboardMetricCard
-            icon={GraduationCap}
-            label="En clase"
-            value={isLoading ? "..." : summary.openSessions}
-            description="Tienen sesión habilitada desde el contexto actual."
-            tone="rose"
-          />
-        </section>
+        {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 
-        <section className="lk-role-section-grid">
-          <DashboardPanel
-            eyebrow="Directorio estudiantil"
-            title="Lista institucional"
-            subtitle="Explora el grupo actual de cada estudiante y abre su detalle cuando necesites actuar."
-            aside={<UsersRound size={18} color="var(--lk-purple)" aria-hidden="true" />}
-          >
-            <div className="lk-role-page__toolbar">
-              <div>
-                <span className="lk-role-panel__eyebrow">
-                  {selectedGroupId
-                    ? groupsById.get(String(selectedGroupId))?.nombre || "Grupo seleccionado"
-                    : "Todos los grupos"}
-                </span>
-                <h3 className="lk-role-panel__title">Filtros por grupo</h3>
+        <DashboardPanel
+          eyebrow="Directorio estudiantil"
+          title="Lista institucional"
+          subtitle="Explora el grupo actual de cada estudiante y abre su detalle cuando necesites actuar."
+          aside={<UsersRound size={18} color="var(--lk-purple)" />}
+        >
+          {!isLoading && visibleStudents.length === 0 ? (
+            <EmptyState
+              title="No hay estudiantes para esta vista"
+              description="Ajusta el estado, la búsqueda o el grupo para encontrar otros casos."
+            />
+          ) : null}
+
+          {visibleStudents.length > 0 && (
+            <>
+              <div className="lk-table-wrap lk-role-table--desktop">
+                <table className="lk-table">
+                  <thead>
+                    <tr>
+                      <th>Estudiante</th>
+                      <th>Grupo</th>
+                      <th>Edad</th>
+                      <th>Estado</th>
+                      <th>Clase</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visibleStudents.map((student) => (
+                      <tr key={student.id}>
+                        <td>
+                          <strong>{student.nombre}</strong>
+                          <p className="lk-muted">ID #{student.id}</p>
+                        </td>
+                        <td>{resolveGroupName(student, groupsById)}</td>
+                        <td>{student.edad} años</td>
+                        <td>
+                          <StatusBadge label={getStudentState(student)} variant={getStudentState(student)} />
+                        </td>
+                        <td>
+                          <StatusBadge
+                            label={student.sesion_activa ? "abierta" : "cerrada"}
+                            variant={student.sesion_activa ? "activo" : "inactivo"}
+                          />
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="lk-btn lk-btn--secondary"
+                            onClick={() => handleViewDetail(student)}
+                          >
+                            Ver detalle
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
-              <div className="lk-field lk-role-page__group-filter">
-                <label htmlFor="admin-students-group-filter">Grupo</label>
-                <select
-                  id="admin-students-group-filter"
-                  value={selectedGroupId}
-                  onChange={(event) => setSelectedGroupId(event.target.value)}
-                >
-                  <option value="">Todos los grupos</option>
-                  {groups.map((group) => (
-                    <option key={String(group.id_grupo ?? group.id)} value={String(group.id_grupo ?? group.id)}>
-                      {group.nombre}
-                    </option>
-                  ))}
-                </select>
+              <div className="lk-role-mobile-list">
+                {visibleStudents.map((student) => (
+                  <article key={student.id} className="lk-role-mobile-card">
+                    <header className="lk-role-mobile-card__header">
+                      <div>
+                        <h3 className="lk-role-mobile-card__title">{student.nombre}</h3>
+                        <p className="lk-role-mobile-card__subtitle">
+                          {student.edad} años · {resolveGroupName(student, groupsById)}
+                        </p>
+                      </div>
+                      <StatusBadge label={getStudentState(student)} variant={getStudentState(student)} />
+                    </header>
+
+                    <dl className="lk-role-entity-card__meta">
+                      <div>
+                        <dt>Clase</dt>
+                        <dd>{student.sesion_activa ? "Abierta" : "Cerrada"}</dd>
+                      </div>
+                      <div>
+                        <dt>ID</dt>
+                        <dd>#{student.id}</dd>
+                      </div>
+                    </dl>
+
+                    <button
+                      type="button"
+                      className="lk-btn lk-btn--secondary"
+                      onClick={() => handleViewDetail(student)}
+                    >
+                      Ver detalle
+                    </button>
+                  </article>
+                ))}
+              </div>
+
+              <div className="lk-role-table-footer">
+                Mostrando {visibleStudents.length} de {students.length} estudiante(s) en esta vista.
+              </div>
+            </>
+          )}
+        </DashboardPanel>
+
+        <RoleModal
+          open={showMetricsModal}
+          onClose={() => setShowMetricsModal(false)}
+          eyebrow="Estadísticas"
+          title="Resumen de Estudiantes"
+          width={900}
+          actions={
+            <button className="lk-btn lk-btn--primary" onClick={() => setShowMetricsModal(false)}>
+              Cerrar
+            </button>
+          }
+        >
+          <div className="lk-role-dashboard__metrics">
+            <DashboardMetricCard icon={UsersRound} label="Total del contexto" value={summary.total} description="Cuenta total" tone="purple" />
+            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeStudents} description="Listos para jugar" tone="gold" />
+            <DashboardMetricCard icon={UserRoundX} label="Sin grupo" value={summary.withoutGroup} description="Ubicarlos pronto" tone="orange" />
+            <DashboardMetricCard icon={GraduationCap} label="En clase" value={summary.openSessions} description="Sesión habilitada" tone="rose" />
+          </div>
+        </RoleModal>
+
+        <RoleModal
+          open={showDetailModal}
+          onClose={() => setShowDetailModal(false)}
+          eyebrow="Detalle del estudiante"
+          title={selectedStudentDetail?.nombre || "Estudiante"}
+          width={540}
+          actions={
+            <div className="lk-modal-actions">
+              <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
+                Cerrar
+              </button>
+              <button className="lk-btn lk-btn--secondary" onClick={() => {
+                setShowDetailModal(false);
+                openEditModal(selectedStudentDetail);
+              }}>
+                <PencilLine size={16} /> Editar
+              </button>
+              <button className="lk-btn lk-btn--secondary" onClick={() => {
+                setShowDetailModal(false);
+                openMoveModal(selectedStudentDetail);
+              }}>
+                <Shuffle size={16} /> Cambiar grupo
+              </button>
+              <button className="lk-btn lk-btn--secondary" onClick={() => {
+                setShowDetailModal(false);
+                handleOpenQr(selectedStudentDetail);
+              }}>
+                <QrCode size={16} /> Ver QR
+              </button>
+              {getStudentState(selectedStudentDetail) === "activo" ? (
+                <button className="lk-btn lk-btn--ghost-danger" onClick={() => {
+                  setShowDetailModal(false);
+                  openStateModal(selectedStudentDetail, "inactivo");
+                }}>
+                  <UserRoundX size={16} /> Desactivar
+                </button>
+              ) : (
+                <button className="lk-btn lk-btn--primary" onClick={() => {
+                  setShowDetailModal(false);
+                  openStateModal(selectedStudentDetail, "activo");
+                }}>
+                  <UserCheck2 size={16} /> Reactivar
+                </button>
+              )}
+            </div>
+          }
+        >
+          {selectedStudentDetail && (
+            <div className="lk-admin-detail-content">
+              <div className="lk-detail-field">
+                <label>Nombre</label>
+                <p><strong>{selectedStudentDetail.nombre}</strong></p>
+              </div>
+              <div className="lk-detail-field">
+                <label>ID</label>
+                <p>#{selectedStudentDetail.id}</p>
+              </div>
+              <div className="lk-detail-field">
+                <label>Edad</label>
+                <p>{selectedStudentDetail.edad} años</p>
+              </div>
+              <div className="lk-detail-field">
+                <label>Grupo</label>
+                <p>{resolveGroupName(selectedStudentDetail, groupsById)}</p>
+              </div>
+              <div className="lk-detail-field">
+                <label>Estado</label>
+                <StatusBadge label={getStudentState(selectedStudentDetail)} variant={getStudentState(selectedStudentDetail)} />
+              </div>
+              <div className="lk-detail-field">
+                <label>Clase</label>
+                <StatusBadge
+                  label={selectedStudentDetail.sesion_activa ? "abierta" : "cerrada"}
+                  variant={selectedStudentDetail.sesion_activa ? "activo" : "inactivo"}
+                />
               </div>
             </div>
-
-            {!isLoading && visibleStudents.length === 0 ? (
-              <EmptyState
-                title="No hay estudiantes para esta vista"
-                description="Ajusta el estado, la búsqueda o el grupo para encontrar otros casos."
-              />
-            ) : null}
-
-            {visibleStudents.length > 0 ? (
-              <>
-                <div className="lk-table-wrap lk-role-table--desktop">
-                  <table className="lk-table">
-                    <thead>
-                      <tr>
-                        <th>Estudiante</th>
-                        <th>Grupo</th>
-                        <th>Edad</th>
-                        <th>Estado</th>
-                        <th>Clase</th>
-                        <th>Acción</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {visibleStudents.map((student) => (
-                        <tr
-                          key={student.id}
-                          className={`lk-role-table-row${selectedStudentId === student.id ? " is-selected" : ""}`}
-                        >
-                          <td>
-                            <strong>{student.nombre}</strong>
-                            <p className="lk-muted">ID #{student.id}</p>
-                          </td>
-                          <td>{resolveGroupName(student, groupsById)}</td>
-                          <td>{student.edad} años</td>
-                          <td>
-                            <StatusBadge label={getStudentState(student)} variant={getStudentState(student)} />
-                          </td>
-                          <td>
-                            <StatusBadge
-                              label={student.sesion_activa ? "abierta" : "cerrada"}
-                              variant={student.sesion_activa ? "activo" : "inactivo"}
-                            />
-                          </td>
-                          <td>
-                            <button
-                              type="button"
-                              className={`lk-btn ${selectedStudentId === student.id ? "lk-btn--primary" : "lk-btn--secondary"}`}
-                              onClick={() => handleSelectStudent(student.id)}
-                            >
-                              {selectedStudentId === student.id ? "Viendo detalle" : "Ver detalle"}
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="lk-role-mobile-list">
-                  {visibleStudents.map((student) => (
-                    <article
-                      key={student.id}
-                      className={`lk-role-mobile-card${selectedStudentId === student.id ? " is-selected" : ""}`}
-                    >
-                      <header className="lk-role-mobile-card__header">
-                        <div>
-                          <h3 className="lk-role-mobile-card__title">{student.nombre}</h3>
-                          <p className="lk-role-mobile-card__subtitle">
-                            {student.edad} años · {resolveGroupName(student, groupsById)}
-                          </p>
-                        </div>
-                        <StatusBadge label={getStudentState(student)} variant={getStudentState(student)} />
-                      </header>
-
-                      <dl className="lk-role-entity-card__meta">
-                        <div>
-                          <dt>Clase</dt>
-                          <dd>{student.sesion_activa ? "Abierta" : "Cerrada"}</dd>
-                        </div>
-                        <div>
-                          <dt>ID</dt>
-                          <dd>#{student.id}</dd>
-                        </div>
-                      </dl>
-
-                      <button
-                        type="button"
-                        className={`lk-btn ${selectedStudentId === student.id ? "lk-btn--primary" : "lk-btn--secondary"}`}
-                        onClick={() => handleSelectStudent(student.id)}
-                      >
-                        {selectedStudentId === student.id ? "Viendo detalle" : "Ver detalle"}
-                      </button>
-                    </article>
-                  ))}
-                </div>
-
-                <div className="lk-role-table-footer">
-                  Mostrando {visibleStudents.length} de {students.length} estudiante(s) en esta vista.
-                </div>
-              </>
-            ) : null}
-          </DashboardPanel>
-
-          <div ref={detailPanelRef}>
-            <DashboardPanel
-              eyebrow="Gestión"
-              title={selectedStudent ? selectedStudent.nombre : "Selecciona un estudiante"}
-              subtitle="Desde aquí puedes ajustar datos básicos, moverlo de grupo o compartir su acceso QR."
-              aside={<GraduationCap size={18} color="var(--lk-purple)" aria-hidden="true" />}
-            >
-              {!selectedStudent ? (
-                <EmptyState
-                  title="Aún no hay estudiante seleccionado"
-                  description="Elige una fila de la lista para ver contexto y acciones disponibles."
-                />
-              ) : (
-                <div className="lk-role-detail-stack">
-                  {!selectedStudent.grupo_id ? (
-                    <div className="lk-role-banner lk-role-banner--warning">
-                      <div className="lk-role-banner__content">
-                        <strong>Estudiante sin grupo</strong>
-                        <p>Asigna un grupo antes de preparar su próxima sesión de clase.</p>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div className="lk-role-info-grid">
-                    <article className="lk-role-info-card">
-                      <span className="lk-role-info-card__label">Estudiante</span>
-                      <strong className="lk-role-info-card__value">{selectedStudent.nombre}</strong>
-                      <p className="lk-role-info-card__hint">ID #{selectedStudent.id}</p>
-                    </article>
-
-                    <article className="lk-role-info-card">
-                      <span className="lk-role-info-card__label">Edad y estado</span>
-                      <strong className="lk-role-info-card__value">
-                        {selectedStudent.edad} años · {getStudentState(selectedStudent)}
-                      </strong>
-                      <p className="lk-role-info-card__hint">
-                        {selectedStudent.sesion_activa
-                          ? "Tiene sesión habilitada en este momento."
-                          : "Su sesión está cerrada por ahora."}
-                      </p>
-                    </article>
-
-                    <article className="lk-role-info-card">
-                      <span className="lk-role-info-card__label">Grupo actual</span>
-                      <strong className="lk-role-info-card__value">
-                        {resolveGroupName(selectedStudent, groupsById)}
-                      </strong>
-                      <p className="lk-role-info-card__hint">
-                        Los movimientos quedan reflejados en el historial institucional.
-                      </p>
-                    </article>
-                  </div>
-
-                  <div className="lk-role-inline-actions">
-                    <button
-                      type="button"
-                      className="lk-btn lk-btn--secondary"
-                      onClick={() => handleOpenQr(selectedStudent)}
-                    >
-                      <QrCode size={16} aria-hidden="true" />
-                      Ver QR
-                    </button>
-                    <button
-                      type="button"
-                      className="lk-btn lk-btn--secondary"
-                      onClick={() => openEditModal(selectedStudent)}
-                    >
-                      <PencilLine size={16} aria-hidden="true" />
-                      Editar
-                    </button>
-                    <button
-                      type="button"
-                      className="lk-btn lk-btn--secondary"
-                      onClick={() => openMoveModal(selectedStudent)}
-                    >
-                      <Shuffle size={16} aria-hidden="true" />
-                      Cambiar grupo
-                    </button>
-                    {getStudentState(selectedStudent) === "activo" ? (
-                      <button
-                        type="button"
-                        className="lk-btn lk-btn--ghost-danger"
-                        onClick={() => openStateModal(selectedStudent, "inactivo")}
-                      >
-                        <UserRoundX size={16} aria-hidden="true" />
-                        Desactivar
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="lk-btn lk-btn--primary"
-                        onClick={() => openStateModal(selectedStudent, "activo")}
-                      >
-                        <UserCheck2 size={16} aria-hidden="true" />
-                        Reactivar
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-            </DashboardPanel>
-          </div>
-        </section>
+          )}
+        </RoleModal>
 
         <RoleModal
           open={studentModal.open}
@@ -827,108 +693,70 @@ export default function EstudiantesPage() {
           title={studentModal.mode === "create" ? "Nuevo estudiante" : "Editar estudiante"}
           actions={
             <>
-              <button type="button" className="lk-btn lk-btn--secondary" onClick={closeStudentModal}>
-                Cancelar
-              </button>
-              <button type="button" className="lk-btn lk-btn--primary" onClick={handleStudentSubmit}>
-                Guardar
-              </button>
+              <button className="lk-btn lk-btn--secondary" onClick={closeStudentModal}>Cancelar</button>
+              <button className="lk-btn lk-btn--primary" onClick={handleStudentSubmit}>Guardar</button>
             </>
           }
         >
           <div className="lk-form-grid">
             <div className="lk-form-row">
               <div className="lk-field">
-                <label htmlFor="student-name">Nombre</label>
-                <input
-                  id="student-name"
-                  type="text"
-                  value={studentModal.form.nombre}
-                  onChange={(event) => updateStudentForm("nombre", event.target.value)}
-                  placeholder="Ejemplo: Sara Gómez"
-                />
+                <label>Nombre</label>
+                <input type="text" value={studentModal.form.nombre} onChange={(e) => updateStudentForm("nombre", e.target.value)} />
               </div>
-
               <div className="lk-field">
-                <label htmlFor="student-age">Edad</label>
-                <input
-                  id="student-age"
-                  type="number"
-                  min="1"
-                  value={studentModal.form.edad}
-                  onChange={(event) => updateStudentForm("edad", event.target.value)}
-                  placeholder="7"
-                />
+                <label>Edad</label>
+                <input type="number" min="1" value={studentModal.form.edad} onChange={(e) => updateStudentForm("edad", e.target.value)} />
               </div>
             </div>
-
-            {studentModal.mode === "create" ? (
+            {studentModal.mode === "create" && (
               <div className="lk-field">
-                <label htmlFor="student-group">Grupo inicial</label>
-                <select
-                  id="student-group"
-                  value={studentModal.form.grupo_id}
-                  onChange={(event) => updateStudentForm("grupo_id", event.target.value)}
-                >
-                  <option value="">Sin grupo por ahora</option>
+                <label>Grupo inicial</label>
+                <select value={studentModal.form.grupo_id} onChange={(e) => updateStudentForm("grupo_id", e.target.value)}>
+                  <option value="">Sin grupo</option>
                   {groups.map((group) => (
-                    <option key={String(group.id_grupo ?? group.id)} value={String(group.id_grupo ?? group.id)}>
+                    <option key={group.id_grupo ?? group.id} value={group.id_grupo ?? group.id}>
                       {group.nombre}
                     </option>
                   ))}
                 </select>
               </div>
-            ) : null}
+            )}
           </div>
         </RoleModal>
 
         <RoleModal
-          open={moveModal.open && Boolean(selectedStudent)}
+          open={moveModal.open && Boolean(selectedStudentDetail)}
           onClose={closeMoveModal}
           eyebrow="Reasignación"
           title="Mover estudiante de grupo"
-          warning="Cambiar de grupo cerrará cualquier sesión activa, moverá el contexto del estudiante y dejará trazabilidad en el historial institucional."
+          warning="Cambiar de grupo cerrará cualquier sesión activa."
           actions={
             <>
-              <button type="button" className="lk-btn lk-btn--secondary" onClick={closeMoveModal}>
-                Cancelar
-              </button>
-              <button type="button" className="lk-btn lk-btn--primary" onClick={handleMoveStudent}>
-                Confirmar movimiento
-              </button>
+              <button className="lk-btn lk-btn--secondary" onClick={closeMoveModal}>Cancelar</button>
+              <button className="lk-btn lk-btn--primary" onClick={handleMoveStudent}>Confirmar</button>
             </>
           }
         >
-          {selectedStudent ? (
+          {selectedStudentDetail && (
             <>
               <div className="lk-role-modal__field">
-                <strong>Estudiante seleccionado</strong>
-                <p>{selectedStudent.nombre}</p>
+                <strong>Estudiante</strong>
+                <p>{selectedStudentDetail.nombre}</p>
               </div>
-
               <div className="lk-field">
-                <label htmlFor="move-student-group">Nuevo grupo</label>
-                <select
-                  id="move-student-group"
-                  value={moveModal.groupId}
-                  onChange={(event) =>
-                    setMoveModal((current) => ({ ...current, groupId: event.target.value }))
-                  }
-                >
+                <label>Nuevo grupo</label>
+                <select value={moveModal.groupId} onChange={(e) => setMoveModal((prev) => ({ ...prev, groupId: e.target.value }))}>
                   <option value="">Selecciona un grupo</option>
                   {groups.map((group) => (
-                    <option key={String(group.id_grupo ?? group.id)} value={String(group.id_grupo ?? group.id)}>
+                    <option key={group.id_grupo ?? group.id} value={group.id_grupo ?? group.id}>
                       {group.nombre}
                     </option>
                   ))}
                 </select>
               </div>
-
-              <p className="lk-role-modal__muted">
-                El movimiento deja trazabilidad y reinicia la sesión activa del estudiante.
-              </p>
             </>
-          ) : null}
+          )}
         </RoleModal>
 
         <StateChangeModal
@@ -936,19 +764,10 @@ export default function EstudiantesPage() {
           onClose={closeStateModal}
           onConfirm={async () => {
             if (!stateModal.student) return;
-            const wasSuccessful = await handleStudentStateChange(
-              stateModal.student,
-              stateModal.nextState
-            );
-            if (wasSuccessful) {
-              closeStateModal();
-            }
+            const ok = await handleStudentStateChange(stateModal.student, stateModal.nextState);
+            if (ok) closeStateModal();
           }}
-          entityLabel={
-            stateModal.student
-              ? `${stateModal.student.nombre} · ${resolveGroupName(stateModal.student, groupsById)}`
-              : ""
-          }
+          entityLabel={stateModal.student ? `${stateModal.student.nombre}` : ""}
           currentState={stateModal.student ? getStudentState(stateModal.student) : "activo"}
           nextState={stateModal.nextState}
           {...getStudentStateCopy(stateModal.nextState)}
@@ -961,11 +780,11 @@ export default function EstudiantesPage() {
           title="Código QR"
         >
           {qrModal.isLoading ? (
-            <p className="lk-role-note">Generando el acceso del estudiante...</p>
+            <p>Cargando...</p>
           ) : qrModal.token ? (
             <StudentQrPreview token={qrModal.token} studentName={qrModal.studentName} />
           ) : (
-            <p className="lk-role-note">No fue posible cargar el código QR en este momento.</p>
+            <p>No fue posible cargar el código QR.</p>
           )}
         </RoleModal>
       </div>
