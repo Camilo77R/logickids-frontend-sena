@@ -74,7 +74,7 @@ export default function InstitucionesPage() {
     );
   }, [institutions, searchTerm]);
 
-  const summary = useMemo(() => {
+  const institutionSummary = useMemo(() => {
     const activeInstitutions = institutions.filter((institution) => institution.activo);
     const inactiveInstitutions = institutions.filter((institution) => !institution.activo);
 
@@ -239,15 +239,15 @@ export default function InstitucionesPage() {
 
           <div className="lk-role-dashboard__hero-tags">
             <article className="lk-role-dashboard__hero-tag">
-              <strong>{summary.total}</strong>
+              <strong>{institutionSummary.total}</strong>
               <span>Registradas</span>
             </article>
             <article className="lk-role-dashboard__hero-tag">
-              <strong>{summary.active}</strong>
+              <strong>{institutionSummary.active}</strong>
               <span>Habilitadas</span>
             </article>
             <article className="lk-role-dashboard__hero-tag">
-              <strong>{summary.inactive}</strong>
+              <strong>{institutionSummary.inactive}</strong>
               <span>Congeladas</span>
             </article>
           </div>
@@ -330,13 +330,13 @@ export default function InstitucionesPage() {
             <div className="lk-role-info-grid">
               <article className="lk-role-info-card">
                 <span className="lk-role-info-card__label">Instituciones visibles</span>
-                <strong className="lk-role-info-card__value">{isLoading ? "..." : summary.total}</strong>
+                <strong className="lk-role-info-card__value">{isLoading ? "..." : institutionSummary.total}</strong>
                 <p className="lk-role-info-card__hint">Base actual del directorio institucional.</p>
               </article>
 
               <article className="lk-role-info-card">
                 <span className="lk-role-info-card__label">Ciudades cubiertas</span>
-                <strong className="lk-role-info-card__value">{isLoading ? "..." : summary.cities}</strong>
+                <strong className="lk-role-info-card__value">{isLoading ? "..." : institutionSummary.cities}</strong>
                 <p className="lk-role-info-card__hint">Alcance territorial medido solo desde instituciones registradas.</p>
               </article>
             </div>
@@ -369,19 +369,18 @@ export default function InstitucionesPage() {
           eyebrow="Directorio institucional"
           title="Instituciones registradas"
           subtitle="Busqueda rapida y acciones reales sobre cada colegio."
-          aside={
-            <div className="lk-role-search">
-              <Search size={16} className="lk-role-search__icon" aria-hidden="true" />
-              <input
-                type="search"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Buscar por nombre, ciudad o direccion..."
-                className="lk-role-search__input"
-              />
-            </div>
-          }
         >
+          <div className="lk-role-search" style={{ marginBottom: "1rem" }}>
+            <Search size={16} className="lk-role-search__icon" aria-hidden="true" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Buscar por nombre, ciudad o direccion..."
+              className="lk-role-search__input"
+            />
+          </div>
+
           {!isLoading && !filteredInstitutions.length ? (
             <EmptyState
               title="No hay instituciones para esta busqueda"
@@ -463,14 +462,14 @@ export default function InstitucionesPage() {
           )}
         </DashboardPanel>
 
-        {summary.recentInactive.length ? (
+        {institutionSummary.recentInactive.length ? (
           <DashboardPanel
             eyebrow="Seguimiento"
             title="Congeladas recientemente visibles"
             subtitle="Pequeno radar operativo para no salir del modulo cuando necesitas reaccionar rapido."
           >
             <div className="lk-role-list">
-              {summary.recentInactive.map((institution) => (
+              {institutionSummary.recentInactive.map((institution) => (
                 <article
                   key={institution.id ?? institution.id_institucion}
                   className="lk-role-list__item lk-role-list__item--rose"

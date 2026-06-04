@@ -5,7 +5,7 @@ const unwrapEntity = (payload) => payload?.data ?? payload ?? null;
 
 const adminTutorsService = {
   async listTutors() {
-    const payload = await request("/admin/usuarios");
+    const payload = await request("/admin/usuarios?rol=tutor");
     return unwrapCollection(payload);
   },
 

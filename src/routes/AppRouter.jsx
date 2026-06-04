@@ -24,6 +24,7 @@ import SolicitudesPage from "../pages/admin/SolicitudesPage";
 import InstitucionesPage from "../pages/admin/InstitucionesPage";
 import MinijuegosPage from "../pages/admin/MinijuegosPage";
 import SuperadminDashboardPage from "../pages/superadmin/SuperadminDashboardPage";
+import SuperadminUsersDirectoryPage from "../pages/superadmin/SuperadminUsersDirectoryPage";
 
 // Páginas del tutor
 import TutorDashboardOverview from "../pages/tutor/TutorDashboardOverview";
@@ -96,6 +97,9 @@ export default function AppRouter() {
         {/* ───────── RUTAS DEL SUPERADMIN (plataforma global) ───────── */}
         <Route path="/superadmin/dashboard" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><SuperadminDashboardPage /></RoleRoute></ProtectedRoute>} />
         <Route path="/superadmin/instituciones" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><InstitucionesPage /></RoleRoute></ProtectedRoute>} />
+        <Route path="/superadmin/admins" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><SuperadminUsersDirectoryPage type="admins" /></RoleRoute></ProtectedRoute>} />
+        <Route path="/superadmin/tutores" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><SuperadminUsersDirectoryPage type="tutors" /></RoleRoute></ProtectedRoute>} />
+        <Route path="/superadmin/estudiantes" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><SuperadminUsersDirectoryPage type="students" /></RoleRoute></ProtectedRoute>} />
         <Route path="/superadmin/minijuegos" element={<ProtectedRoute><RoleRoute allowedRoles={[USER_ROLES.SUPERADMIN]}><MinijuegosPage /></RoleRoute></ProtectedRoute>} />
 
         {/* Cualquier ruta desconocida → login */}
