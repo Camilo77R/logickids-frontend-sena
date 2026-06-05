@@ -1,8 +1,13 @@
 import { request } from "./httpClient";
 
 const adminService = {
-  async listUsers() {
-    const payload = await request("/admin/usuarios");
+  // Usuarios y roles
+  async listUsers({ rol = "todos", institutionId } = {}) {
+    const params = new URLSearchParams();
+    if (rol) params.set("rol", rol);
+    if (institutionId) params.set("institucion_id", String(institutionId));
+    const query = params.toString();
+    const payload = await request(`/admin/usuarios${query ? `?${query}` : ""}`);
     return payload?.data || (Array.isArray(payload) ? payload : []);
   },
 
@@ -20,6 +25,13 @@ const adminService = {
     return payload?.data ?? null;
   },
 
+  // Dashboard global
+  async getDashboard() {
+    const payload = await request("/admin/dashboard");
+    return payload?.data ?? null;
+  },
+
+  // Instituciones
   async listInstitutions() {
     const payload = await request("/admin/instituciones");
     return payload?.data || (Array.isArray(payload) ? payload : []);
@@ -29,6 +41,15 @@ const adminService = {
     const payload = await request("/admin/instituciones", {
       method: "POST",
       body: institutionData,
+    });
+
+    return payload?.data ?? null;
+  },
+
+  async updateInstitution(institutionId, data) {
+    const payload = await request(`/admin/instituciones/${institutionId}`, {
+      method: "PUT",
+      body: data,
     });
 
     return payload?.data ?? null;
@@ -58,23 +79,7 @@ const adminService = {
     return payload?.data ?? null;
   },
 
-  /**
-   * Actualiza los datos de una institución existente.
-   * Solo el superadmin puede ejecutar esta operación.
-   *
-   * @param {number} institutionId
-   * @param {{ nombre?: string, ciudad?: string, direccion?: string, telefono?: string }} data
-   * @returns {Promise<object|null>} Institución actualizada
-   */
-  async updateInstitution(institutionId, data) {
-    const payload = await request(`/admin/instituciones/${institutionId}`, {
-      method: "PUT",
-      body: data,
-    });
-
-    return payload?.data ?? null;
-  },
-
+  // Minijuegos
   async listMinigames() {
     const payload = await request("/admin/minijuegos");
     return payload?.data || (Array.isArray(payload) ? payload : []);
@@ -89,6 +94,7 @@ const adminService = {
     return payload?.data ?? null;
   },
 
+  // Solicitudes de reactivación
   async listReactivationRequests() {
     const payload = await request("/solicitudes/admin/solicitudes");
     return payload?.data || payload?.solicitudes || [];

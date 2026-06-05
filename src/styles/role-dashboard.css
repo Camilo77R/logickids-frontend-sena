@@ -158,10 +158,17 @@
   opacity: 0.85;
 }
  
+/* ── COLORES PARA ADMIN (brillantes/vibrantes) ── */
 .lk-role-metric--purple { background: linear-gradient(135deg, #8f3b92, #bc59b1); }
 .lk-role-metric--gold   { background: linear-gradient(135deg, #f5a910, #fdb813); color: #5a3262; }
 .lk-role-metric--orange { background: linear-gradient(135deg, #f29b11, #ffb325); color: #5a3262; }
 .lk-role-metric--rose   { background: linear-gradient(135deg, #a84fd3, #cf79c6); }
+
+/* ── COLORES PARA SUPER ADMIN (opacos/sobrios) ── */
+.lk-role-metric--super-purple { background: linear-gradient(135deg, #401842ab, #821875); }
+.lk-role-metric--super-gold   { background: linear-gradient(135deg, #b47f147a, #e2a519); color: #441b4c; }
+.lk-role-metric--super-orange { background: linear-gradient(135deg, #a76d0f9c, #ffb325); color: #401a48; }
+.lk-role-metric--super-rose   { background: linear-gradient(135deg, #461260a4, #611c5a); }
  
 /* ── GRID / PANELS ────────────────────────────────────────────────────────── */
  
@@ -728,39 +735,7 @@
   color: #92400e;
 }
  
-/* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */
- 
-@media (max-width: 1199.98px) {
-  .lk-role-dashboard__metrics {
-    grid-template-columns: 1fr 1fr;
-  }
-  .lk-role-dashboard__grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
- 
-@media (max-width: 767.98px) {
-  .lk-role-dashboard__metrics,
-  .lk-role-dashboard__grid {
-    grid-template-columns: 1fr;
-  }
- 
-  .lk-role-page__toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    flex-wrap: wrap;
-  }
- 
-  .lk-role-page__search {
-    max-width: none;
-  }
- 
-  .lk-role-page__filters {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 4px;
-  }
-}/* ── MÉTRICAS COMPACTAS (para panel lateral) ──────────────────────────────── */
+/* ── MÉTRICAS COMPACTAS (para panel lateral) ──────────────────────────────── */
 
 .lk-metric-compact {
   display: flex;
@@ -819,7 +794,9 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(139, 47, 201, 0.15), transparent);
   margin: 1rem 0;
-}/* ── TOOLBAR FIJO ARRIBA (STICKY) ──────────────────────────────────────────── */
+}
+
+/* ── TOOLBAR FIJO ARRIBA (STICKY) ──────────────────────────────────────────── */
 
 .lk-portal-topbar {
   position: sticky;
@@ -830,10 +807,12 @@
 
 .lk-role-page__toolbar {
   position: sticky;
-  top: -23px;  /* ← ALTURA EXACTA DE TU HEADER */
+  top: -23px;  /* ALTURA EXACTA DE TU HEADER */
   z-index: 100;
   background: white;
-}/* ── CABECERA DE TABLA FIJA (STICKY) ──────────────────────────────────────────── */
+}
+
+/* ── CABECERA DE TABLA FIJA (STICKY) ──────────────────────────────────────────── */
 
 .lk-table thead th {
   position: sticky;
@@ -847,7 +826,9 @@
   .lk-table thead th {
     top: 100px;
   }
-}/* ── TABLA CON SCROLL INTERNO ──────────────────────────────────────────────────── */
+}
+
+/* ── TABLA CON SCROLL INTERNO ──────────────────────────────────────────────────── */
 
 .lk-table-wrap {
   max-height: 500px;           /* Altura máxima antes de scroll */
@@ -870,7 +851,11 @@
 
 .lk-table tbody tr:hover {
   background: #f9fafb;
-}.lk-role-dashboard__hero-header {
+}
+
+/* ── HERO HEADER CON LOGO ──────────────────────────────────────────────────────── */
+
+.lk-role-dashboard__hero-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -893,4 +878,38 @@
 
 .lk-hero-logo:hover {
   opacity: 1;
+}
+
+/* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */
+ 
+@media (max-width: 1199.98px) {
+  .lk-role-dashboard__metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lk-role-dashboard__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+ 
+@media (max-width: 767.98px) {
+  .lk-role-dashboard__metrics,
+  .lk-role-dashboard__grid {
+    grid-template-columns: 1fr;
+  }
+ 
+  .lk-role-page__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+ 
+  .lk-role-page__search {
+    max-width: none;
+  }
+ 
+  .lk-role-page__filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+  }
 }
