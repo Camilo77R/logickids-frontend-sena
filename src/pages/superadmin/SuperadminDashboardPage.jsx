@@ -3,7 +3,7 @@ import {
   Activity,
   Building2,
   Gamepad2,
-  MapPinned,
+  GraduationCap,
   Power,
   ShieldCheck,
   UsersRound,
@@ -15,20 +15,23 @@ import QuickActionCard from "../../components/dashboard/QuickActionCard";
 import adminService from "../../services/adminService";
 import { useAuth } from "../../hooks/useAuth";
 import { buildSuperadminDashboardView } from "./superadminDashboard.selectors";
+import logoWordmark from "../../assets/imgs/logoLogickids transparente.png";
 
 export default function SuperadminDashboardPage() {
   const { user } = useAuth();
+  const [dashboardSummary, setDashboardSummary] = useState({});
   const [institutions, setInstitutions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadDashboard = async () => {
       try {
         setIsLoading(true);
 
-        const institutionsData = await adminService.listInstitutions();
-        setInstitutions(institutionsData);
+        const dashboardData = await adminService.getDashboard();
+        setDashboardSummary(dashboardData?.resumen ?? {});
+        setInstitutions(dashboardData?.instituciones ?? []);
         setError("");
       } catch (loadError) {
         setError(loadError.message || "No fue posible cargar el panel global.");
@@ -45,9 +48,10 @@ export default function SuperadminDashboardPage() {
   const view = useMemo(
     () =>
       buildSuperadminDashboardView({
+        resumen: dashboardSummary,
         institutions,
       }),
-    [institutions]
+    [dashboardSummary, institutions]
   );
 
   return (
@@ -59,12 +63,30 @@ export default function SuperadminDashboardPage() {
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
         <section className="lk-role-dashboard__hero">
-          <span className="lk-role-dashboard__hero-badge">Resumen global</span>
-          <h2 className="lk-role-dashboard__hero-title">Panorama ejecutivo de LogicKids</h2>
-          <p className="lk-role-dashboard__hero-subtitle">
-            Este panel concentra lectura global. Las acciones operativas viven en los modulos de
-            Instituciones y Minijuegos para evitar duplicidad y mezclar decision con ejecucion.
-          </p>
+          <div className="lk-role-dashboard__hero-header">
+            <div>
+              <span className="lk-role-dashboard__hero-badge">Resumen global</span>
+              <h2 className="lk-role-dashboard__hero-title">Panorama ejecutivo de LogicKids</h2>
+              <p className="lk-role-dashboard__hero-subtitle">
+                Este panel concentra lectura global. Las acciones operativas viven en los modulos de
+                Instituciones y Minijuegos para evitar duplicidad y mezclar decision con ejecucion.
+              </p>
+            </div>
+            <div className="lk-role-dashboard__hero-logo" style={{ marginLeft: "auto" }}>
+              <img
+                src={logoWordmark}
+                alt="LogicKids"
+                className="lk-hero-logo"
+                style={{
+                  width: "400px",
+                  height: "auto",
+                  display: "block",
+                  transform: "scale(1.6)",
+                  transformOrigin: "center",
+                }}
+              />
+            </div>
+          </div>
 
           <div className="lk-role-dashboard__hero-tags">
             {view.heroTags.map((tag) => (
@@ -99,7 +121,7 @@ export default function SuperadminDashboardPage() {
             tone={view.metrics[2].tone}
           />
           <DashboardMetricCard
-            icon={MapPinned}
+            icon={GraduationCap}
             label={view.metrics[3].label}
             value={isLoading ? "..." : view.metrics[3].value}
             description={view.metrics[3].description}
@@ -120,6 +142,27 @@ export default function SuperadminDashboardPage() {
                 title="Instituciones"
                 description="CRUD, congelamiento, reactivacion y directorio operativo de colegios."
                 tone="purple"
+              />
+              <QuickActionCard
+                to="/superadmin/admins"
+                icon={ShieldCheck}
+                title="Admins"
+                description="Directorio global de administradores activos por institucion."
+                tone="orange"
+              />
+              <QuickActionCard
+                to="/superadmin/tutores"
+                icon={UsersRound}
+                title="Tutores"
+                description="Directorio global de tutores activos con busqueda operativa."
+                tone="gold"
+              />
+              <QuickActionCard
+                to="/superadmin/estudiantes"
+                icon={GraduationCap}
+                title="Estudiantes"
+                description="Lectura global de estudiantes activos, grupos e instituciones."
+                tone="rose"
               />
               <QuickActionCard
                 to="/superadmin/minijuegos"

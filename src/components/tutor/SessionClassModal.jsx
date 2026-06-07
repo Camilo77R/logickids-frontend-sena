@@ -3,6 +3,12 @@ import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 
 const DEFAULT_SINGLE_LEVELS = 3;
 
+const resolveMinigameTitle = (minijuego) =>
+  minijuego?.titulo ?? minijuego?.nombre ?? minijuego?.nombre_minijuego ?? minijuego?.slug ?? "Minijuego";
+
+const resolveMinigameDescription = (minijuego) =>
+  minijuego?.descripcion ?? "Selecciona un minijuego para revisar el enfoque pedagógico de esta actividad.";
+
 const getFirstCatalogId = (items) => (items[0]?.id ? String(items[0].id) : "");
 
 const buildInitialDraft = (minijuegos, rutasPedagogicas) => {
@@ -140,7 +146,7 @@ export default function SessionClassModal({
     onConfirm({
       modo: "single",
       minijuegoId: Number(draft.minijuegoId),
-      minijuegoTitulo: selectedMinigame?.titulo ?? "Minijuego",
+      minijuegoTitulo: resolveMinigameTitle(selectedMinigame),
       niveles: selectedLevels,
     });
   };
@@ -242,7 +248,7 @@ export default function SessionClassModal({
                   <option value="">Selecciona un minijuego</option>
                   {minijuegos.map((minijuego) => (
                     <option key={minijuego.id} value={minijuego.id}>
-                      {minijuego.titulo}
+                      {resolveMinigameTitle(minijuego)}
                     </option>
                   ))}
                 </Form.Select>
@@ -287,11 +293,10 @@ export default function SessionClassModal({
               <div className="tg-session-modal__preview-head">
                 <div>
                   <strong className="tg-session-modal__preview-title">
-                    {selectedMinigame?.titulo ?? "Sin minijuego seleccionado"}
+                    {selectedMinigame ? resolveMinigameTitle(selectedMinigame) : "Sin minijuego seleccionado"}
                   </strong>
                   <p className="tg-session-modal__preview-description">
-                    {selectedMinigame?.descripcion ??
-                      "Selecciona un minijuego para revisar el enfoque pedagógico de esta actividad."}
+                    {resolveMinigameDescription(selectedMinigame)}
                   </p>
                 </div>
                 <div className="tg-session-modal__meta-list">
@@ -389,7 +394,7 @@ export default function SessionClassModal({
                 <strong>Tipo:</strong> Actividad de un juego
               </div>
               <div className="mb-1">
-                <strong>Juego:</strong> {selectedMinigame?.titulo ?? "Sin seleccionar"}
+                <strong>Juego:</strong> {selectedMinigame ? resolveMinigameTitle(selectedMinigame) : "Sin seleccionar"}
               </div>
               <div className="mb-1">
                 <strong>Recorrido:</strong> {formatLevelsCopy(selectedLevels)}

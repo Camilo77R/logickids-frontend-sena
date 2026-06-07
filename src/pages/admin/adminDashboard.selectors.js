@@ -3,73 +3,86 @@ const percentage = (value, total) => {
   return Math.max(0, Math.min(100, Math.round((value / total) * 100)));
 };
 
+const sortByName = (left, right) =>
+  (left.nombre || "").localeCompare(right.nombre || "", "es");
+
+const sortAdmins = (left, right) => {
+  if (left.es_admin_principal && !right.es_admin_principal) return -1;
+  if (!left.es_admin_principal && right.es_admin_principal) return 1;
+  return sortByName(left, right);
+};
+
 /**
  * buildAdminDashboardView
  *
  * Convierte datos crudos del backend en un view-model
  * listo para pintar en el dashboard admin.
  */
-export const buildAdminDashboardView = ({ users, pendingRequests, institutionName }) => {
-  const tutors = users.filter((user) => user.rol === "tutor");
+export const buildAdminDashboardView = ({
+  tutors = [],
+  admins = [],
+  students = [],
+  pendingRequests = 0,
+  institutionName,
+}) => {
   const activeTutors = tutors.filter((user) => user.estado === "activo");
   const inactiveTutors = tutors.filter((user) => user.estado === "inactivo");
   const suspendedTutors = tutors.filter((user) => user.estado === "suspendido");
-  const tutorPreview = [...tutors]
-    .sort((left, right) => {
-      const leftPriority = left.estado === "activo" ? 0 : left.estado === "inactivo" ? 1 : 2;
-      const rightPriority = right.estado === "activo" ? 0 : right.estado === "inactivo" ? 1 : 2;
-
-      return leftPriority - rightPriority;
-    })
-    .slice(0, 4);
+  const activeAdmins = admins.filter((admin) => admin.estado === "activo");
+  const inactiveAdmins = admins.filter((admin) => admin.estado === "inactivo");
+  const activeStudents = students.filter((student) => (student.estado || "activo") === "activo");
+  const inactiveStudents = students.filter((student) => (student.estado || "activo") === "inactivo");
+  const studentsInClass = students.filter((student) => student.sesion_activa === true);
 
   const totalTutors = tutors.length;
-  const activeRate = percentage(activeTutors.length, totalTutors);
+  const totalAdmins = admins.length;
+  const totalStudents = students.length;
+  const activeTutorRate = percentage(activeTutors.length, totalTutors);
   const pendingRate = percentage(pendingRequests, totalTutors || pendingRequests || 1);
   const suspendedRate = percentage(suspendedTutors.length, totalTutors);
 
   return {
     heroTags: [
-      { label: "Institución", value: institutionName || "Sin nombre" },
-      { label: "Tutores", value: totalTutors },
-      { label: "Activos", value: `${activeRate}%` },
+      { label: "Institucion", value: institutionName || "Sin nombre" },
+      { label: "Admins", value: totalAdmins },
+      { label: "Estudiantes", value: totalStudents },
     ],
     metrics: [
       {
-        key: "tutores",
-        label: "Tutores registrados",
-        value: totalTutors,
-        description: "Cuentas docentes visibles dentro de tu institución.",
+        key: "admins",
+        label: "Admins activos",
+        value: activeAdmins.length,
+        description: "Responsables administrativos con acceso habilitado.",
         tone: "purple",
       },
       {
-        key: "activos",
+        key: "tutores",
         label: "Tutores activos",
         value: activeTutors.length,
-        description: "Ya pueden iniciar sesión y operar sus aulas.",
+        description: "Cuentas docentes listas para operar sus aulas.",
         tone: "gold",
       },
       {
-        key: "pendientes",
-        label: "Pendientes por activar",
-        value: inactiveTutors.length,
-        description: "Nuevas cuentas o accesos aún sin habilitar.",
+        key: "estudiantes",
+        label: "Estudiantes activos",
+        value: activeStudents.length,
+        description: "Alumnado listo para participar en sesiones de clase.",
         tone: "orange",
       },
       {
-        key: "suspendidos",
-        label: "Suspendidos",
-        value: suspendedTutors.length,
-        description: "Requieren intervención institucional.",
+        key: "solicitudes",
+        label: "Solicitudes pendientes",
+        value: pendingRequests,
+        description: "Reactivaciones que esperan revision administrativa.",
         tone: "rose",
       },
     ],
     progress: [
       {
         key: "active",
-        label: "Cuentas activas",
+        label: "Tutores activos",
         value: `${activeTutors.length} de ${totalTutors}`,
-        percent: activeRate,
+        percent: activeTutorRate,
         tone: "gold",
       },
       {
@@ -87,6 +100,17 @@ export const buildAdminDashboardView = ({ users, pendingRequests, institutionNam
         tone: "rose",
       },
     ],
-    tutorPreview,
+    totals: {
+      admins: totalAdmins,
+      tutors: totalTutors,
+      students: totalStudents,
+      inactiveAdmins: inactiveAdmins.length,
+      inactiveTutors: inactiveTutors.length,
+      inactiveStudents: inactiveStudents.length,
+      studentsInClass: studentsInClass.length,
+    },
+    activeAdminPreview: [...activeAdmins].sort(sortAdmins),
+    activeTutorPreview: [...activeTutors].sort(sortByName),
+    activeStudentPreview: [...activeStudents].sort(sortByName),
   };
 };

@@ -1,23 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { Gamepad2, Layers3, PlayCircle, PauseCircle, RefreshCcw } from "lucide-react";
-import EmptyState from "../../components/common/EmptyState";
-import StatusBadge from "../../components/common/StatusBadge";
+import { Gamepad2, Layers3, PauseCircle, PlayCircle, RefreshCcw } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
 import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
 import DashboardPanel from "../../components/dashboard/DashboardPanel";
+import EmptyState from "../../components/common/EmptyState";
+import StatusBadge from "../../components/common/StatusBadge";
 import adminService from "../../services/adminService";
 
-const toSkillLabel = (value) => {
-  const labels = {
-    secuencias: "Secuencias",
-    clasificacion: "Clasificacion",
-    espacial: "Espacial",
-    logica_booleana: "Logica booleana",
-    memoria: "Memoria",
-  };
-
-  return labels[value] ?? value;
+const SKILL_LABELS = {
+  clasificacion: "Clasificación",
+  espacial: "Espacial",
+  logica_booleana: "Lógica booleana",
+  memoria: "Memoria",
+  secuencias: "Secuencias",
 };
+
+const getSkillLabel = (value) => SKILL_LABELS[value] ?? value;
 
 export default function MinijuegosPage() {
   const [minigames, setMinigames] = useState([]);
@@ -225,7 +223,7 @@ export default function MinijuegosPage() {
                   <dl className="lk-role-entity-card__meta">
                     <div>
                       <dt>Habilidad</dt>
-                      <dd>{toSkillLabel(minigame.habilidad)}</dd>
+                      <dd>{getSkillLabel(minigame.habilidad)}</dd>
                     </div>
                     <div>
                       <dt>Dificultad maxima</dt>
