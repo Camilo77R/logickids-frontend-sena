@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import EmptyState from "../../components/common/EmptyState";
+import Pagination from "../../components/common/Pagination";
 import RoleModal from "../../components/common/RoleModal";
 import StateChangeModal from "../../components/common/StateChangeModal";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -33,6 +34,9 @@ const INITIAL_ADMIN_FORM = {
   email: "",
 };
 
+const PAGE_SIZE = 10;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function buildAdminsSummary(admins) {
   return {
     total: admins.length,
@@ -45,6 +49,10 @@ function buildAdminsSummary(admins) {
 function formatDate(value) {
   if (!value) return "Sin fecha";
   return new Date(value).toLocaleString("es-CO", { dateStyle: "medium" });
+}
+
+function isValidEmail(email) {
+  return EMAIL_PATTERN.test(email);
 }
 
 function getAdminStateCopy(nextState) {
@@ -122,11 +130,14 @@ export default function AdminsInstitucionalesPage() {
   const [statusFilter, setStatusFilter] = useState("todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreatingAdmin, setIsCreatingAdmin] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [createFeedback, setCreateFeedback] = useState(null);
   const [createModal, setCreateModal] = useState({ open: false, form: INITIAL_ADMIN_FORM });
   const [createdCredentials, setCreatedCredentials] = useState(null);
   const [stateModal, setStateModal] = useState({ open: false, nextState: "", admin: null });
   const [showMetricsModal, setShowMetricsModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const canCreateAdmins = user?.es_admin_principal === true;
 
@@ -147,13 +158,23 @@ export default function AdminsInstitucionalesPage() {
   }, [admins, searchTerm, statusFilter]);
 
   const summary = useMemo(() => buildAdminsSummary(admins), [admins]);
+  const paginatedAdmins = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return visibleAdmins.slice(start, start + PAGE_SIZE);
+  }, [currentPage, visibleAdmins]);
 
-  const loadAdmins = async () => {
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
+  const loadAdmins = async ({ clearFeedback = true } = {}) => {
     setIsLoading(true);
     try {
       const data = await adminInstitutionalAdminsService.listAdmins();
       setAdmins(data);
-      setFeedback(null);
+      if (clearFeedback) {
+        setFeedback(null);
+      }
     } catch (error) {
       setAdmins([]);
       setFeedback({
@@ -175,8 +196,8 @@ export default function AdminsInstitucionalesPage() {
   const handleAdminStateChange = async (adminId, estado) => {
     try {
       await adminInstitutionalAdminsService.updateAdminState(adminId, estado);
+      await loadAdmins({ clearFeedback: false });
       setFeedback({ type: "success", message: getAdminStateFeedback(estado) });
-      await loadAdmins();
       return true;
     } catch (error) {
       setFeedback({ type: "error", message: error.message || "No fue posible actualizar el estado del admin." });
@@ -192,10 +213,17 @@ export default function AdminsInstitucionalesPage() {
     setStateModal({ open: false, nextState: "", admin: null });
   };
 
-  const openCreateModal = () => setCreateModal({ open: true, form: INITIAL_ADMIN_FORM });
-  const closeCreateModal = () => setCreateModal({ open: false, form: INITIAL_ADMIN_FORM });
+  const openCreateModal = () => {
+    setCreateModal({ open: true, form: INITIAL_ADMIN_FORM });
+    setCreateFeedback(null);
+  };
+  const closeCreateModal = () => {
+    setCreateModal({ open: false, form: INITIAL_ADMIN_FORM });
+    setCreateFeedback(null);
+  };
 
   const updateCreateForm = (field, value) => {
+    setCreateFeedback(null);
     setCreateModal((current) => ({ ...current, form: { ...current.form, [field]: value } }));
   };
 
@@ -203,17 +231,38 @@ export default function AdminsInstitucionalesPage() {
     const nombre = createModal.form.nombre.trim();
     const email = createModal.form.email.trim();
     if (!nombre || !email) {
-      setFeedback({ type: "error", message: "Completa nombre y correo antes de crear el admin institucional." });
+      setCreateFeedback({ type: "error", message: "Completa nombre y correo antes de crear el admin institucional." });
       return;
     }
+    const normalizedEmail = email.toLowerCase();
+    if (!isValidEmail(normalizedEmail)) {
+      setCreateFeedback({
+        type: "error",
+        message: "Escribe un correo valido antes de crear el admin institucional.",
+      });
+      return;
+    }
+
+    const emailAlreadyExists = admins.some((admin) => admin.email?.toLowerCase() === normalizedEmail);
+    if (emailAlreadyExists) {
+      setCreateFeedback({
+        type: "error",
+        message: "Ya existe un admin institucional con ese correo. Busca la cuenta en la lista y cambia su estado si necesitas habilitarla.",
+      });
+      return;
+    }
+    setIsCreatingAdmin(true);
+    setCreateFeedback(null);
     try {
-      const createdAdmin = await adminInstitutionalAdminsService.createInstitutionalAdmin({ nombre, email });
+      const createdAdmin = await adminInstitutionalAdminsService.createInstitutionalAdmin({ nombre, email: normalizedEmail });
       setCreatedCredentials(createdAdmin);
-      setFeedback({ type: "success", message: `Admin institucional ${createdAdmin?.nombre || nombre} creado correctamente.` });
       closeCreateModal();
-      await loadAdmins();
+      await loadAdmins({ clearFeedback: false });
+      setFeedback({ type: "success", message: `Admin institucional ${createdAdmin?.nombre || nombre} creado correctamente.` });
     } catch (error) {
-      setFeedback({ type: "error", message: error.message || "No fue posible crear el admin institucional." });
+      setCreateFeedback({ type: "error", message: error.message || "No fue posible crear el admin institucional." });
+    } finally {
+      setIsCreatingAdmin(false);
     }
   };
 
@@ -313,7 +362,7 @@ export default function AdminsInstitucionalesPage() {
             {visibleAdmins.length > 0 && (
               <>
                 <div className="lk-role-entity-grid">
-                  {visibleAdmins.map((admin) => (
+                  {paginatedAdmins.map((admin) => (
                     <article
                       key={admin.id}
                       className={`lk-role-entity-card ${admin.es_admin_principal ? "lk-role-entity-card--gold" : ""}`}
@@ -345,9 +394,14 @@ export default function AdminsInstitucionalesPage() {
                     </article>
                   ))}
                 </div>
-                <div className="lk-role-table-footer">
-                  Mostrando {visibleAdmins.length} de {admins.length} admin(s) en esta vista.
-                </div>
+                <Pagination
+                  currentPage={currentPage}
+                  itemLabel="admin"
+                  itemPluralLabel="admins"
+                  onPageChange={setCurrentPage}
+                  pageSize={PAGE_SIZE}
+                  totalItems={visibleAdmins.length}
+                />
               </>
             )}
           </div>
@@ -439,13 +493,18 @@ export default function AdminsInstitucionalesPage() {
               <button className="lk-btn lk-btn--secondary" onClick={closeCreateModal}>
                 Cancelar
               </button>
-              <button className="lk-btn lk-btn--primary" onClick={handleCreateAdmin}>
-                Crear admin
+              <button className="lk-btn lk-btn--primary" onClick={handleCreateAdmin} disabled={isCreatingAdmin}>
+                {isCreatingAdmin ? "Creando..." : "Crear admin"}
               </button>
             </>
           }
         >
           <div className="lk-form-grid">
+            {createFeedback && (
+              <div className={`lk-alert lk-alert--${createFeedback.type}`}>
+                {createFeedback.message}
+              </div>
+            )}
             <div className="lk-field">
               <label htmlFor="new-admin-name">Nombre</label>
               <input

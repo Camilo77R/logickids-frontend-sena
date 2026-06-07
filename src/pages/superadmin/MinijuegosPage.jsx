@@ -193,9 +193,8 @@ export default function MinijuegosPage() {
         </section>
 
         <DashboardPanel
-          eyebrow="Catalogo operativo"
-          title="Minijuegos registrados"
-          subtitle="Acciones directas de activacion y pausa sobre cada experiencia."
+          title="Minijuegos"
+          compact
         >
           {!isLoading && !minigames.length ? (
             <EmptyState

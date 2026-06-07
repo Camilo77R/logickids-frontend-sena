@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import EmptyState from "../../components/common/EmptyState";
+import Pagination from "../../components/common/Pagination";
 import RoleModal from "../../components/common/RoleModal";
 import StateChangeModal from "../../components/common/StateChangeModal";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -34,6 +35,9 @@ const INITIAL_TUTOR_FORM = {
   email: "",
 };
 
+const PAGE_SIZE = 10;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function buildUsersSummary(users) {
   const activeUsers = users.filter((user) => user.estado === "activo").length;
   const inactiveUsers = users.filter((user) => user.estado === "inactivo").length;
@@ -52,6 +56,10 @@ function formatDate(value) {
   return new Date(value).toLocaleString("es-CO", {
     dateStyle: "medium",
   });
+}
+
+function isValidEmail(email) {
+  return EMAIL_PATTERN.test(email);
 }
 
 function getTutorStateCopy(nextState) {
@@ -119,7 +127,9 @@ export default function UsuariosPage() {
   const [statusFilter, setStatusFilter] = useState("todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreatingTutor, setIsCreatingTutor] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [createFeedback, setCreateFeedback] = useState(null);
   const [createModal, setCreateModal] = useState({
     open: false,
     form: INITIAL_TUTOR_FORM,
@@ -133,6 +143,7 @@ export default function UsuariosPage() {
   const [showMetricsModal, setShowMetricsModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedTutorDetail, setSelectedTutorDetail] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const visibleTutors = useMemo(() => {
     const activeFilter = STATUS_FILTERS.find((filter) => filter.value === statusFilter);
@@ -150,13 +161,23 @@ export default function UsuariosPage() {
   }, [searchTerm, statusFilter, tutors]);
 
   const summary = useMemo(() => buildUsersSummary(tutors), [tutors]);
+  const paginatedTutors = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return visibleTutors.slice(start, start + PAGE_SIZE);
+  }, [currentPage, visibleTutors]);
 
-  const loadTutors = async () => {
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
+  const loadTutors = async ({ clearFeedback = true } = {}) => {
     setIsLoading(true);
     try {
       const data = await adminTutorsService.listTutors();
       setTutors(data);
-      setFeedback(null);
+      if (clearFeedback) {
+        setFeedback(null);
+      }
     } catch (error) {
       setTutors([]);
       setFeedback({
@@ -217,6 +238,7 @@ export default function UsuariosPage() {
       open: true,
       form: INITIAL_TUTOR_FORM,
     });
+    setCreateFeedback(null);
   };
 
   const closeCreateModal = () => {
@@ -224,9 +246,11 @@ export default function UsuariosPage() {
       open: false,
       form: INITIAL_TUTOR_FORM,
     });
+    setCreateFeedback(null);
   };
 
   const updateCreateForm = (field, value) => {
+    setCreateFeedback(null);
     setCreateModal((current) => ({
       ...current,
       form: {
@@ -241,31 +265,53 @@ export default function UsuariosPage() {
     const email = createModal.form.email.trim();
 
     if (!nombre || !email) {
-      setFeedback({
+      setCreateFeedback({
         type: "error",
         message: "Completa nombre y correo antes de crear el tutor institucional.",
       });
       return;
     }
 
+    const normalizedEmail = email.toLowerCase();
+    if (!isValidEmail(normalizedEmail)) {
+      setCreateFeedback({
+        type: "error",
+        message: "Escribe un correo valido antes de crear el tutor institucional.",
+      });
+      return;
+    }
+
+    const emailAlreadyExists = tutors.some((tutor) => tutor.email?.toLowerCase() === normalizedEmail);
+    if (emailAlreadyExists) {
+      setCreateFeedback({
+        type: "error",
+        message: "Ya existe un tutor institucional con ese correo. Busca la cuenta en la lista y cambia su estado si necesitas habilitarla.",
+      });
+      return;
+    }
+
+    setIsCreatingTutor(true);
+    setCreateFeedback(null);
     try {
       const createdTutor = await adminTutorsService.createTutor({
         nombre,
-        email,
+        email: normalizedEmail,
       });
 
       setCreatedCredentials(createdTutor);
       closeCreateModal();
-      await loadTutors();
+      await loadTutors({ clearFeedback: false });
       setFeedback({
         type: "success",
         message: `Tutor ${createdTutor?.nombre || nombre} creado correctamente.`,
       });
     } catch (error) {
-      setFeedback({
+      setCreateFeedback({
         type: "error",
         message: error.message || "No fue posible crear el tutor institucional.",
       });
+    } finally {
+      setIsCreatingTutor(false);
     }
   };
 
@@ -351,10 +397,9 @@ export default function UsuariosPage() {
 
         {/* Panel único que ocupa TODO el ancho */}
         <DashboardPanel
-          eyebrow="Directorio institucional"
-          title="Tutores filtrados"
-          subtitle="Mantén a la vista el equipo docente de tu institución y abre cada ficha cuando necesites actuar."
+          title="Tutores"
           aside={<UsersRound size={18} color="var(--lk-purple)" />}
+          compact
         >
           {!isLoading && visibleTutors.length === 0 ? (
             <EmptyState
@@ -377,7 +422,7 @@ export default function UsuariosPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleTutors.map((tutor) => (
+                    {paginatedTutors.map((tutor) => (
                       <tr key={tutor.id}>
                         <td>
                           <strong>{tutor.nombre}</strong>
@@ -404,7 +449,7 @@ export default function UsuariosPage() {
               </div>
 
               <div className="lk-role-mobile-list">
-                {visibleTutors.map((tutor) => (
+                {paginatedTutors.map((tutor) => (
                   <article
                     key={tutor.id}
                     className={`lk-role-mobile-card`}
@@ -439,9 +484,14 @@ export default function UsuariosPage() {
                 ))}
               </div>
 
-              <div className="lk-role-table-footer">
-                Mostrando {visibleTutors.length} de {tutors.length} tutor(es).
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                itemLabel="tutor"
+                itemPluralLabel="tutores"
+                onPageChange={setCurrentPage}
+                pageSize={PAGE_SIZE}
+                totalItems={visibleTutors.length}
+              />
             </>
           ) : null}
         </DashboardPanel>
@@ -549,13 +599,18 @@ export default function UsuariosPage() {
               <button className="lk-btn lk-btn--secondary" onClick={closeCreateModal}>
                 Cancelar
               </button>
-              <button className="lk-btn lk-btn--primary" onClick={handleCreateTutor}>
-                Crear tutor
+              <button className="lk-btn lk-btn--primary" onClick={handleCreateTutor} disabled={isCreatingTutor}>
+                {isCreatingTutor ? "Creando..." : "Crear tutor"}
               </button>
             </>
           }
         >
           <div className="lk-form-grid">
+            {createFeedback && (
+              <div className={`lk-alert lk-alert--${createFeedback.type}`}>
+                {createFeedback.message}
+              </div>
+            )}
             <div className="lk-field">
               <label htmlFor="new-tutor-name">Nombre</label>
               <input

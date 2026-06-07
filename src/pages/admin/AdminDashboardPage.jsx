@@ -149,7 +149,7 @@ export default function AdminDashboardPage() {
       description="Coordina admins, tutores, estudiantes y accesos desde un solo punto de control institucional."
       notificationCount={pendingRequests}
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-admin-dashboard">
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
         <section className="lk-role-dashboard__hero">
@@ -162,19 +162,11 @@ export default function AdminDashboardPage() {
                 operación diaria avance sin fricción.
               </p>
             </div>
-
-            <div className="lk-role-dashboard__hero-logo" style={{ marginLeft: "auto" }}>
+            <div className="lk-role-dashboard__hero-logo">
               <img
                 src={logoWordmark}
                 alt="LogicKids"
                 className="lk-hero-logo"
-                style={{
-                  width: "400px",
-                  height: "auto",
-                  display: "block",
-                  transform: "scale(1.6)",
-                  transformOrigin: "center",
-                }}
               />
             </div>
           </div>

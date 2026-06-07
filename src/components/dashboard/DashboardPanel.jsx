@@ -8,10 +8,11 @@ export default function DashboardPanel({
   title,
   subtitle,
   aside,
+  compact = false,
   children,
 }) {
   return (
-    <section className="lk-role-panel">
+    <section className={`lk-role-panel${compact ? " lk-role-panel--compact" : ""}`}>
       <header className="lk-role-panel__header">
         <div>
           {eyebrow ? <span className="lk-role-panel__eyebrow">{eyebrow}</span> : null}

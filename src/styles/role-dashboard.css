@@ -5,13 +5,13 @@
  * Mantiene el mismo lenguaje visual del login/mockup:
  * púrpura, amarillo y blanco suave.
  */
- 
+
 .lk-role-dashboard {
   font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
   display: grid;
   gap: 1.5rem;
 }
- 
+
 .lk-role-dashboard__hero {
   position: relative;
   overflow: hidden;
@@ -24,7 +24,7 @@
   border: 1px solid rgba(139, 47, 201, 0.12);
   box-shadow: var(--lk-shadow-panel);
 }
- 
+
 .lk-role-dashboard__hero-badge {
   display: inline-flex;
   align-items: center;
@@ -37,7 +37,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
- 
+
 .lk-role-dashboard__hero-title {
   margin: 0.9rem 0 0.4rem;
   color: var(--lk-text);
@@ -46,7 +46,7 @@
   font-weight: 900;
   letter-spacing: -0.06em;
 }
- 
+
 .lk-role-dashboard__hero-subtitle {
   max-width: 58ch;
   margin: 0;
@@ -54,14 +54,14 @@
   font-size: 0.95rem;
   line-height: 1.65;
 }
- 
+
 .lk-role-dashboard__hero-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
   margin-top: 1.25rem;
 }
- 
+
 .lk-role-dashboard__hero-tag {
   padding: 0.78rem 0.92rem;
   min-width: 116px;
@@ -70,7 +70,7 @@
   border: 1px solid rgba(139, 47, 201, 0.1);
   box-shadow: 0 10px 22px rgba(139, 47, 201, 0.07);
 }
- 
+
 .lk-role-dashboard__hero-tag strong {
   display: block;
   color: var(--lk-text);
@@ -78,7 +78,7 @@
   font-weight: 900;
   letter-spacing: -0.04em;
 }
- 
+
 .lk-role-dashboard__hero-tag span {
   color: var(--lk-text-muted);
   font-size: 0.72rem;
@@ -86,15 +86,15 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
- 
+
 /* ── METRICS ──────────────────────────────────────────────────────────────── */
- 
+
 .lk-role-dashboard__metrics {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
- 
+
 .lk-role-metric {
   position: relative;
   overflow: hidden;
@@ -106,7 +106,7 @@
   display: flex;
   flex-direction: column;
 }
- 
+
 .lk-role-metric::after {
   content: "";
   position: absolute;
@@ -118,7 +118,7 @@
   background: rgba(255,255,255,0.12);
   pointer-events: none;
 }
- 
+
 .lk-role-metric__icon {
   width: 44px;
   height: 44px;
@@ -131,7 +131,7 @@
   color: inherit;
   flex-shrink: 0;
 }
- 
+
 .lk-role-metric__label {
   display: block;
   margin-bottom: 0.35rem;
@@ -141,7 +141,7 @@
   text-transform: uppercase;
   opacity: 0.86;
 }
- 
+
 .lk-role-metric__value {
   display: block;
   font-size: 2.5rem;
@@ -149,7 +149,7 @@
   letter-spacing: -0.08em;
   line-height: 1;
 }
- 
+
 .lk-role-metric__description {
   margin: 0.55rem 0 0;
   max-width: 24ch;
@@ -157,7 +157,7 @@
   line-height: 1.55;
   opacity: 0.85;
 }
- 
+
 /* ── COLORES PARA ADMIN (brillantes/vibrantes) ── */
 .lk-role-metric--purple { background: linear-gradient(135deg, #8f3b92, #bc59b1); }
 .lk-role-metric--gold   { background: linear-gradient(135deg, #f5a910, #fdb813); color: #5a3262; }
@@ -169,15 +169,15 @@
 .lk-role-metric--super-gold   { background: linear-gradient(135deg, #b47f147a, #e2a519); color: #441b4c; }
 .lk-role-metric--super-orange { background: linear-gradient(135deg, #a76d0f9c, #ffb325); color: #401a48; }
 .lk-role-metric--super-rose   { background: linear-gradient(135deg, #461260a4, #611c5a); }
- 
+
 /* ── GRID / PANELS ────────────────────────────────────────────────────────── */
- 
+
 .lk-role-dashboard__grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.92fr);
 }
- 
+
 .lk-role-panel {
   position: relative;
   overflow: hidden;
@@ -187,7 +187,7 @@
   border: 1px solid rgba(139, 47, 201, 0.1);
   box-shadow: var(--lk-shadow-card);
 }
- 
+
 .lk-role-panel::before {
   content: "";
   position: absolute;
@@ -196,7 +196,7 @@
   height: 4px;
   background: linear-gradient(90deg, #bc59b1 0%, #f5a910 62%, #ffb325 100%);
 }
- 
+
 .lk-role-panel__header {
   display: flex;
   align-items: flex-start;
@@ -204,7 +204,7 @@
   gap: 1rem;
   margin-bottom: 1rem;
 }
- 
+
 .lk-role-panel__aside {
   width: 2.6rem;
   height: 2.6rem;
@@ -216,7 +216,7 @@
   border: 1px solid rgba(245, 169, 16, 0.16);
   box-shadow: 0 10px 18px rgba(245, 169, 16, 0.12);
 }
- 
+
 .lk-role-panel__eyebrow {
   display: inline-block;
   margin-bottom: 0.3rem;
@@ -226,7 +226,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
- 
+
 .lk-role-panel__title {
   margin: 0;
   color: var(--lk-text);
@@ -234,21 +234,21 @@
   font-weight: 900;
   letter-spacing: -0.03em;
 }
- 
+
 .lk-role-panel__subtitle {
   margin: 0.32rem 0 0;
   color: var(--lk-text-soft);
   font-size: 0.82rem;
   line-height: 1.55;
 }
- 
+
 /* ── QUICK LINKS ──────────────────────────────────────────────────────────── */
- 
+
 .lk-role-quick-grid {
   display: grid;
   gap: 0.85rem;
 }
- 
+
 .lk-role-quick-link {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -261,18 +261,18 @@
   box-shadow: 0 10px 20px rgba(139, 47, 201, 0.06);
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
- 
+
 .lk-role-quick-link:hover {
   transform: translateY(-2px);
   border-color: rgba(139, 47, 201, 0.18);
   box-shadow: 0 14px 30px rgba(139, 47, 201, 0.12);
 }
- 
+
 .lk-role-quick-link--purple { border-color: rgba(188, 89, 177, 0.12); background: rgba(253, 248, 255, 0.98); }
 .lk-role-quick-link--gold   { border-color: rgba(245, 169, 16, 0.16); background: rgba(255, 251, 240, 0.98); }
 .lk-role-quick-link--orange { border-color: rgba(255, 179, 37, 0.16); background: rgba(255, 246, 233, 0.98); }
 .lk-role-quick-link--rose   { border-color: rgba(168, 79, 211, 0.14); background: rgba(252, 245, 255, 0.98); }
- 
+
 .lk-role-quick-link__icon {
   width: 2.6rem;
   height: 2.6rem;
@@ -281,12 +281,12 @@
   align-items: center;
   justify-content: center;
 }
- 
+
 .lk-role-quick-link__icon--purple { background: rgba(188, 89, 177, 0.14); color: #bc59b1; }
 .lk-role-quick-link__icon--gold   { background: rgba(253, 184, 19, 0.18);  color: #f5a910; }
 .lk-role-quick-link__icon--orange { background: rgba(255, 179, 37, 0.18);  color: #f29b11; }
 .lk-role-quick-link__icon--rose   { background: rgba(168, 79, 211, 0.14);  color: #a84fd3; }
- 
+
 .lk-role-quick-link__title {
   display: block;
   color: var(--lk-text);
@@ -294,21 +294,21 @@
   font-weight: 900;
   margin-bottom: 0.18rem;
 }
- 
+
 .lk-role-quick-link__description {
   margin: 0;
   color: var(--lk-text-soft);
   font-size: 0.8rem;
   line-height: 1.5;
 }
- 
+
 /* ── LISTS ────────────────────────────────────────────────────────────────── */
- 
+
 .lk-role-list {
   display: grid;
   gap: 0.85rem;
 }
- 
+
 .lk-role-list__item {
   display: grid;
   gap: 0.45rem;
@@ -317,35 +317,35 @@
   border: 1px solid rgba(139, 47, 201, 0.08);
   background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,244,255,0.9));
 }
- 
+
 .lk-role-list__item--gold {
   border-color: rgba(245, 169, 16, 0.22);
   background: linear-gradient(180deg, rgba(255, 249, 235, 0.98), rgba(255,255,255,0.94));
 }
- 
+
 .lk-role-list__item--orange {
   border-color: rgba(255, 179, 37, 0.24);
   background: linear-gradient(180deg, rgba(255, 244, 224, 0.98), rgba(255,255,255,0.94));
 }
- 
+
 .lk-role-list__item--rose {
   border-color: rgba(188, 89, 177, 0.22);
   background: linear-gradient(180deg, rgba(253, 244, 255, 0.98), rgba(255,255,255,0.94));
 }
- 
+
 .lk-role-list__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
 }
- 
+
 .lk-role-list__title {
   color: var(--lk-text);
   font-size: 0.9rem;
   font-weight: 800;
 }
- 
+
 .lk-role-list__meta {
   display: inline-flex;
   align-items: center;
@@ -357,24 +357,24 @@
   font-weight: 800;
   text-transform: capitalize;
 }
- 
+
 .lk-role-list__meta--gold   { color: #8b5a00; background: rgba(253, 184, 19, 0.18); }
 .lk-role-list__meta--orange { color: #9a5b00; background: rgba(255, 179, 37, 0.18); }
 .lk-role-list__meta--rose   { color: #7c2e8e; background: rgba(188, 89, 177, 0.16); }
- 
+
 .lk-role-list__description {
   color: var(--lk-text-soft);
   font-size: 0.8rem;
   line-height: 1.55;
   margin: 0;
 }
- 
+
 /* ── INLINE METRICS (barras de progreso) ─────────────────────────────────── */
- 
+
 .lk-role-inline-metric { display: grid; gap: 0.8rem; }
- 
+
 .lk-role-inline-metric__row { display: grid; gap: 0.35rem; }
- 
+
 .lk-role-inline-metric__label {
   display: flex;
   justify-content: space-between;
@@ -383,7 +383,7 @@
   font-size: 0.82rem;
   font-weight: 700;
 }
- 
+
 .lk-role-inline-metric__track {
   width: 100%;
   height: 9px;
@@ -391,17 +391,17 @@
   border-radius: 999px;
   background: rgba(139, 47, 201, 0.08);
 }
- 
+
 .lk-role-inline-metric__fill {
   height: 100%;
   border-radius: 999px;
 }
- 
+
 .lk-role-inline-metric__fill--purple { background: linear-gradient(90deg, #8f3b92, #bc59b1); }
 .lk-role-inline-metric__fill--gold   { background: linear-gradient(90deg, #f5a910, #fdb813); }
 .lk-role-inline-metric__fill--orange { background: linear-gradient(90deg, #f29b11, #ffb325); }
 .lk-role-inline-metric__fill--rose   { background: linear-gradient(90deg, #a84fd3, #cf79c6); }
- 
+
 .lk-role-note {
   margin: 0;
   padding: 1rem;
@@ -411,9 +411,9 @@
   font-size: 0.82rem;
   line-height: 1.6;
 }
- 
+
 /* ── TOOLBAR ──────────────────────────────────────────────────────────────── */
- 
+
 .lk-role-page__toolbar {
   display: flex;
   flex-direction: row;
@@ -430,14 +430,14 @@
   box-sizing: border-box;
   min-height: 56px;
 }
- 
+
 .lk-role-page__filters {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   flex-shrink: 0;
 }
- 
+
 .lk-filter-btn,
 .lk-role-page__filter {
   padding: 6px 14px;
@@ -451,18 +451,18 @@
   transition: all 0.2s ease;
   white-space: nowrap;
 }
- 
+
 .lk-filter-btn:hover,
 .lk-role-page__filter:hover {
   background-color: #e5e7eb;
 }
- 
+
 .lk-filter-btn--active,
 .lk-role-page__filter.is-active {
   background-color: #7c3aed;
   color: white;
 }
- 
+
 .lk-role-page__search {
   flex: 1;
   max-width: 320px;
@@ -471,30 +471,37 @@
   display: flex;
   align-items: center;
 }
- 
+
 .lk-search-icon {
   position: absolute;
   left: 12px;
   color: #9ca3af;
   pointer-events: none;
 }
- 
+
 .lk-search-input {
   width: 100%;
-  padding: 8px 12px 8px 36px;
+  padding: 8px 34px 8px 36px;
   border: 1px solid #e5e7eb;
   border-radius: 2rem;
   font-size: 0.85rem;
   background: white;
   transition: all 0.2s;
+  appearance: none;
 }
- 
+
+.lk-search-input::-webkit-search-cancel-button,
+.lk-search-input::-webkit-search-decoration {
+  appearance: none;
+  display: none;
+}
+
 .lk-search-input:focus {
   outline: none;
   border-color: #7c3aed;
   box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
 }
- 
+
 .lk-search-clear {
   position: absolute;
   right: 10px;
@@ -506,23 +513,23 @@
   display: flex;
   align-items: center;
 }
- 
+
 .lk-role-page__actions {
   display: flex;
   gap: 8px;
   align-items: center;
   flex-shrink: 0;
 }
- 
+
 /* Variante para Solicitudes (sin botón Nuevo) */
 .lk-role-page__toolbar--solicitudes .lk-role-page__actions {
   gap: 0;
 }
- 
+
 .lk-role-page__toolbar--solicitudes .lk-role-page__actions .lk-btn--icon {
   margin-left: 4px;
 }
- 
+
 .lk-btn--icon {
   padding: 8px;
   border-radius: 2rem;
@@ -534,12 +541,12 @@
   justify-content: center;
   transition: all 0.2s;
 }
- 
+
 .lk-btn--icon:hover {
   background: #f9fafb;
   border-color: #cbd5e1;
 }
- 
+
 .lk-btn--primary {
   background: #7c3aed;
   color: white;
@@ -552,11 +559,11 @@
   gap: 8px;
   transition: all 0.2s;
 }
- 
+
 .lk-btn--primary:hover {
   background: #6d28d9;
 }
- 
+
 .lk-btn--secondary {
   background: #f3f4f6;
   color: #4b5563;
@@ -569,11 +576,11 @@
   gap: 8px;
   transition: all 0.2s;
 }
- 
+
 .lk-btn--secondary:hover {
   background: #e5e7eb;
 }
- 
+
 .lk-btn--ghost-danger {
   background: transparent;
   color: #dc2626;
@@ -586,14 +593,14 @@
   gap: 8px;
   transition: all 0.2s;
 }
- 
+
 .lk-btn--ghost-danger:hover {
   background: #fee2e2;
   border-color: #fca5a5;
 }
- 
+
 /* ── STATUS BADGE ─────────────────────────────────────────────────────────── */
- 
+
 .lk-status-badge {
   display: inline-flex;
   align-items: center;
@@ -604,20 +611,20 @@
   text-transform: capitalize;
   letter-spacing: 0.02em;
 }
- 
+
 /* ── MODAL DE DETALLE ─────────────────────────────────────────────────────── */
- 
+
 .lk-admin-detail-content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
- 
+
 .lk-detail-field {
   border-bottom: 1px solid #f0eef2;
   padding-bottom: 0.5rem;
 }
- 
+
 .lk-detail-field label {
   display: block;
   font-size: 0.7rem;
@@ -627,23 +634,23 @@
   margin-bottom: 0.2rem;
   letter-spacing: 0.04em;
 }
- 
+
 .lk-detail-field p {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
   color: #1e1b2c;
 }
- 
+
 /* ── ENTITY GRID (tarjetas) ───────────────────────────────────────────────── */
- 
+
 .lk-role-entity-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
 }
- 
+
 .lk-role-entity-card {
   background: white;
   border-radius: 1.2rem;
@@ -651,16 +658,16 @@
   border: 1px solid rgba(139, 47, 201, 0.08);
   transition: all 0.2s;
 }
- 
+
 .lk-role-entity-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
- 
+
 .lk-role-entity-card--gold {
   border-left: 4px solid #f5a910;
 }
- 
+
 .lk-role-entity-card__header {
   display: flex;
   justify-content: space-between;
@@ -668,19 +675,19 @@
   gap: 0.5rem;
   margin-bottom: 0.75rem;
 }
- 
+
 .lk-role-entity-card__title {
   font-weight: 800;
   font-size: 1rem;
   margin: 0;
 }
- 
+
 .lk-role-entity-card__subtitle {
   font-size: 0.7rem;
   color: #6b7280;
   margin: 0;
 }
- 
+
 .lk-role-entity-card__meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -688,53 +695,53 @@
   font-size: 0.75rem;
   margin: 0.75rem 0;
 }
- 
+
 .lk-role-entity-card__meta dt {
   font-weight: 700;
   color: #4b5563;
 }
- 
+
 .lk-role-entity-card__meta dd { margin: 0; }
- 
+
 .lk-role-entity-card__actions {
   display: flex;
   justify-content: flex-end;
 }
- 
+
 .lk-role-table-footer {
   margin-top: 1rem;
   font-size: 0.75rem;
   color: #6c757d;
   text-align: center;
 }
- 
+
 .lk-role-panel--full {
   grid-column: 1 / -1;
 }
- 
+
 /* ── ALERTAS ──────────────────────────────────────────────────────────────── */
- 
+
 .lk-alert {
   padding: 1rem;
   border-radius: 1rem;
   margin-bottom: 1rem;
 }
- 
+
 .lk-alert--success {
   background: #d1fae5;
   color: #065f46;
 }
- 
+
 .lk-alert--error {
   background: #fee2e2;
   color: #991b1b;
 }
- 
+
 .lk-alert--warning {
   background: #fed7aa;
   color: #92400e;
 }
- 
+
 /* ── MÉTRICAS COMPACTAS (para panel lateral) ──────────────────────────────── */
 
 .lk-metric-compact {
@@ -864,24 +871,37 @@
   margin-bottom: 1.5rem;
 }
 
-.lk-role-dashboard__hero-logo {
+.lk-admin-dashboard .lk-role-dashboard__hero-logo {
   flex-shrink: 0;
   margin-left: auto;
 }
 
-.lk-hero-logo {
+.lk-admin-dashboard .lk-hero-logo {
+  width: min(400px, 36vw);
   height: auto;
   display: block;
   opacity: 0.9;
+  transform: scale(1.6);
+  transform-origin: center;
   transition: opacity 0.2s ease;
 }
 
-.lk-hero-logo:hover {
+.lk-admin-dashboard .lk-hero-logo:hover {
   opacity: 1;
 }
 
+@media (max-width: 991.98px) {
+  .lk-admin-dashboard .lk-role-dashboard__hero-logo {
+    width: 100%;
+  }
+
+  .lk-admin-dashboard .lk-hero-logo {
+    width: min(260px, 72vw);
+    transform: none;
+  }
+}
 /* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */
- 
+
 @media (max-width: 1199.98px) {
   .lk-role-dashboard__metrics {
     grid-template-columns: 1fr 1fr;
@@ -890,23 +910,23 @@
     grid-template-columns: 1fr 1fr;
   }
 }
- 
+
 @media (max-width: 767.98px) {
   .lk-role-dashboard__metrics,
   .lk-role-dashboard__grid {
     grid-template-columns: 1fr;
   }
- 
+
   .lk-role-page__toolbar {
     flex-direction: column;
     align-items: stretch;
     flex-wrap: wrap;
   }
- 
+
   .lk-role-page__search {
     max-width: none;
   }
- 
+
   .lk-role-page__filters {
     overflow-x: auto;
     flex-wrap: nowrap;
