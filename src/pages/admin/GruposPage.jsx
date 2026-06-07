@@ -15,7 +15,9 @@ import {
   UsersRound,
   X,
 } from "lucide-react";
+import AdminSelect from "../../components/common/AdminSelect";
 import EmptyState from "../../components/common/EmptyState";
+import Pagination from "../../components/common/Pagination";
 import RoleModal from "../../components/common/RoleModal";
 import StateChangeModal from "../../components/common/StateChangeModal";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -38,6 +40,8 @@ const INITIAL_GROUP_FORM = {
   nombre: "",
   descripcion: "",
 };
+
+const PAGE_SIZE = 10;
 
 function buildGroupsSummary(groups, studentCountMap) {
   const total = groups.length;
@@ -127,6 +131,7 @@ export default function GruposPage() {
     tutorId: "",
   });
   const [unassignModalOpen, setUnassignModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const hasLoaded = useRef(false);
   
   const studentCountMap = useMemo(() => {
@@ -143,6 +148,15 @@ export default function GruposPage() {
   const activeTutors = useMemo(() => {
     return tutors.filter((t) => t.estado === "activo");
   }, [tutors]);
+  const tutorOptions = useMemo(
+    () =>
+      activeTutors.map((tutor) => ({
+        value: String(tutor.id),
+        label: tutor.nombre,
+        description: tutor.email,
+      })),
+    [activeTutors]
+  );
   
   const visibleGroups = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -163,6 +177,24 @@ export default function GruposPage() {
   }, [groups, selectedGroupId]);
   
   const summary = useMemo(() => buildGroupsSummary(groups, studentCountMap), [groups, studentCountMap]);
+  const paginatedGroups = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return visibleGroups.slice(start, start + PAGE_SIZE);
+  }, [currentPage, visibleGroups]);
+  const modalGroupDetail = useMemo(() => {
+    if (!selectedGroupForModal) return null;
+    if (selectedGroupDetail?.id === selectedGroupForModal.id) {
+      return {
+        ...selectedGroupForModal,
+        ...selectedGroupDetail,
+      };
+    }
+    return selectedGroupForModal;
+  }, [selectedGroupDetail, selectedGroupForModal]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
   
   const loadData = async (shouldKeepSelection = false) => {
     setIsLoading(true);
@@ -227,8 +259,10 @@ export default function GruposPage() {
   }, [selectedGroupId]);
   
   const handleViewDetail = (group) => {
+    setSelectedGroupId(group.id);
     setSelectedGroupForModal(group);
     setShowDetailModal(true);
+    loadGroupDetail(group.id);
   };
   
   const openCreateModal = () => {
@@ -354,10 +388,10 @@ export default function GruposPage() {
     });
   };
   
-  const openTutorModal = () => {
+  const openTutorModal = (group = selectedGroup) => {
     setTutorModal({
       open: true,
-      tutorId: selectedGroup?.tutor_asignado_id ? String(selectedGroup.tutor_asignado_id) : "",
+      tutorId: group?.tutor_asignado_id ? String(group.tutor_asignado_id) : "",
     });
   };
   
@@ -370,11 +404,15 @@ export default function GruposPage() {
       return;
     }
     try {
-      await adminGroupsService.assignTutor(selectedGroupId, Number(tutorModal.tutorId));
+      const targetGroupId = selectedGroupForModal?.id || selectedGroupId;
+      const updatedGroup = await adminGroupsService.assignTutor(targetGroupId, Number(tutorModal.tutorId));
       setFeedback({
         type: "success",
         message: "Tutor asignado al grupo correctamente.",
       });
+      setSelectedGroupId(targetGroupId);
+      setSelectedGroupForModal(updatedGroup);
+      setSelectedGroupDetail(updatedGroup);
       setTutorModal({ open: false, tutorId: "" });
       await loadData(true);
     } catch (error) {
@@ -387,11 +425,15 @@ export default function GruposPage() {
   
   const handleUnassignTutor = async () => {
     try {
-      await adminGroupsService.unassignTutor(selectedGroupId);
+      const targetGroupId = selectedGroupForModal?.id || selectedGroupId;
+      const updatedGroup = await adminGroupsService.unassignTutor(targetGroupId);
       setFeedback({
         type: "success",
         message: "Tutor desasignado correctamente.",
       });
+      setSelectedGroupId(targetGroupId);
+      setSelectedGroupForModal(updatedGroup);
+      setSelectedGroupDetail(updatedGroup);
       setUnassignModalOpen(false);
       await loadData(true);
     } catch (error) {
@@ -460,10 +502,9 @@ export default function GruposPage() {
         
         {/* Panel único que ocupa todo el ancho */}
         <DashboardPanel
-          eyebrow="Directorio pedagógico"
-          title="Lista de grupos"
-          subtitle="Explora los grupos institucionales y selecciona uno para administrarlo."
+          title="Grupos"
           aside={<FolderClosed size={18} color="var(--lk-purple)" />}
+          compact
         >
           {!isLoading && visibleGroups.length === 0 ? (
             <EmptyState
@@ -486,7 +527,7 @@ export default function GruposPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleGroups.map((group) => (
+                    {paginatedGroups.map((group) => (
                       <tr key={group.id}>
                         <td>
                           <strong>{group.nombre}</strong>
@@ -526,9 +567,53 @@ export default function GruposPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="lk-role-table-footer">
-                Mostrando {visibleGroups.length} de {groups.length} grupo(s).
+
+              <div className="lk-role-mobile-list">
+                {paginatedGroups.map((group) => (
+                  <article key={group.id} className="lk-role-mobile-card">
+                    <header className="lk-role-mobile-card__header">
+                      <div>
+                        <h3 className="lk-role-mobile-card__title">{group.nombre}</h3>
+                        <p className="lk-role-mobile-card__subtitle">
+                          {group.tutor_nombre || "Sin tutor"} · ID #{group.id}
+                        </p>
+                      </div>
+                      <StatusBadge
+                        label={group.activo ? "activo" : "archivado"}
+                        variant={group.activo ? "activo" : "inactivo"}
+                      />
+                    </header>
+
+                    <dl className="lk-role-entity-card__meta">
+                      <div>
+                        <dt>Estudiantes</dt>
+                        <dd>{studentCountMap[group.id] || 0}</dd>
+                      </div>
+                      <div>
+                        <dt>Clase</dt>
+                        <dd>{group.sesion_activa ? "Jugando" : "Cerrada"}</dd>
+                      </div>
+                    </dl>
+
+                    <button
+                      type="button"
+                      className="lk-btn lk-btn--secondary"
+                      onClick={() => handleViewDetail(group)}
+                    >
+                      Ver detalle
+                    </button>
+                  </article>
+                ))}
               </div>
+
+              <Pagination
+                currentPage={currentPage}
+                itemLabel="grupo"
+                itemPluralLabel="grupos"
+                onPageChange={setCurrentPage}
+                pageSize={PAGE_SIZE}
+                totalItems={visibleGroups.length}
+              />
             </>
           ) : null}
         </DashboardPanel>
@@ -559,24 +644,24 @@ export default function GruposPage() {
           open={showDetailModal}
           onClose={() => setShowDetailModal(false)}
           eyebrow="Detalle del grupo"
-          title={selectedGroupForModal?.nombre || "Grupo"}
-          width={540}
+          title={modalGroupDetail?.nombre || "Grupo"}
+          width={760}
           actions={
             <div className="lk-modal-actions">
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
                 Cerrar
               </button>
-              {selectedGroupForModal?.activo ? (
+              {modalGroupDetail?.activo ? (
                 <>
                   <button className="lk-btn lk-btn--secondary" onClick={() => {
                     setShowDetailModal(false);
-                    openEditModal(selectedGroupForModal);
+                    openEditModal(modalGroupDetail);
                   }}>
                     <Pencil size={16} /> Editar
                   </button>
                   <button className="lk-btn lk-btn--ghost-danger" onClick={() => {
                     setShowDetailModal(false);
-                    openStateModal(selectedGroupForModal, "inactivo");
+                    openStateModal(modalGroupDetail, "inactivo");
                   }}>
                     <Archive size={16} /> Archivar
                   </button>
@@ -584,7 +669,7 @@ export default function GruposPage() {
               ) : (
                 <button className="lk-btn lk-btn--primary" onClick={() => {
                   setShowDetailModal(false);
-                  openStateModal(selectedGroupForModal, "activo");
+                  openStateModal(modalGroupDetail, "activo");
                 }}>
                   <CheckCircle size={16} /> Reactivar
                 </button>
@@ -592,45 +677,124 @@ export default function GruposPage() {
             </div>
           }
         >
-          {selectedGroupForModal && (
+          {modalGroupDetail && (
             <div className="lk-admin-detail-content">
               <div className="lk-detail-field">
                 <label>Nombre</label>
-                <p><strong>{selectedGroupForModal.nombre}</strong></p>
+                <p><strong>{modalGroupDetail.nombre}</strong></p>
               </div>
               <div className="lk-detail-field">
                 <label>ID</label>
-                <p>#{selectedGroupForModal.id}</p>
+                <p>#{modalGroupDetail.id}</p>
               </div>
               <div className="lk-detail-field">
                 <label>Descripción</label>
-                <p>{selectedGroupForModal.descripcion || "Sin descripción"}</p>
+                <p>{modalGroupDetail.descripcion || "Sin descripción"}</p>
               </div>
               <div className="lk-detail-field">
                 <label>Tutor asignado</label>
-                <p>{selectedGroupForModal.tutor_nombre || "Sin tutor"}</p>
-                {selectedGroupForModal.tutor_email && (
-                  <p className="lk-muted">{selectedGroupForModal.tutor_email}</p>
+                {modalGroupDetail.tutor_asignado_id ? (
+                  <>
+                    <p><strong>{modalGroupDetail.tutor_nombre || "Tutor asignado"}</strong></p>
+                    {modalGroupDetail.tutor_email && (
+                      <p className="lk-muted">{modalGroupDetail.tutor_email}</p>
+                    )}
+                    {modalGroupDetail.activo ? (
+                      <div className="lk-group-tutor-actions">
+                        <button
+                          type="button"
+                          className="lk-tutor-unassign-btn"
+                          onClick={() => setUnassignModalOpen(true)}
+                        >
+                          Quitar tutor
+                        </button>
+                        <span className="lk-group-divider">|</span>
+                        <button
+                          type="button"
+                          className="lk-group-link-btn"
+                          onClick={() => openTutorModal(modalGroupDetail)}
+                        >
+                          Reasignar tutor
+                        </button>
+                      </div>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    <p className="lk-group-empty-tutor">Sin tutor asignado</p>
+                    {modalGroupDetail.activo ? (
+                      <div className="lk-group-tutor-assign-wrap">
+                        <button
+                          type="button"
+                          className="lk-btn lk-btn--secondary lk-group-assign-btn"
+                          onClick={() => openTutorModal(modalGroupDetail)}
+                        >
+                          Asignar tutor
+                        </button>
+                      </div>
+                    ) : null}
+                  </>
                 )}
               </div>
               <div className="lk-detail-field">
                 <label>Estado</label>
                 <StatusBadge
-                  label={selectedGroupForModal.activo ? "activo" : "archivado"}
-                  variant={selectedGroupForModal.activo ? "activo" : "inactivo"}
+                  label={modalGroupDetail.activo ? "activo" : "archivado"}
+                  variant={modalGroupDetail.activo ? "activo" : "inactivo"}
                 />
               </div>
               <div className="lk-detail-field">
                 <label>Clase</label>
                 <StatusBadge
-                  label={selectedGroupForModal.sesion_activa ? "jugando" : "cerrada"}
-                  variant={selectedGroupForModal.sesion_activa ? "activo" : "inactivo"}
+                  label={modalGroupDetail.sesion_activa ? "jugando" : "cerrada"}
+                  variant={modalGroupDetail.sesion_activa ? "activo" : "inactivo"}
                 />
               </div>
               <div className="lk-detail-field">
                 <label>Estudiantes</label>
-                <p>{studentCountMap[selectedGroupForModal.id] || 0} estudiantes</p>
+                <p>{studentCountMap[modalGroupDetail.id] || modalGroupDetail.estudiantes?.length || 0} estudiantes</p>
               </div>
+              <div className="lk-detail-field">
+                <label>Contexto institucional</label>
+                <p>{user?.institucion || "LogicKids Institución"}</p>
+                <p className="lk-muted">Administrador: {user?.nombre || "Coordinador"}</p>
+              </div>
+
+              <div className="lk-group-students-header">
+                <h4 className="lk-group-students-title">Estudiantes en el grupo</h4>
+                <span className="lk-group-students-count">
+                  {isDetailLoading ? "..." : modalGroupDetail.estudiantes?.length || 0}
+                </span>
+              </div>
+
+              {isDetailLoading ? (
+                <p className="lk-role-text-note lk-group-text-italic">Cargando lista de estudiantes...</p>
+              ) : modalGroupDetail.estudiantes?.length > 0 ? (
+                <div className="lk-group-students-list">
+                  {modalGroupDetail.estudiantes.map((student) => (
+                    <div key={student.id} className="lk-group-student-item">
+                      <div className="lk-group-student-info">
+                        <span
+                          className="lk-group-student-avatar-dot"
+                          style={{ backgroundColor: student.color_avatar || "#3B82F6" }}
+                        />
+                        <div>
+                          <span className="lk-group-student-name">{student.nombre}</span>
+                          <span className="lk-group-student-age"> · {student.edad} años</span>
+                        </div>
+                      </div>
+                      <StatusBadge
+                        label={student.sesion_activa ? "en juego" : "sin sesión"}
+                        variant={student.sesion_activa ? "activo" : "inactivo"}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="lk-role-text-note lk-group-text-italic">
+                  No hay estudiantes activos en este grupo. Asigna estudiantes en el módulo de Estudiantes.
+                </p>
+              )}
             </div>
           )}
         </RoleModal>
@@ -664,6 +828,7 @@ export default function GruposPage() {
           onClose={() => setTutorModal({ open: false, tutorId: "" })}
           eyebrow="Operación escolar"
           title="Asignar tutor"
+          width={640}
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={() => setTutorModal({ open: false, tutorId: "" })}>Cancelar</button>
@@ -671,12 +836,16 @@ export default function GruposPage() {
             </>
           }
         >
-          <select value={tutorModal.tutorId} onChange={(e) => setTutorModal((prev) => ({ ...prev, tutorId: e.target.value }))}>
-            <option value="">-- Seleccionar tutor --</option>
-            {activeTutors.map((tutor) => (
-              <option key={tutor.id} value={tutor.id}>{tutor.nombre} ({tutor.email})</option>
-            ))}
-          </select>
+          <div className="lk-field">
+            <label>Tutor disponible</label>
+            <AdminSelect
+              value={tutorModal.tutorId}
+              onChange={(value) => setTutorModal((prev) => ({ ...prev, tutorId: value }))}
+              options={tutorOptions}
+              placeholder="Selecciona un tutor"
+              emptyText="No hay tutores activos disponibles"
+            />
+          </div>
         </RoleModal>
         
         <RoleModal

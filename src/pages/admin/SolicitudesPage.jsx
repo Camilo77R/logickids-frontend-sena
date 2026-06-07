@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   AlertCircle,
   BarChart3,
+  CalendarDays,
   CheckCircle,
   Eye,
   Mail,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
 import EmptyState from "../../components/common/EmptyState";
+import Pagination from "../../components/common/Pagination";
 import RoleModal from "../../components/common/RoleModal";
 import StatusBadge from "../../components/common/StatusBadge";
 import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
@@ -26,6 +28,8 @@ const STATUS_FILTERS = [
   { value: "aprobado", label: "Aprobados" },
   { value: "rechazado", label: "Rechazados" },
 ];
+
+const PAGE_SIZE = 10;
 
 function buildRequestsSummary(requests) {
   return {
@@ -48,6 +52,8 @@ export default function SolicitudesPage() {
   const [solicitudes, setSolicitudes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [statusFilter, setStatusFilter] = useState("todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -56,6 +62,7 @@ export default function SolicitudesPage() {
   const [feedback, setFeedback] = useState({ type: "", message: "" });
   const [showMetricsModal, setShowMetricsModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const loadSolicitudes = async () => {
     setIsLoading(true);
@@ -76,18 +83,33 @@ export default function SolicitudesPage() {
 
   const filteredSolicitudes = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
+    const fromDate = dateFrom ? new Date(`${dateFrom}T00:00:00`) : null;
+    const toDate = dateTo ? new Date(`${dateTo}T23:59:59`) : null;
+
     return solicitudes.filter((req) => {
+      const requestDate = req.fecha_solicitud ? new Date(req.fecha_solicitud) : null;
       const matchesFilter = statusFilter === "todos" || req.estado_solicitud === statusFilter;
+      const matchesDate =
+        (!fromDate || (requestDate && requestDate >= fromDate)) &&
+        (!toDate || (requestDate && requestDate <= toDate));
       const matchesSearch =
         !normalizedSearch ||
         req.tutor_nombre?.toLowerCase().includes(normalizedSearch) ||
         req.correo_contacto?.toLowerCase().includes(normalizedSearch) ||
         req.tutor_email?.toLowerCase().includes(normalizedSearch);
-      return matchesFilter && matchesSearch;
+      return matchesFilter && matchesDate && matchesSearch;
     });
-  }, [searchTerm, solicitudes, statusFilter]);
+  }, [dateFrom, dateTo, searchTerm, solicitudes, statusFilter]);
 
   const summary = useMemo(() => buildRequestsSummary(solicitudes), [solicitudes]);
+  const paginatedSolicitudes = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredSolicitudes.slice(start, start + PAGE_SIZE);
+  }, [currentPage, filteredSolicitudes]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [dateFrom, dateTo, searchTerm, statusFilter]);
 
   const handleAprobar = async (requestId) => {
     try {
@@ -158,6 +180,36 @@ export default function SolicitudesPage() {
         )}
       </div>
 
+      <div className="lk-role-page__date-filter" aria-label="Filtrar solicitudes por fecha">
+        <CalendarDays size={16} aria-hidden="true" />
+        <input
+          type="date"
+          value={dateFrom}
+          onChange={(e) => setDateFrom(e.target.value)}
+          title="Desde"
+        />
+        <span>hasta</span>
+        <input
+          type="date"
+          value={dateTo}
+          onChange={(e) => setDateTo(e.target.value)}
+          title="Hasta"
+        />
+        {(dateFrom || dateTo) && (
+          <button
+            type="button"
+            className="lk-date-clear"
+            onClick={() => {
+              setDateFrom("");
+              setDateTo("");
+            }}
+            title="Limpiar fechas"
+          >
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       <div className="lk-role-page__actions">
         <button className="lk-btn lk-btn--icon" onClick={loadSolicitudes} title="Recargar">
           <RefreshCw size={16} />
@@ -184,15 +236,14 @@ export default function SolicitudesPage() {
         {error && <div className="lk-alert lk-alert--error">{error}</div>}
 
         <DashboardPanel
-          eyebrow="Bandeja institucional"
-          title="Solicitudes visibles"
-          subtitle="Revisa, aprueba o rechaza peticiones de tutores suspendidos."
+          title="Solicitudes"
           aside={<Mail size={18} color="var(--lk-purple)" />}
+          compact
         >
           {!isLoading && filteredSolicitudes.length === 0 ? (
             <EmptyState
               title="No hay solicitudes"
-              description={searchTerm ? "Prueba con otro término." : "La bandeja está vacía."}
+              description={searchTerm || dateFrom || dateTo ? "Prueba con otros filtros." : "La bandeja está vacía."}
             />
           ) : (
             <>
@@ -209,7 +260,7 @@ export default function SolicitudesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredSolicitudes.map((solicitud) => (
+                    {paginatedSolicitudes.map((solicitud) => (
                       <tr key={solicitud.id}>
                         <td>{formatDate(solicitud.fecha_solicitud)}</td>
                         <td>
@@ -231,9 +282,14 @@ export default function SolicitudesPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="lk-role-table-footer">
-                Mostrando {filteredSolicitudes.length} de {solicitudes.length} solicitud(es).
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                itemLabel="solicitud"
+                itemPluralLabel="solicitudes"
+                onPageChange={setCurrentPage}
+                pageSize={PAGE_SIZE}
+                totalItems={filteredSolicitudes.length}
+              />
             </>
           )}
         </DashboardPanel>

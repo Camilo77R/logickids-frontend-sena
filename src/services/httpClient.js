@@ -11,6 +11,17 @@ class HttpError extends Error {
   }
 }
 
+const formatErrorDetails = (details = []) => {
+  if (!Array.isArray(details) || details.length === 0) {
+    return "";
+  }
+
+  return details
+    .map((detail) => detail?.message)
+    .filter(Boolean)
+    .join(" ");
+};
+
 const buildHeaders = (body, auth) => {
   const headers = {
     Accept: "application/json",
@@ -71,10 +82,14 @@ export const request = async (path, { method = "GET", body, auth = true } = {}) 
       emitSessionExpired();
     }
 
+    const details = payload?.errors || [];
+    const detailMessage = formatErrorDetails(details);
+    const baseMessage = payload?.message || "No fue posible completar la solicitud.";
+
     throw new HttpError(
-      payload?.message || "No fue posible completar la solicitud.",
+      detailMessage ? `${baseMessage}: ${detailMessage}` : baseMessage,
       response.status,
-      payload?.errors || []
+      details
     );
   }
 

@@ -14,6 +14,8 @@ import {
   X,
 } from "lucide-react";
 import EmptyState from "../../components/common/EmptyState";
+import AdminSelect from "../../components/common/AdminSelect";
+import Pagination from "../../components/common/Pagination";
 import RoleModal from "../../components/common/RoleModal";
 import StateChangeModal from "../../components/common/StateChangeModal";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -35,6 +37,10 @@ const INITIAL_STUDENT_FORM = {
   edad: "",
   grupo_id: "",
 };
+
+const PAGE_SIZE = 10;
+const GROUP_FILTER_ALL = "";
+const GROUP_FILTER_WITHOUT_GROUP = "__without_group";
 
 const getStudentState = (student) => student?.estado || "activo";
 const getStudentGroupId = (student) => String(student?.grupo_id ?? "");
@@ -136,6 +142,7 @@ export default function EstudiantesPage() {
   const [statusFilter, setStatusFilter] = useState("todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isSavingStudent, setIsSavingStudent] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [showMetricsModal, setShowMetricsModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -157,10 +164,32 @@ export default function EstudiantesPage() {
     nextState: "",
     student: null,
   });
+  const [currentPage, setCurrentPage] = useState(1);
   const hasLoadedFilters = useRef(false);
 
   const groupsById = useMemo(
     () => new Map(groups.map((group) => [String(group.id_grupo ?? group.id ?? ""), group])),
+    [groups]
+  );
+  const groupOptions = useMemo(
+    () =>
+      groups.map((group) => ({
+        value: String(group.id_grupo ?? group.id),
+        label: group.nombre,
+      })),
+    [groups]
+  );
+  const assignableGroupOptions = useMemo(
+    () =>
+      groups.map((group) => {
+        const isArchived = group.activo === false;
+        return {
+          value: String(group.id_grupo ?? group.id),
+          label: group.nombre,
+          description: isArchived ? "Archivado - no disponible para estudiantes" : undefined,
+          disabled: isArchived,
+        };
+      }),
     [groups]
   );
 
@@ -169,22 +198,39 @@ export default function EstudiantesPage() {
     return students.filter((student) => {
       const state = getStudentState(student);
       const matchesFilter = statusFilter === "todos" || state === statusFilter;
+      const matchesGroup =
+        selectedGroupId === GROUP_FILTER_ALL ||
+        (selectedGroupId === GROUP_FILTER_WITHOUT_GROUP
+          ? !student.grupo_id
+          : getStudentGroupId(student) === selectedGroupId);
       const matchesSearch = matchesStudentSearch(student, normalizedSearch, groupsById);
-      return matchesFilter && matchesSearch;
+      return matchesFilter && matchesGroup && matchesSearch;
     });
-  }, [groupsById, searchTerm, statusFilter, students]);
+  }, [groupsById, searchTerm, selectedGroupId, statusFilter, students]);
 
   const summary = useMemo(() => buildStudentsSummary(students), [students]);
+  const paginatedStudents = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return visibleStudents.slice(start, start + PAGE_SIZE);
+  }, [currentPage, visibleStudents]);
 
-  const loadStudents = async (groupId = selectedGroupId) => {
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedGroupId, statusFilter]);
+
+  const loadStudents = async (groupId = selectedGroupId, { clearFeedback = true } = {}) => {
     setIsLoading(true);
     try {
+      const shouldFilterByGroup =
+        groupId && groupId !== GROUP_FILTER_WITHOUT_GROUP;
       const data = await adminStudentsService.listStudents({
-        groupId: groupId ? Number(groupId) : undefined,
+        groupId: shouldFilterByGroup ? Number(groupId) : undefined,
         includeInactive: true,
       });
       setStudents(data);
-      setFeedback(null);
+      if (clearFeedback) {
+        setFeedback(null);
+      }
     } catch (error) {
       setStudents([]);
       setFeedback({
@@ -234,7 +280,10 @@ export default function EstudiantesPage() {
       mode: "create",
       form: {
         ...INITIAL_STUDENT_FORM,
-        grupo_id: selectedGroupId || "",
+        grupo_id:
+          selectedGroupId && selectedGroupId !== GROUP_FILTER_WITHOUT_GROUP
+            ? selectedGroupId
+            : "",
       },
     });
   };
@@ -274,32 +323,60 @@ export default function EstudiantesPage() {
       });
       return;
     }
+    const parsedAge = Number(edad);
+    if (!Number.isInteger(parsedAge) || parsedAge <= 0) {
+      setFeedback({
+        type: "error",
+        message: "La edad debe ser un numero entero mayor que cero.",
+      });
+      return;
+    }
+    if (studentModal.mode === "edit" && !selectedStudentDetail) {
+      setFeedback({
+        type: "error",
+        message: "Selecciona un estudiante antes de guardar cambios.",
+      });
+      return;
+    }
+    setIsSavingStudent(true);
     try {
       if (studentModal.mode === "create") {
         const createdStudent = await adminStudentsService.createStudent(
           normalizeStudentPayload(studentModal.form)
         );
+        closeStudentModal();
+        await loadStudents(selectedGroupId, { clearFeedback: false });
         setFeedback({
           type: "success",
           message: `Estudiante ${createdStudent?.nombre || nombre.trim()} creado correctamente.`,
         });
-      } else if (selectedStudentDetail) {
+      } else {
+        const currentGroupId = getStudentGroupId(selectedStudentDetail);
+        const nextGroupId = studentModal.form.grupo_id;
         await adminStudentsService.updateStudent(selectedStudentDetail.id, {
           nombre: nombre.trim(),
-          edad: Number(edad),
+          edad: parsedAge,
         });
+        if (nextGroupId && nextGroupId !== currentGroupId) {
+          await adminStudentsService.changeStudentGroup(selectedStudentDetail.id, Number(nextGroupId));
+        }
+        closeStudentModal();
+        await loadStudents(selectedGroupId, { clearFeedback: false });
         setFeedback({
           type: "success",
-          message: "Datos del estudiante actualizados correctamente.",
+          message:
+            nextGroupId && nextGroupId !== currentGroupId
+              ? "Datos y grupo del estudiante actualizados correctamente."
+              : "Datos del estudiante actualizados correctamente.",
         });
       }
-      closeStudentModal();
-      await loadStudents();
     } catch (error) {
       setFeedback({
         type: "error",
         message: error.message || "No fue posible guardar el estudiante.",
       });
+    } finally {
+      setIsSavingStudent(false);
     }
   };
 
@@ -330,7 +407,7 @@ export default function EstudiantesPage() {
         message: "El estudiante fue movido al nuevo grupo.",
       });
       closeMoveModal();
-      await loadStudents();
+      await loadStudents(selectedGroupId, { clearFeedback: false });
     } catch (error) {
       setFeedback({
         type: "error",
@@ -362,7 +439,7 @@ export default function EstudiantesPage() {
           ? "Estudiante reactivado correctamente."
           : "Estudiante desactivado correctamente.",
       });
-      await loadStudents();
+      await loadStudents(selectedGroupId, { clearFeedback: false });
       return true;
     } catch (error) {
       setFeedback({
@@ -428,19 +505,17 @@ export default function EstudiantesPage() {
         ))}
       </div>
 
-      <div className="lk-field" style={{ margin: 0, width: "180px" }}>
-        <select
+      <div className="lk-role-page__select">
+        <AdminSelect
           value={selectedGroupId}
-          onChange={(e) => setSelectedGroupId(e.target.value)}
-          style={{ padding: "6px 12px", borderRadius: "2rem", fontSize: "0.85rem", width: "100%" }}
-        >
-          <option value="">Todos los grupos</option>
-          {groups.map((group) => (
-            <option key={String(group.id_grupo ?? group.id)} value={String(group.id_grupo ?? group.id)}>
-              {group.nombre}
-            </option>
-          ))}
-        </select>
+          onChange={setSelectedGroupId}
+          options={[
+            { value: GROUP_FILTER_ALL, label: "Todos los grupos" },
+            { value: GROUP_FILTER_WITHOUT_GROUP, label: "Sin grupo" },
+            ...groupOptions,
+          ]}
+          placeholder="Todos los grupos"
+        />
       </div>
 
       <div className="lk-role-page__search">
@@ -485,10 +560,9 @@ export default function EstudiantesPage() {
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 
         <DashboardPanel
-          eyebrow="Directorio estudiantil"
-          title="Lista institucional"
-          subtitle="Explora el grupo actual de cada estudiante y abre su detalle cuando necesites actuar."
+          title="Estudiantes"
           aside={<UsersRound size={18} color="var(--lk-purple)" />}
+          compact
         >
           {!isLoading && visibleStudents.length === 0 ? (
             <EmptyState
@@ -512,7 +586,7 @@ export default function EstudiantesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {visibleStudents.map((student) => (
+                    {paginatedStudents.map((student) => (
                       <tr key={student.id}>
                         <td>
                           <strong>{student.nombre}</strong>
@@ -545,7 +619,7 @@ export default function EstudiantesPage() {
               </div>
 
               <div className="lk-role-mobile-list">
-                {visibleStudents.map((student) => (
+                {paginatedStudents.map((student) => (
                   <article key={student.id} className="lk-role-mobile-card">
                     <header className="lk-role-mobile-card__header">
                       <div>
@@ -579,9 +653,14 @@ export default function EstudiantesPage() {
                 ))}
               </div>
 
-              <div className="lk-role-table-footer">
-                Mostrando {visibleStudents.length} de {students.length} estudiante(s) en esta vista.
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                itemLabel="estudiante"
+                itemPluralLabel="estudiantes"
+                onPageChange={setCurrentPage}
+                pageSize={PAGE_SIZE}
+                totalItems={visibleStudents.length}
+              />
             </>
           )}
         </DashboardPanel>
@@ -694,7 +773,9 @@ export default function EstudiantesPage() {
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={closeStudentModal}>Cancelar</button>
-              <button className="lk-btn lk-btn--primary" onClick={handleStudentSubmit}>Guardar</button>
+              <button className="lk-btn lk-btn--primary" onClick={handleStudentSubmit} disabled={isSavingStudent}>
+                {isSavingStudent ? "Guardando..." : "Guardar"}
+              </button>
             </>
           }
         >
@@ -712,14 +793,24 @@ export default function EstudiantesPage() {
             {studentModal.mode === "create" && (
               <div className="lk-field">
                 <label>Grupo inicial</label>
-                <select value={studentModal.form.grupo_id} onChange={(e) => updateStudentForm("grupo_id", e.target.value)}>
-                  <option value="">Sin grupo</option>
-                  {groups.map((group) => (
-                    <option key={group.id_grupo ?? group.id} value={group.id_grupo ?? group.id}>
-                      {group.nombre}
-                    </option>
-                  ))}
-                </select>
+                <AdminSelect
+                  value={studentModal.form.grupo_id}
+                  onChange={(value) => updateStudentForm("grupo_id", value)}
+                  options={[{ value: "", label: "Sin grupo" }, ...assignableGroupOptions]}
+                  placeholder="Sin grupo"
+                />
+              </div>
+            )}
+            {studentModal.mode === "edit" && (
+              <div className="lk-field">
+                <label>Grupo</label>
+                <AdminSelect
+                  value={studentModal.form.grupo_id}
+                  onChange={(value) => updateStudentForm("grupo_id", value)}
+                  options={assignableGroupOptions}
+                  placeholder="Selecciona un grupo"
+                  emptyText="No hay grupos activos disponibles"
+                />
               </div>
             )}
           </div>
@@ -746,14 +837,12 @@ export default function EstudiantesPage() {
               </div>
               <div className="lk-field">
                 <label>Nuevo grupo</label>
-                <select value={moveModal.groupId} onChange={(e) => setMoveModal((prev) => ({ ...prev, groupId: e.target.value }))}>
-                  <option value="">Selecciona un grupo</option>
-                  {groups.map((group) => (
-                    <option key={group.id_grupo ?? group.id} value={group.id_grupo ?? group.id}>
-                      {group.nombre}
-                    </option>
-                  ))}
-                </select>
+                <AdminSelect
+                  value={moveModal.groupId}
+                  onChange={(value) => setMoveModal((prev) => ({ ...prev, groupId: value }))}
+                  options={assignableGroupOptions}
+                  placeholder="Selecciona un grupo"
+                />
               </div>
             </>
           )}

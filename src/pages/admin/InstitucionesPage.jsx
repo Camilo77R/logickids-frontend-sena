@@ -366,9 +366,7 @@ export default function InstitucionesPage() {
         </section>
 
         <DashboardPanel
-          eyebrow="Directorio institucional"
-          title="Instituciones registradas"
-          subtitle="Busqueda rapida y acciones reales sobre cada colegio."
+          title="Instituciones"
           aside={
             <div className="lk-role-search">
               <Search size={16} className="lk-role-search__icon" aria-hidden="true" />
@@ -381,6 +379,7 @@ export default function InstitucionesPage() {
               />
             </div>
           }
+          compact
         >
           {!isLoading && !filteredInstitutions.length ? (
             <EmptyState

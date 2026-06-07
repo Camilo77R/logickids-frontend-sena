@@ -474,12 +474,19 @@
  
 .lk-search-input {
   width: 100%;
-  padding: 8px 12px 8px 36px;
+  padding: 8px 34px 8px 36px;
   border: 1px solid #e5e7eb;
   border-radius: 2rem;
   font-size: 0.85rem;
   background: white;
   transition: all 0.2s;
+  appearance: none;
+}
+
+.lk-search-input::-webkit-search-cancel-button,
+.lk-search-input::-webkit-search-decoration {
+  appearance: none;
+  display: none;
 }
  
 .lk-search-input:focus {
@@ -870,7 +877,9 @@
 
 .lk-table tbody tr:hover {
   background: #f9fafb;
-}.lk-role-dashboard__hero-header {
+}
+
+.lk-admin-dashboard .lk-role-dashboard__hero-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -879,18 +888,32 @@
   margin-bottom: 1.5rem;
 }
 
-.lk-role-dashboard__hero-logo {
+.lk-admin-dashboard .lk-role-dashboard__hero-logo {
   flex-shrink: 0;
   margin-left: auto;
 }
 
-.lk-hero-logo {
+.lk-admin-dashboard .lk-hero-logo {
+  width: min(400px, 36vw);
   height: auto;
   display: block;
   opacity: 0.9;
+  transform: scale(1.6);
+  transform-origin: center;
   transition: opacity 0.2s ease;
 }
 
-.lk-hero-logo:hover {
+.lk-admin-dashboard .lk-hero-logo:hover {
   opacity: 1;
+}
+
+@media (max-width: 991.98px) {
+  .lk-admin-dashboard .lk-role-dashboard__hero-logo {
+    width: 100%;
+  }
+
+  .lk-admin-dashboard .lk-hero-logo {
+    width: min(260px, 72vw);
+    transform: none;
+  }
 }
