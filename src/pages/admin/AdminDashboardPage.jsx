@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   UserCog2,
   X,
+  Users,
 } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -207,7 +208,6 @@ export default function AdminDashboardPage() {
 
   const getCount = (key) => {
     switch (key) {
-      case "indicators": return 4;
       case "pulse": return view.progress.length;
       case "admins": return view.totals?.admins;
       case "tutors": return view.totals?.tutors;
@@ -217,10 +217,111 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const renderPreview = (key) => {
+    if (isLoading) return null;
+
+    if (key === "pulse") {
+      return (
+        <div className="lk-admin-module-card__preview">
+          {view.progress.map((item) => (
+            <div key={item.key} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{item.label}</span>
+              <span className="lk-admin-module-card__preview-value">{item.value}</span>
+            </div>
+          ))}
+          <div className="lk-admin-module-card__preview-metric">
+            <span className="lk-admin-module-card__preview-metric-icon">
+              <Users size={12} /> En clase ahora
+            </span>
+            <span className="lk-admin-module-card__preview-value">{view.totals?.studentsInClass ?? 0}</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (key === "admins") {
+      const preview = view.activeAdminPreview.slice(0, 3);
+      const remaining = view.activeAdminPreview.length - preview.length;
+      return (
+        <div className="lk-admin-module-card__preview">
+          {preview.length ? preview.map((a) => (
+            <div key={a.id || a.email} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{a.nombre}</span>
+              <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#9ca3af" }}>
+                {a.es_admin_principal ? "Principal" : ""}
+              </span>
+            </div>
+          )) : (
+            <div className="lk-admin-module-card__preview-empty">Sin admins activos</div>
+          )}
+          {remaining > 0 && <div className="lk-admin-module-card__preview-extra">+{remaining} más</div>}
+        </div>
+      );
+    }
+
+    if (key === "tutors") {
+      const preview = view.activeTutorPreview.slice(0, 3);
+      const remaining = view.activeTutorPreview.length - preview.length;
+      return (
+        <div className="lk-admin-module-card__preview">
+          {preview.length ? preview.map((t) => (
+            <div key={t.id || t.email} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{t.nombre}</span>
+            </div>
+          )) : (
+            <div className="lk-admin-module-card__preview-empty">Sin tutores activos</div>
+          )}
+          {remaining > 0 && <div className="lk-admin-module-card__preview-extra">+{remaining} más</div>}
+        </div>
+      );
+    }
+
+    if (key === "students") {
+      const preview = view.activeStudentPreview.slice(0, 3);
+      const remaining = view.activeStudentPreview.length - preview.length;
+      return (
+        <div className="lk-admin-module-card__preview">
+          {preview.length ? preview.map((s) => (
+            <div key={s.id || s.email} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{s.nombre}</span>
+              <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#9ca3af" }}>
+                {s.grupo_nombre || ""}
+              </span>
+            </div>
+          )) : (
+            <div className="lk-admin-module-card__preview-empty">Sin estudiantes activos</div>
+          )}
+          {remaining > 0 && <div className="lk-admin-module-card__preview-extra">+{remaining} más</div>}
+        </div>
+      );
+    }
+
+    if (key === "requests") {
+      return (
+        <div className="lk-admin-module-card__preview">
+          {pendingRequestsList.length ? (
+            pendingRequestsList.slice(0, 3).map((r) => (
+              <div key={r.id} className="lk-admin-module-card__preview-row">
+                <span className="lk-admin-module-card__preview-label">{r.tutor_nombre}</span>
+                <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#92400e" }}>
+                  pendiente
+                </span>
+              </div>
+            ))
+          ) : (
+            <div className="lk-admin-module-card__preview-empty">No hay solicitudes pendientes</div>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <AppShell
       title={`Hola, ${firstName}`}
-      description="Coordina admins, tutores, estudiantes y accesos desde un solo punto de control institucional."
+      description={user?.institucion || "Panel institucional"}
       notificationCount={pendingRequests}
     >
       <div className="lk-role-dashboard lk-admin-dashboard">
@@ -229,6 +330,7 @@ export default function AdminDashboardPage() {
         <section className="lk-admin-module-grid">
           {MODULES.map((mod) => {
             const Icon = mod.icon;
+            const count = getCount(mod.key);
             return (
               <button
                 key={mod.key}
@@ -236,16 +338,20 @@ export default function AdminDashboardPage() {
                 className="lk-admin-module-card"
                 onClick={() => setActiveModal(mod.key)}
               >
-                <div className="lk-admin-module-card__icon">
-                  <Icon size={20} />
+                <div className="lk-admin-module-card__header">
+                  <div className="lk-admin-module-card__icon">
+                    <Icon size={20} />
+                  </div>
+                  <div className="lk-admin-module-card__text">
+                    <strong className="lk-admin-module-card__title">{mod.title}</strong>
+                    <span className="lk-admin-module-card__subtitle">{mod.subtitle}</span>
+                  </div>
+                  <span className="lk-admin-module-card__count">
+                    {isLoading ? "..." : count}
+                  </span>
                 </div>
-                <div className="lk-admin-module-card__text">
-                  <strong className="lk-admin-module-card__title">{mod.title}</strong>
-                  <span className="lk-admin-module-card__subtitle">{mod.subtitle}</span>
-                </div>
-                <span className="lk-admin-module-card__count">
-                  {isLoading ? "..." : getCount(mod.key)}
-                </span>
+                {renderPreview(mod.key)}
+                <div className="lk-admin-module-card__footer">Ver detalle →</div>
               </button>
             );
           })}
