@@ -227,7 +227,7 @@ export default function SolicitudesPage() {
       description="Aquí el admin resuelve reactivaciones de tutores suspendidos."
       toolbar={toolbar}
     >
-      <div className="lk-role-dashboard lk-role-dashboard--fill">
+      <div className="lk-role-dashboard lk-role-dashboard--fill lk-admin-dashboard">
 
         {feedback.message && (
           <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
@@ -301,6 +301,7 @@ export default function SolicitudesPage() {
           eyebrow="Estadísticas"
           title="Resumen de Solicitudes"
           width={900}
+          overlayClassName="lk-admin-modal"
           actions={
             <button className="lk-btn lk-btn--primary" onClick={() => setShowMetricsModal(false)}>
               Cerrar
@@ -322,6 +323,7 @@ export default function SolicitudesPage() {
           eyebrow="Detalle"
           title={selectedRequest?.tutor_nombre || "Solicitud"}
           width={540}
+          overlayClassName="lk-admin-modal"
           actions={
             <div className="lk-modal-actions">
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
@@ -392,6 +394,7 @@ export default function SolicitudesPage() {
           eyebrow="Rechazar"
           title="Motivo del rechazo"
           warning="Esta acción enviará al tutor el motivo."
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowRechazoModal(false)}>Cancelar</button>

@@ -555,7 +555,7 @@ export default function EstudiantesPage() {
       description="Organiza el alumnado de tu institución, mueve grupos cuando haga falta y comparte QR sin salir del portal."
       toolbar={toolbar}
     >
-      <div className="lk-role-dashboard lk-role-dashboard--fill">
+      <div className="lk-role-dashboard lk-role-dashboard--fill lk-admin-dashboard">
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 
@@ -671,6 +671,7 @@ export default function EstudiantesPage() {
           eyebrow="Estadísticas"
           title="Resumen de Estudiantes"
           width={900}
+          overlayClassName="lk-admin-modal"
           actions={
             <button className="lk-btn lk-btn--primary" onClick={() => setShowMetricsModal(false)}>
               Cerrar
@@ -691,6 +692,7 @@ export default function EstudiantesPage() {
           eyebrow="Detalle del estudiante"
           title={selectedStudentDetail?.nombre || "Estudiante"}
           width={540}
+          overlayClassName="lk-admin-modal"
           actions={
             <div className="lk-modal-actions">
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
@@ -770,6 +772,7 @@ export default function EstudiantesPage() {
           onClose={closeStudentModal}
           eyebrow={studentModal.mode === "create" ? "Alta institucional" : "Ajuste de perfil"}
           title={studentModal.mode === "create" ? "Nuevo estudiante" : "Editar estudiante"}
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={closeStudentModal}>Cancelar</button>
@@ -822,6 +825,7 @@ export default function EstudiantesPage() {
           eyebrow="Reasignación"
           title="Mover estudiante de grupo"
           warning="Cambiar de grupo cerrará cualquier sesión activa."
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={closeMoveModal}>Cancelar</button>
@@ -859,6 +863,7 @@ export default function EstudiantesPage() {
           entityLabel={stateModal.student ? `${stateModal.student.nombre}` : ""}
           currentState={stateModal.student ? getStudentState(stateModal.student) : "activo"}
           nextState={stateModal.nextState}
+          overlayClassName="lk-admin-modal"
           {...getStudentStateCopy(stateModal.nextState)}
         />
 
@@ -867,6 +872,7 @@ export default function EstudiantesPage() {
           onClose={() => setQrModal({ open: false, token: "", studentName: "", isLoading: false })}
           eyebrow="Acceso del estudiante"
           title="Código QR"
+          overlayClassName="lk-admin-modal"
         >
           {qrModal.isLoading ? (
             <p>Cargando...</p>

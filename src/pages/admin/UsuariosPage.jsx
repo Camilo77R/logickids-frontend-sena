@@ -391,7 +391,7 @@ export default function UsuariosPage() {
       description="Da de alta al equipo tutor, entrega credenciales temporales y ajusta accesos desde el portal institucional."
       toolbar={toolbar}
     >
-      <div className="lk-role-dashboard lk-role-dashboard--fill">
+      <div className="lk-role-dashboard lk-role-dashboard--fill lk-admin-dashboard">
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 
@@ -503,6 +503,7 @@ export default function UsuariosPage() {
           eyebrow="Estadísticas"
           title="Resumen de Tutores"
           width={900}
+          overlayClassName="lk-admin-modal"
           actions={
             <button className="lk-btn lk-btn--primary" onClick={() => setShowMetricsModal(false)}>
               Cerrar
@@ -524,6 +525,7 @@ export default function UsuariosPage() {
           eyebrow="Detalle del tutor"
           title={selectedTutorDetail?.nombre || "Tutor"}
           width={540}
+          overlayClassName="lk-admin-modal"
           actions={
             <div className="lk-modal-actions">
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
@@ -594,6 +596,7 @@ export default function UsuariosPage() {
           eyebrow="Alta institucional"
           title="Crear tutor institucional"
           warning="Se generará una contraseña temporal para este tutor. Compártela por un canal seguro y pídale cambiarla apenas entre al portal."
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={closeCreateModal}>
@@ -647,6 +650,7 @@ export default function UsuariosPage() {
           eyebrow="Entrega inicial"
           title="Credenciales temporales"
           warning="La contraseña temporal solo se muestra en este momento. Guárdala y compártela por un canal seguro."
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={handleCopyCredentials}>
@@ -688,6 +692,7 @@ export default function UsuariosPage() {
           entityLabel={stateModal.user ? `${stateModal.user.nombre} · ${stateModal.user.email}` : ""}
           currentState={stateModal.user?.estado || "activo"}
           nextState={stateModal.nextState}
+          overlayClassName="lk-admin-modal"
           {...getTutorStateCopy(stateModal.nextState)}
         />
       </div>

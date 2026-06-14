@@ -496,7 +496,7 @@ export default function GruposPage() {
       description="Organiza los grupos de tu institución, asigna tutores y supervisa la operación de clases."
       toolbar={toolbar}
     >
-      <div className="lk-role-dashboard lk-role-dashboard--fill">
+      <div className="lk-role-dashboard lk-role-dashboard--fill lk-admin-dashboard">
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
         
@@ -625,6 +625,7 @@ export default function GruposPage() {
           eyebrow="Estadísticas"
           title="Resumen de Grupos"
           width={900}
+          overlayClassName="lk-admin-modal"
           actions={
             <button className="lk-btn lk-btn--primary" onClick={() => setShowMetricsModal(false)}>
               Cerrar
@@ -645,7 +646,8 @@ export default function GruposPage() {
           onClose={() => setShowDetailModal(false)}
           eyebrow="Detalle del grupo"
           title={modalGroupDetail?.nombre || "Grupo"}
-          width={760}
+          width={640}
+          overlayClassName="lk-admin-modal"
           actions={
             <div className="lk-modal-actions">
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
@@ -804,6 +806,7 @@ export default function GruposPage() {
           onClose={closeGroupFormModal}
           eyebrow={groupFormModal.mode === "create" ? "Alta pedagógica" : "Ajuste de grupo"}
           title={groupFormModal.mode === "create" ? "Nuevo grupo" : "Editar grupo"}
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={closeGroupFormModal}>Cancelar</button>
@@ -829,6 +832,7 @@ export default function GruposPage() {
           eyebrow="Operación escolar"
           title="Asignar tutor"
           width={640}
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={() => setTutorModal({ open: false, tutorId: "" })}>Cancelar</button>
@@ -854,6 +858,7 @@ export default function GruposPage() {
           eyebrow="Operación docente"
           title="Quitar tutor"
           warning="¿Estás seguro de que deseas desasignar al tutor actual?"
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={() => setUnassignModalOpen(false)}>Cancelar</button>
@@ -872,6 +877,7 @@ export default function GruposPage() {
             const success = await handleStateChange(stateModal.group.id, stateModal.nextState);
             if (success) closeStateModal();
           }}
+          overlayClassName="lk-admin-modal"
           entityLabel={stateModal.group ? `${stateModal.group.nombre}` : ""}
           currentState={stateModal.group?.activo ? "activo" : "inactivo"}
           nextState={stateModal.nextState}
