@@ -7,7 +7,7 @@
  */
 
 .lk-role-dashboard {
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
   display: grid;
   gap: 0.5rem;
 }
@@ -37,7 +37,7 @@
 .lk-role-dashboard__hero-title {
   margin: 0.2rem 0 0;
   color: var(--lk-text);
-  font-family: "Fredoka", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-display-font);
   font-size: clamp(1.1rem, 2.5vw, 1.35rem);
   font-weight: 700;
   letter-spacing: -0.06em;
@@ -70,14 +70,14 @@
   display: block;
   color: var(--lk-text);
   font-size: 1.2rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.04em;
 }
 
 .lk-role-dashboard__hero-tag span {
   color: var(--lk-text-muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -130,7 +130,7 @@
   display: block;
   margin-bottom: 0.35rem;
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   opacity: 0.86;
@@ -139,7 +139,7 @@
 .lk-role-metric__value {
   display: block;
   font-size: 2.5rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: -0.08em;
   line-height: 1;
 }
@@ -220,7 +220,7 @@
   margin-bottom: 0.3rem;
   color: var(--lk-purple);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -229,7 +229,7 @@
   margin: 0;
   color: var(--lk-text);
   font-size: 1.08rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
@@ -287,7 +287,7 @@
   display: block;
   color: var(--lk-text);
   font-size: 0.9rem;
-  font-weight: 900;
+  font-weight: 700;
   margin-bottom: 0.18rem;
 }
 
@@ -339,7 +339,7 @@
 .lk-role-list__title {
   color: var(--lk-text);
   font-size: 0.9rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-role-list__meta {
@@ -350,7 +350,7 @@
   border-radius: 999px;
   color: var(--lk-text-muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: capitalize;
 }
 
@@ -736,7 +736,7 @@
 }
 
 .lk-role-entity-card__title {
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1rem;
   margin: 0;
 }
@@ -1070,7 +1070,7 @@
   border: 1px solid #e5e7eb;
   border-radius: var(--lk-radius-sm);
   cursor: pointer;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
   transition: border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
@@ -1111,10 +1111,10 @@
 
 .lk-admin-module-card__count {
   margin-left: auto;
-  font-family: "Fredoka", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-display-font);
   font-size: 0.85rem;
   font-weight: 700;
-  color: #612B88;
+  color: var(--lk-brand);
   flex-shrink: 0;
 }
 

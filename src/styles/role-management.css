@@ -116,7 +116,7 @@
 .lk-role-entity-card__meta dt {
   color: var(--lk-text-muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -190,7 +190,7 @@
   display: inline-block;
   color: var(--lk-purple);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -320,7 +320,7 @@
 .lk-role-page__date-filter span {
   color: var(--lk-text-muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-date-clear {
@@ -343,7 +343,7 @@
   border-radius: 999px;
   padding: 0.62rem 0.9rem;
   font-size: 0.84rem;
-  font-weight: 800;
+  font-weight: 600;
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
 }
 
@@ -382,7 +382,7 @@
 .lk-role-info-card__label {
   color: var(--lk-text-muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -390,7 +390,7 @@
 .lk-role-info-card__value {
   color: var(--lk-text);
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.45;
 }
 
@@ -481,7 +481,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -624,7 +624,7 @@
 .lk-role-state-flow__label {
   color: var(--lk-text-muted);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -632,7 +632,7 @@
 .lk-role-state-flow__arrow {
   color: var(--lk-purple);
   font-size: 1.15rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-role-impact-card {
@@ -647,7 +647,7 @@
 .lk-role-impact-card__title {
   color: var(--lk-text);
   font-size: 0.9rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-role-impact-list {
@@ -679,7 +679,7 @@
   padding: 0.92rem 1rem;
   color: var(--lk-purple);
   font-size: 0.82rem;
-  font-weight: 800;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -711,7 +711,7 @@
 .lk-role-modal__field strong {
   color: var(--lk-text-muted);
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -799,7 +799,7 @@
 
 .lk-admin-select__value span {
   font-size: 0.88rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .lk-admin-select__value small {
