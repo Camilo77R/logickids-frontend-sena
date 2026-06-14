@@ -225,6 +225,12 @@
   border-bottom: 1px solid rgba(97, 43, 136, 0.08);
 }
 
+/* Topbar sin toolbar: mas compacto */
+.lk-portal-topbar:not(.lk-portal-topbar--merged) {
+  padding: 0.35rem 1.2rem;
+  min-height: 48px;
+}
+
 /* Merged: topbar + toolbar in one bar */
 .lk-portal-topbar--merged {
   flex-direction: column;

@@ -332,9 +332,9 @@ export default function AdminsInstitucionalesPage() {
     <AppShell
       title="Admins institucionales"
       description="Consolida el equipo administrativo de tu sede y mantén claro quién puede coordinar la operación diaria."
+      toolbar={toolbar}
     >
-      <div className="lk-role-dashboard">
-        {toolbar}
+      <div className="lk-role-dashboard lk-admin-dashboard">
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 
@@ -359,7 +359,49 @@ export default function AdminsInstitucionalesPage() {
               />
             )}
 
-            {visibleAdmins.length > 0 && (
+            {visibleAdmins.length > 0 && statusFilter === "principal" && visibleAdmins.length === 1 ? (
+              <div className="lk-admin-principal-split">
+                <article className="lk-role-entity-card lk-role-entity-card--gold">
+                  <header className="lk-role-entity-card__header">
+                    <div>
+                      <h3 className="lk-role-entity-card__title">{visibleAdmins[0].nombre}</h3>
+                      <p className="lk-role-entity-card__subtitle">{visibleAdmins[0].email}</p>
+                    </div>
+                    <StatusBadge label="principal" variant="principal" />
+                  </header>
+                  <dl className="lk-role-entity-card__meta">
+                    <div><dt>Estado</dt><dd>{visibleAdmins[0].estado}</dd></div>
+                    <div><dt>Institución</dt><dd>{visibleAdmins[0].institucion || "Sin institución"}</dd></div>
+                    <div><dt>Creado</dt><dd>{formatDate(visibleAdmins[0].creado_en)}</dd></div>
+                  </dl>
+                </article>
+                <div className="lk-admin-principal-detail">
+                  <h4 className="lk-admin-principal-detail__title">Detalle del admin</h4>
+                  <div className="lk-admin-detail-content">
+                    <div className="lk-detail-field"><label>Email</label><p>{visibleAdmins[0].email}</p></div>
+                    <div className="lk-detail-field">
+                      <label>Rol</label>
+                      <p>Admin principal</p>
+                    </div>
+                    <div className="lk-detail-field">
+                      <label>Estado</label>
+                      <StatusBadge label={visibleAdmins[0].estado} variant={visibleAdmins[0].estado} />
+                    </div>
+                    <div className="lk-detail-field">
+                      <label>Institución</label>
+                      <p>{visibleAdmins[0].institucion || "No asignada"}</p>
+                    </div>
+                    <div className="lk-detail-field">
+                      <label>Fecha de registro</label>
+                      <p>{formatDate(visibleAdmins[0].creado_en)}</p>
+                    </div>
+                    <div className="lk-role-banner lk-role-banner--warning">
+                      <strong>Admin principal</strong> — No se puede modificar desde esta vista.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : visibleAdmins.length > 0 ? (
               <>
                 <div className="lk-role-entity-grid">
                   {paginatedAdmins.map((admin) => (
@@ -403,7 +445,7 @@ export default function AdminsInstitucionalesPage() {
                   totalItems={visibleAdmins.length}
                 />
               </>
-            )}
+            ) : null}
           </div>
         </section>
 
