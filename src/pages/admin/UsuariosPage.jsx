@@ -389,9 +389,9 @@ export default function UsuariosPage() {
     <AppShell
       title="Tutores"
       description="Da de alta al equipo tutor, entrega credenciales temporales y ajusta accesos desde el portal institucional."
+      toolbar={toolbar}
     >
       <div className="lk-role-dashboard lk-role-dashboard--fill">
-        {toolbar}
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 

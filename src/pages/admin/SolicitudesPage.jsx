@@ -225,9 +225,9 @@ export default function SolicitudesPage() {
     <AppShell
       title="Solicitudes"
       description="Aquí el admin resuelve reactivaciones de tutores suspendidos."
+      toolbar={toolbar}
     >
       <div className="lk-role-dashboard lk-role-dashboard--fill">
-        {toolbar}
 
         {feedback.message && (
           <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>

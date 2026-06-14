@@ -553,9 +553,9 @@ export default function EstudiantesPage() {
     <AppShell
       title="Estudiantes"
       description="Organiza el alumnado de tu institución, mueve grupos cuando haga falta y comparte QR sin salir del portal."
+      toolbar={toolbar}
     >
       <div className="lk-role-dashboard lk-role-dashboard--fill">
-        {toolbar}
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 

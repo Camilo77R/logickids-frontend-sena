@@ -494,10 +494,10 @@ export default function GruposPage() {
     <AppShell
       title="Grupos"
       description="Organiza los grupos de tu institución, asigna tutores y supervisa la operación de clases."
+      toolbar={toolbar}
     >
       <div className="lk-role-dashboard lk-role-dashboard--fill">
-        {toolbar}
-        
+
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
         
         {/* Panel único que ocupa todo el ancho */}

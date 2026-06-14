@@ -22,6 +22,7 @@ export default function PortalShell({
   onAccountCenter,
   onLogout,
   actions,
+  toolbar,
   className = "",
   children,
 }) {
@@ -47,6 +48,7 @@ export default function PortalShell({
           onNotificationsClick={onNotificationsClick}
           onAccountCenter={onAccountCenter}
           actions={actions}
+          toolbar={toolbar}
         />
 
         <PortalMobileNav

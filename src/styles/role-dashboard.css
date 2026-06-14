@@ -427,6 +427,16 @@
   min-height: 44px;
 }
 
+/* Toolbar inside merged topbar: strip visual separation */
+.lk-portal-topbar--merged .lk-role-page__toolbar {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+  gap: 8px;
+}
+
 .lk-role-page__filters {
   display: flex;
   gap: 8px;

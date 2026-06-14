@@ -50,6 +50,7 @@ export default function AppShell({
   description,
   children,
   actions,
+  toolbar,
   notificationCount = 0,
 }) {
   const navigate = useNavigate();
@@ -95,6 +96,7 @@ export default function AppShell({
         onAccountCenter={() => setShowAccountCenter(true)}
         onLogout={handleLogout}
         actions={actions}
+        toolbar={toolbar}
         className={user?.rol === USER_ROLES.ADMIN ? "lk-portal-shell--admin" : ""}
       >
         {children}
