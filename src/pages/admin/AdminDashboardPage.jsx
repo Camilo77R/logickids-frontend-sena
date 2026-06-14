@@ -7,7 +7,6 @@ import {
   ShieldCheck,
   UserCog2,
   X,
-  Users,
 } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -229,12 +228,6 @@ export default function AdminDashboardPage() {
               <span className="lk-admin-module-card__preview-value">{item.value}</span>
             </div>
           ))}
-          <div className="lk-admin-module-card__preview-metric">
-            <span className="lk-admin-module-card__preview-metric-icon">
-              <Users size={12} /> En clase ahora
-            </span>
-            <span className="lk-admin-module-card__preview-value">{view.totals?.studentsInClass ?? 0}</span>
-          </div>
         </div>
       );
     }
