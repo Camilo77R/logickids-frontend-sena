@@ -107,7 +107,7 @@ export default function AccountCenterModal({ show, onHide }) {
       <Modal.Body style={{ padding: '2rem', fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
         {/* Cabecera / Info de Usuario */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.8rem' }}>
-          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#8E35D5', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 800 }}>
+          <div style={{ width: '56px', height: '56px',             borderRadius: '50%', background: '#612B88', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 800 }}>
             {initials}
           </div>
           <div style={{ minWidth: 0 }}>
@@ -117,7 +117,7 @@ export default function AccountCenterModal({ show, onHide }) {
             <div style={{ fontSize: '0.9rem', color: '#555', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {user?.email}
             </div>
-            <div style={{ display: 'inline-block', marginTop: '5px', padding: '0.2rem 0.6rem', borderRadius: '999px', background: 'rgba(142, 53, 213, 0.1)', color: '#8E35D5', fontSize: '0.75rem', fontWeight: 700 }}>
+            <div style={{ display: 'inline-block', marginTop: '5px', padding: '0.2rem 0.6rem', borderRadius: '999px', background: 'rgba(97, 43, 136, 0.1)', color: '#612B88', fontSize: '0.75rem', fontWeight: 700 }}>
               Rol: {roleLabel}
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function AccountCenterModal({ show, onHide }) {
             />
           </div>
 
-          <div style={{ margin: '1rem 0 0.5rem', fontSize: '0.75rem', fontWeight: 700, color: '#8E35D5', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ margin: '1rem 0 0.5rem', fontSize: '0.75rem', fontWeight: 700, color: '#612B88', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Cambiar Contraseña (Opcional)
           </div>
 
@@ -187,7 +187,7 @@ export default function AccountCenterModal({ show, onHide }) {
             <button 
               type="submit" 
               disabled={isLoading}
-              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: '#8E35D5', color: '#fff', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(142, 53, 213, 0.22)' }}
+              style={{ flex: 1, padding: '0.7rem', borderRadius: '999px', background: '#612B88', color: '#fff', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}
             >
               {isLoading ? <Spinner size="sm" /> : "Guardar"}
             </button>

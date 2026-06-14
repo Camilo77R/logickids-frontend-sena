@@ -22,10 +22,11 @@ export default function PortalShell({
   onAccountCenter,
   onLogout,
   actions,
+  className = "",
   children,
 }) {
   return (
-    <div className="lk-portal-shell">
+    <div className={`lk-portal-shell${className ? ` ${className}` : ""}`}>
       <PortalSidebar
         navigation={navigation}
         roleLabel={roleLabel}

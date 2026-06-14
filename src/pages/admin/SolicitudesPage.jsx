@@ -226,7 +226,7 @@ export default function SolicitudesPage() {
       title="Solicitudes"
       description="Aquí el admin resuelve reactivaciones de tutores suspendidos."
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-role-dashboard--fill">
         {toolbar}
 
         {feedback.message && (
@@ -308,10 +308,10 @@ export default function SolicitudesPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={Mail} label="Solicitudes" value={summary.total} description="Total de reactivaciones" tone="purple" />
-            <DashboardMetricCard icon={AlertCircle} label="Pendientes" value={summary.pending} description="Casos por decidir" tone="orange" />
-            <DashboardMetricCard icon={CheckCircle} label="Aprobadas" value={summary.approved} description="Tutores reactivados" tone="gold" />
-            <DashboardMetricCard icon={XCircle} label="Rechazadas" value={summary.rejected} description="Respuestas negativas" tone="rose" />
+            <DashboardMetricCard icon={Mail} label="Solicitudes" value={summary.total} description="Total de reactivaciones" tone="gray" />
+            <DashboardMetricCard icon={AlertCircle} label="Pendientes" value={summary.pending} description="Casos por decidir" tone="gray" />
+            <DashboardMetricCard icon={CheckCircle} label="Aprobadas" value={summary.approved} description="Tutores reactivados" tone="gray" />
+            <DashboardMetricCard icon={XCircle} label="Rechazadas" value={summary.rejected} description="Respuestas negativas" tone="gray" />
           </div>
         </RoleModal>
 

@@ -554,7 +554,7 @@ export default function EstudiantesPage() {
       title="Estudiantes"
       description="Organiza el alumnado de tu institución, mueve grupos cuando haga falta y comparte QR sin salir del portal."
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-role-dashboard--fill">
         {toolbar}
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
@@ -678,10 +678,10 @@ export default function EstudiantesPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={UsersRound} label="Total del contexto" value={summary.total} description="Cuenta total" tone="purple" />
-            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeStudents} description="Listos para jugar" tone="gold" />
-            <DashboardMetricCard icon={UserRoundX} label="Sin grupo" value={summary.withoutGroup} description="Ubicarlos pronto" tone="orange" />
-            <DashboardMetricCard icon={GraduationCap} label="En clase" value={summary.openSessions} description="Sesión habilitada" tone="rose" />
+            <DashboardMetricCard icon={UsersRound} label="Total del contexto" value={summary.total} description="Cuenta total" tone="gray" />
+            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeStudents} description="Listos para jugar" tone="gray" />
+            <DashboardMetricCard icon={UserRoundX} label="Sin grupo" value={summary.withoutGroup} description="Ubicarlos pronto" tone="gray" />
+            <DashboardMetricCard icon={GraduationCap} label="En clase" value={summary.openSessions} description="Sesión habilitada" tone="gray" />
           </div>
         </RoleModal>
 

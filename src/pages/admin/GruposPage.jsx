@@ -495,7 +495,7 @@ export default function GruposPage() {
       title="Grupos"
       description="Organiza los grupos de tu institución, asigna tutores y supervisa la operación de clases."
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-role-dashboard--fill">
         {toolbar}
         
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
@@ -632,10 +632,10 @@ export default function GruposPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={FolderClosed} label="Total de grupos" value={summary.total} description="Cantidad de grupos" tone="purple" />
-            <DashboardMetricCard icon={UserCheck2} label="Grupos activos" value={summary.activeGroups} description="Aulas operativas" tone="gold" />
-            <DashboardMetricCard icon={UsersRound} label="Sin tutor" value={summary.withoutTutor} description="Necesitan tutor" tone="orange" />
-            <DashboardMetricCard icon={Activity} label="Clases activas" value={summary.activeSessions} description="En juego" tone="rose" />
+            <DashboardMetricCard icon={FolderClosed} label="Total de grupos" value={summary.total} description="Cantidad de grupos" tone="gray" />
+            <DashboardMetricCard icon={UserCheck2} label="Grupos activos" value={summary.activeGroups} description="Aulas operativas" tone="gray" />
+            <DashboardMetricCard icon={UsersRound} label="Sin tutor" value={summary.withoutTutor} description="Necesitan tutor" tone="gray" />
+            <DashboardMetricCard icon={Activity} label="Clases activas" value={summary.activeSessions} description="En juego" tone="gray" />
           </div>
         </RoleModal>
         

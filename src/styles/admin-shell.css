@@ -32,7 +32,6 @@
   align-content: start;
   background: rgba(255, 255, 255, 0.98);
   border: 1px solid var(--lk-color-border);
-  box-shadow: var(--lk-shadow-card);
   backdrop-filter: blur(16px);
 }
 
@@ -43,8 +42,8 @@
   align-items: center;
   padding: 0.95rem 1rem;
   border-radius: var(--lk-radius-lg);
-  background: rgba(139, 47, 201, 0.06);
-  border: 1px solid rgba(139, 47, 201, 0.08);
+  background: rgba(97, 43, 136, 0.06);
+  border: 1px solid rgba(97, 43, 136, 0.08);
 }
 
 .lk-shell-profile-copy {
@@ -73,9 +72,8 @@
 .lk-shell-main {
   border-radius: var(--lk-radius-xl);
   padding: 1.1rem 1.2rem 1.35rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.64), rgba(248,244,255,0.97));
+  background: rgba(255,255,255,0.64);
   border: 1px solid var(--lk-color-border);
-  box-shadow: var(--lk-shadow-card);
   backdrop-filter: blur(16px);
 }
 
@@ -96,13 +94,13 @@
 
 .lk-nav-link:hover {
   transform: translateX(2px);
-  background: rgba(139,47,201,0.07);
+  background: rgba(97, 43, 136, 0.07);
   color: var(--lk-text);
 }
 
 .lk-nav-link.active {
-  background: linear-gradient(135deg, rgba(139,47,201,0.14), rgba(168,85,247,0.10));
-  color: var(--lk-purple-dark);
+  background: rgba(97, 43, 136, 0.14);
+  color: #612B88;
   font-weight: 800;
 }
 
@@ -114,7 +112,7 @@
   border-radius: 50%;
   font-weight: 800;
   color: #ffffff;
-  background: linear-gradient(135deg, var(--lk-purple), var(--lk-purple-light));
+  background: #612B88;
 }
 
 .lk-topbar {
@@ -146,7 +144,6 @@
   background: #ffffff;
   border: 1px solid var(--lk-color-border);
   color: var(--lk-text-muted);
-  box-shadow: var(--lk-shadow-sm);
 }
 
 .lk-page-header {
@@ -173,7 +170,7 @@
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--lk-purple);
+  color: #612B88;
   background: var(--lk-purple-soft);
 }
 
@@ -196,7 +193,7 @@
   letter-spacing: -0.01em;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  transition: transform 180ms ease, background 180ms ease;
 }
 
 .lk-btn:hover:not(:disabled) {
@@ -210,18 +207,17 @@
 
 .lk-btn--primary {
   color: var(--lk-purple-deep);
-  background: linear-gradient(135deg, var(--lk-yellow-dark), var(--lk-yellow));
-  box-shadow: 0 12px 24px rgba(255, 202, 40, 0.26);
+  background: #FFDE40;
 }
 
 .lk-btn--secondary {
   color: var(--lk-text);
   background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(139, 47, 201, 0.12);
+  border-color: rgba(97, 43, 136, 0.12);
 }
 
 .lk-btn--subtle {
-  color: var(--lk-purple);
+  color: #612B88;
   background: var(--lk-purple-soft);
 }
 
@@ -232,14 +228,14 @@
 }
 
 .lk-btn--primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f5a910, #ffbd17);
+  background: #F7DF46;
 }
 
 .lk-btn--secondary:hover:not(:disabled),
 .lk-btn--subtle:hover:not(:disabled) {
-  color: var(--lk-purple);
+  color: #612B88;
   background: var(--lk-surface-soft);
-  border-color: rgba(139, 47, 201, 0.18);
+  border-color: rgba(97, 43, 136, 0.18);
 }
 
 .lk-btn--full {
@@ -255,7 +251,7 @@
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--lk-purple);
+  color: #612B88;
   background: var(--lk-purple-soft);
 }
 

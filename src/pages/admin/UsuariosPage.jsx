@@ -390,7 +390,7 @@ export default function UsuariosPage() {
       title="Tutores"
       description="Da de alta al equipo tutor, entrega credenciales temporales y ajusta accesos desde el portal institucional."
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-role-dashboard--fill">
         {toolbar}
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
@@ -510,10 +510,10 @@ export default function UsuariosPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={UsersRound} label="Tutores visibles" value={summary.total} description="Cuentas docentes" tone="purple" />
-            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeUsers} description="Tutores habilitados" tone="gold" />
-            <DashboardMetricCard icon={AlertCircle} label="Inactivos" value={summary.inactiveUsers} description="Cuentas pausadas" tone="orange" />
-            <DashboardMetricCard icon={ShieldAlert} label="Suspendidos" value={summary.suspendedUsers} description="Requieren revisión" tone="rose" />
+            <DashboardMetricCard icon={UsersRound} label="Tutores visibles" value={summary.total} description="Cuentas docentes" tone="gray" />
+            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeUsers} description="Tutores habilitados" tone="gray" />
+            <DashboardMetricCard icon={AlertCircle} label="Inactivos" value={summary.inactiveUsers} description="Cuentas pausadas" tone="gray" />
+            <DashboardMetricCard icon={ShieldAlert} label="Suspendidos" value={summary.suspendedUsers} description="Requieren revisión" tone="gray" />
           </div>
         </RoleModal>
 

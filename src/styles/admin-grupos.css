@@ -10,7 +10,7 @@
   align-items: center;
   margin-top: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(139, 47, 201, 0.08);
+  border-bottom: 1px solid rgba(97, 43, 136, 0.08);
 }
 
 .lk-group-students-title {
@@ -45,7 +45,7 @@
   align-items: center;
   padding: 0.6rem 0.8rem;
   background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(139, 47, 201, 0.06);
+  border: 1px solid rgba(97, 43, 136, 0.06);
   border-radius: var(--lk-radius-sm);
 }
 

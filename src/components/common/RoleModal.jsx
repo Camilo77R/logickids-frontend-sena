@@ -10,6 +10,7 @@ export default function RoleModal({
   width = 520,
   actions,
   children,
+  overlayClassName = "",
 }) {
   const sizeClass =
     width >= 720 ? " lk-role-modal--wide" : width >= 640 ? " lk-role-modal--large" : "";
@@ -28,7 +29,7 @@ export default function RoleModal({
   if (!open) return null;
 
   return createPortal(
-    <div className="lk-role-modal-overlay" onClick={onClose}>
+    <div className={`lk-role-modal-overlay${overlayClassName ? ` ${overlayClassName}` : ""}`} onClick={onClose}>
       <div
         className={`lk-role-modal${sizeClass}`}
         onClick={(event) => event.stopPropagation()}

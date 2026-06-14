@@ -119,7 +119,7 @@ const styles = {
   },
   sidebar: {
     width: "260px",
-    background: "linear-gradient(160deg, #1e1b4b 0%, #312e81 100%)",
+    background: "#612B88",
     display: "flex",
     flexDirection: "column",
     padding: "24px 16px",
@@ -157,7 +157,7 @@ const styles = {
     width: "36px",
     height: "36px",
     borderRadius: "50%",
-    background: "#7c3aed",
+    background: "#612B88",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

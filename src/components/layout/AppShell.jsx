@@ -95,6 +95,7 @@ export default function AppShell({
         onAccountCenter={() => setShowAccountCenter(true)}
         onLogout={handleLogout}
         actions={actions}
+        className={user?.rol === USER_ROLES.ADMIN ? "lk-portal-shell--admin" : ""}
       >
         {children}
       </PortalShell>

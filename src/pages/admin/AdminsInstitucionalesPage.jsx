@@ -421,10 +421,10 @@ export default function AdminsInstitucionalesPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={UsersRound} label="Admins visibles" value={summary.total} description="Personal administrativo" tone="purple" />
-            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeAdmins} description="Cuentas listas para coordinar" tone="gold" />
-            <DashboardMetricCard icon={ShieldCheck} label="Principal" value={summary.principalAdmins} description="Responsables con control" tone="orange" />
-            <DashboardMetricCard icon={ShieldAlert} label="Suspendidos" value={summary.suspendedAdmins} description="Casos que requieren revisión" tone="rose" />
+            <DashboardMetricCard icon={UsersRound} label="Admins visibles" value={summary.total} description="Personal administrativo" tone="gray" />
+            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeAdmins} description="Cuentas listas para coordinar" tone="gray" />
+            <DashboardMetricCard icon={ShieldCheck} label="Principal" value={summary.principalAdmins} description="Responsables con control" tone="gray" />
+            <DashboardMetricCard icon={ShieldAlert} label="Suspendidos" value={summary.suspendedAdmins} description="Casos que requieren revisión" tone="gray" />
           </div>
         </RoleModal>
 
