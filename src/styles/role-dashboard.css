@@ -1272,6 +1272,7 @@
 
 .lk-admin-modal .lk-role-modal__content {
   background: #f8f9fa !important;
+  overflow: visible !important;
 }
 
 /* Entity cards admin: blanco limpio, sin colores cálidos */

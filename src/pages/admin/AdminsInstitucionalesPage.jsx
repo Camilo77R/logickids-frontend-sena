@@ -453,6 +453,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={showMetricsModal}
           onClose={() => setShowMetricsModal(false)}
+          overlayClassName="lk-admin-modal"
           eyebrow="Estadísticas"
           title="Resumen de Admins"
           width={900}
@@ -474,6 +475,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={isModalOpen}
           onClose={handleCloseModal}
+          overlayClassName="lk-admin-modal"
           eyebrow="Detalle del admin"
           title={selectedAdmin?.nombre || "Administrador"}
           width={540}
@@ -528,6 +530,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={createModal.open}
           onClose={closeCreateModal}
+          overlayClassName="lk-admin-modal"
           eyebrow="Alta administrativa"
           title="Crear admin institucional"
           actions={
@@ -578,6 +581,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={Boolean(createdCredentials)}
           onClose={() => setCreatedCredentials(null)}
+          overlayClassName="lk-admin-modal"
           eyebrow="Entrega inicial"
           title="Credenciales temporales"
           warning="Comparte estas credenciales por un canal seguro. La contraseña temporal solo se muestra en este momento."
@@ -600,6 +604,7 @@ export default function AdminsInstitucionalesPage() {
         <StateChangeModal
           open={stateModal.open && Boolean(stateModal.admin)}
           onClose={closeStateModal}
+          overlayClassName="lk-admin-modal"
           onConfirm={async () => {
             if (!stateModal.admin) return;
             const ok = await handleAdminStateChange(stateModal.admin.id, stateModal.nextState);

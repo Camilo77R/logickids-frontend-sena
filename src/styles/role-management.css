@@ -866,7 +866,7 @@
 }
 
 .lk-admin-select__options {
-  max-height: none;
+  max-height: 16rem;
   overflow-y: auto;
   display: grid;
   gap: 0.28rem;
