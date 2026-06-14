@@ -301,6 +301,7 @@
   display: grid;
   gap: 0.12rem;
   min-width: 0;
+  flex: 1;
 }
 
 .lk-portal-topbar__title {
