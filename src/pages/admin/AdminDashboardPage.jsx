@@ -69,12 +69,6 @@ function filterStudents(students, search) {
   );
 }
 
-function resolveRequestTone(estado) {
-  if (estado === "aprobado") return "gold";
-  if (estado === "rechazado") return "rose";
-  return "orange";
-}
-
 function DataTable({ columns, data, searchValue, onSearchChange, searchPlaceholder }) {
   const [page, setPage] = useState(1);
   const start = (page - 1) * PAGE_SIZE;
@@ -210,7 +204,10 @@ export default function AdminDashboardPage() {
     [searches.students, view.activeStudentPreview]
   );
 
-  const requestPreview = requests.slice(0, 10);
+  const pendingRequestsList = useMemo(
+    () => requests.filter((r) => r.estado_solicitud === "pendiente"),
+    [requests]
+  );
   const currentModule = MODULES.find((m) => m.key === activeModal);
   const closeModal = () => setActiveModal(null);
 
@@ -395,27 +392,28 @@ export default function AdminDashboardPage() {
           )}
 
           {activeModal === "requests" && (
-            <div className="lk-role-list">
-              {requestPreview.length ? (
-                requestPreview.map((request) => (
-                  <article
-                    key={request.id}
-                    className={`lk-role-list__item lk-role-list__item--${resolveRequestTone(request.estado_solicitud)}`}
-                  >
-                    <div className="lk-role-list__top">
-                      <span className="lk-role-list__title">{request.tutor_nombre}</span>
-                      <span className={`lk-role-list__meta lk-role-list__meta--${resolveRequestTone(request.estado_solicitud)}`}>
-                        {request.estado_solicitud}
-                      </span>
-                    </div>
-                    <p className="lk-role-list__description">
-                      {request.correo_contacto || request.tutor_email}
-                    </p>
-                  </article>
-                ))
-              ) : (
-                <p className="lk-role-note">No hay solicitudes recientes.</p>
-              )}
+            <div className="lk-role-detail-stack">
+              <div className="lk-table-wrap" style={{ overflowY: "auto", flex: 1 }}>
+                {pendingRequestsList.length ? (
+                  <div className="lk-role-list">
+                    {pendingRequestsList.map((request) => (
+                      <article key={request.id} className="lk-role-list__item">
+                        <div className="lk-role-list__top">
+                          <span className="lk-role-list__title">{request.tutor_nombre}</span>
+                          <StatusBadge label="pendiente" variant="pendiente" />
+                        </div>
+                        <p className="lk-role-list__description">
+                          {request.correo_contacto || request.tutor_email}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p style={{ textAlign: "center", padding: "2rem", color: "var(--lk-text-muted)" }}>
+                    No hay solicitudes pendientes
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
