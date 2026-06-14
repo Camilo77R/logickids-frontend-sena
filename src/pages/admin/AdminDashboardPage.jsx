@@ -2,17 +2,13 @@
 import {
   Activity,
   GraduationCap,
-  LayoutDashboard,
   Mail,
   Search,
-  ShieldAlert,
   ShieldCheck,
-  UserCheck2,
   UserCog2,
   X,
 } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
-import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
 import StatusBadge from "../../components/common/StatusBadge";
 import RoleModal from "../../components/common/RoleModal";
 import Pagination from "../../components/common/Pagination";
@@ -22,11 +18,9 @@ import adminTutorsService from "../../services/adminTutorsService";
 import adminInstitutionalAdminsService from "../../services/adminInstitutionalAdminsService";
 import adminStudentsService from "../../services/adminStudentsService";
 import { buildAdminDashboardView } from "./adminDashboard.selectors";
-import logoWordmark from "../../assets/imgs/logoLogickids transparente.png";
 
 const PAGE_SIZE = 8;
 const MODULES = [
-  { key: "indicators", icon: LayoutDashboard, title: "Indicadores", subtitle: "Métricas principales" },
   { key: "pulse", icon: Activity, title: "Pulso", subtitle: "Salud de accesos" },
   { key: "admins", icon: ShieldCheck, title: "Admins", subtitle: "Directorio activo" },
   { key: "tutors", icon: UserCog2, title: "Tutores", subtitle: "Directorio activo" },
@@ -232,53 +226,6 @@ export default function AdminDashboardPage() {
       <div className="lk-role-dashboard lk-admin-dashboard">
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
-        <section className="lk-role-dashboard__hero">
-          <div className="lk-role-dashboard__hero-header">
-            <div>
-              <span className="lk-role-dashboard__hero-badge">Panel institucional</span>
-              <h2 className="lk-role-dashboard__hero-title">Tu institución bajo control</h2>
-            </div>
-            <div className="lk-role-dashboard__hero-logo">
-              <img src={logoWordmark} alt="LogicKids" className="lk-hero-logo" />
-            </div>
-          </div>
-        </section>
-
-        <section className="lk-admin-metrics">
-          <DashboardMetricCard
-            icon={ShieldCheck}
-            label={view.metrics[0].label}
-            value={isLoading ? "..." : view.metrics[0].value}
-            description={view.metrics[0].description}
-            tone="gray"
-            compact
-          />
-          <DashboardMetricCard
-            icon={UserCheck2}
-            label={view.metrics[1].label}
-            value={isLoading ? "..." : view.metrics[1].value}
-            description={view.metrics[1].description}
-            tone="gray"
-            compact
-          />
-          <DashboardMetricCard
-            icon={GraduationCap}
-            label={view.metrics[2].label}
-            value={isLoading ? "..." : view.metrics[2].value}
-            description={view.metrics[2].description}
-            tone="gray"
-            compact
-          />
-          <DashboardMetricCard
-            icon={ShieldAlert}
-            label={view.metrics[3].label}
-            value={isLoading ? "..." : view.metrics[3].value}
-            description={view.metrics[3].description}
-            tone="gray"
-            compact
-          />
-        </section>
-
         <section className="lk-admin-module-grid">
           {MODULES.map((mod) => {
             const Icon = mod.icon;
@@ -312,21 +259,6 @@ export default function AdminDashboardPage() {
           width={640}
           overlayClassName="lk-admin-modal"
         >
-          {activeModal === "indicators" && (
-            <div className="lk-modal-metrics">
-              {view.metrics.map((m) => (
-                <DashboardMetricCard
-                  key={m.key}
-                  icon={ShieldCheck}
-                  label={m.label}
-                  value={isLoading ? "..." : m.value}
-                  description={m.description}
-                  tone="gray"
-                />
-              ))}
-            </div>
-          )}
-
           {activeModal === "pulse" && (
             <div className="lk-role-inline-metric">
               {view.progress.map((item) => (
