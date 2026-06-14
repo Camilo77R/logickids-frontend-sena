@@ -14,6 +14,7 @@ export default function PortalShell({
   roleLabel,
   title,
   subtitle,
+  tertiary,
   userName,
   initials,
   notificationCount = 0,
@@ -40,6 +41,7 @@ export default function PortalShell({
         <PortalTopbar
           title={title}
           subtitle={subtitle}
+          tertiary={tertiary}
           userName={userName}
           roleLabel={roleLabel}
           initials={initials}

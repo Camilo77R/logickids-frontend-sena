@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 export default function PortalTopbar({
   title,
   subtitle,
+  tertiary,
   userName,
   roleLabel,
   initials,
@@ -39,6 +40,7 @@ export default function PortalTopbar({
           <div className="lk-portal-topbar__copy">
             <h1 className="lk-portal-topbar__title">{title}</h1>
             {toolbar ? null : <p className="lk-portal-topbar__subtitle">{subtitle}</p>}
+            {toolbar ? null : tertiary ? <p className="lk-portal-topbar__tertiary">{tertiary}</p> : null}
           </div>
         </div>
 

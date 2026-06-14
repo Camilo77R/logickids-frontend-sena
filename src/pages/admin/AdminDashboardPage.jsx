@@ -168,6 +168,7 @@ export default function AdminDashboardPage() {
   }, []);
 
   const firstName = user?.nombre?.split(" ")[0] || "Profe";
+  const roleLabel = user?.rol === "superadmin" ? "Superadmin" : "Administrador";
 
   const view = useMemo(
     () =>
@@ -314,7 +315,8 @@ export default function AdminDashboardPage() {
   return (
     <AppShell
       title={`Hola, ${firstName}`}
-      description={user?.institucion || "Panel institucional"}
+      description={`${user?.institucion || "Panel institucional"} — ${roleLabel}`}
+      tertiary="Administra tutores, estudiantes y accesos de tu institucion."
       notificationCount={pendingRequests}
     >
       <div className="lk-role-dashboard lk-admin-dashboard">

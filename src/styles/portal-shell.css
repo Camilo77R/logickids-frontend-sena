@@ -316,6 +316,14 @@
   font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
 }
 
+.lk-portal-topbar__tertiary {
+  margin: 0;
+  color: var(--lk-text-soft);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+}
+
 .lk-portal-topbar__actions {
   display: flex;
   align-items: center;
@@ -565,6 +573,10 @@
 
   .lk-portal-topbar__subtitle {
     font-size: 0.78rem;
+  }
+
+  .lk-portal-topbar__tertiary {
+    font-size: 0.7rem;
   }
 
   .lk-portal-topbar__profile {

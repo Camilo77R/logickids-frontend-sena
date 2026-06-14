@@ -48,6 +48,7 @@ const ROLE_LABEL = {
 export default function AppShell({
   title,
   description,
+  tertiary,
   children,
   actions,
   toolbar,
@@ -88,6 +89,7 @@ export default function AppShell({
         roleLabel={roleLabel}
         title={title}
         subtitle={description}
+        tertiary={tertiary}
         userName={user?.nombre || "Usuario LogicKids"}
         initials={initials}
         notificationCount={user?.rol === USER_ROLES.ADMIN ? notificationCount : 0}
