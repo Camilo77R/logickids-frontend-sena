@@ -20,10 +20,6 @@
   background: #f4f4f5;
 }
 
-.lk-portal-shell--admin .lk-portal-topbar__brand {
-  display: none;
-}
-
 .lk-portal-sidebar {
   height: 100%;
   border-radius: 2.4rem;

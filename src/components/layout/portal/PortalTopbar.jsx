@@ -83,6 +83,10 @@ export default function PortalTopbar({
       {tertiary ? (
         <>
           <div className="lk-portal-topbar__row">
+            <div className="lk-portal-topbar__brand" aria-label="LogicKids">
+              <span className="lk-portal-topbar__brand-logic">Logic</span>
+              <span className="lk-portal-topbar__brand-kids">Kids</span>
+            </div>
             <div className="lk-portal-topbar__right">
               {controls}
             </div>
