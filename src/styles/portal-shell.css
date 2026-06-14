@@ -249,7 +249,7 @@
 }
 
 .lk-portal-topbar--hero .lk-portal-topbar__row {
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .lk-portal-topbar--hero .lk-portal-topbar__copy {
