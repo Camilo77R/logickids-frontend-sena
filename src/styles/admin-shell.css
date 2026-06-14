@@ -100,7 +100,7 @@
 
 .lk-nav-link.active {
   background: rgba(97, 43, 136, 0.14);
-  color: #612B88;
+  color: var(--lk-purple);
   font-weight: 800;
 }
 
@@ -112,7 +112,7 @@
   border-radius: 50%;
   font-weight: 800;
   color: #ffffff;
-  background: #612B88;
+  background: var(--lk-purple);
 }
 
 .lk-topbar {
@@ -170,7 +170,7 @@
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #612B88;
+  color: var(--lk-purple);
   background: var(--lk-purple-soft);
 }
 
@@ -207,17 +207,17 @@
 
 .lk-btn--primary {
   color: var(--lk-purple-deep);
-  background: #FFDE40;
+  background: var(--lk-yellow-bright);
 }
 
 .lk-btn--secondary {
   color: var(--lk-text);
   background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(97, 43, 136, 0.12);
+  border-color: var(--lk-border);
 }
 
 .lk-btn--subtle {
-  color: #612B88;
+  color: var(--lk-purple);
   background: var(--lk-purple-soft);
 }
 
@@ -228,12 +228,12 @@
 }
 
 .lk-btn--primary:hover:not(:disabled) {
-  background: #F7DF46;
+  background: var(--lk-yellow);
 }
 
 .lk-btn--secondary:hover:not(:disabled),
 .lk-btn--subtle:hover:not(:disabled) {
-  color: #612B88;
+  color: var(--lk-purple);
   background: var(--lk-surface-soft);
   border-color: rgba(97, 43, 136, 0.18);
 }
@@ -251,7 +251,7 @@
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #612B88;
+  color: var(--lk-purple);
   background: var(--lk-purple-soft);
 }
 

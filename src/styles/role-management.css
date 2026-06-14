@@ -488,14 +488,14 @@
 
 .lk-admin-pagination__button:hover:not(:disabled),
 .lk-admin-pagination__page:hover {
-  border-color: #612B88;
-  color: #612B88;
+  border-color: var(--lk-purple);
+  color: var(--lk-purple);
   background: rgba(97, 43, 136, 0.08);
 }
 
 .lk-admin-pagination__page.is-active {
-  border-color: #612B88;
-  background: #612B88;
+  border-color: var(--lk-purple);
+  background: var(--lk-purple);
   color: #ffffff;
 }
 

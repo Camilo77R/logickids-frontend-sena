@@ -29,8 +29,8 @@
   line-height: 1.55;
 }
 
-.lk-stat-card--blue   { background: #612B88; }
-.lk-stat-card--purple { background: #7F3EBF; }
+.lk-stat-card--blue   { background: var(--lk-purple); }
+.lk-stat-card--purple { background: var(--lk-purple-light); }
 .lk-stat-card--orange { background: #A94BB5; }
 .lk-stat-card--green  { background: #13b56b; }
 
@@ -111,7 +111,7 @@
 .lk-field textarea:focus,
 .lk-field select:focus {
   outline: none;
-  border-color: #612B88;
+  border-color: var(--lk-purple);
 }
 
 .lk-field--error input,
@@ -279,8 +279,8 @@
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  border: 2px solid rgba(97, 43, 136, 0.12);
-  border-top-color: #612B88;
+  border: 2px solid var(--lk-border);
+  border-top-color: var(--lk-purple);
   animation: lk-spin 0.7s linear infinite;
 }
 
@@ -326,7 +326,7 @@
 
 .lk-progress-bar-fill {
   height: 100%;
-  background-color: #612B88;
+  background-color: var(--lk-purple);
   border-radius: 4px;
   transition: width 0.5s ease;
 }
