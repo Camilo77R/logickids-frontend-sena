@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { History, MousePointerClick } from "lucide-react";
+import { History, MousePointerClick, Search, X } from "lucide-react";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
 import SesionesTable from "../../components/sesiones/SesionesTable";
@@ -26,6 +26,8 @@ export default function SesionesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingEventos, setIsLoadingEventos] = useState(false);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("todas");
 
   /* ── Cargar grupos ── */
   useEffect(() => {
@@ -131,6 +133,19 @@ export default function SesionesPage() {
     [data]
   );
 
+  /* ── Filtrado local ── */
+  const filteredData = useMemo(() => {
+    return data.filter((s) => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch = !q ||
+        (s.actividad_titulo || "").toLowerCase().includes(q) ||
+        (s.minijuego || "").toLowerCase().includes(q) ||
+        (s.actividad_detalle || "").toLowerCase().includes(q);
+      const matchesStatus = statusFilter === "todas" || s.estado === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [data, searchQuery, statusFilter]);
+
   /* ─────────────── RENDER ─────────────── */
   return (
     <div className="tutor-page-container">
@@ -227,8 +242,38 @@ export default function SesionesPage() {
                 <History size={16} />
                 Historial de sesiones
               </div>
+
+              <div className="ses-toolbar">
+                <div className="ses-search">
+                  <Search size={15} className="ses-search__icon" />
+                  <input
+                    className="ses-search__input"
+                    type="text"
+                    placeholder="Buscar actividad, minijuego..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  {searchQuery && (
+                    <button className="ses-search__clear" onClick={() => setSearchQuery("")}>
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
+                <div className="ses-filters">
+                  {["todas", "completado", "en_progreso"].map((f) => (
+                    <button
+                      key={f}
+                      className={`ses-filter-pill${statusFilter === f ? " is-active" : ""}`}
+                      onClick={() => setStatusFilter(f)}
+                    >
+                      {f === "todas" ? "Todas" : f === "completado" ? "Completadas" : "En progreso"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <SesionesTable
-                data={data}
+                data={filteredData}
                 onSelectSession={handleSelectSession}
                 selectedSessionId={selectedSession?.id}
                 showStudentColumn={tipo === "grupo"}
