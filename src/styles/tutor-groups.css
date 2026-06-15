@@ -93,7 +93,13 @@
   border-radius: 18px;
   background: var(--tg-surface);
   font-family: inherit;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+.tov-module-card:hover,
+.tg-group-item:hover:not(.is-selected) {
+  border-color: #AFA9EC;
+  box-shadow: 0 4px 16px rgba(83, 74, 183, 0.1);
+  transform: translateY(-1px);
 }
 
 .tg-group-item.is-selected {
@@ -190,15 +196,22 @@
 .tg-link-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 0;
+  padding: 10px 16px;
   background: transparent;
-  border: 0;
-  color: var(--tg-p);
+  border: 1.5px solid var(--tg-border);
+  border-radius: 12px;
+  color: var(--tg-soft);
   font-family: inherit;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.tg-link-btn:hover {
+  border-color: var(--tg-p);
+  color: var(--tg-p);
 }
 
 .tg-primary-btn {
@@ -210,8 +223,8 @@
   padding: 10px 16px;
   border: 1px solid transparent;
   border-radius: 12px;
-  background: var(--tg-y);
-  color: #2d1600;
+  background: var(--tg-p, #534AB7);
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
   font-family: inherit;
@@ -221,7 +234,7 @@
 }
 
 .tg-primary-btn:hover:not(:disabled) {
-  background: var(--tg-yd);
+  background: var(--tg-pd, #3C3489);
 }
 
 .tg-primary-btn.is-secondary {
@@ -232,7 +245,7 @@
 }
 
 .tg-primary-btn.is-secondary:hover:not(:disabled) {
-  background: #edd7eb;
+  background: #ddd5f0;
   border-color: transparent;
   color: var(--tg-pd);
 }
