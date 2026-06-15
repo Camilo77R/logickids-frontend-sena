@@ -1169,6 +1169,42 @@
   border-style: dashed;
 }
 
+/* --- Date filter inputs --- */
+.ses-date-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.ses-date-icon {
+  color: var(--lk-text-muted);
+  flex-shrink: 0;
+}
+.ses-date-input {
+  height: 32px;
+  padding: 0 8px;
+  border: 1.5px solid var(--lk-border);
+  border-radius: 999px;
+  background: var(--lk-surface);
+  color: var(--lk-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 130px;
+}
+.ses-date-input:focus {
+  border-color: var(--lk-tutor-primary);
+  box-shadow: 0 0 0 3px rgba(142, 53, 213, 0.1);
+}
+.ses-date-sep {
+  color: var(--lk-text-muted);
+  font-size: 12px;
+}
+
 /* --- Pagination --- */
 .ses-pagination {
   display: flex;

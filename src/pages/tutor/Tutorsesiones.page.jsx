@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { BarChart3, History, Search, X } from "lucide-react";
+import { BarChart3, Calendar, History, Search, X } from "lucide-react";
 import RoleModal from "../../components/common/RoleModal";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
@@ -29,7 +29,8 @@ export default function SesionesPage() {
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("todas");
-  const [dateFilter, setDateFilter] = useState("todo");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [metricsModalOpen, setMetricsModalOpen] = useState(false);
 
@@ -146,7 +147,6 @@ export default function SesionesPage() {
 
   /* ── Filtrado local ── */
   const filteredData = useMemo(() => {
-    const now = new Date();
     return data.filter((s) => {
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch = !q ||
@@ -156,21 +156,17 @@ export default function SesionesPage() {
       const matchesStatus = statusFilter === "todas" || s.estado === statusFilter;
 
       let matchesDate = true;
-      if (dateFilter !== "todo" && s.iniciada_en) {
-        const fecha = new Date(s.iniciada_en);
-        const diffMs = now - fecha;
-        if (dateFilter === "hoy") {
-          matchesDate = diffMs < 86400000;
-        } else if (dateFilter === "semana") {
-          matchesDate = diffMs < 604800000;
-        } else if (dateFilter === "mes") {
-          matchesDate = diffMs < 2592000000;
-        }
+      if (s.iniciada_en) {
+        const fecha = new Date(s.iniciada_en).toISOString().slice(0, 10);
+        if (dateFrom && fecha < dateFrom) matchesDate = false;
+        if (dateTo && fecha > dateTo) matchesDate = false;
+      } else {
+        if (dateFrom || dateTo) matchesDate = false;
       }
 
       return matchesSearch && matchesStatus && matchesDate;
     });
-  }, [data, searchQuery, statusFilter, dateFilter]);
+  }, [data, searchQuery, statusFilter, dateFrom, dateTo]);
 
   /* ─────────────── RENDER ─────────────── */
   return (
@@ -259,16 +255,28 @@ export default function SesionesPage() {
                 </button>
               ))}
             </div>
-            <div className="ses-filters">
-              {["todo", "hoy", "semana", "mes"].map((d) => (
-                <button
-                  key={d}
-                  className={`ses-filter-pill ses-filter-pill--date${dateFilter === d ? " is-active" : ""}`}
-                  onClick={() => setDateFilter(d)}
-                >
-                  {d === "todo" ? "Todo" : d === "hoy" ? "Hoy" : d === "semana" ? "Esta semana" : "Este mes"}
+            <div className="ses-date-filter">
+              <Calendar size={14} className="ses-date-icon" />
+              <input
+                type="date"
+                className="ses-date-input"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                title="Fecha desde"
+              />
+              <span className="ses-date-sep">—</span>
+              <input
+                type="date"
+                className="ses-date-input"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                title="Fecha hasta"
+              />
+              {(dateFrom || dateTo) && (
+                <button className="ses-search__clear" onClick={() => { setDateFrom(""); setDateTo(""); }}>
+                  <X size={12} />
                 </button>
-              ))}
+              )}
             </div>
           </div>
 
