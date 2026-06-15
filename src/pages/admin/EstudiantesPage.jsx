@@ -824,7 +824,6 @@ export default function EstudiantesPage() {
           onClose={closeMoveModal}
           eyebrow="Reasignación"
           title="Mover estudiante de grupo"
-          width={640}
           warning="Cambiar de grupo cerrará cualquier sesión activa."
           overlayClassName="lk-admin-modal"
           actions={
@@ -836,8 +835,8 @@ export default function EstudiantesPage() {
         >
           {selectedStudentDetail && (
             <>
-              <div className="lk-field">
-                <label>Estudiante</label>
+              <div className="lk-role-modal__field">
+                <strong>Estudiante</strong>
                 <p>{selectedStudentDetail.nombre}</p>
               </div>
               <div className="lk-field">
