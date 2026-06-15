@@ -978,7 +978,6 @@
   gap: 12px;
   padding: 12px 0;
   margin-bottom: 8px;
-  flex-wrap: wrap;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -995,9 +994,8 @@
 
 .tg-search {
   position: relative;
-  flex: 1;
-  min-width: 200px;
-  max-width: 320px;
+  width: 220px;
+  flex-shrink: 0;
 }
 .tg-search__icon {
   position: absolute;
@@ -1086,19 +1084,13 @@
 
 @media (max-width: 640px) {
   .tg-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    flex-wrap: wrap;
   }
   .tg-search {
-    max-width: none;
+    width: 100%;
   }
   .tg-filters {
-    justify-content: center;
-  }
-  .tg-toolbar__count {
-    margin-left: 0;
-    text-align: center;
+    margin-left: auto;
   }
 }
 
