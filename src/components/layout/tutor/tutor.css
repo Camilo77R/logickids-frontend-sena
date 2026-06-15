@@ -311,7 +311,7 @@
 /* Main Content Area */
 .tutor-main-content {
   flex: 1;
-  padding: 0 40px 40px;
+  padding: 40px;
   overflow-y: auto;
 }
 
@@ -376,6 +376,7 @@
     padding: 0;
     max-width: 1400px;
     margin: 0 auto;
+    overflow-x: clip;
 }
 
 /* Page Header */
@@ -383,7 +384,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 40px;
     margin-bottom: 32px;
 }
 
@@ -853,8 +853,12 @@
   margin-bottom: 20px;
   background: var(--lk-tutor-primary);
   position: sticky;
-  top: 0;
+  top: -1.55rem;
   z-index: 10;
+  margin-left: -1.55rem;
+  margin-right: -1.55rem;
+  padding-left: 1.55rem;
+  padding-right: 1.55rem;
   border-radius: var(--lk-radius-xl);
 }
 
