@@ -515,7 +515,7 @@
     font-size: 14px;
     font-weight: 600;
     font-family: inherit;
-    border-radius: var(--lk-radius-sm);
+    border-radius: 10px;
     border: none;
     cursor: pointer;
     transition: all 0.2s;
@@ -853,7 +853,7 @@
   position: sticky;
   top: -1.55rem;
   z-index: 10;
-  border-radius: var(--lk-radius-xl);
+  border-radius: 32px;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -916,7 +916,7 @@
 }
 
 .ses-stat-card {
-  border-radius: var(--lk-radius-lg);
+  border-radius: 16px;
   padding: 25px 22px;
   display: flex;
   align-items: center;
@@ -1824,7 +1824,7 @@
   background: var(--lk-tutor-primary);
   color: #ffffff;
   border: none;
-  border-radius: var(--lk-radius-sm);
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 700;
   font-family: var(--lk-font);
@@ -1856,7 +1856,7 @@
   backdrop-filter: blur(8px);
   color: var(--lk-tutor-text);
   border: 1.5px solid var(--lk-tutor-border);
-  border-radius: var(--lk-radius-sm);
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   font-family: var(--lk-font);
