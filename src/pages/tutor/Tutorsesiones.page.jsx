@@ -227,9 +227,6 @@ export default function SesionesPage() {
                 <History size={16} />
                 Historial de sesiones
               </div>
-              <p className="ses-history-note">
-                Cada fila es una sesión hija. Las que comparten la misma actividad muestran el mismo bloque de contexto pedagógico.
-              </p>
               <SesionesTable
                 data={data}
                 onSelectSession={handleSelectSession}

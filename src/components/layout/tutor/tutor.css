@@ -930,9 +930,9 @@
 }
 
 .ses-stat-label {
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -956,10 +956,10 @@
   z-index: 1;
 }
 
-.ses-stat-card--orange { background: #F97316; }
-.ses-stat-card--purple { background: #8E35D5; }
-.ses-stat-card--green  { background: #10b981; }
-.ses-stat-card--red    { background: #8E35D5; }
+.ses-stat-card--orange { background: #534AB7; }
+.ses-stat-card--purple { background: #26215C; }
+.ses-stat-card--green  { background: #1D9E75; }
+.ses-stat-card--red    { background: #9CA3AF; }
 
 /* --- Charts --- */
 .ses-charts-card {
