@@ -29,6 +29,7 @@ export default function SesionesPage() {
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("todas");
+  const [dateFilter, setDateFilter] = useState("todo");
   const [modalOpen, setModalOpen] = useState(false);
   const [metricsModalOpen, setMetricsModalOpen] = useState(false);
 
@@ -145,6 +146,7 @@ export default function SesionesPage() {
 
   /* ── Filtrado local ── */
   const filteredData = useMemo(() => {
+    const now = new Date();
     return data.filter((s) => {
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch = !q ||
@@ -152,9 +154,23 @@ export default function SesionesPage() {
         (s.minijuego || "").toLowerCase().includes(q) ||
         (s.actividad_detalle || "").toLowerCase().includes(q);
       const matchesStatus = statusFilter === "todas" || s.estado === statusFilter;
-      return matchesSearch && matchesStatus;
+
+      let matchesDate = true;
+      if (dateFilter !== "todo" && s.iniciada_en) {
+        const fecha = new Date(s.iniciada_en);
+        const diffMs = now - fecha;
+        if (dateFilter === "hoy") {
+          matchesDate = diffMs < 86400000;
+        } else if (dateFilter === "semana") {
+          matchesDate = diffMs < 604800000;
+        } else if (dateFilter === "mes") {
+          matchesDate = diffMs < 2592000000;
+        }
+      }
+
+      return matchesSearch && matchesStatus && matchesDate;
     });
-  }, [data, searchQuery, statusFilter]);
+  }, [data, searchQuery, statusFilter, dateFilter]);
 
   /* ─────────────── RENDER ─────────────── */
   return (
@@ -215,40 +231,52 @@ export default function SesionesPage() {
         </div>
       ) : (
         <>
+          {/* Toolbar sticky */}
+          <div className="ses-toolbar">
+            <div className="ses-search">
+              <Search size={15} className="ses-search__icon" />
+              <input
+                className="ses-search__input"
+                type="text"
+                placeholder="Buscar actividad, minijuego..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button className="ses-search__clear" onClick={() => setSearchQuery("")}>
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            <div className="ses-filters">
+              {["todas", "completado", "en_progreso"].map((f) => (
+                <button
+                  key={f}
+                  className={`ses-filter-pill${statusFilter === f ? " is-active" : ""}`}
+                  onClick={() => setStatusFilter(f)}
+                >
+                  {f === "todas" ? "Todas" : f === "completado" ? "Completadas" : "En progreso"}
+                </button>
+              ))}
+            </div>
+            <div className="ses-filters">
+              {["todo", "hoy", "semana", "mes"].map((d) => (
+                <button
+                  key={d}
+                  className={`ses-filter-pill ses-filter-pill--date${dateFilter === d ? " is-active" : ""}`}
+                  onClick={() => setDateFilter(d)}
+                >
+                  {d === "todo" ? "Todo" : d === "hoy" ? "Hoy" : d === "semana" ? "Esta semana" : "Este mes"}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Tabla */}
             <div className="tutor-card">
               <div className="ses-section-title">
                 <History size={16} />
                 Historial de sesiones
-              </div>
-
-              <div className="ses-toolbar">
-                <div className="ses-search">
-                  <Search size={15} className="ses-search__icon" />
-                  <input
-                    className="ses-search__input"
-                    type="text"
-                    placeholder="Buscar actividad, minijuego..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  {searchQuery && (
-                    <button className="ses-search__clear" onClick={() => setSearchQuery("")}>
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-                <div className="ses-filters">
-                  {["todas", "completado", "en_progreso"].map((f) => (
-                    <button
-                      key={f}
-                      className={`ses-filter-pill${statusFilter === f ? " is-active" : ""}`}
-                      onClick={() => setStatusFilter(f)}
-                    >
-                      {f === "todas" ? "Todas" : f === "completado" ? "Completadas" : "En progreso"}
-                    </button>
-                  ))}
-                </div>
               </div>
 
               <SesionesTable

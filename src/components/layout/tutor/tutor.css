@@ -1063,7 +1063,7 @@
   height: 200px !important;
 }
 
-/* --- Toolbar: search + filters --- */
+/* --- Toolbar: search + filters (standalone sticky) --- */
 .ses-toolbar {
   display: flex;
   align-items: center;
@@ -1072,8 +1072,11 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  padding: 12px 0;
+  padding: 0 0 12px;
   background: var(--lk-bg);
+}
+.ses-filters + .ses-filters {
+  margin-left: auto;
 }
 .ses-search {
   position: relative;
@@ -1161,6 +1164,9 @@
   background: var(--lk-tutor-primary);
   border-color: var(--lk-tutor-primary);
   color: #fff;
+}
+.ses-filter-pill--date {
+  border-style: dashed;
 }
 
 /* --- Pagination --- */
