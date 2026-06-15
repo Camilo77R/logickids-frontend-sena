@@ -852,7 +852,7 @@
   margin-bottom: 20px;
   background: var(--lk-tutor-primary);
   position: sticky;
-  top: 0;
+  top: -1.55rem;
   z-index: 10;
   border-radius: 32px;
   border: 2px solid rgba(255, 255, 255, 0.18);
