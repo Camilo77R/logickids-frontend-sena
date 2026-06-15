@@ -851,6 +851,9 @@
 .ses-filters-card {
   margin-bottom: 20px;
   background: var(--lk-tutor-primary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .ses-filters-row {
