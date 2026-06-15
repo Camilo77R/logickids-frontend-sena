@@ -313,6 +313,7 @@
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Placeholder Page Styles */
@@ -852,12 +853,8 @@
   margin-bottom: 20px;
   background: var(--lk-tutor-primary);
   position: sticky;
-  top: -40px;
+  top: 0;
   z-index: 10;
-  margin-left: -40px;
-  margin-right: -40px;
-  padding-left: 40px;
-  padding-right: 40px;
   border-radius: var(--lk-radius-xl);
 }
 
