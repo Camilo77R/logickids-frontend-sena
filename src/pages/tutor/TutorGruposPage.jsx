@@ -334,11 +334,10 @@ export default function TutorGruposPage() {
         width={640}
         actions={
           selectedGroup ? (
-            <div style={{ display: "flex", gap: "0.75rem", width: "100%" }}>
+            <>
               <button
                 type="button"
-                className={`tg-primary-btn${isSessionActive(selectedGroup.sesion_activa) ? " is-secondary" : ""}`}
-                style={{ flex: 1 }}
+                className={`tg-primary-btn${isSessionActive(selectedGroup.sesion_activa) ? " tg-primary-btn--danger" : ""}`}
                 onClick={() => { handleToggleSesion(selectedGroup); setDetailModalOpen(false); }}
                 disabled={cargandoAccion === normalizeGroupId(selectedGroup)}
               >
@@ -350,10 +349,10 @@ export default function TutorGruposPage() {
                   <><Play size={15} /> Abrir actividad</>
                 )}
               </button>
-              <button type="button" className="tg-link-btn" onClick={() => setDetailModalOpen(false)}>
+              <button type="button" className="tg-primary-btn tg-primary-btn--ghost" onClick={() => setDetailModalOpen(false)}>
                 Cerrar
               </button>
-            </div>
+            </>
           ) : null
         }
       >

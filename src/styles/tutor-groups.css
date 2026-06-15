@@ -250,6 +250,26 @@
   color: var(--tg-pd);
 }
 
+.tg-primary-btn--danger {
+  background: #DC2626;
+  color: #fff;
+  border-color: transparent;
+}
+.tg-primary-btn--danger:hover:not(:disabled) {
+  background: #B91C1C;
+}
+
+.tg-primary-btn--ghost {
+  background: transparent;
+  color: var(--tg-soft);
+  border: 1.5px solid var(--tg-border);
+}
+.tg-primary-btn--ghost:hover:not(:disabled) {
+  border-color: var(--tg-p);
+  color: var(--tg-p);
+  background: transparent;
+}
+
 .tg-primary-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
