@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Play, Route, Square, Users } from "lucide-react";
+import { BookOpen, Eye, Play, Route, Square, Users } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
 import RoleModal from "../../components/common/RoleModal";
 import tutorGroupsService from "../../services/tutorGroupsService";
