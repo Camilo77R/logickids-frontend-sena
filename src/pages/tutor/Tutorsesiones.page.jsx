@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { History, MousePointerClick, Search, X } from "lucide-react";
+import { History, Search, X } from "lucide-react";
+import RoleModal from "../../components/common/RoleModal";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
 import SesionesTable from "../../components/sesiones/SesionesTable";
@@ -28,6 +29,7 @@ export default function SesionesPage() {
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("todas");
+  const [modalOpen, setModalOpen] = useState(false);
 
   /* ── Cargar grupos ── */
   useEffect(() => {
@@ -96,6 +98,7 @@ export default function SesionesPage() {
   /* ── Seleccionar sesión → cargar eventos ── */
   const handleSelectSession = async (session) => {
     setSelectedSession(session);
+    setModalOpen(true);
     setIsLoadingEventos(true);
     try {
       const eventos = await getEventosSesion(session.id);
@@ -106,6 +109,12 @@ export default function SesionesPage() {
     } finally {
       setIsLoadingEventos(false);
     }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedSession(null);
+    setEventosSesion([]);
   };
 
   /* ── Totales ── */
@@ -233,10 +242,7 @@ export default function SesionesPage() {
             <SesionesCharts data={data} />
           </div>
 
-          {/* Tabla + Detalle */}
-          <div className="ses-bottom-grid">
-
-            {/* Historial */}
+          {/* Tabla */}
             <div className="tutor-card">
               <div className="ses-section-title">
                 <History size={16} />
@@ -280,36 +286,39 @@ export default function SesionesPage() {
               />
             </div>
 
-            {/* Detalle de eventos */}
-            <div className="tutor-card ses-detalle-card">
-              <div className="ses-section-title">
-                <MousePointerClick size={16} />
-                Detalle de eventos
-              </div>
-
-              {!selectedSession ? (
-                <p className="ses-detalle-empty">
-                  Selecciona una sesión de la tabla para ver sus eventos.
-                </p>
-              ) : isLoadingEventos ? (
-                <div className="tutor-loading">
-                  <span>Cargando eventos...</span>
-                </div>
-              ) : !eventosSesion.length ? (
-                <p className="ses-detalle-empty">
-                  Esta sesión no tiene eventos registrados.
-                </p>
-              ) : (
-                <div className="ses-eventos-list">
-                  <div className="ses-activity-summary">
-                    <div className="ses-cell-primary">
-                      {selectedSession.actividad_titulo || "Actividad seleccionada"}
-                    </div>
-                    <div className="ses-cell-secondary">
-                      {selectedSession.actividad_detalle || "Sin detalle de actividad"}
-                    </div>
+          {/* Modal de detalle de eventos */}
+          <RoleModal
+            open={modalOpen}
+            onClose={closeModal}
+            eyebrow="Detalle de sesión"
+            title={selectedSession?.actividad_titulo || "Sesión"}
+            width={560}
+            actions={
+              <button type="button" className="ses-modal-close-btn" onClick={closeModal}>
+                Cerrar
+              </button>
+            }
+          >
+            {selectedSession && (
+              <div className="ses-eventos-list">
+                <div className="ses-activity-summary">
+                  <div className="ses-cell-primary">
+                    {selectedSession.actividad_titulo || "Actividad seleccionada"}
                   </div>
-                  {eventosSesion.map((evento) => (
+                  <div className="ses-cell-secondary">
+                    {selectedSession.actividad_detalle || "Sin detalle de actividad"}
+                  </div>
+                </div>
+                {isLoadingEventos ? (
+                  <div className="tutor-loading">
+                    <span>Cargando eventos...</span>
+                  </div>
+                ) : !eventosSesion.length ? (
+                  <p className="ses-detalle-empty">
+                    Esta sesión no tiene eventos registrados.
+                  </p>
+                ) : (
+                  eventosSesion.map((evento) => (
                     <div key={evento.id} className="ses-evento-item">
                       <div className="ses-evento-header">
                         <strong>{evento.tipo_evento}</strong>
@@ -325,12 +334,12 @@ export default function SesionesPage() {
                         </span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-          </div>
+                  ))
+                )}
+              </div>
+            )}
+          </RoleModal>
+        </>
         </>
       )}
     </div>

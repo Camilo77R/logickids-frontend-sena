@@ -1203,13 +1203,27 @@
   color: var(--lk-text-muted);
   font-size: 14px;
 }
+.ses-modal-close-btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: var(--lk-text-soft);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: 1.5px solid var(--lk-border);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.ses-modal-close-btn:hover {
+  border-color: var(--lk-tutor-primary);
+  color: var(--lk-tutor-primary);
+  background: var(--lk-purple-soft);
+}
 
-/* --- Bottom grid: tabla + detalle --- */
+/* --- Bottom section: full-width table --- */
 .ses-bottom-grid {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 20px;
-  align-items: start;
+  display: block;
 }
 
 .ses-section-title {
