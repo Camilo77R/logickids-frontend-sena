@@ -340,7 +340,6 @@ export default function SesionesPage() {
             )}
           </RoleModal>
         </>
-        </>
       )}
     </div>
   );
