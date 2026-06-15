@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { History, Search, X } from "lucide-react";
+import { BarChart3, History, Search, X } from "lucide-react";
 import RoleModal from "../../components/common/RoleModal";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
@@ -30,6 +30,7 @@ export default function SesionesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("todas");
   const [modalOpen, setModalOpen] = useState(false);
+  const [metricsModalOpen, setMetricsModalOpen] = useState(false);
 
   /* ── Cargar grupos ── */
   useEffect(() => {
@@ -189,40 +190,18 @@ export default function SesionesPage() {
         />
       </div>
 
-      {/* Stat Cards */}
-      <div className="ses-stats-grid">
-        <div className="ses-stat-card ses-stat-card--orange">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Actividades detectadas</span>
-            <span className="ses-stat-value">{summary.actividades}</span>
-          </div>
-          <span className="ses-stat-icon">⏱️</span>
-        </div>
-
-        <div className="ses-stat-card ses-stat-card--purple">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Sesiones / niveles</span>
-            <span className="ses-stat-value">{summary.sesiones}</span>
-          </div>
-          <span className="ses-stat-icon">🏆</span>
-        </div>
-
-        <div className="ses-stat-card ses-stat-card--green">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Aciertos</span>
-            <span className="ses-stat-value">{summary.aciertos}</span>
-          </div>
-          <span className="ses-stat-icon">⚡</span>
-        </div>
-
-        <div className="ses-stat-card ses-stat-card--red">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Errores</span>
-            <span className="ses-stat-value">{summary.errores}</span>
-          </div>
-          <span className="ses-stat-icon">⚠️</span>
-        </div>
-      </div>
+      {/* Botón métricas */}
+      {data.length > 0 && (
+        <button
+          type="button"
+          className="ses-metrics-btn"
+          onClick={() => setMetricsModalOpen(true)}
+        >
+          <BarChart3 size={18} />
+          Ver métricas
+          <span className="ses-metrics-btn__badge">{summary.actividades} actividades · {summary.sesiones} sesiones</span>
+        </button>
+      )}
 
       {/* Estado: cargando */}
       {isLoading ? (
@@ -237,11 +216,6 @@ export default function SesionesPage() {
         </div>
       ) : (
         <>
-          {/* Charts */}
-          <div className="tutor-card ses-charts-card">
-            <SesionesCharts data={data} />
-          </div>
-
           {/* Tabla */}
             <div className="tutor-card">
               <div className="ses-section-title">
@@ -338,6 +312,58 @@ export default function SesionesPage() {
                 )}
               </div>
             )}
+          </RoleModal>
+
+          {/* Modal de métricas */}
+          <RoleModal
+            open={metricsModalOpen}
+            onClose={() => setMetricsModalOpen(false)}
+            eyebrow="Resumen"
+            title="Métricas de sesiones"
+            width={720}
+            actions={
+              <button type="button" className="ses-modal-close-btn" onClick={() => setMetricsModalOpen(false)}>
+                Cerrar
+              </button>
+            }
+          >
+            <div className="ses-stats-grid">
+              <div className="ses-stat-card ses-stat-card--orange">
+                <div className="ses-stat-info">
+                  <span className="ses-stat-label">Actividades detectadas</span>
+                  <span className="ses-stat-value">{summary.actividades}</span>
+                </div>
+                <span className="ses-stat-icon">⏱️</span>
+              </div>
+
+              <div className="ses-stat-card ses-stat-card--purple">
+                <div className="ses-stat-info">
+                  <span className="ses-stat-label">Sesiones / niveles</span>
+                  <span className="ses-stat-value">{summary.sesiones}</span>
+                </div>
+                <span className="ses-stat-icon">🏆</span>
+              </div>
+
+              <div className="ses-stat-card ses-stat-card--green">
+                <div className="ses-stat-info">
+                  <span className="ses-stat-label">Aciertos</span>
+                  <span className="ses-stat-value">{summary.aciertos}</span>
+                </div>
+                <span className="ses-stat-icon">⚡</span>
+              </div>
+
+              <div className="ses-stat-card ses-stat-card--red">
+                <div className="ses-stat-info">
+                  <span className="ses-stat-label">Errores</span>
+                  <span className="ses-stat-value">{summary.errores}</span>
+                </div>
+                <span className="ses-stat-icon">⚠️</span>
+              </div>
+            </div>
+
+            <div className="ses-charts-card">
+              <SesionesCharts data={data} />
+            </div>
           </RoleModal>
         </>
       )}
