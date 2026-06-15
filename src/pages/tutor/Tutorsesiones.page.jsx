@@ -188,7 +188,7 @@ export default function SesionesPage() {
       {/* Error */}
       {error && <div className="tutor-alert tutor-alert--error">{error}</div>}
 
-      {/* Filtros + Botón métricas */}
+      {/* Filtros + Toolbar */}
       <div className="tutor-card ses-filters-card">
         <div className="ses-filters-row">
           <SesionesFilters
@@ -212,22 +212,8 @@ export default function SesionesPage() {
             </button>
           )}
         </div>
-      </div>
 
-      {/* Estado: cargando */}
-      {isLoading ? (
-        <div className="tutor-loading">
-          <span>Cargando sesiones...</span>
-        </div>
-      ) : !data.length ? (
-        /* Estado: sin datos */
-        <div className="tutor-card tutor-empty">
-          <History size={44} />
-          <p>No hay sesiones registradas para el filtro actual.</p>
-        </div>
-      ) : (
-        <>
-          {/* Toolbar sticky */}
+        {data.length > 0 && (
           <div className="ses-toolbar">
             <div className="ses-search">
               <Search size={15} className="ses-search__icon" />
@@ -279,7 +265,22 @@ export default function SesionesPage() {
               )}
             </div>
           </div>
+        )}
+      </div>
 
+      {/* Estado: cargando */}
+      {isLoading ? (
+        <div className="tutor-loading">
+          <span>Cargando sesiones...</span>
+        </div>
+      ) : !data.length ? (
+        /* Estado: sin datos */
+        <div className="tutor-card tutor-empty">
+          <History size={44} />
+          <p>No hay sesiones registradas para el filtro actual.</p>
+        </div>
+      ) : (
+        <>
           {/* Tabla */}
             <div className="tutor-card">
               <div className="ses-section-title">

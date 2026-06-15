@@ -1063,21 +1063,85 @@
   height: 200px !important;
 }
 
-/* --- Toolbar: search + filters (standalone sticky) --- */
+/* --- Toolbar: search + filters (inside purple card) --- */
 .ses-toolbar {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  padding: 0 0 12px;
-  background: var(--lk-bg);
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
 }
 .ses-filters + .ses-filters {
   margin-left: auto;
 }
+/* Inside purple card: light elements on dark bg */
+.ses-toolbar .ses-search__input {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #1e293b;
+}
+.ses-toolbar .ses-search__input::placeholder {
+  color: #94a3b8;
+}
+.ses-toolbar .ses-search__input:focus {
+  background: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.ses-toolbar .ses-search__clear {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+.ses-toolbar .ses-search__clear:hover {
+  background: #fff;
+  color: var(--lk-tutor-primary);
+}
+.ses-toolbar .ses-search__icon {
+  color: #94a3b8;
+}
+
+.ses-toolbar .ses-filter-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.85);
+}
+.ses-toolbar .ses-filter-pill:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+.ses-toolbar .ses-filter-pill.is-active {
+  background: #fff;
+  border-color: #fff;
+  color: var(--lk-tutor-primary);
+}
+
+.ses-toolbar .ses-date-input {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #1e293b;
+}
+.ses-toolbar .ses-date-input:focus {
+  background: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.ses-toolbar .ses-date-icon {
+  color: rgba(255, 255, 255, 0.6);
+}
+.ses-toolbar .ses-date-sep {
+  color: rgba(255, 255, 255, 0.5);
+}
+.ses-toolbar .ses-date-clear {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+.ses-toolbar .ses-date-clear:hover {
+  background: #fff;
+  color: var(--lk-tutor-primary);
+}
+
+/* Base styles (used outside toolbar context too) */
 .ses-search {
   position: relative;
   width: 200px;
@@ -1093,7 +1157,7 @@
 }
 .ses-search__input {
   width: 100%;
-  height: 36px;
+  height: 34px;
   padding: 0 32px 0 34px;
   border: 1.5px solid var(--lk-border);
   border-radius: 999px;
@@ -1164,9 +1228,6 @@
   background: var(--lk-tutor-primary);
   border-color: var(--lk-tutor-primary);
   color: #fff;
-}
-.ses-filter-pill--date {
-  border-style: dashed;
 }
 
 /* --- Date filter inputs --- */
@@ -1297,18 +1358,18 @@
   gap: 6px;
   padding: 0.45rem 0.9rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
-  color: var(--lk-tutor-primary);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   cursor: pointer;
   transition: background 0.15s ease, transform 0.15s ease;
   white-space: nowrap;
 }
 .ses-metrics-btn:hover {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
 }
 .ses-metrics-btn:active {
