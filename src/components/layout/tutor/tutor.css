@@ -1,5 +1,4 @@
 /* tutor.css - Premium Light Dashboard Layout */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   /* Fondo principal muy suave, no es blanco puro (evita lo genérico) */
@@ -28,7 +27,7 @@
   width: 100vw;
   background-color: var(--lk-tutor-bg);
   color: var(--lk-tutor-text);
-  font-family: 'Outfit', -apple-system, sans-serif;
+  font-family: var(--lk-font);
   overflow: hidden;
   position: relative;
 }
@@ -884,7 +883,7 @@
   background: rgba(255, 255, 255, 0.12);
   color: #EEEDFE;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--lk-font);
   outline: none;
   transition: all 0.2s ease;
   appearance: none;
@@ -948,7 +947,7 @@
   font-weight: 800;
   color: #ffffff;
   line-height: 2;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--lk-font);
 }
 
 .ses-stat-icon {
@@ -1464,7 +1463,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 13.5px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--lk-font);
 }
 
 .ses-table thead th {
@@ -1828,7 +1827,7 @@
   border-radius: 10px;
   font-size: 14px;
   font-weight: 700;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--lk-font);
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 4px 14px rgba(142, 53, 213, 0.35);
@@ -1860,7 +1859,7 @@
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--lk-font);
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
