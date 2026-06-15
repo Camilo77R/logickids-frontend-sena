@@ -72,6 +72,16 @@
   margin-bottom: 18px;
 }
 
+.tutor-card > .tg-section-head {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--tg-surface, #fff);
+  padding: 8px 0;
+  margin: -8px 0 8px;
+  border-bottom: 1px solid var(--tg-border);
+}
+
 .tg-section-head__eyebrow {
   display: inline-block;
   margin-bottom: 6px;
