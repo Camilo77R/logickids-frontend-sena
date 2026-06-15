@@ -1154,6 +1154,56 @@
   color: #fff;
 }
 
+/* --- Pagination --- */
+.ses-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 0 4px;
+}
+.ses-page-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1.5px solid var(--lk-border);
+  border-radius: 999px;
+  background: var(--lk-surface);
+  color: var(--lk-text-soft);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ses-page-btn:hover:not(:disabled) {
+  border-color: var(--lk-tutor-primary);
+  color: var(--lk-tutor-primary);
+}
+.ses-page-btn.is-active {
+  background: var(--lk-tutor-primary);
+  border-color: var(--lk-tutor-primary);
+  color: #fff;
+}
+.ses-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.ses-page-ellipsis {
+  color: var(--lk-text-muted);
+  font-size: 13px;
+  padding: 0 4px;
+}
+.ses-empty-row {
+  text-align: center;
+  padding: 32px 14px !important;
+  color: var(--lk-text-muted);
+  font-size: 14px;
+}
+
 /* --- Bottom grid: tabla + detalle --- */
 .ses-bottom-grid {
   display: grid;
