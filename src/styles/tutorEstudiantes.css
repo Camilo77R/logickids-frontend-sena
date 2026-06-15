@@ -1568,17 +1568,17 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 /* Ajuste de paleta exacta del tutor: sidebar #8E35D5 y amarillo #fdb813. */
 .lk-students-page {
-  --students-pink: #8E35D5 !important;
+  --students-pink: #3C3489 !important;
   --students-pink-dark: #2B173D !important;
   --students-pink-soft: #F3E8FA !important;
-  --students-pink-light: #8E35D5 !important;
-  --students-pink-light-2: #8E35D5 !important;
+  --students-pink-light: #3C3489 !important;
+  --students-pink-light-2: #3C3489 !important;
   --students-yellow: #fdb813 !important;
   --students-yellow-dark: #f5a910 !important;
 }
 
 .lk-students-hero {
-  background: #8E35D5 !important;
+  background: #3C3489 !important;
 }
 
 .lk-tutor-profile-placeholder {
