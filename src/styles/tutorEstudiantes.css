@@ -1332,7 +1332,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) 184px !important;
   align-items: stretch !important;
-  border-radius: 8px !important;
+  border-radius: 32px !important;
   background: var(--students-pink) !important;
   box-shadow: none !important;
 }
