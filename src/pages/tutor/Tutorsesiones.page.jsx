@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { BarChart3, Calendar, History, Search, X } from "lucide-react";
+import { AlertCircle, BarChart3, Calendar, CheckCircle, Clock, History, Layers, Search, X } from "lucide-react";
 import RoleModal from "../../components/common/RoleModal";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
@@ -369,7 +369,7 @@ export default function SesionesPage() {
                   <span className="ses-stat-label">Actividades detectadas</span>
                   <span className="ses-stat-value">{summary.actividades}</span>
                 </div>
-                <span className="ses-stat-icon">⏱️</span>
+                <span className="ses-stat-icon"><Clock size={50} /></span>
               </div>
 
               <div className="ses-stat-card ses-stat-card--purple">
@@ -377,7 +377,7 @@ export default function SesionesPage() {
                   <span className="ses-stat-label">Sesiones / niveles</span>
                   <span className="ses-stat-value">{summary.sesiones}</span>
                 </div>
-                <span className="ses-stat-icon">🏆</span>
+                <span className="ses-stat-icon"><Layers size={50} /></span>
               </div>
 
               <div className="ses-stat-card ses-stat-card--green">
@@ -385,7 +385,7 @@ export default function SesionesPage() {
                   <span className="ses-stat-label">Aciertos</span>
                   <span className="ses-stat-value">{summary.aciertos}</span>
                 </div>
-                <span className="ses-stat-icon">⚡</span>
+                <span className="ses-stat-icon"><CheckCircle size={50} /></span>
               </div>
 
               <div className="ses-stat-card ses-stat-card--red">
@@ -393,7 +393,7 @@ export default function SesionesPage() {
                   <span className="ses-stat-label">Errores</span>
                   <span className="ses-stat-value">{summary.errores}</span>
                 </div>
-                <span className="ses-stat-icon">⚠️</span>
+                <span className="ses-stat-icon"><AlertCircle size={50} /></span>
               </div>
             </div>
 

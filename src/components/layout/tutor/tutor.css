@@ -952,20 +952,23 @@
 }
 
 .ses-stat-icon {
-  font-size: 50px;
-  opacity: 0.5;
   position: absolute;
-  right: 4px;
-  bottom: 4px;
+  right: 8px;
+  bottom: 8px;
+  opacity: 0.6;
   line-height: 1;
   pointer-events: none;
   z-index: 1;
 }
 
+.ses-stat-icon svg {
+  display: block;
+}
+
 .ses-stat-card--orange { background: #3C3489; }
 .ses-stat-card--purple { background: #26215C; }
 .ses-stat-card--green  { background: #085041; }
-.ses-stat-card--red    { background: #f4f7f9; border: 0.5px solid var(--lk-border); }
+.ses-stat-card--red    { background: #F7F4FB; border: 0.5px solid var(--lk-border); }
 
 .ses-stat-card--orange .ses-stat-label,
 .ses-stat-card--purple .ses-stat-label { color: #AFA9EC; }
