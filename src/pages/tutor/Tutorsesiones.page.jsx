@@ -319,7 +319,7 @@ export default function SesionesPage() {
             onClose={() => setMetricsModalOpen(false)}
             eyebrow="Resumen"
             title="Métricas de sesiones"
-            width={820}
+            width={960}
             actions={
               <button type="button" className="ses-modal-close-btn" onClick={() => setMetricsModalOpen(false)}>
                 Cerrar

@@ -1256,11 +1256,52 @@
 }
 
 /* Metrics modal: charts inside scroll */
+/* Metrics modal: override wide to go bigger */
+.lk-role-modal--wide {
+  width: min(960px, 95vw);
+  max-height: 90vh;
+}
+.lk-role-modal--wide .lk-role-modal__content {
+  overflow-y: auto;
+  max-height: calc(90vh - 120px);
+}
+.lk-role-modal--wide .ses-stats-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.lk-role-modal--wide .ses-stat-card {
+  padding: 20px 18px;
+  min-height: 100px;
+}
+.lk-role-modal--wide .ses-stat-value {
+  font-size: 32px;
+}
+.lk-role-modal--wide .ses-stat-label {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
 .lk-role-modal__content .ses-charts-card {
   margin-top: 16px;
 }
 .lk-role-modal__content .ses-stats-grid {
   margin-bottom: 0;
+}
+.lk-role-modal--wide .ses-charts-container {
+  gap: 32px;
+}
+.lk-role-modal--wide .ses-donut-canvas {
+  width: 200px;
+  height: 200px;
+}
+.lk-role-modal--wide .ses-donut-canvas canvas {
+  width: 200px !important;
+  height: 200px !important;
+}
+.lk-role-modal--wide .ses-bar-wrapper {
+  height: 260px;
+}
+.lk-role-modal--wide .ses-bar-wrapper canvas {
+  height: 260px !important;
 }
 
 /* --- Bottom section: full-width table --- */
