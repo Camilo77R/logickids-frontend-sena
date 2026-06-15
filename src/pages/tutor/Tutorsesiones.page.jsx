@@ -176,32 +176,31 @@ export default function SesionesPage() {
       {/* Error */}
       {error && <div className="tutor-alert tutor-alert--error">{error}</div>}
 
-      {/* Filtros */}
+      {/* Filtros + Botón métricas */}
       <div className="tutor-card ses-filters-card">
-        <SesionesFilters
-          tipo={tipo}
-          setTipo={setTipo}
-          grupos={grupos}
-          grupoId={grupoId}
-          setGrupoId={setGrupoId}
-          estudiantes={estudiantes}
-          estudianteId={estudianteId}
-          setEstudiante={setEstudiante}
-        />
+        <div className="ses-filters-row">
+          <SesionesFilters
+            tipo={tipo}
+            setTipo={setTipo}
+            grupos={grupos}
+            grupoId={grupoId}
+            setGrupoId={setGrupoId}
+            estudiantes={estudiantes}
+            estudianteId={estudianteId}
+            setEstudiante={setEstudiante}
+          />
+          {data.length > 0 && (
+            <button
+              type="button"
+              className="ses-metrics-btn"
+              onClick={() => setMetricsModalOpen(true)}
+            >
+              <BarChart3 size={16} />
+              Actividades · Sesiones
+            </button>
+          )}
+        </div>
       </div>
-
-      {/* Botón métricas */}
-      {data.length > 0 && (
-        <button
-          type="button"
-          className="ses-metrics-btn"
-          onClick={() => setMetricsModalOpen(true)}
-        >
-          <BarChart3 size={18} />
-          Ver métricas
-          <span className="ses-metrics-btn__badge">{summary.actividades} actividades · {summary.sesiones} sesiones</span>
-        </button>
-      )}
 
       {/* Estado: cargando */}
       {isLoading ? (
@@ -320,7 +319,7 @@ export default function SesionesPage() {
             onClose={() => setMetricsModalOpen(false)}
             eyebrow="Resumen"
             title="Métricas de sesiones"
-            width={720}
+            width={820}
             actions={
               <button type="button" className="ses-modal-close-btn" onClick={() => setMetricsModalOpen(false)}>
                 Cerrar
