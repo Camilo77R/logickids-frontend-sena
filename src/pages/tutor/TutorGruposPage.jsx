@@ -308,45 +308,39 @@ export default function TutorGruposPage() {
                   Grupos asignados
                 </h2>
               </div>
-            </div>
-
-            <div className="tg-toolbar">
-              <div className="tg-search">
-                <Search size={15} className="tg-search__icon" />
-                <input
-                  type="text"
-                  className="tg-search__input"
-                  placeholder="Buscar grupo..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                {searchQuery && (
-                  <button type="button" className="tg-search__clear" onClick={() => setSearchQuery("")}>
-                    &times;
-                  </button>
-                )}
+              <div className="tg-toolbar">
+                <div className="tg-search">
+                  <Search size={15} className="tg-search__icon" />
+                  <input
+                    type="text"
+                    className="tg-search__input"
+                    placeholder="Buscar grupo..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  {searchQuery && (
+                    <button type="button" className="tg-search__clear" onClick={() => setSearchQuery("")}>
+                      &times;
+                    </button>
+                  )}
+                </div>
+                <div className="tg-filters">
+                  {[
+                    { key: "all", label: "Todos" },
+                    { key: "open", label: "Abiertas" },
+                    { key: "closed", label: "Cerradas" },
+                  ].map((f) => (
+                    <button
+                      key={f.key}
+                      type="button"
+                      className={`tg-filter-pill${statusFilter === f.key ? " is-active" : ""}`}
+                      onClick={() => setStatusFilter(f.key)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="tg-filters">
-                {[
-                  { key: "all", label: "Todos" },
-                  { key: "open", label: "Abiertas" },
-                  { key: "closed", label: "Cerradas" },
-                ].map((f) => (
-                  <button
-                    key={f.key}
-                    type="button"
-                    className={`tg-filter-pill${statusFilter === f.key ? " is-active" : ""}`}
-                    onClick={() => setStatusFilter(f.key)}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </div>
-              <span className="tg-toolbar__count">
-                {filteredGroups.length === grupos.length
-                  ? `${grupos.length} grupo${grupos.length !== 1 ? "s" : ""}`
-                  : `${filteredGroups.length} de ${grupos.length}`}
-              </span>
             </div>
 
             {cargando ? (

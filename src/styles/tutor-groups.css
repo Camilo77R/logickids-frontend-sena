@@ -975,26 +975,13 @@
 .tg-toolbar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  margin-bottom: 8px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--tg-surface, #fff);
-  border-bottom: 1px solid var(--tg-border);
-}
-.tg-toolbar__count {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--tg-muted);
-  white-space: nowrap;
-  margin-left: auto;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .tg-search {
   position: relative;
-  width: 220px;
+  width: 200px;
   flex-shrink: 0;
 }
 .tg-search__icon {
