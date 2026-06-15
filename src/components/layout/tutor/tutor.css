@@ -311,9 +311,8 @@
 /* Main Content Area */
 .tutor-main-content {
   flex: 1;
-  padding: 40px;
+  padding: 0 40px 40px;
   overflow-y: auto;
-  overflow-x: clip;
 }
 
 /* Placeholder Page Styles */
@@ -384,6 +383,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 40px;
     margin-bottom: 32px;
 }
 
@@ -853,12 +853,8 @@
   margin-bottom: 20px;
   background: var(--lk-tutor-primary);
   position: sticky;
-  top: -40px;
+  top: 0;
   z-index: 10;
-  margin-left: -40px;
-  margin-right: -40px;
-  padding-left: 40px;
-  padding-right: 40px;
   border-radius: var(--lk-radius-xl);
 }
 
