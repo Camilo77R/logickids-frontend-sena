@@ -860,6 +860,7 @@
   padding-left: 1.55rem;
   padding-right: 1.55rem;
   border-radius: var(--lk-radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ses-filters-row {
