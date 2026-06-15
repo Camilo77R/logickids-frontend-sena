@@ -854,8 +854,8 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  border-radius: var(--lk-radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
 }
 
 .ses-filters-row {
