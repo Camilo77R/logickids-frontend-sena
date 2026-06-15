@@ -373,15 +373,10 @@ export default function TutorDashboardOverview() {
             {groups.length === 0 ? (
               <div className="tov-module-card__preview-empty">Sin grupos</div>
             ) : (
-              <>
-                {groups.slice(0, 2).map((g) => (
-                  <div key={g.id} className="tov-module-card__preview-row">
-                    <span className="tov-module-card__preview-label">{g.nombre}</span>
-                    <span className={`tov-module-card__preview-dot ${isSessionActive(g.sesion_activa) ? "tov-module-card__preview-dot--live" : ""}`} />
-                  </div>
-                ))}
-                {groups.length > 2 && <div className="tov-module-card__preview-extra">+{groups.length - 2} m&aacute;s</div>}
-              </>
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-label">{groups[0].nombre}</span>
+                <span className={`tov-module-card__preview-dot ${isSessionActive(groups[0].sesion_activa) ? "tov-module-card__preview-dot--live" : ""}`} />
+              </div>
             )}
           </div>
           <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
@@ -399,18 +394,13 @@ export default function TutorDashboardOverview() {
             {sortedStudents.length === 0 ? (
               <div className="tov-module-card__preview-empty">Sin estudiantes</div>
             ) : (
-              <>
-                {sortedStudents.slice(0, 3).map((s, i) => (
-                  <div key={s.id} className="tov-module-card__preview-row">
-                    <span className="tov-module-card__preview-name">
-                      {isSessionActive(s.sesion_activa) && <span className="tov-module-card__preview-dot tov-module-card__preview-dot--live" />}
-                      {s.nombre}
-                    </span>
-                    <span className="tov-module-card__preview-value">#{i + 1}</span>
-                  </div>
-                ))}
-                {sortedStudents.length > 3 && <div className="tov-module-card__preview-extra">+{sortedStudents.length - 3} m&aacute;s</div>}
-              </>
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-name">
+                  {isSessionActive(sortedStudents[0].sesion_activa) && <span className="tov-module-card__preview-dot tov-module-card__preview-dot--live" />}
+                  {sortedStudents[0].nombre}
+                </span>
+                <span className="tov-module-card__preview-value">#1</span>
+              </div>
             )}
           </div>
           <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
@@ -426,15 +416,10 @@ export default function TutorDashboardOverview() {
           </div>
           <div className="tov-module-card__preview">
             {focusGroup ? (
-              <>
-                <div className="tov-module-card__preview-row">
-                  <span className="tov-module-card__preview-label">{getSessionModeLabel(focusGroup) || "Individual"}</span>
-                  <span className="tov-module-card__preview-value">{getSessionStepsLabel(focusGroup) || "1 nivel"}</span>
-                </div>
-                <div className="tov-module-card__preview-extra">
-                  {isSessionActive(focusGroup.sesion_activa) ? "\u25cf Clase activa" : "Sin sesi\u00f3n activa"}
-                </div>
-              </>
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-label">{getSessionModeLabel(focusGroup) || "Individual"}</span>
+                <span className="tov-module-card__preview-value">{getSessionStepsLabel(focusGroup) || "1 nivel"}</span>
+              </div>
             ) : (
               <div className="tov-module-card__preview-empty">Sin clase activa</div>
             )}
@@ -454,18 +439,13 @@ export default function TutorDashboardOverview() {
             {skills.length === 0 ? (
               <div className="tov-module-card__preview-empty">Sin datos de precisi&oacute;n</div>
             ) : (
-              <>
-                {skills.slice(0, 2).map((sk) => (
-                  <div key={sk.id_habilidad ?? sk.habilidad} className="tov-module-card__preview-skill">
-                    <span className="tov-module-card__preview-skill-name">{sk.habilidad}</span>
-                    <div className="tov-module-card__preview-skill-bar">
-                      <div className="tov-module-card__preview-skill-fill" style={{ width: `${Math.min(100, Math.round(Number(sk.precision_promedio ?? 0)))}%` }} />
-                    </div>
-                    <span className="tov-module-card__preview-skill-pct">{Math.round(Number(sk.precision_promedio ?? 0))}%</span>
-                  </div>
-                ))}
-                {skills.length > 2 && <div className="tov-module-card__preview-extra">+{skills.length - 2} m&aacute;s</div>}
-              </>
+              <div className="tov-module-card__preview-skill">
+                <span className="tov-module-card__preview-skill-name">{skills[0].habilidad}</span>
+                <div className="tov-module-card__preview-skill-bar">
+                  <div className="tov-module-card__preview-skill-fill" style={{ width: `${Math.min(100, Math.round(Number(skills[0].precision_promedio ?? 0)))}%` }} />
+                </div>
+                <span className="tov-module-card__preview-skill-pct">{Math.round(Number(skills[0].precision_promedio ?? 0))}%</span>
+              </div>
             )}
           </div>
           <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
@@ -483,12 +463,9 @@ export default function TutorDashboardOverview() {
             {recs.length === 0 ? (
               <div className="tov-module-card__preview-empty">Sin recomendaciones</div>
             ) : (
-              <>
-                <div className="tov-module-card__preview-rec">
-                  <strong>{recs[0].habilidad ?? recs[0].skill ?? "General"}:</strong> {recs[0].mensaje ?? recs[0].message ?? recs[0].recomendacion}
-                </div>
-                {recs.length > 1 && <div className="tov-module-card__preview-extra">+{recs.length - 1} m&aacute;s</div>}
-              </>
+              <div className="tov-module-card__preview-rec">
+                <strong>{recs[0].habilidad ?? recs[0].skill ?? "General"}:</strong> {recs[0].mensaje ?? recs[0].message ?? recs[0].recomendacion}
+              </div>
             )}
           </div>
           <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
