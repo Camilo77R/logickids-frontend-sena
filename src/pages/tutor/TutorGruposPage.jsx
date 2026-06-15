@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Eye, Play, Route, Square, Users } from "lucide-react";
+import { BookOpen, Eye, Play, Route, Search, Square, Users } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
 import RoleModal from "../../components/common/RoleModal";
 import tutorGroupsService from "../../services/tutorGroupsService";
@@ -91,6 +91,8 @@ export default function TutorGruposPage() {
     error: "",
   });
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const selectedGroup = useMemo(
     () => grupos.find((grupo) => normalizeGroupId(grupo) === selectedGroupId) ?? null,
@@ -106,6 +108,20 @@ export default function TutorGruposPage() {
     () => selectedStudents.filter((student) => isSessionActive(student?.sesion_activa)).length,
     [selectedStudents]
   );
+
+  const filteredGroups = useMemo(() => {
+    let result = grupos;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter((g) => (g.nombre || "").toLowerCase().includes(q));
+    }
+    if (statusFilter === "open") {
+      result = result.filter((g) => isSessionActive(g.sesion_activa));
+    } else if (statusFilter === "closed") {
+      result = result.filter((g) => !isSessionActive(g.sesion_activa));
+    }
+    return result;
+  }, [grupos, searchQuery, statusFilter]);
 
   const loadGroupsAndCatalog = async (nextSelectedGroupId = selectedGroupId) => {
     try {
@@ -294,11 +310,55 @@ export default function TutorGruposPage() {
               </div>
             </div>
 
+            <div className="tg-toolbar">
+              <div className="tg-search">
+                <Search size={15} className="tg-search__icon" />
+                <input
+                  type="text"
+                  className="tg-search__input"
+                  placeholder="Buscar grupo..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery && (
+                  <button type="button" className="tg-search__clear" onClick={() => setSearchQuery("")}>
+                    &times;
+                  </button>
+                )}
+              </div>
+              <div className="tg-filters">
+                {[
+                  { key: "all", label: "Todos" },
+                  { key: "open", label: "Abiertas" },
+                  { key: "closed", label: "Cerradas" },
+                ].map((f) => (
+                  <button
+                    key={f.key}
+                    type="button"
+                    className={`tg-filter-pill${statusFilter === f.key ? " is-active" : ""}`}
+                    onClick={() => setStatusFilter(f.key)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+              <span className="tg-toolbar__count">
+                {filteredGroups.length === grupos.length
+                  ? `${grupos.length} grupo${grupos.length !== 1 ? "s" : ""}`
+                  : `${filteredGroups.length} de ${grupos.length}`}
+              </span>
+            </div>
+
             {cargando ? (
               <div className="tutor-loading">Cargando grupos...</div>
+            ) : filteredGroups.length === 0 ? (
+              <div className="tutor-empty">
+                <Search size={30} />
+                <p>No se encontraron grupos con esos criterios.</p>
+              </div>
             ) : (
               <div className="tg-group-list">
-                {grupos.map((grupo) => {
+                {filteredGroups.map((grupo) => {
                   const groupId = normalizeGroupId(grupo);
 
                   return (
