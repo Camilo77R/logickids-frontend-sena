@@ -262,7 +262,11 @@
 .tg-primary-btn--ghost {
   background: transparent;
   color: var(--tg-soft);
-  border: 1.5px solid var(--tg-border);
+  border: 1.5px solid #d1cdd9;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
 }
 .tg-primary-btn--ghost:hover:not(:disabled) {
   border-color: var(--tg-p);
