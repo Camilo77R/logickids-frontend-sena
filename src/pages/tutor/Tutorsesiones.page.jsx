@@ -273,8 +273,8 @@ export default function SesionesPage() {
                 title="Fecha hasta"
               />
               {(dateFrom || dateTo) && (
-                <button className="ses-search__clear" onClick={() => { setDateFrom(""); setDateTo(""); }}>
-                  <X size={12} />
+                <button className="ses-date-clear" onClick={() => { setDateFrom(""); setDateTo(""); }}>
+                  <X size={14} />
                 </button>
               )}
             </div>
