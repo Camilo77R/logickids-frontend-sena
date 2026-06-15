@@ -23,6 +23,8 @@ import {
   Star,
   Target,
   Route,
+  Gamepad2,
+  Layers,
 } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
 import { useAuth } from "../../hooks/useAuth";
@@ -39,13 +41,6 @@ import {
   isSessionActive,
 } from "../../utils/sessionClassUi";
 import "../../styles/tutor-ov.css";
-
-const getSaludo = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Buenos días";
-  if (hour < 18) return "Buenas tardes";
-  return "Buenas noches";
-};
 
 const AVATAR_COLORS = ["#8E35D5", "#2B173D", "#F9A825", "#e8920a", "#7a3575", "#f0b429"];
 const avatarColor = (index) => AVATAR_COLORS[index % AVATAR_COLORS.length];
@@ -87,21 +82,15 @@ const loadStudentsForTutorGroups = async (groups) => {
   return [...uniqueStudents.values()];
 };
 
-function KpiCard({ value, label, sublabel, Icon, accent }) {
+function KpiCard({ value, label, sublabel, Icon, variant }) {
   return (
-    <div className="tov-kpi">
-      <div className="tov-kpi__left">
-        <div className="tov-kpi__ico" style={{ background: accent }}>
-          <Icon size={18} strokeWidth={2.2} />
-        </div>
-        <div>
-          <span className="tov-kpi__lbl">{label}</span>
-          {sublabel && <span className="tov-kpi__sub">{sublabel}</span>}
-        </div>
+    <div className={`tov-kpi ${variant ? `tov-kpi--${variant}` : ""}`}>
+      <div className="tov-kpi__ico">
+        <Icon size={16} strokeWidth={1.5} />
       </div>
-      <strong className="tov-kpi__val" style={{ color: accent }}>
-        {value}
-      </strong>
+      <strong className="tov-kpi__val">{value}</strong>
+      <span className="tov-kpi__lbl">{label}</span>
+      {sublabel && <span className="tov-kpi__sub">{sublabel}</span>}
     </div>
   );
 }
@@ -134,15 +123,20 @@ function GroupCard({ group, onToggle, loading }) {
   return (
     <div className={`tov-gcard ${active ? "tov-gcard--on" : ""}`}>
       <div className="tov-gcard__header">
-        <div className={`tov-gcard__dot ${active ? "tov-gcard__dot--on" : "tov-gcard__dot--off"}`} />
-        <span className="tov-gcard__status">{active ? "Clase abierta" : "Cerrada"}</span>
+        <span className={`tov-gcard__badge ${active ? "tov-gcard__badge--on" : "tov-gcard__badge--off"}`}>
+          {active ? "Clase abierta" : "Cerrada"}
+        </span>
       </div>
 
       <h3 className="tov-gcard__name">{group.nombre}</h3>
       <p className="tov-gcard__desc">{group.descripcion?.slice(0, 56) || "Sin descripción"}</p>
-      <div className="d-flex flex-wrap gap-2 mb-2">
-        <span className="badge bg-light text-dark border">{getSessionModeLabel(group)}</span>
-        <span className="badge bg-light text-dark border">{getSessionStepsLabel(group)}</span>
+      <div className="tov-gcard__meta">
+        <span className="tov-gcard__meta-item">
+          <Gamepad2 size={11} strokeWidth={1.5} /> {getSessionModeLabel(group) || "Actividad de un juego"}
+        </span>
+        <span className="tov-gcard__meta-item">
+          <Layers size={11} strokeWidth={1.5} /> {getSessionStepsLabel(group) || "2 niveles"}
+        </span>
       </div>
       <p className="tov-gcard__desc">{getSessionSummaryText(group)}</p>
 
@@ -152,7 +146,7 @@ function GroupCard({ group, onToggle, loading }) {
           disabled={loading === group.id}
           onClick={() => onToggle(group)}
         >
-          {loading === group.id ? "…" : active ? "Cerrar" : "Abrir actividad"}
+          {loading === group.id ? "\u2026" : active ? "Cerrar" : "Abrir actividad"}
         </button>
         <button className="tov-gcard__arrow" onClick={() => navigate("/tutor/grupos")}>
           <ChevronRight size={15} />
@@ -350,9 +344,6 @@ export default function TutorDashboardOverview() {
 
       <div className="tov-hero">
         <div className="tov-hero__text">
-          <p className="tov-hero__eye">
-            {getSaludo()}, {firstName} 👋
-          </p>
           <h1 className="tov-hero__h1">Panel del Tutor</h1>
           <p className="tov-hero__sub">
             {activeGroups > 0
@@ -360,28 +351,14 @@ export default function TutorDashboardOverview() {
               : "No hay clases activas. Abre una actividad pedagógica cuando quieras empezar."}
           </p>
         </div>
-        <div className="tov-hero__pills">
-          {[
-            { n: totalGroups, l: "Grupos" },
-            { n: activeGroups, l: "Activos" },
-            { n: totalStudents, l: "Estudiantes" },
-            { n: liveStudents, l: "Jugando" },
-          ].map(({ n, l }) => (
-            <div key={l} className="tov-hero__pill">
-              <strong>{n}</strong>
-              <span>{l}</span>
-            </div>
-          ))}
+        <div className="tov-hero__kpis">
+          <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} />
+          <KpiCard value={activeGroups} label="Clases abiertas" sublabel="Sesión activa" Icon={PlayCircle} variant="green" />
+          <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} />
+          <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} />
+          <KpiCard value={liveStudents} label="Jugando ahora" sublabel="Con sesión activa" Icon={Target} variant="purple" />
+          <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} />
         </div>
-      </div>
-
-      <div className="tov-kpis">
-        <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} accent="#8E35D5" />
-        <KpiCard value={activeGroups} label="Clases abiertas" sublabel="Sesión activa" Icon={PlayCircle} accent="#F9A825" />
-        <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} accent="#8E35D5" />
-        <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} accent="#8E35D5" />
-        <KpiCard value={liveStudents} label="Jugando ahora" sublabel="Con sesión activa" Icon={Target} accent="#F9A825" />
-        <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} accent="#8E35D5" />
       </div>
 
       <div className="tov-bento">
@@ -499,29 +476,7 @@ export default function TutorDashboardOverview() {
             </div>
           )}
 
-          <div className="tov-panel">
-            <span className="tov-eye">Navegación</span>
-            <h2 className="tov-ptitle" style={{ marginBottom: "0.7rem" }}>
-              Ir a
-            </h2>
-            <div className="tov-actions">
-              {[
-                { Icon: BookOpen, label: "Mis grupos", path: "/tutor/grupos" },
-                { Icon: Users, label: "Estudiantes", path: "/tutor/estudiantes" },
-                { Icon: Clock, label: "Sesiones", path: "/tutor/sesiones" },
-                { Icon: TrendingUp, label: "Estadísticas", path: "/tutor/estadisticas" },
-                { Icon: Award, label: "Logros", path: "/tutor/logros" },
-              ].map(({ Icon, label, path }) => (
-                <button key={label} className="tov-act" onClick={() => navigate(path)}>
-                  <div className="tov-act__ico">
-                    <Icon size={14} strokeWidth={2.3} />
-                  </div>
-                  <span>{label}</span>
-                  <ChevronRight size={13} className="tov-act__arr" />
-                </button>
-              ))}
-            </div>
-          </div>
+
         </div>
       </div>
 
