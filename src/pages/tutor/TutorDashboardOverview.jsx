@@ -341,21 +341,13 @@ export default function TutorDashboardOverview() {
       {toast && <div className={`tov-toast tov-toast--${toast.type}`}>{toast.text}</div>}
 
       <div className="tov-hero">
-        <div className="tov-hero__left">
-          <button className="tov-hero__avatar" onClick={() => navigate("/tutor/perfil")} title="Mi Perfil">
-            {firstName.slice(0, 2).toUpperCase()}
-          </button>
-          <div className="tov-hero__info">
-            <span className="tov-hero__name">{user?.nombre || "Tutor"}</span>
-            <span className="tov-hero__role">
-              {activeGroups > 0 ? "\u25cf " : ""}Tutora{activeGroups > 0 ? " activa" : ""}
-            </span>
-            <span className="tov-hero__stats">
-              {activeGroups > 0
-                ? `${activeGroups} clase${activeGroups > 1 ? "s" : ""} \u00b7 ${liveStudents} estudiante${liveStudents !== 1 ? "s" : ""} jugando`
-                : "Sin clases activas"}
-            </span>
-          </div>
+        <div className="tov-hero__text">
+          <h1 className="tov-hero__h1">Panel del Tutor</h1>
+          <p className="tov-hero__sub">
+            {activeGroups > 0
+              ? `${activeGroups} clase${activeGroups > 1 ? "s" : ""} abierta${activeGroups > 1 ? "s" : ""} · ${liveStudents} estudiante${liveStudents !== 1 ? "s" : ""} jugando ahora mismo.`
+              : "No hay clases activas. Abre una actividad pedagógica cuando quieras empezar."}
+          </p>
         </div>
         <div className="tov-hero__kpis">
           <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} />
