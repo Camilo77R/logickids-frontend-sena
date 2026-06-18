@@ -29,10 +29,10 @@
   line-height: 1.55;
 }
 
-.lk-stat-card--blue   { background: linear-gradient(135deg, #1596f0, #1ab1ff); }
-.lk-stat-card--purple { background: linear-gradient(135deg, #9749d3, #b86af1); }
-.lk-stat-card--orange { background: linear-gradient(135deg, #ff8b3d, #ffb03b); }
-.lk-stat-card--green  { background: linear-gradient(135deg, #13b56b, #39d98a); }
+.lk-stat-card--blue   { background: var(--lk-purple); }
+.lk-stat-card--purple { background: var(--lk-purple-light); }
+.lk-stat-card--orange { background: #A94BB5; }
+.lk-stat-card--green  { background: #13b56b; }
 
 .lk-dashboard-grid,
 .lk-admin-grid {
@@ -55,7 +55,6 @@
 .lk-switch-card {
   background: rgba(255,255,255,0.98);
   border: 1px solid var(--lk-color-border);
-  box-shadow: var(--lk-shadow-card);
   backdrop-filter: blur(16px);
   border-radius: var(--lk-radius-lg);
   padding: 1.15rem 1.2rem;
@@ -105,7 +104,7 @@
   color: var(--lk-text);
   border-radius: var(--lk-radius-md);
   padding: 0.95rem 1rem;
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition: border-color 180ms ease;
 }
 
 .lk-field input:focus,
@@ -113,7 +112,6 @@
 .lk-field select:focus {
   outline: none;
   border-color: var(--lk-purple);
-  box-shadow: 0 0 0 4px var(--lk-purple-soft);
 }
 
 .lk-field--error input,
@@ -166,7 +164,6 @@
   border-radius: var(--lk-radius-lg);
   background: #ffffff;
   border: 1px solid var(--lk-color-border);
-  box-shadow: var(--lk-shadow-sm);
 }
 
 .lk-groups-grid { display: grid; gap: 1rem; }
@@ -225,17 +222,24 @@
 .lk-table th,
 .lk-table td {
   text-align: left;
-  padding: 0.9rem 0.75rem;
-  border-bottom: 1px solid var(--lk-color-border);
-  vertical-align: top;
+  padding: 0.35rem 0.65rem;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+  font-size: 0.82rem;
+  background: white;
 }
 
 .lk-table th {
-  font-size: 0.84rem;
-  font-weight: 800;
-  color: var(--lk-text-muted);
+  background: #f4f5f7;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6b7280;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+}
+
+.lk-table tbody tr:nth-child(even) td {
+  background: #f8f9fa;
 }
 
 .lk-switch-card { display: grid; gap: 0.85rem; }
@@ -245,13 +249,13 @@
   border: none;
   border-radius: 999px;
   padding: 0.52rem 0.95rem;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
   transition: transform 180ms ease;
 }
 
 .lk-mini-switch:hover { transform: translateY(-1px); }
-.lk-mini-switch--on { color: #ffffff; background: linear-gradient(135deg, #13b56b, #12a85f); }
+.lk-mini-switch--on { color: #ffffff; background: #13b56b; }
 .lk-mini-switch--off { color: var(--lk-text-soft); background: #eef4fb; }
 
 .lk-loader-screen {
@@ -269,30 +273,29 @@
   border-radius: 999px;
   background: rgba(255,255,255,0.98);
   border: 1px solid var(--lk-color-border);
-  box-shadow: var(--lk-shadow-sm);
 }
 
 .lk-spinner {
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  border: 2px solid var(--lk-purple-soft);
+  border: 2px solid var(--lk-border);
   border-top-color: var(--lk-purple);
   animation: lk-spin 0.7s linear infinite;
 }
 
 @keyframes lk-spin { to { transform: rotate(360deg); } }
 @keyframes lk-pulse {
-  0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(19,181,107,0.7); }
-  70%  { transform: scale(1); box-shadow: 0 0 0 8px rgba(19,181,107,0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(19,181,107,0); }
+  0%   { transform: scale(0.95); }
+  70%  { transform: scale(1); }
+  100% { transform: scale(0.95); }
 }
 
 .lk-empty {
   padding: 1.3rem;
   border-radius: var(--lk-radius-md);
   border: 1px dashed var(--lk-color-border-strong);
-  background: rgba(139,47,201,0.04);
+  background: rgba(97, 43, 136, 0.04);
 }
 
 .lk-status-dot {
@@ -358,3 +361,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── ADMIN-SCOPED PASTEL COLOR OVERRIDES ── */
+.lk-admin-dashboard .lk-stat-card--blue,
+.lk-admin-dashboard .lk-stat-card--purple,
+.lk-admin-dashboard .lk-stat-card--orange,
+.lk-admin-dashboard .lk-stat-card--green { background: #fff; border: 1px solid #e5e7eb; color: #374151; }

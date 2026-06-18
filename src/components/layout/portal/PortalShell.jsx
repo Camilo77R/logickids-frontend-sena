@@ -14,6 +14,7 @@ export default function PortalShell({
   roleLabel,
   title,
   subtitle,
+  tertiary,
   userName,
   initials,
   notificationCount = 0,
@@ -22,10 +23,12 @@ export default function PortalShell({
   onAccountCenter,
   onLogout,
   actions,
+  toolbar,
+  className = "",
   children,
 }) {
   return (
-    <div className="lk-portal-shell">
+    <div className={`lk-portal-shell${className ? ` ${className}` : ""}`}>
       <PortalSidebar
         navigation={navigation}
         roleLabel={roleLabel}
@@ -38,6 +41,7 @@ export default function PortalShell({
         <PortalTopbar
           title={title}
           subtitle={subtitle}
+          tertiary={tertiary}
           userName={userName}
           roleLabel={roleLabel}
           initials={initials}
@@ -46,6 +50,7 @@ export default function PortalShell({
           onNotificationsClick={onNotificationsClick}
           onAccountCenter={onAccountCenter}
           actions={actions}
+          toolbar={toolbar}
         />
 
         <PortalMobileNav

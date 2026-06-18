@@ -17,6 +17,7 @@ export default function StateChangeModal({
   detailsItems = [],
   confirmLabel,
   confirmVariant = "primary",
+  overlayClassName,
 }) {
   return (
     <RoleModal
@@ -25,6 +26,7 @@ export default function StateChangeModal({
       eyebrow={eyebrow}
       title={title}
       warning={warning}
+      overlayClassName={overlayClassName}
       actions={
         <>
           <button type="button" className="lk-btn lk-btn--secondary" onClick={onClose}>

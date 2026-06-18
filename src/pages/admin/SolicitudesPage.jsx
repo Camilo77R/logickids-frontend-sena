@@ -225,9 +225,9 @@ export default function SolicitudesPage() {
     <AppShell
       title="Solicitudes"
       description="Aquí el admin resuelve reactivaciones de tutores suspendidos."
+      toolbar={toolbar}
     >
-      <div className="lk-role-dashboard">
-        {toolbar}
+      <div className="lk-role-dashboard lk-role-dashboard--fill lk-admin-dashboard">
 
         {feedback.message && (
           <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>
@@ -301,6 +301,7 @@ export default function SolicitudesPage() {
           eyebrow="Estadísticas"
           title="Resumen de Solicitudes"
           width={900}
+          overlayClassName="lk-admin-modal"
           actions={
             <button className="lk-btn lk-btn--primary" onClick={() => setShowMetricsModal(false)}>
               Cerrar
@@ -308,10 +309,10 @@ export default function SolicitudesPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={Mail} label="Solicitudes" value={summary.total} description="Total de reactivaciones" tone="purple" />
-            <DashboardMetricCard icon={AlertCircle} label="Pendientes" value={summary.pending} description="Casos por decidir" tone="orange" />
-            <DashboardMetricCard icon={CheckCircle} label="Aprobadas" value={summary.approved} description="Tutores reactivados" tone="gold" />
-            <DashboardMetricCard icon={XCircle} label="Rechazadas" value={summary.rejected} description="Respuestas negativas" tone="rose" />
+            <DashboardMetricCard icon={Mail} label="Solicitudes" value={summary.total} description="Total de reactivaciones" tone="gray" />
+            <DashboardMetricCard icon={AlertCircle} label="Pendientes" value={summary.pending} description="Casos por decidir" tone="gray" />
+            <DashboardMetricCard icon={CheckCircle} label="Aprobadas" value={summary.approved} description="Tutores reactivados" tone="gray" />
+            <DashboardMetricCard icon={XCircle} label="Rechazadas" value={summary.rejected} description="Respuestas negativas" tone="gray" />
           </div>
         </RoleModal>
 
@@ -322,6 +323,7 @@ export default function SolicitudesPage() {
           eyebrow="Detalle"
           title={selectedRequest?.tutor_nombre || "Solicitud"}
           width={540}
+          overlayClassName="lk-admin-modal"
           actions={
             <div className="lk-modal-actions">
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
@@ -392,6 +394,7 @@ export default function SolicitudesPage() {
           eyebrow="Rechazar"
           title="Motivo del rechazo"
           warning="Esta acción enviará al tutor el motivo."
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowRechazoModal(false)}>Cancelar</button>

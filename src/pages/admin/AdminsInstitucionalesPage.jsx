@@ -332,9 +332,9 @@ export default function AdminsInstitucionalesPage() {
     <AppShell
       title="Admins institucionales"
       description="Consolida el equipo administrativo de tu sede y mantén claro quién puede coordinar la operación diaria."
+      toolbar={toolbar}
     >
-      <div className="lk-role-dashboard">
-        {toolbar}
+      <div className="lk-role-dashboard lk-admin-dashboard">
 
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
 
@@ -359,7 +359,49 @@ export default function AdminsInstitucionalesPage() {
               />
             )}
 
-            {visibleAdmins.length > 0 && (
+            {visibleAdmins.length > 0 && statusFilter === "principal" && visibleAdmins.length === 1 ? (
+              <div className="lk-admin-principal-split">
+                <article className="lk-role-entity-card lk-role-entity-card--gold">
+                  <header className="lk-role-entity-card__header">
+                    <div>
+                      <h3 className="lk-role-entity-card__title">{visibleAdmins[0].nombre}</h3>
+                      <p className="lk-role-entity-card__subtitle">{visibleAdmins[0].email}</p>
+                    </div>
+                    <StatusBadge label="principal" variant="principal" />
+                  </header>
+                  <dl className="lk-role-entity-card__meta">
+                    <div><dt>Estado</dt><dd>{visibleAdmins[0].estado}</dd></div>
+                    <div><dt>Institución</dt><dd>{visibleAdmins[0].institucion || "Sin institución"}</dd></div>
+                    <div><dt>Creado</dt><dd>{formatDate(visibleAdmins[0].creado_en)}</dd></div>
+                  </dl>
+                </article>
+                <div className="lk-admin-principal-detail">
+                  <h4 className="lk-admin-principal-detail__title">Detalle del admin</h4>
+                  <div className="lk-admin-detail-content">
+                    <div className="lk-detail-field"><label>Email</label><p>{visibleAdmins[0].email}</p></div>
+                    <div className="lk-detail-field">
+                      <label>Rol</label>
+                      <p>Admin principal</p>
+                    </div>
+                    <div className="lk-detail-field">
+                      <label>Estado</label>
+                      <StatusBadge label={visibleAdmins[0].estado} variant={visibleAdmins[0].estado} />
+                    </div>
+                    <div className="lk-detail-field">
+                      <label>Institución</label>
+                      <p>{visibleAdmins[0].institucion || "No asignada"}</p>
+                    </div>
+                    <div className="lk-detail-field">
+                      <label>Fecha de registro</label>
+                      <p>{formatDate(visibleAdmins[0].creado_en)}</p>
+                    </div>
+                    <div className="lk-role-banner lk-role-banner--warning">
+                      <strong>Admin principal</strong> — No se puede modificar desde esta vista.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : visibleAdmins.length > 0 ? (
               <>
                 <div className="lk-role-entity-grid">
                   {paginatedAdmins.map((admin) => (
@@ -403,7 +445,7 @@ export default function AdminsInstitucionalesPage() {
                   totalItems={visibleAdmins.length}
                 />
               </>
-            )}
+            ) : null}
           </div>
         </section>
 
@@ -411,6 +453,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={showMetricsModal}
           onClose={() => setShowMetricsModal(false)}
+          overlayClassName="lk-admin-modal"
           eyebrow="Estadísticas"
           title="Resumen de Admins"
           width={900}
@@ -421,10 +464,10 @@ export default function AdminsInstitucionalesPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={UsersRound} label="Admins visibles" value={summary.total} description="Personal administrativo" tone="purple" />
-            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeAdmins} description="Cuentas listas para coordinar" tone="gold" />
-            <DashboardMetricCard icon={ShieldCheck} label="Principal" value={summary.principalAdmins} description="Responsables con control" tone="orange" />
-            <DashboardMetricCard icon={ShieldAlert} label="Suspendidos" value={summary.suspendedAdmins} description="Casos que requieren revisión" tone="rose" />
+            <DashboardMetricCard icon={UsersRound} label="Admins visibles" value={summary.total} description="Personal administrativo" tone="gray" />
+            <DashboardMetricCard icon={UserCheck2} label="Activos" value={summary.activeAdmins} description="Cuentas listas para coordinar" tone="gray" />
+            <DashboardMetricCard icon={ShieldCheck} label="Principal" value={summary.principalAdmins} description="Responsables con control" tone="gray" />
+            <DashboardMetricCard icon={ShieldAlert} label="Suspendidos" value={summary.suspendedAdmins} description="Casos que requieren revisión" tone="gray" />
           </div>
         </RoleModal>
 
@@ -432,6 +475,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={isModalOpen}
           onClose={handleCloseModal}
+          overlayClassName="lk-admin-modal"
           eyebrow="Detalle del admin"
           title={selectedAdmin?.nombre || "Administrador"}
           width={540}
@@ -486,6 +530,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={createModal.open}
           onClose={closeCreateModal}
+          overlayClassName="lk-admin-modal"
           eyebrow="Alta administrativa"
           title="Crear admin institucional"
           actions={
@@ -536,6 +581,7 @@ export default function AdminsInstitucionalesPage() {
         <RoleModal
           open={Boolean(createdCredentials)}
           onClose={() => setCreatedCredentials(null)}
+          overlayClassName="lk-admin-modal"
           eyebrow="Entrega inicial"
           title="Credenciales temporales"
           warning="Comparte estas credenciales por un canal seguro. La contraseña temporal solo se muestra en este momento."
@@ -558,6 +604,7 @@ export default function AdminsInstitucionalesPage() {
         <StateChangeModal
           open={stateModal.open && Boolean(stateModal.admin)}
           onClose={closeStateModal}
+          overlayClassName="lk-admin-modal"
           onConfirm={async () => {
             if (!stateModal.admin) return;
             const ok = await handleAdminStateChange(stateModal.admin.id, stateModal.nextState);

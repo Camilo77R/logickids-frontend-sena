@@ -1,13 +1,13 @@
 // src/components/common/StatusBadge.jsx
 const STATUS_CONFIG = {
-  activo:     { label: 'Activo',     color: '#10B981', bg: '#D1FAE5' },
+  activo:     { label: 'Activo',     color: '#15803d', bg: '#dcfce7' },
   inactivo:   { label: 'Inactivo',   color: '#6B7280', bg: '#F3F4F6' },
-  suspendido: { label: 'Suspendido', color: '#EF4444', bg: '#FEE2E2' },
-  pendiente:  { label: 'Pendiente',  color: '#F59E0B', bg: '#FEF3C7' },
-  principal:  { label: 'Principal',  color: '#8B5CF6', bg: '#EDE9FE' },
-  abierta:    { label: 'Abierta',    color: '#10B981', bg: '#D1FAE5' },
-  aprobado:   { label: 'Aprobado',   color: '#10B981', bg: '#D1FAE5' },
-  predeterminado: { label: 'Pendiente', color: '#F59E0B', bg: '#FEF3C7' },
+  suspendido: { label: 'Suspendido', color: '#b91c1c', bg: '#fee2e2' },
+  pendiente:  { label: 'Pendiente',  color: '#92400e', bg: '#fef3c7' },
+  principal:  { label: 'Principal',  color: '#5b21b6', bg: '#ede9fe' },
+  abierta:    { label: 'Abierta',    color: '#15803d', bg: '#dcfce7' },
+  aprobado:   { label: 'Aprobado',   color: '#15803d', bg: '#dcfce7' },
+  predeterminado: { label: 'Pendiente', color: '#92400e', bg: '#fef3c7' },
 };
 
 const normalizeVariant = (variant) => {

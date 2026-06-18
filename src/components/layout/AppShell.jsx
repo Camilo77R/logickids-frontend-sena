@@ -48,8 +48,10 @@ const ROLE_LABEL = {
 export default function AppShell({
   title,
   description,
+  tertiary,
   children,
   actions,
+  toolbar,
   notificationCount = 0,
 }) {
   const navigate = useNavigate();
@@ -87,6 +89,7 @@ export default function AppShell({
         roleLabel={roleLabel}
         title={title}
         subtitle={description}
+        tertiary={tertiary}
         userName={user?.nombre || "Usuario LogicKids"}
         initials={initials}
         notificationCount={user?.rol === USER_ROLES.ADMIN ? notificationCount : 0}
@@ -95,6 +98,8 @@ export default function AppShell({
         onAccountCenter={() => setShowAccountCenter(true)}
         onLogout={handleLogout}
         actions={actions}
+        toolbar={toolbar}
+        className={user?.rol === USER_ROLES.ADMIN ? "lk-portal-shell--admin" : ""}
       >
         {children}
       </PortalShell>

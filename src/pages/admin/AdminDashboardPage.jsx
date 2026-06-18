@@ -1,67 +1,130 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState, useCallback } from "react";
 import {
   Activity,
-  Clock3,
   GraduationCap,
   Mail,
   Search,
-  ShieldAlert,
   ShieldCheck,
-  UserCheck2,
   UserCog2,
-  UsersRound,
   X,
 } from "lucide-react";
 import AppShell from "../../components/layout/AppShell";
-import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard";
-import DashboardPanel from "../../components/dashboard/DashboardPanel";
-import QuickActionCard from "../../components/dashboard/QuickActionCard";
 import StatusBadge from "../../components/common/StatusBadge";
-import EmptyState from "../../components/common/EmptyState";
+import RoleModal from "../../components/common/RoleModal";
+import Pagination from "../../components/common/Pagination";
 import { useAuth } from "../../hooks/useAuth";
 import adminService from "../../services/adminService";
 import adminTutorsService from "../../services/adminTutorsService";
 import adminInstitutionalAdminsService from "../../services/adminInstitutionalAdminsService";
 import adminStudentsService from "../../services/adminStudentsService";
 import { buildAdminDashboardView } from "./adminDashboard.selectors";
-import logoWordmark from "../../assets/imgs/logoLogickids transparente.png";
+
+const PAGE_SIZE = 8;
+const MODULES = [
+  { key: "pulse", icon: Activity, title: "Pulso", subtitle: "Salud de accesos" },
+  { key: "admins", icon: ShieldCheck, title: "Admins", subtitle: "Directorio activo" },
+  { key: "tutors", icon: UserCog2, title: "Tutores", subtitle: "Directorio activo" },
+  { key: "students", icon: GraduationCap, title: "Estudiantes", subtitle: "Accesos listos" },
+  { key: "requests", icon: Mail, title: "Solicitudes", subtitle: "Pendientes" },
+];
 
 const normalizeSearch = (value) => value.trim().toLowerCase();
-
 const includesSearch = (value, search) =>
   String(value || "").toLowerCase().includes(search);
 
 function filterAdmins(admins, search) {
   if (!search) return admins;
-
   return admins.filter(
-    (admin) =>
-      includesSearch(admin.nombre, search) ||
-      includesSearch(admin.email, search) ||
-      includesSearch(admin.institucion, search)
+    (a) =>
+      includesSearch(a.nombre, search) ||
+      includesSearch(a.email, search) ||
+      includesSearch(a.institucion, search)
   );
 }
 
 function filterTutors(tutors, search) {
   if (!search) return tutors;
-
   return tutors.filter(
-    (tutor) =>
-      includesSearch(tutor.nombre, search) ||
-      includesSearch(tutor.email, search) ||
-      includesSearch(tutor.institucion, search)
+    (t) =>
+      includesSearch(t.nombre, search) ||
+      includesSearch(t.email, search) ||
+      includesSearch(t.institucion, search)
   );
 }
 
 function filterStudents(students, search) {
   if (!search) return students;
-
   return students.filter(
-    (student) =>
-      includesSearch(student.nombre, search) ||
-      includesSearch(student.grupo_nombre, search) ||
-      includesSearch(student.id, search) ||
-      includesSearch(student.edad, search)
+    (s) =>
+      includesSearch(s.nombre, search) ||
+      includesSearch(s.grupo_nombre, search) ||
+      includesSearch(s.id, search) ||
+      includesSearch(s.edad, search)
+  );
+}
+
+function DataTable({ columns, data, searchValue, onSearchChange, searchPlaceholder }) {
+  const [page, setPage] = useState(1);
+  const start = (page - 1) * PAGE_SIZE;
+  const paginated = data.slice(start, start + PAGE_SIZE);
+
+  useEffect(() => { setPage(1); }, [searchValue]);
+
+  return (
+    <div className="lk-role-detail-stack">
+      <div style={{ position: "sticky", top: 0, zIndex: 1, background: "#f8f9fa", paddingBottom: "0.5rem" }}>
+        <div className="lk-role-search">
+          <Search size={18} className="lk-role-search__icon" aria-hidden="true" />
+          <input
+            type="search"
+            className="lk-role-search__input"
+            placeholder={searchPlaceholder}
+            value={searchValue}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+          {searchValue ? (
+            <button type="button" className="lk-input-action" onClick={() => onSearchChange("")} aria-label="Limpiar búsqueda">
+              <X size={16} aria-hidden="true" />
+            </button>
+          ) : null}
+        </div>
+      </div>
+      <div className="lk-table-wrap">
+        <table className="lk-table">
+          <thead>
+            <tr>
+              {columns.map((col) => (
+                <th key={col.key}>{col.label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {paginated.length ? (
+              paginated.map((row) => (
+                <tr key={row.id}>
+                  {columns.map((col) => (
+                    <td key={col.key}>{col.render ? col.render(row) : row[col.key]}</td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length} style={{ textAlign: "center", padding: "2rem", color: "#9ca3af", fontSize: "0.85rem" }}>
+                  No hay resultados con ese filtro
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <Pagination
+        currentPage={page}
+        totalItems={data.length}
+        pageSize={PAGE_SIZE}
+        onPageChange={setPage}
+        itemLabel="registro"
+      />
+    </div>
   );
 }
 
@@ -72,11 +135,8 @@ export default function AdminDashboardPage() {
   const [students, setStudents] = useState([]);
   const [requests, setRequests] = useState([]);
   const [pendingRequests, setPendingRequests] = useState(0);
-  const [searches, setSearches] = useState({
-    admins: "",
-    tutors: "",
-    students: "",
-  });
+  const [searches, setSearches] = useState({ admins: "", tutors: "", students: "" });
+  const [activeModal, setActiveModal] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -84,33 +144,31 @@ export default function AdminDashboardPage() {
     const loadDashboard = async () => {
       try {
         setIsLoading(true);
-
         const [adminsData, tutorsData, studentsData, requestsData] = await Promise.all([
           adminInstitutionalAdminsService.listAdmins(),
           adminTutorsService.listTutors(),
           adminStudentsService.listStudents({ includeInactive: true }),
           adminService.listReactivationRequests(),
         ]);
-
         setAdmins(adminsData);
         setTutors(tutorsData);
         setStudents(studentsData);
         setRequests(requestsData);
         setPendingRequests(
-          requestsData.filter((request) => request.estado_solicitud === "pendiente").length
+          requestsData.filter((r) => r.estado_solicitud === "pendiente").length
         );
         setError("");
-      } catch (loadError) {
-        setError(loadError.message || "No fue posible cargar el panel institucional.");
+      } catch (err) {
+        setError(err.message || "No fue posible cargar el panel institucional.");
       } finally {
         setIsLoading(false);
       }
     };
-
     loadDashboard();
   }, []);
 
   const firstName = user?.nombre?.split(" ")[0] || "Profe";
+  const roleLabel = user?.rol === "superadmin" ? "Superadmin" : "Administrador";
 
   const view = useMemo(
     () =>
@@ -123,6 +181,10 @@ export default function AdminDashboardPage() {
       }),
     [admins, pendingRequests, students, tutors, user?.institucion]
   );
+
+  const updateSearch = useCallback((key, value) => {
+    setSearches((curr) => ({ ...curr, [key]: value }));
+  }, []);
 
   const activeAdminRows = useMemo(
     () => filterAdmins(view.activeAdminPreview, normalizeSearch(searches.admins)),
@@ -137,125 +199,168 @@ export default function AdminDashboardPage() {
     [searches.students, view.activeStudentPreview]
   );
 
-  const requestPreview = requests.slice(0, 4);
+  const pendingRequestsList = useMemo(
+    () => requests.filter((r) => r.estado_solicitud === "pendiente"),
+    [requests]
+  );
+  const currentModule = MODULES.find((m) => m.key === activeModal);
+  const closeModal = () => setActiveModal(null);
 
-  const updateSearch = (key, value) => {
-    setSearches((current) => ({ ...current, [key]: value }));
+  const getCount = (key) => {
+    switch (key) {
+      case "pulse": return view.progress.length;
+      case "admins": return view.totals?.admins;
+      case "tutors": return view.totals?.tutors;
+      case "students": return view.totals?.students;
+      case "requests": return pendingRequests;
+      default: return null;
+    }
+  };
+
+  const renderPreview = (key) => {
+    if (isLoading) return null;
+
+    if (key === "pulse") {
+      return (
+        <div className="lk-admin-module-card__preview">
+          {view.progress.map((item) => (
+            <div key={item.key} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{item.label}</span>
+              <span className="lk-admin-module-card__preview-value">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (key === "admins") {
+      const preview = view.activeAdminPreview.slice(0, 3);
+      const remaining = view.activeAdminPreview.length - preview.length;
+      return (
+        <div className="lk-admin-module-card__preview">
+          {preview.length ? preview.map((a) => (
+            <div key={a.id || a.email} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{a.nombre}</span>
+              <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#9ca3af" }}>
+                {a.es_admin_principal ? "Principal" : ""}
+              </span>
+            </div>
+          )) : (
+            <div className="lk-admin-module-card__preview-empty">Sin admins activos</div>
+          )}
+          {remaining > 0 && <div className="lk-admin-module-card__preview-extra">+{remaining} más</div>}
+        </div>
+      );
+    }
+
+    if (key === "tutors") {
+      const preview = view.activeTutorPreview.slice(0, 3);
+      const remaining = view.activeTutorPreview.length - preview.length;
+      return (
+        <div className="lk-admin-module-card__preview">
+          {preview.length ? preview.map((t) => (
+            <div key={t.id || t.email} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{t.nombre}</span>
+            </div>
+          )) : (
+            <div className="lk-admin-module-card__preview-empty">Sin tutores activos</div>
+          )}
+          {remaining > 0 && <div className="lk-admin-module-card__preview-extra">+{remaining} más</div>}
+        </div>
+      );
+    }
+
+    if (key === "students") {
+      const preview = view.activeStudentPreview.slice(0, 3);
+      const remaining = view.activeStudentPreview.length - preview.length;
+      return (
+        <div className="lk-admin-module-card__preview">
+          {preview.length ? preview.map((s) => (
+            <div key={s.id || s.email} className="lk-admin-module-card__preview-row">
+              <span className="lk-admin-module-card__preview-label">{s.nombre}</span>
+              <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#9ca3af" }}>
+                {s.grupo_nombre || ""}
+              </span>
+            </div>
+          )) : (
+            <div className="lk-admin-module-card__preview-empty">Sin estudiantes activos</div>
+          )}
+          {remaining > 0 && <div className="lk-admin-module-card__preview-extra">+{remaining} más</div>}
+        </div>
+      );
+    }
+
+    if (key === "requests") {
+      return (
+        <div className="lk-admin-module-card__preview">
+          {pendingRequestsList.length ? (
+            pendingRequestsList.slice(0, 3).map((r) => (
+              <div key={r.id} className="lk-admin-module-card__preview-row">
+                <span className="lk-admin-module-card__preview-label">{r.tutor_nombre}</span>
+                <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#92400e" }}>
+                  pendiente
+                </span>
+              </div>
+            ))
+          ) : (
+            <div className="lk-admin-module-card__preview-empty">No hay solicitudes pendientes</div>
+          )}
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
     <AppShell
       title={`Hola, ${firstName}`}
-      description="Coordina admins, tutores, estudiantes y accesos desde un solo punto de control institucional."
+      description={`${user?.institucion || "Panel institucional"} — ${roleLabel}`}
+      tertiary="Administra tutores, estudiantes y accesos de tu institucion."
       notificationCount={pendingRequests}
     >
       <div className="lk-role-dashboard lk-admin-dashboard">
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
-        <section className="lk-role-dashboard__hero">
-          <div className="lk-role-dashboard__hero-header">
-            <div>
-              <span className="lk-role-dashboard__hero-badge">Panel institucional</span>
-              <h2 className="lk-role-dashboard__hero-title">Tu institución bajo control</h2>
-              <p className="lk-role-dashboard__hero-subtitle">
-                Aquí concentras el pulso de tutores, estudiantes, admins y solicitudes para que la
-                operación diaria avance sin fricción.
-              </p>
-            </div>
-            <div className="lk-role-dashboard__hero-logo">
-              <img
-                src={logoWordmark}
-                alt="LogicKids"
-                className="lk-hero-logo"
-              />
-            </div>
-          </div>
-
-          <div className="lk-role-dashboard__hero-tags">
-            {view.heroTags.map((tag) => (
-              <article key={tag.label} className="lk-role-dashboard__hero-tag">
-                <strong>{isLoading ? "..." : tag.value}</strong>
-                <span>{tag.label}</span>
-              </article>
-            ))}
-          </div>
+        <section className="lk-admin-module-grid">
+          {MODULES.map((mod) => {
+            const Icon = mod.icon;
+            const count = getCount(mod.key);
+            return (
+              <button
+                key={mod.key}
+                type="button"
+                className="lk-admin-module-card"
+                onClick={() => setActiveModal(mod.key)}
+              >
+                <div className="lk-admin-module-card__header">
+                  <div className="lk-admin-module-card__icon">
+                    <Icon size={20} />
+                  </div>
+                  <div className="lk-admin-module-card__text">
+                    <strong className="lk-admin-module-card__title">{mod.title}</strong>
+                    <span className="lk-admin-module-card__subtitle">{mod.subtitle}</span>
+                  </div>
+                  <span className="lk-admin-module-card__count">
+                    {isLoading ? "..." : count}
+                  </span>
+                </div>
+                {renderPreview(mod.key)}
+                <div className="lk-admin-module-card__footer">Ver detalle →</div>
+              </button>
+            );
+          })}
         </section>
 
-        <section className="lk-role-dashboard__metrics">
-          <DashboardMetricCard
-            icon={ShieldCheck}
-            label={view.metrics[0].label}
-            value={isLoading ? "..." : view.metrics[0].value}
-            description={view.metrics[0].description}
-            tone={view.metrics[0].tone}
-          />
-          <DashboardMetricCard
-            icon={UserCheck2}
-            label={view.metrics[1].label}
-            value={isLoading ? "..." : view.metrics[1].value}
-            description={view.metrics[1].description}
-            tone={view.metrics[1].tone}
-          />
-          <DashboardMetricCard
-            icon={GraduationCap}
-            label={view.metrics[2].label}
-            value={isLoading ? "..." : view.metrics[2].value}
-            description={view.metrics[2].description}
-            tone={view.metrics[2].tone}
-          />
-          <DashboardMetricCard
-            icon={ShieldAlert}
-            label={view.metrics[3].label}
-            value={isLoading ? "..." : view.metrics[3].value}
-            description={view.metrics[3].description}
-            tone={view.metrics[3].tone}
-          />
-        </section>
-
-        <section className="lk-role-dashboard__grid">
-          <DashboardPanel
-            eyebrow="Acciones rapidas"
-            title="Siguientes movimientos"
-            subtitle="Atajos para entrar directo al modulo que hoy necesita tu atencion."
-          >
-            <div className="lk-role-quick-grid">
-              <QuickActionCard
-                to="/admin/admins"
-                icon={ShieldCheck}
-                title="Gestionar admins"
-                description="Revisa responsables activos y permisos institucionales."
-                tone="purple"
-              />
-              <QuickActionCard
-                to="/admin/usuarios"
-                icon={UsersRound}
-                title="Gestionar tutores"
-                description="Activa cuentas, revisa estados y ordena el equipo docente."
-                tone="gold"
-              />
-              <QuickActionCard
-                to="/admin/estudiantes"
-                icon={GraduationCap}
-                title="Gestionar estudiantes"
-                description="Mueve grupos, revisa estado y comparte el acceso QR cuando haga falta."
-                tone="orange"
-              />
-              <QuickActionCard
-                to="/admin/solicitudes"
-                icon={Mail}
-                title="Revisar solicitudes"
-                description="Atiende reactivaciones pendientes sin perder el contexto del dia."
-                tone="rose"
-              />
-            </div>
-          </DashboardPanel>
-
-          <DashboardPanel
-            eyebrow="Pulso del tablero"
-            title="Salud de accesos"
-            subtitle="Indicadores clave para saber si tu institucion esta lista para operar hoy."
-            aside={<Activity size={18} color="var(--lk-purple)" aria-hidden="true" />}
-          >
+        <RoleModal
+          open={!!activeModal}
+          onClose={closeModal}
+          eyebrow="Módulo"
+          title={currentModule?.title || ""}
+          width={640}
+          overlayClassName="lk-admin-modal"
+        >
+          {activeModal === "pulse" && (
             <div className="lk-role-inline-metric">
               {view.progress.map((item) => (
                 <article key={item.key} className="lk-role-inline-metric__row">
@@ -272,191 +377,81 @@ export default function AdminDashboardPage() {
                 </article>
               ))}
             </div>
-          </DashboardPanel>
-        </section>
+          )}
 
-        <section className="lk-role-dashboard__grid">
-          <ActiveDirectoryPanel
-            title="Admins activos"
-            subtitle={`${view.activeAdminPreview.length} de ${view.totals.admins} admin(s) con acceso activo.`}
-            searchValue={searches.admins}
-            searchPlaceholder="Buscar admin por nombre, correo o institucion"
-            onSearchChange={(value) => updateSearch("admins", value)}
-            rows={activeAdminRows}
-            emptyTitle="No hay admins activos con ese filtro"
-            renderRow={(admin) => (
-              <ActivePersonRow
-                key={admin.id}
-                title={admin.nombre}
-                description={admin.email}
-                meta={admin.es_admin_principal ? "Principal" : admin.institucion || "Institucion"}
-                badge={admin.estado}
-                tone={admin.es_admin_principal ? "pendiente" : admin.estado}
-              />
-            )}
-            icon={ShieldCheck}
-          />
+          {activeModal === "admins" && (
+            <DataTable
+              columns={[
+                { key: "nombre", label: "Nombre" },
+                { key: "email", label: "Email" },
+                { key: "rol", label: "Rol", render: (a) => a.es_admin_principal ? "Principal" : a.institucion || "Institución" },
+                { key: "estado", label: "Estado", render: (a) => <StatusBadge label={a.estado} variant={a.estado === "activo" ? "activo" : a.estado} /> },
+              ]}
+              data={activeAdminRows}
+              searchValue={searches.admins}
+              searchPlaceholder="Buscar admin por nombre, correo o institución"
+              onSearchChange={(v) => updateSearch("admins", v)}
+            />
+          )}
 
-          <ActiveDirectoryPanel
-            title="Tutores activos"
-            subtitle={`${view.activeTutorPreview.length} de ${view.totals.tutors} tutor(es) con acceso activo.`}
-            searchValue={searches.tutors}
-            searchPlaceholder="Buscar tutor por nombre, correo o institucion"
-            onSearchChange={(value) => updateSearch("tutors", value)}
-            rows={activeTutorRows}
-            emptyTitle="No hay tutores activos con ese filtro"
-            renderRow={(tutor) => (
-              <ActivePersonRow
-                key={tutor.id}
-                title={tutor.nombre}
-                description={tutor.email}
-                meta={tutor.institucion || "Institucion"}
-                badge={tutor.estado}
-                tone={tutor.estado}
-              />
-            )}
-            icon={UserCog2}
-          />
-        </section>
+          {activeModal === "tutors" && (
+            <DataTable
+              columns={[
+                { key: "nombre", label: "Nombre" },
+                { key: "email", label: "Email" },
+                { key: "institucion", label: "Institución", render: (t) => t.institucion || "Institución" },
+                { key: "estado", label: "Estado", render: (t) => <StatusBadge label={t.estado} variant={t.estado} /> },
+              ]}
+              data={activeTutorRows}
+              searchValue={searches.tutors}
+              searchPlaceholder="Buscar tutor por nombre, correo o institución"
+              onSearchChange={(v) => updateSearch("tutors", v)}
+            />
+          )}
 
-        <section className="lk-role-dashboard__grid">
-          <ActiveDirectoryPanel
-            title="Estudiantes activos"
-            subtitle={`${view.activeStudentPreview.length} de ${view.totals.students} estudiante(s) listos para clase.`}
-            searchValue={searches.students}
-            searchPlaceholder="Buscar estudiante por nombre, grupo, ID o edad"
-            onSearchChange={(value) => updateSearch("students", value)}
-            rows={activeStudentRows}
-            emptyTitle="No hay estudiantes activos con ese filtro"
-            renderRow={(student) => (
-              <ActivePersonRow
-                key={student.id}
-                title={student.nombre}
-                description={`${student.grupo_nombre || "Sin grupo"} - ID #${student.id}`}
-                meta={student.sesion_activa ? "En clase" : `${student.edad} anos`}
-                badge={student.estado || "activo"}
-                tone={student.sesion_activa ? "activo" : student.estado || "activo"}
-              />
-            )}
-            icon={GraduationCap}
-          />
+          {activeModal === "students" && (
+            <DataTable
+              columns={[
+                { key: "nombre", label: "Nombre" },
+                { key: "grupo", label: "Grupo", render: (s) => s.grupo_nombre || "Sin grupo" },
+                { key: "detalle", label: "Detalle", render: (s) => s.sesion_activa ? "En clase" : `${s.edad} años` },
+                { key: "estado", label: "Estado", render: (s) => <StatusBadge label={s.estado || "activo"} variant={s.estado === "activo" ? "activo" : s.estado || "activo"} /> },
+              ]}
+              data={activeStudentRows}
+              searchValue={searches.students}
+              searchPlaceholder="Buscar estudiante por nombre, grupo, ID o edad"
+              onSearchChange={(v) => updateSearch("students", v)}
+            />
+          )}
 
-          <DashboardPanel
-            eyebrow="Bandeja"
-            title="Solicitudes recientes"
-            subtitle="Reactivaciones visibles para que no se acumulen sin respuesta."
-            aside={<Clock3 size={18} color="var(--lk-purple)" aria-hidden="true" />}
-          >
-            <div className="lk-role-list">
-              {requestPreview.length ? (
-                requestPreview.map((request) => (
-                  <article
-                    key={request.id}
-                    className={`lk-role-list__item lk-role-list__item--${resolveRequestTone(
-                      request.estado_solicitud
-                    )}`}
-                  >
-                    <div className="lk-role-list__top">
-                      <span className="lk-role-list__title">{request.tutor_nombre}</span>
-                      <span
-                        className={`lk-role-list__meta lk-role-list__meta--${resolveRequestTone(
-                          request.estado_solicitud
-                        )}`}
-                      >
-                        {request.estado_solicitud}
-                      </span>
-                    </div>
-                    <p className="lk-role-list__description">
-                      {request.correo_contacto || request.tutor_email}
-                    </p>
-                  </article>
-                ))
-              ) : (
-                <p className="lk-role-note">No hay solicitudes recientes en este momento.</p>
-              )}
+          {activeModal === "requests" && (
+            <div className="lk-role-detail-stack">
+              <div className="lk-table-wrap" style={{ overflowY: "auto", flex: 1 }}>
+                {pendingRequestsList.length ? (
+                  <div className="lk-role-list">
+                    {pendingRequestsList.map((request) => (
+                      <article key={request.id} className="lk-role-list__item">
+                        <div className="lk-role-list__top">
+                          <span className="lk-role-list__title">{request.tutor_nombre}</span>
+                          <StatusBadge label="pendiente" variant="pendiente" />
+                        </div>
+                        <p className="lk-role-list__description">
+                          {request.correo_contacto || request.tutor_email}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p style={{ textAlign: "center", padding: "2rem", color: "var(--lk-text-muted)" }}>
+                    No hay solicitudes pendientes
+                  </p>
+                )}
+              </div>
             </div>
-          </DashboardPanel>
-        </section>
+          )}
+
+        </RoleModal>
       </div>
     </AppShell>
   );
-}
-
-function ActiveDirectoryPanel({
-  title,
-  subtitle,
-  searchValue,
-  searchPlaceholder,
-  onSearchChange,
-  rows,
-  emptyTitle,
-  renderRow,
-  icon: Icon,
-}) {
-  return (
-    <DashboardPanel
-      eyebrow="Directorio activo"
-      title={title}
-      subtitle={subtitle}
-      aside={<Icon size={18} color="var(--lk-purple)" aria-hidden="true" />}
-    >
-      <div className="lk-role-detail-stack">
-        <div className="lk-role-search">
-          <Search size={18} className="lk-role-search__icon" aria-hidden="true" />
-          <input
-            type="search"
-            className="lk-role-search__input"
-            placeholder={searchPlaceholder}
-            value={searchValue}
-            onChange={(event) => onSearchChange(event.target.value)}
-          />
-          {searchValue ? (
-            <button
-              type="button"
-              className="lk-input-action"
-              onClick={() => onSearchChange("")}
-              aria-label="Limpiar busqueda"
-            >
-              <X size={16} aria-hidden="true" />
-            </button>
-          ) : null}
-        </div>
-
-        {rows.length ? (
-          <div className="lk-role-list">{rows.map(renderRow)}</div>
-        ) : (
-          <EmptyState
-            title={emptyTitle}
-            description="Ajusta la busqueda o abre el modulo completo para revisar mas estados."
-          />
-        )}
-      </div>
-    </DashboardPanel>
-  );
-}
-
-function ActivePersonRow({ title, description, meta, badge, tone }) {
-  return (
-    <article className={`lk-role-list__item lk-role-list__item--${resolveListTone(tone)}`}>
-      <div className="lk-role-list__top">
-        <span className="lk-role-list__title">{title}</span>
-        <StatusBadge label={badge} variant={tone} />
-      </div>
-      <p className="lk-role-list__description">{description}</p>
-      <p className="lk-role-list__description">{meta}</p>
-    </article>
-  );
-}
-
-function resolveListTone(estado) {
-  if (estado === "activo") return "gold";
-  if (estado === "inactivo") return "orange";
-  if (estado === "pendiente") return "orange";
-  return "rose";
-}
-
-function resolveRequestTone(estado) {
-  if (estado === "aprobado") return "gold";
-  if (estado === "rechazado") return "rose";
-  return "orange";
 }

@@ -494,10 +494,10 @@ export default function GruposPage() {
     <AppShell
       title="Grupos"
       description="Organiza los grupos de tu institución, asigna tutores y supervisa la operación de clases."
+      toolbar={toolbar}
     >
-      <div className="lk-role-dashboard">
-        {toolbar}
-        
+      <div className="lk-role-dashboard lk-role-dashboard--fill lk-admin-dashboard">
+
         {feedback && <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div>}
         
         {/* Panel único que ocupa todo el ancho */}
@@ -625,6 +625,7 @@ export default function GruposPage() {
           eyebrow="Estadísticas"
           title="Resumen de Grupos"
           width={900}
+          overlayClassName="lk-admin-modal"
           actions={
             <button className="lk-btn lk-btn--primary" onClick={() => setShowMetricsModal(false)}>
               Cerrar
@@ -632,10 +633,10 @@ export default function GruposPage() {
           }
         >
           <div className="lk-role-dashboard__metrics">
-            <DashboardMetricCard icon={FolderClosed} label="Total de grupos" value={summary.total} description="Cantidad de grupos" tone="purple" />
-            <DashboardMetricCard icon={UserCheck2} label="Grupos activos" value={summary.activeGroups} description="Aulas operativas" tone="gold" />
-            <DashboardMetricCard icon={UsersRound} label="Sin tutor" value={summary.withoutTutor} description="Necesitan tutor" tone="orange" />
-            <DashboardMetricCard icon={Activity} label="Clases activas" value={summary.activeSessions} description="En juego" tone="rose" />
+            <DashboardMetricCard icon={FolderClosed} label="Total de grupos" value={summary.total} description="Cantidad de grupos" tone="gray" />
+            <DashboardMetricCard icon={UserCheck2} label="Grupos activos" value={summary.activeGroups} description="Aulas operativas" tone="gray" />
+            <DashboardMetricCard icon={UsersRound} label="Sin tutor" value={summary.withoutTutor} description="Necesitan tutor" tone="gray" />
+            <DashboardMetricCard icon={Activity} label="Clases activas" value={summary.activeSessions} description="En juego" tone="gray" />
           </div>
         </RoleModal>
         
@@ -645,7 +646,8 @@ export default function GruposPage() {
           onClose={() => setShowDetailModal(false)}
           eyebrow="Detalle del grupo"
           title={modalGroupDetail?.nombre || "Grupo"}
-          width={760}
+          width={640}
+          overlayClassName="lk-admin-modal"
           actions={
             <div className="lk-modal-actions">
               <button className="lk-btn lk-btn--secondary" onClick={() => setShowDetailModal(false)}>
@@ -804,6 +806,7 @@ export default function GruposPage() {
           onClose={closeGroupFormModal}
           eyebrow={groupFormModal.mode === "create" ? "Alta pedagógica" : "Ajuste de grupo"}
           title={groupFormModal.mode === "create" ? "Nuevo grupo" : "Editar grupo"}
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={closeGroupFormModal}>Cancelar</button>
@@ -829,6 +832,7 @@ export default function GruposPage() {
           eyebrow="Operación escolar"
           title="Asignar tutor"
           width={640}
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={() => setTutorModal({ open: false, tutorId: "" })}>Cancelar</button>
@@ -854,6 +858,7 @@ export default function GruposPage() {
           eyebrow="Operación docente"
           title="Quitar tutor"
           warning="¿Estás seguro de que deseas desasignar al tutor actual?"
+          overlayClassName="lk-admin-modal"
           actions={
             <>
               <button className="lk-btn lk-btn--secondary" onClick={() => setUnassignModalOpen(false)}>Cancelar</button>
@@ -872,6 +877,7 @@ export default function GruposPage() {
             const success = await handleStateChange(stateModal.group.id, stateModal.nextState);
             if (success) closeStateModal();
           }}
+          overlayClassName="lk-admin-modal"
           entityLabel={stateModal.group ? `${stateModal.group.nombre}` : ""}
           currentState={stateModal.group?.activo ? "activo" : "inactivo"}
           nextState={stateModal.nextState}
