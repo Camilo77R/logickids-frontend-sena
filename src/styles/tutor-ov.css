@@ -16,7 +16,7 @@
 
 .tov {
   display: flex; flex-direction: column; gap: 1.25rem;
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-font);
   color: var(--tov-text);
 }
 
@@ -126,7 +126,7 @@
   padding: 0.28rem 0.7rem; border-radius: 999px;
   background: var(--tov-accent-soft); color: var(--tov-accent);
   border: none; font-size: 0.72rem; font-weight: 600;
-  cursor: pointer; font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  cursor: pointer; font-family: var(--lk-font);
   white-space: nowrap; transition: filter 0.12s;
 }
 .tov-ilink:hover { filter: brightness(0.94); }
@@ -171,7 +171,7 @@
 .tov-gcard__btn {
   flex: 1; padding: 0.4rem 0.7rem; border-radius: 999px; border: none;
   font-size: 0.71rem; font-weight: 600; cursor: pointer;
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif; transition: filter 0.12s;
+  font-family: var(--lk-font); transition: filter 0.12s;
 }
 .tov-gcard__btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .tov-gcard__btn--open  { background: var(--tov-accent); color: #fff; }
@@ -257,7 +257,7 @@
   width: 100%; padding: 0.55rem 0.9rem; border-radius: 999px;
   background: var(--tov-accent); color: #fff; border: none;
   font-size: 0.76rem; font-weight: 600;
-  cursor: pointer; font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  cursor: pointer; font-family: var(--lk-font);
   transition: background 0.12s;
 }
 .tov-spotlight__btn:hover { background: #4733a3; }
@@ -304,7 +304,7 @@
   padding: 0.6rem 0.75rem; border-radius: 0.9rem;
   background: var(--tov-bg); border: 1px solid var(--tov-border);
   cursor: pointer; text-align: left; width: 100%;
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-font);
   font-size: 0.8rem; font-weight: 600; color: var(--tov-text);
   transition: background 0.12s, border-color 0.12s;
 }
@@ -538,7 +538,7 @@
   color: #fff; font-size: 0.85rem; font-weight: 600;
   border: none; cursor: pointer;
   transition: filter 0.15s ease;
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 .tov-modal-action:hover { filter: brightness(1.1); }
 
@@ -549,6 +549,6 @@
   color: var(--tov-soft); font-size: 0.85rem; font-weight: 600;
   border: 1.5px solid var(--tov-border); cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 .tov-modal-close:hover { border-color: var(--tov-accent); color: var(--tov-accent); }
