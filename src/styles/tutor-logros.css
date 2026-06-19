@@ -1,8 +1,8 @@
 .lk-achievements-page {
-  --ach-purple: #8E35D5;
+  --ach-purple: var(--lk-tutor-primary);
   --ach-ink: #2B173D;
   --ach-soft: #F3E8FA;
-  --ach-yellow: #FFC107;
+  --ach-yellow: var(--lk-yellow);
   --ach-border: rgba(142, 53, 213, 0.16);
   min-height: 100%;
   padding: 1.2rem 1.4rem 1.8rem;
@@ -114,12 +114,12 @@
   border: 1px solid rgba(43, 23, 61, 0.1);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 18px 36px rgba(43, 23, 61, 0.08);
+  box-shadow: var(--lk-shadow-card);
 }
 
 .lk-achievements-kpi--highlight {
   border-color: rgba(142, 53, 213, 0.28);
-  box-shadow: 0 18px 36px rgba(142, 53, 213, 0.2);
+  box-shadow: var(--lk-shadow-md);
 }
 
 .lk-achievements-kpi__icon {
@@ -200,7 +200,7 @@
 .lk-achievements-tabs button.active {
   background: #fff;
   color: var(--ach-purple);
-  box-shadow: 0 10px 22px rgba(142, 53, 213, 0.14);
+  box-shadow: var(--lk-shadow-sm);
 }
 
 .lk-achievements-grid {
@@ -217,12 +217,12 @@
   border-radius: 18px;
   background: #fff;
   border: 1px solid rgba(43, 23, 61, 0.1);
-  box-shadow: 0 16px 34px rgba(43, 23, 61, 0.08);
+  box-shadow: var(--lk-shadow-card);
 }
 
 .lk-achievement-card.is-unlocked {
   border-color: rgba(142, 53, 213, 0.34);
-  box-shadow: 0 18px 34px rgba(142, 53, 213, 0.17);
+  box-shadow: var(--lk-shadow-md);
 }
 
 .lk-achievement-card.is-locked {
@@ -302,7 +302,7 @@
   border-radius: 20px;
   background: #fff;
   border: 1px solid rgba(43, 23, 61, 0.1);
-  box-shadow: 0 18px 36px rgba(43, 23, 61, 0.08);
+  box-shadow: var(--lk-shadow-card);
 }
 
 .lk-achievements-timeline {
@@ -404,9 +404,9 @@
   padding: 2rem;
   overflow: hidden;
   border-radius: 28px;
-  background: #8E35D5;
+  background: var(--ach-purple);
   color: #fff;
-  box-shadow: 0 24px 54px rgba(142, 53, 213, 0.32);
+  box-shadow: var(--lk-shadow-lg);
 }
 
 .lk-achievements-banner span {
@@ -452,7 +452,7 @@
 }
 
 .lk-achievements-banner__actions button:first-child {
-  background: #FFC107;
+  background: var(--ach-yellow);
   color: var(--ach-ink);
 }
 
@@ -467,15 +467,6 @@
 .lk-achievements-rocket svg:first-child {
   width: 120px;
   height: 120px;
-  filter: drop-shadow(0 22px 22px rgba(43, 23, 61, 0.22));
-  transform: rotate(18deg);
-}
-
-.lk-achievements-rocket svg:last-child {
-  position: absolute;
-  right: 42px;
-  bottom: 18px;
-  color: var(--ach-yellow);
 }
 
 @media (max-width: 1120px) {
