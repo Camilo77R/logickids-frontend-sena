@@ -939,6 +939,12 @@
 }
 
 .tg-session-modal__footer-btn--primary:disabled {
+  --bs-btn-disabled-bg: var(--tg-y);
+  --bs-btn-disabled-border-color: var(--tg-y);
+  --bs-btn-disabled-color: #2d1600;
+  background-color: var(--tg-y);
+  border-color: var(--tg-y);
+  color: #2d1600;
   opacity: 0.65;
   cursor: not-allowed;
 }

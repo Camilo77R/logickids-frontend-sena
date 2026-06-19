@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, BarChart3, Calendar, CheckCircle, Clock, History, Layers, Search, X } from "lucide-react";
 import RoleModal from "../../components/common/RoleModal";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
@@ -27,6 +27,17 @@ export default function SesionesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingEventos, setIsLoadingEventos] = useState(false);
   const [error, setError] = useState("");
+  const errorTimer = useRef(null);
+  const clearError = useCallback(() => setError(""), []);
+
+  useEffect(() => {
+    if (error) {
+      clearTimeout(errorTimer.current);
+      errorTimer.current = setTimeout(clearError, 5000);
+    }
+    return () => clearTimeout(errorTimer.current);
+  }, [error, clearError]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("todas");
   const [dateFrom, setDateFrom] = useState("");
@@ -188,7 +199,12 @@ export default function SesionesPage() {
       </div>
 
       {/* Error */}
-      {error && <div className="tutor-alert tutor-alert--error">{error}</div>}
+      {error && (
+        <div className="tutor-alert tutor-alert--error">
+          <span>{error}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearError} aria-label="Cerrar"><X size={16} /></button>
+        </div>
+      )}
 
       {/* Filtros + Toolbar */}
       <div className="tutor-card ses-filters-card">

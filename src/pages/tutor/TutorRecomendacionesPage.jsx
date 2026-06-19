@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Brain,
   Eraser,
@@ -8,6 +8,7 @@ import {
   Target,
   Trash2,
   Users,
+  X,
   Wand2,
 } from "lucide-react";
 import EmptyState from "../../components/common/EmptyState";
@@ -189,6 +190,26 @@ export default function TutorRecomendacionesPage() {
   const [recomendaciones, setRecomendaciones] = useState([]);
   const [pageError, setPageError] = useState("");
   const [notice, setNotice] = useState("");
+  const pageErrorTimer = useRef(null);
+  const noticeTimer = useRef(null);
+  const clearPageError = useCallback(() => setPageError(""), []);
+  const clearNotice = useCallback(() => setNotice(""), []);
+
+  useEffect(() => {
+    if (pageError) {
+      clearTimeout(pageErrorTimer.current);
+      pageErrorTimer.current = setTimeout(clearPageError, 5000);
+    }
+    return () => clearTimeout(pageErrorTimer.current);
+  }, [pageError, clearPageError]);
+
+  useEffect(() => {
+    if (notice) {
+      clearTimeout(noticeTimer.current);
+      noticeTimer.current = setTimeout(clearNotice, 5000);
+    }
+    return () => clearTimeout(noticeTimer.current);
+  }, [notice, clearNotice]);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [isLoadingStudents, setIsLoadingStudents] = useState(false);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
@@ -482,8 +503,18 @@ export default function TutorRecomendacionesPage() {
           </button>
         </div>
 
-        {pageError ? <div className="lk-rec-alert lk-rec-alert--error">{pageError}</div> : null}
-        {notice ? <div className="lk-rec-alert lk-rec-alert--success">{notice}</div> : null}
+        {pageError ? (
+          <div className="lk-rec-alert lk-rec-alert--error">
+            <span>{pageError}</span>
+            <button type="button" className="tutor-alert__close" onClick={clearPageError} aria-label="Cerrar"><X size={16} /></button>
+          </div>
+        ) : null}
+        {notice ? (
+          <div className="lk-rec-alert lk-rec-alert--success">
+            <span>{notice}</span>
+            <button type="button" className="tutor-alert__close" onClick={clearNotice} aria-label="Cerrar"><X size={16} /></button>
+          </div>
+        ) : null}
 
         <div className="lk-rec-source-note">
           <Brain size={16} />

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Eye, Play, Route, Search, Square, Users } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { BookOpen, Eye, Play, Route, Search, Square, Users, X } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
 import RoleModal from "../../components/common/RoleModal";
 import tutorGroupsService from "../../services/tutorGroupsService";
@@ -91,6 +91,28 @@ export default function TutorGruposPage() {
     error: "",
   });
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const feedbackTimer = useRef(null);
+  const errorTimer = useRef(null);
+
+  const clearFeedback = useCallback(() => { setFeedback(null); }, []);
+  const clearError = useCallback(() => { setError(null); }, []);
+
+  useEffect(() => {
+    if (feedback) {
+      clearTimeout(feedbackTimer.current);
+      feedbackTimer.current = setTimeout(clearFeedback, 5000);
+    }
+    return () => clearTimeout(feedbackTimer.current);
+  }, [feedback, clearFeedback]);
+
+  useEffect(() => {
+    if (error) {
+      clearTimeout(errorTimer.current);
+      errorTimer.current = setTimeout(clearError, 5000);
+    }
+    return () => clearTimeout(errorTimer.current);
+  }, [error, clearError]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -286,11 +308,17 @@ export default function TutorGruposPage() {
 
       {feedback ? (
         <div className={`tutor-alert ${feedback.type === "success" ? "tutor-alert--success" : "tutor-alert--error"}`}>
-          {feedback.message}
+          <span>{feedback.message}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearFeedback} aria-label="Cerrar"><X size={16} /></button>
         </div>
       ) : null}
 
-      {error ? <div className="tutor-alert tutor-alert--error">{error}</div> : null}
+      {error ? (
+        <div className="tutor-alert tutor-alert--error">
+          <span>{error}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearError} aria-label="Cerrar"><X size={16} /></button>
+        </div>
+      ) : null}
 
       {!cargando && !grupos.length ? (
         <div className="tutor-card tutor-empty">
