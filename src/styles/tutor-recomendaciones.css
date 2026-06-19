@@ -11,19 +11,14 @@
   gap: 1.25rem;
   padding: 1.6rem;
   border-radius: var(--lk-radius-2xl);
-  background: var(--lk-purple);
-  box-shadow: var(--lk-shadow-panel);
+  background: var(--lk-surface);
+  border: 1px solid var(--lk-border);
+  box-shadow: var(--lk-shadow-card);
   overflow: hidden;
 }
 
 .lk-rec-hero::after {
-  content: "";
-  position: absolute;
-  inset: auto -60px -90px auto;
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
+  display: none;
 }
 
 .lk-rec-hero__glow {
@@ -43,8 +38,8 @@
   padding: 0.42rem 0.72rem;
   margin-bottom: 0.9rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fffdf7;
+  background: var(--lk-purple-soft);
+  color: var(--lk-purple);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -52,7 +47,7 @@
 
 .lk-rec-hero__title {
   margin: 0;
-  color: #ffffff;
+  color: var(--lk-text);
   font-family: var(--lk-display-font);
   font-size: clamp(2rem, 3.6vw, 3.05rem);
   font-weight: 700;
@@ -63,7 +58,7 @@
 .lk-rec-hero__subtitle {
   max-width: 52ch;
   margin: 0.9rem 0 0;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--lk-text-soft);
   font-size: 0.98rem;
   line-height: 1.7;
 }

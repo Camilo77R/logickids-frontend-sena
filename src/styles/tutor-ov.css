@@ -42,16 +42,16 @@
 .tov-hero {
   display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem;
   padding: 1.25rem 1.5rem; border-radius: 1.8rem;
-  background: var(--tov-hero-bg); position: relative;
+  background: var(--lk-surface); border: 1px solid var(--tov-border); position: relative;
 }
 .tov-hero__h1 {
   font-family: "Fredoka", system-ui, sans-serif;
   font-size: clamp(1.35rem, 2.8vw, 1.75rem); font-weight: 700;
-  color: #fff; margin: 0; letter-spacing: -0.025em;
+  color: var(--lk-text); margin: 0; letter-spacing: -0.025em;
 }
 .tov-hero__sub {
   margin: 0.25rem 0 0; font-size: 0.78rem; font-weight: 400;
-  color: var(--tov-accent-light); max-width: 46ch;
+  color: var(--tov-soft); max-width: 46ch;
 }
 .tov-hero__kpis {
   display: grid;
@@ -60,16 +60,16 @@
   flex-shrink: 0;
 }
 .tov-hero .tov-kpi {
-  background: rgba(255,255,255,0.07);
+  background: var(--tov-bg-card);
   padding: 0.5rem 0.7rem; border-radius: 8px; gap: 0;
 }
-.tov-hero .tov-kpi__ico { color: rgba(255,255,255,0.5); margin-bottom: 0; }
+.tov-hero .tov-kpi__ico { color: var(--tov-muted); margin-bottom: 0; }
 .tov-hero .tov-kpi__ico svg { width: 14px; height: 14px; }
-.tov-hero .tov-kpi__val { font-size: 1.1rem; color: #fff; line-height: 1.2; }
-.tov-hero .tov-kpi__lbl { font-size: 0.63rem; color: rgba(255,255,255,0.7); line-height: 1.2; }
-.tov-hero .tov-kpi__sub { font-size: 0.6rem; color: rgba(255,255,255,0.5); opacity: 1; line-height: 1.1; }
-.tov-hero .tov-kpi--green .tov-kpi__val { color: #7EE0B0; }
-.tov-hero .tov-kpi--purple .tov-kpi__val { color: #FFB74D; }
+.tov-hero .tov-kpi__val { font-size: 1.1rem; color: var(--lk-text); line-height: 1.2; }
+.tov-hero .tov-kpi__lbl { font-size: 0.63rem; color: var(--tov-soft); line-height: 1.2; }
+.tov-hero .tov-kpi__sub { font-size: 0.6rem; color: var(--tov-muted); opacity: 1; line-height: 1.1; }
+.tov-hero .tov-kpi--green .tov-kpi__val { color: var(--tov-green); }
+.tov-hero .tov-kpi--purple .tov-kpi__val { color: var(--tov-accent); }
 
 .tov-kpi {
   background: var(--tov-bg-card); border: none;
