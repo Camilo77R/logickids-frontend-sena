@@ -125,43 +125,40 @@ function StudentRow({ student, rank }) {
 }
 
 function PodiumSpot({ student, rank }) {
-  const colors = {
-    1: { bg: "var(--lk-brand)", icon: "#F9A825" },
-    2: { bg: "var(--lk-accent)", icon: "#fff" },
-    3: { bg: "var(--lk-brand-soft)", icon: "var(--lk-brand)" },
-  };
-  const labels = { 1: "1°", 2: "2°", 3: "3°" };
   const pts = student.puntaje ?? student.valor ?? 0;
-  const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
-  const c = colors[rank];
+  const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(student.nombre || student.estudiante_id || "")}`;
 
   return (
     <div className={`tov-podium-spot tov-podium-spot--${rank}`}>
-      {rank === 1 ? (
-        <Crown size={22} strokeWidth={2} style={{ color: c.icon }} />
-      ) : (
-        <Award size={18} strokeWidth={2} style={{ color: c.icon }} />
-      )}
-      <div className="tov-podium-spot__avatar" style={{ background: c.bg }}>
-        {initials}
+      <div className="tov-podium-spot__icon">
+        {rank === 1 ? (
+          <Crown size={20} strokeWidth={2} />
+        ) : (
+          <Award size={16} strokeWidth={2} />
+        )}
       </div>
-      <span className="tov-podium-spot__label">{labels[rank]}</span>
+      <img className="tov-podium-spot__avatar" src={avatarUrl} alt={student.nombre} />
       <span className="tov-podium-spot__name">{student.nombre}</span>
-      <span className="tov-podium-spot__pts">{pts}</span>
+      <span className="tov-podium-spot__label">
+        {rank === 1 ? "1" : rank === 2 ? "2" : "3"}°
+      </span>
+      <span className="tov-podium-spot__pts">{pts} pts</span>
     </div>
   );
 }
 
 function RankRow({ student, rank }) {
   const pts = student.puntaje ?? student.valor ?? 0;
-  const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
+  const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(student.nombre || student.estudiante_id || "")}`;
 
   return (
     <div className="tov-rank-row">
-      <span className="tov-rank-row__num">{student.posicion ?? rank}°</span>
-      <div className="tov-rank-row__avatar">{initials}</div>
+      <span className="tov-rank-row__num">
+        {rank}°
+      </span>
+      <img className="tov-rank-row__avatar" src={avatarUrl} alt={student.nombre} />
       <span className="tov-rank-row__name">{student.nombre}</span>
-      <span className="tov-rank-row__pts">{pts}</span>
+      <span className="tov-rank-row__pts">{pts} pts</span>
     </div>
   );
 }
