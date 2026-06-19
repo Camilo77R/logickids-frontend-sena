@@ -1,6 +1,7 @@
 import { clearStoredSession, getStoredSession } from "../utils/sessionStorage";
 
-const DEFAULT_API_URL = "http://localhost:3000/api";
+const DEFAULT_API_URL = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
+const API_BASE_URL = (import.meta.env.VITE_API_URL || DEFAULT_API_URL).replace(/\/+$/, "");
 
 class HttpError extends Error {
   constructor(message, status, details = []) {
@@ -63,7 +64,7 @@ export const request = async (path, { method = "GET", body, auth = true } = {}) 
   let response;
 
   try {
-    response = await fetch(`${import.meta.env.VITE_API_URL || DEFAULT_API_URL}${path}`, {
+    response = await fetch(`${API_BASE_URL}${path}`, {
       method,
       headers: buildHeaders(body, auth),
       body: body === undefined ? undefined : JSON.stringify(body),
@@ -96,6 +97,6 @@ export const request = async (path, { method = "GET", body, auth = true } = {}) 
   return payload;
 };
 
-export const resolveApiBaseUrl = () => import.meta.env.VITE_API_URL || DEFAULT_API_URL;
+export const resolveApiBaseUrl = () => API_BASE_URL;
 
 export { HttpError };
