@@ -10,13 +10,13 @@ En desarrollo local, usa el backend local:
 VITE_API_URL=http://localhost:3000/api
 ```
 
-En Vercel, la mejor practica para este despliegue es usar el proxy same-origin definido en `vercel.json`:
+En Vercel, incluyendo previews de ramas, la mejor practica para este despliegue es usar el proxy same-origin definido en `vercel.json`:
 
 ```env
 VITE_API_URL=/api
 ```
 
-Tambien puedes omitir `VITE_API_URL` en produccion; el frontend usa `/api` por defecto cuando se compila con Vite en modo production.
+Tambien puedes omitir `VITE_API_URL` en produccion; el frontend usa `/api` por defecto cuando se compila con Vite en modo production. Si Vercel todavia tiene configurada la URL directa de Render, el cliente la normaliza a `/api` para evitar CORS en previews.
 
 ## CORS y despliegue
 

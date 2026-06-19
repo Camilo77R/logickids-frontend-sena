@@ -1,7 +1,19 @@
 import { clearStoredSession, getStoredSession } from "../utils/sessionStorage";
 
 const DEFAULT_API_URL = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
-const API_BASE_URL = (import.meta.env.VITE_API_URL || DEFAULT_API_URL).replace(/\/+$/, "");
+const RENDER_API_URL = "https://logickids-backend-sena.onrender.com/api";
+
+const resolveBaseUrl = () => {
+  const configuredUrl = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
+
+  if (import.meta.env.PROD && configuredUrl.replace(/\/+$/, "") === RENDER_API_URL) {
+    return "/api";
+  }
+
+  return configuredUrl.replace(/\/+$/, "");
+};
+
+const API_BASE_URL = resolveBaseUrl();
 
 class HttpError extends Error {
   constructor(message, status, details = []) {
