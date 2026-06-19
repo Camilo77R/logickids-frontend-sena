@@ -870,7 +870,7 @@
   margin-bottom: 20px;
   background: var(--lk-brand);
   position: sticky;
-  top: -1.55rem;
+  top: 0;
   z-index: 10;
   border-radius: 32px;
   border: 1px solid var(--lk-tutor-border);
@@ -1367,6 +1367,7 @@
   justify-content: center;
   gap: 6px;
   padding: 16px 0 4px;
+  flex-shrink: 0;
 }
 .ses-page-btn {
   min-width: 32px;
@@ -1514,11 +1515,15 @@
   font-weight: 700;
   color: var(--lk-tutor-text);
   margin-bottom: 16px;
+  flex-shrink: 0;
 }
 
 /* --- Tabla --- */
 .ses-table-wrapper {
   overflow-x: auto;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .ses-table {
@@ -1537,6 +1542,10 @@
   text-transform: uppercase;
   color: var(--lk-tutor-text-muted);
   border-bottom: 1.5px solid var(--lk-tutor-border);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--lk-tutor-surface);
 }
 
 .ses-table-row {
@@ -1842,6 +1851,15 @@
 .tutor-card:has(canvas):hover {
   transform: none;
   box-shadow: var(--lk-card-shadow-hover) !important;
+}
+
+/* Card de tabla ocupa espacio vertical restante */
+.tutor-card:has(.ses-table-wrapper) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* ────────────────────────────────────────────────
