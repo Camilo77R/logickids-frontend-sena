@@ -1,21 +1,15 @@
 /* tutor.css - Premium Light Dashboard Layout */
 
-:root {
-  /* Fondo principal muy suave, no es blanco puro (evita lo genérico) */
-  --lk-tutor-bg: #f4f7f9; 
-  /* Superficies de cristal (Glassmorphism) */
+.lk-tutor-shell {
+  --lk-tutor-bg: #f4f7f9;
   --lk-tutor-surface: rgba(255, 255, 255, 0.75);
   --lk-tutor-surface-hover: rgba(255, 255, 255, 0.95);
   --lk-tutor-border: rgba(15, 23, 42, 0.08);
-  
-  /* Colores vibrantes y profesionales */
   --lk-tutor-primary: #8E35D5;
   --lk-tutor-primary-hover: #2B173D;
   --lk-tutor-accent-blue: #8E35D5;
-  --lk-tutor-accent-green: #10b981; /* Verde esmeralda */
-  --lk-tutor-accent-yellow: #f59e0b; /* Amarillo ámbar */
-  
-  /* Textos oscuros (Azul pizarra oscuro, no negro puro) */
+  --lk-tutor-accent-green: #10b981;
+  --lk-tutor-accent-yellow: #f59e0b;
   --lk-tutor-text: #1e293b;
   --lk-tutor-text-muted: #64748b;
   --lk-tutor-glow: rgba(142, 53, 213, 0.15);
@@ -1676,9 +1670,7 @@
    1. VARIABLES NUEVAS (amplían las existentes)
       Añaden naranja, gris suave y sombras de color
    ──────────────────────────────────────────────── */
-:root {
-  --lk-orange:        #f97316;
-  --lk-orange-dark:   #ea580c;
+.lk-tutor-shell {
   --lk-orange-glow:   rgba(249, 115, 22, 0.2);
   --lk-card-shadow:   0 2px 8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.04);
   --lk-card-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(142, 53, 213, 0.1);
