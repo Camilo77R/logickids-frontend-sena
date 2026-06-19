@@ -228,6 +228,137 @@
   color: var(--tov-muted); margin: 0.5rem 0 0;
 }
 
+.tov-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tov-podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1.2rem;
+  padding: 0.75rem 0 0.5rem;
+}
+
+.tov-podium-spot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.tov-podium-spot--1 { order: 1; }
+.tov-podium-spot--2 { order: 0; }
+.tov-podium-spot--3 { order: 2; }
+
+.tov-podium-spot__medal {
+  font-size: 1.4rem;
+  margin-bottom: 0.1rem;
+}
+.tov-podium-spot--1 .tov-podium-spot__medal { font-size: 1.8rem; }
+
+.tov-podium-spot__avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Fredoka", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  width: 44px;
+  height: 44px;
+}
+.tov-podium-spot--1 .tov-podium-spot__avatar {
+  width: 60px;
+  height: 60px;
+  font-size: 1.05rem;
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+}
+
+.tov-podium-spot__name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--tov-text);
+  text-align: center;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tov-podium-spot--1 .tov-podium-spot__name {
+  font-size: 0.85rem;
+}
+
+.tov-podium-spot__pts {
+  font-family: "Fredoka", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--tov-accent);
+}
+.tov-podium-spot--1 .tov-podium-spot__pts {
+  font-size: 0.95rem;
+}
+
+.tov-rank-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.tov-rank-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.5rem;
+  border-bottom: 1px solid var(--tov-border);
+  transition: background 0.1s;
+}
+.tov-rank-row:last-child { border-bottom: none; }
+.tov-rank-row:hover { background: var(--tov-accent-soft); border-radius: var(--lk-radius-xs); }
+
+.tov-rank-row__num {
+  font-family: "Fredoka", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--tov-muted);
+  min-width: 20px;
+  text-align: center;
+}
+
+.tov-rank-row__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--tov-accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.tov-rank-row__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--tov-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tov-rank-row__pts {
+  font-family: "Fredoka", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--tov-text);
+  flex-shrink: 0;
+}
+
 .tov-spotlight {
   background: #fff;
   color: var(--tov-text);

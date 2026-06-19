@@ -103,6 +103,7 @@ function KpiCard({ value, label, sublabel, Icon, variant }) {
 function StudentRow({ student, rank }) {
   const active = ["pendiente", "en_progreso"].includes(student.participante_estado);
   const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
+  const pts = student.puntaje ?? student.valor ?? 0;
 
   return (
     <div className={`tov-student ${active ? "tov-student--live" : ""}`}>
@@ -113,11 +114,44 @@ function StudentRow({ student, rank }) {
       <div className="tov-student__info">
         <span className="tov-student__name">{student.nombre}</span>
         <span className="tov-student__meta">
-          {active ? "● Participando ahora" : "Resultado oficial"} · {student.puntaje ?? student.valor ?? 0} pts ·{" "}
+          {active ? "● Participando ahora" : "Resultado oficial"} · {pts} pts ·{" "}
           {student.aciertos ?? 0} aciertos
         </span>
       </div>
-      <span className="tov-student__live">{student.valor ?? student.puntaje ?? 0} pts</span>
+      <span className="tov-student__live">{pts} pts</span>
+    </div>
+  );
+}
+
+function PodiumSpot({ student, rank }) {
+  const medals = { 1: "👑", 2: "🥈", 3: "🥉" };
+  const colors = { 1: "#FFD700", 2: "#C0C0C0", 3: "#CD7F32" };
+  const size = rank === 1 ? 56 : 44;
+  const pts = student.puntaje ?? student.valor ?? 0;
+  const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
+
+  return (
+    <div className={`tov-podium-spot tov-podium-spot--${rank}`}>
+      <span className="tov-podium-spot__medal">{medals[rank]}</span>
+      <div className="tov-podium-spot__avatar" style={{ width: size, height: size, background: colors[rank] }}>
+        {initials}
+      </div>
+      <span className="tov-podium-spot__name">{student.nombre}</span>
+      <span className="tov-podium-spot__pts">{pts} pts</span>
+    </div>
+  );
+}
+
+function RankRow({ student, rank }) {
+  const pts = student.puntaje ?? student.valor ?? 0;
+  const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
+
+  return (
+    <div className="tov-rank-row">
+      <span className="tov-rank-row__num">#{student.posicion ?? rank}</span>
+      <div className="tov-rank-row__avatar">{initials}</div>
+      <span className="tov-rank-row__name">{student.nombre}</span>
+      <span className="tov-rank-row__pts">{pts} pts</span>
     </div>
   );
 }
@@ -572,25 +606,34 @@ export default function TutorDashboardOverview() {
                 <p>No hay estudiantes registrados en tus grupos.</p>
               </div>
             ) : (
-              <div className="tov-students">
-                {sortedStudents.slice(0, 8).map((student, index) => (
-                  <StudentRow
-                    key={student.estudiante_id ?? student.id ?? `${student.nombre}-${index}`}
-                    student={student}
-                    rank={index + 1}
-                  />
-                ))}
-                {sortedStudents.length === 0 && (
-                  <p className="tov-more">Todavía no hay resultados oficiales para esta sesión de clase.</p>
+              <div className="tov-ranking">
+                {sortedStudents.length >= 1 && (
+                  <div className="tov-podium">
+                    {sortedStudents.length >= 2 && (
+                      <PodiumSpot student={sortedStudents[1]} rank={2} />
+                    )}
+                    <PodiumSpot student={sortedStudents[0]} rank={1} />
+                    {sortedStudents.length >= 3 && (
+                      <PodiumSpot student={sortedStudents[2]} rank={3} />
+                    )}
+                  </div>
                 )}
-                {sortedStudents.length > 8 && (
-                  <p className="tov-more">+{sortedStudents.length - 8} estudiantes más</p>
+
+                {sortedStudents.length > 3 && (
+                  <div className="tov-rank-list">
+                    {sortedStudents.slice(3).map((s, i) => (
+                      <RankRow
+                        key={s.estudiante_id ?? `${s.nombre}-${i}`}
+                        student={s}
+                        rank={i + 4}
+                      />
+                    ))}
+                  </div>
                 )}
-                {sortedStudents.length > 0 && (
-                  <p className="tov-more">
-                    Ranking oficial del backend · métrica: {ranking?.metrica?.label ?? "puntaje oficial"}
-                  </p>
-                )}
+
+                <p className="tov-more">
+                  {ranking?.metrica?.label ?? "Puntaje oficial"} · {sortedStudents.length} participante{sortedStudents.length !== 1 ? "s" : ""}
+                </p>
               </div>
             )
           )}
