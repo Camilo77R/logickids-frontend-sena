@@ -868,7 +868,7 @@
 
 .ses-filters-card {
   margin-bottom: 20px;
-  background: #612B88;
+  background: var(--lk-brand);
   position: sticky;
   top: -1.55rem;
   z-index: 10;
