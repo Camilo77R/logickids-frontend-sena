@@ -464,9 +464,9 @@
   color: #fff;
 }
 
-.lk-achievements-rocket svg:first-child {
-  width: 120px;
-  height: 120px;
+.lk-achievements-rocket svg {
+  width: 82px;
+  height: 82px;
 }
 
 @media (max-width: 1120px) {
