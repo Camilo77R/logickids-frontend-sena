@@ -133,8 +133,8 @@
 }
 
 .lk-achievements-kpi__icon--lock {
-  color: var(--lk-warning);
-  background: var(--lk-warning-soft);
+  color: var(--lk-text-muted);
+  background: var(--lk-surface-soft);
 }
 
 .lk-achievements-kpi span {
@@ -228,6 +228,11 @@
 .lk-achievement-card.is-locked {
   opacity: 0.72;
   background: #f8f6fb;
+}
+
+.lk-achievement-card.is-locked .lk-achievement-card__icon {
+  color: var(--lk-text-muted);
+  background: var(--lk-surface-soft);
 }
 
 .lk-achievement-card__top {

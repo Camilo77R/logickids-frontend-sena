@@ -288,7 +288,7 @@ export default function TutorLogrosPage() {
           <div className="lk-achievements-kpis">
             <article className="lk-achievements-kpi lk-achievements-kpi--highlight">
               <div className="lk-achievements-kpi__icon">
-                <Trophy size={42} aria-hidden="true" />
+                <Trophy size={32} aria-hidden="true" />
               </div>
               <div>
                 <span>Logros totales</span>
