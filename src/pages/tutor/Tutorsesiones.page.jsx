@@ -166,7 +166,7 @@ export default function SesionesPage() {
         (s.actividad_detalle || "").toLowerCase().includes(q);
       const matchesStatus = statusFilter === "todas" ||
         (statusFilter === "completado" && s.estado === "completado") ||
-        (statusFilter === "en_progreso" && s.estado === "activo");
+        (statusFilter === "abandonado" && s.estado === "abandonado");
 
       let matchesDate = true;
       if (s.iniciada_en) {
@@ -249,13 +249,13 @@ export default function SesionesPage() {
               )}
             </div>
             <div className="ses-filters">
-              {["todas", "completado", "en_progreso"].map((f) => (
+              {["todas", "completado", "abandonado"].map((f) => (
                 <button
                   key={f}
                   className={`ses-filter-pill${statusFilter === f ? " is-active" : ""}`}
                   onClick={() => setStatusFilter(f)}
                 >
-                  {f === "todas" ? "Todas" : f === "completado" ? "Completadas" : "En progreso"}
+                  {f === "todas" ? "Todas" : f === "completado" ? "Completadas" : "Abandonadas"}
                 </button>
               ))}
             </div>
