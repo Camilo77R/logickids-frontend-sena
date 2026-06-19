@@ -1577,8 +1577,8 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   --students-pink-soft: #F3E8FA !important;
   --students-pink-light: #8E35D5 !important;
   --students-pink-light-2: #8E35D5 !important;
-  --students-yellow: #fdb813 !important;
-  --students-yellow-dark: #f5a910 !important;
+  --students-yellow: var(--lk-yellow) !important;
+  --students-yellow-dark: var(--lk-yellow-dark) !important;
 }
 
 .lk-students-hero {
