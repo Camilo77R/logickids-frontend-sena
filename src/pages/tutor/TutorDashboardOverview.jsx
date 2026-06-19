@@ -20,6 +20,7 @@ import {
   Zap,
   Lightbulb,
   BarChart2,
+  BarChart3,
   Star,
   Target,
   Route,
@@ -27,6 +28,7 @@ import {
   Layers,
 } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
+import SesionesMetricsModal from "../../components/tutor/SesionesMetricsModal";
 import RoleModal from "../../components/common/RoleModal";
 import { useAuth } from "../../hooks/useAuth";
 import tutorGroupsService from "../../services/tutorGroupsService";
@@ -199,6 +201,7 @@ export default function TutorDashboardOverview() {
     error: "",
   });
   const [activeModule, setActiveModule] = useState(null);
+  const [metricsModalOpen, setMetricsModalOpen] = useState(false);
 
   const flash = (type, text) => {
     setToast({ type, text });
@@ -493,6 +496,27 @@ export default function TutorDashboardOverview() {
           </div>
           <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
         </button>
+
+        <button className="tov-module-card" onClick={() => setMetricsModalOpen(true)}>
+          <div className="tov-module-card__header">
+            <div className="tov-module-card__icon"><BarChart3 size={18} strokeWidth={1.5} /></div>
+            <div className="tov-module-card__text">
+              <span className="tov-module-card__title">M&eacute;tricas</span>
+              <span className="tov-module-card__subtitle">Resumen de sesiones</span>
+            </div>
+          </div>
+          <div className="tov-module-card__preview">
+            {students.length === 0 ? (
+              <div className="tov-module-card__preview-empty">Sin datos</div>
+            ) : (
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-label">{totalStudents} estudiante{totalStudents !== 1 ? "s" : ""}</span>
+                <span className="tov-module-card__preview-value">{liveStudents} activo{liveStudents !== 1 ? "s" : ""}</span>
+              </div>
+            )}
+          </div>
+          <div className="tov-module-card__footer">Abrir <ChevronRight size={12} strokeWidth={2} /></div>
+        </button>
       </div>
 
       {/* MODAL */}
@@ -647,6 +671,11 @@ export default function TutorDashboardOverview() {
         onConfirm={handleConfirmOpenSession}
         isSubmitting={Boolean(toggling)}
         errorMessage={sessionModal.error}
+      />
+
+      <SesionesMetricsModal
+        show={metricsModalOpen}
+        onClose={() => setMetricsModalOpen(false)}
       />
     </div>
   );
