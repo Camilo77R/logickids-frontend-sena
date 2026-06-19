@@ -1583,7 +1583,6 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 .lk-students-hero {
   background: var(--lk-surface) !important;
-  border: 1px solid var(--lk-border) !important;
 }
 
 .lk-tutor-profile-placeholder {
@@ -1592,7 +1591,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   filter: drop-shadow(0 10px 14px rgba(72, 25, 78, 0.2)) !important;
 }
 
