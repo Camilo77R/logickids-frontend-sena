@@ -140,7 +140,7 @@ function PodiumSpot({ student, rank }) {
       <img className="tov-podium-spot__avatar" src={avatarUrl} alt={student.nombre} />
       <span className="tov-podium-spot__name">{student.nombre}</span>
       <span className="tov-podium-spot__label">
-        {rank === 1 ? "1" : rank === 2 ? "2" : "3"}°
+        {student.posicion ?? (rank === 1 ? "1" : rank === 2 ? "2" : "3")}°
       </span>
       <span className="tov-podium-spot__pts">{pts} pts</span>
     </div>
@@ -154,7 +154,7 @@ function RankRow({ student, rank }) {
   return (
     <div className="tov-rank-row">
       <span className="tov-rank-row__num">
-        {rank}°
+        {student.posicion ?? rank}°
       </span>
       <img className="tov-rank-row__avatar" src={avatarUrl} alt={student.nombre} />
       <span className="tov-rank-row__name">{student.nombre}</span>
@@ -295,8 +295,12 @@ export default function TutorDashboardOverview() {
 
       setSkills(skillsResult.status === "fulfilled" ? skillsResult.value ?? [] : []);
       setRecs(recsResult.status === "fulfilled" ? recsResult.value ?? [] : []);
-      setRankingGroupId((prev) => prev ?? focusGroup.id);
-      await fetchRankingForGroup(focusGroup.id);
+      if (rankingGroupId) {
+        await fetchRankingForGroup(rankingGroupId);
+      } else {
+        setRankingGroupId(focusGroup.id);
+        await fetchRankingForGroup(focusGroup.id);
+      }
     } catch (error) {
       flash("err", error?.message ?? "No fue posible cargar el panel del tutor.");
     } finally {
@@ -309,11 +313,6 @@ export default function TutorDashboardOverview() {
   useEffect(() => {
     loadOverview();
   }, []);
-
-  useEffect(() => {
-    if (!rankingGroupId) return;
-    void fetchRankingForGroup(rankingGroupId);
-  }, [rankingGroupId]);
 
   useEffect(() => {
     if (!user?.id) {
@@ -634,7 +633,7 @@ export default function TutorDashboardOverview() {
                   <select
                     className="tov-ranking-group-select__select"
                     value={rankingGroupId ?? ""}
-                    onChange={(e) => setRankingGroupId(Number(e.target.value))}
+                    onChange={(e) => { const id = Number(e.target.value); setRankingGroupId(id); void fetchRankingForGroup(id); }}
                   >
                     {groups.map((g) => (
                       <option key={g.id} value={g.id}>{g.nombre}</option>
