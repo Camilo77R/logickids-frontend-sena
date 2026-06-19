@@ -125,16 +125,16 @@
 .lk-achievements-kpi__icon {
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 24px;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--lk-radius-md);
   background: var(--ach-soft);
   color: var(--ach-purple);
 }
 
 .lk-achievements-kpi__icon--lock {
-  color: #b45309;
-  background: #fff7df;
+  color: var(--lk-warning);
+  background: var(--lk-warning-soft);
 }
 
 .lk-achievements-kpi span {
@@ -240,13 +240,11 @@
 .lk-achievement-card__icon {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  background: #fff3d5;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--lk-radius-sm);
+  background: var(--ach-soft);
   color: var(--ach-purple);
-  font-size: 1.4rem;
-  font-weight: 700;
 }
 
 .lk-achievement-card__top span {
