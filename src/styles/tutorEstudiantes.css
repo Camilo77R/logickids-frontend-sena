@@ -1346,7 +1346,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 .lk-students-hero h1 {
   margin: 0 0 6px !important;
-  color: var(--lk-text) !important;
+  color: #fff !important;
   font-size: 1.18rem !important;
   line-height: 1.15 !important;
 }
@@ -1354,7 +1354,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-students-hero p {
   max-width: 470px !important;
   margin: 0 0 14px !important;
-  color: var(--lk-text-soft) !important;
+  color: rgba(255,255,255,0.8) !important;
   font-size: 0.74rem !important;
   line-height: 1.32 !important;
 }
@@ -1582,7 +1582,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 }
 
 .lk-students-hero {
-  background: #D6D6D6 !important;
+  background: #612B88 !important;
 }
 
 .lk-tutor-profile-placeholder {

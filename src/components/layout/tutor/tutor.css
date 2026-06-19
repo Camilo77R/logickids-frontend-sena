@@ -843,7 +843,7 @@
 
 .ses-filters-card {
   margin-bottom: 20px;
-  background: #D6D6D6;
+  background: #612B88;
   position: sticky;
   top: -1.55rem;
   z-index: 10;
@@ -1541,6 +1541,11 @@
 .ses-badge--blue {
   background: rgba(14, 165, 233, 0.1);
   color: #0284c7;
+}
+
+.ses-badge--red {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
 }
 
 /* --- Detalle de eventos --- */

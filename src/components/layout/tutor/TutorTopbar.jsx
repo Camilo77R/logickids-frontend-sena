@@ -8,7 +8,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Bell, Plus, RefreshCw, ChevronDown } from "lucide-react";
+import { Bell, ChevronDown } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import AccountCenterModal from "../../account/AccountCenterModal";
 
@@ -85,17 +85,6 @@ export default function TutorTopbar() {
 
         {/* Lado Derecho: Acciones y Perfil */}
         <div className="lk-tutor-topbar-right">
-          <TopbarButton 
-            icon={RefreshCw} 
-            label="Refresh stats" 
-            variant="outline" 
-            onClick={() => console.log("Refresh")} 
-          />
-          <TopbarButton 
-            icon={Plus} 
-            variant="primary" 
-            onClick={() => console.log("Add")} 
-          />
           <TopbarButton 
             icon={Bell} 
             variant="icon" 

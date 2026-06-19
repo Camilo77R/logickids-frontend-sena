@@ -153,7 +153,9 @@ export default function SesionesPage() {
         (s.actividad_titulo || "").toLowerCase().includes(q) ||
         (s.minijuego || "").toLowerCase().includes(q) ||
         (s.actividad_detalle || "").toLowerCase().includes(q);
-      const matchesStatus = statusFilter === "todas" || s.estado === statusFilter;
+      const matchesStatus = statusFilter === "todas" ||
+        (statusFilter === "completado" && s.estado === "completado") ||
+        (statusFilter === "en_progreso" && s.estado === "activo");
 
       let matchesDate = true;
       if (s.iniciada_en) {

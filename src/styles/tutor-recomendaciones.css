@@ -11,8 +11,8 @@
   gap: 1.25rem;
   padding: 1.6rem;
   border-radius: var(--lk-radius-2xl);
-  background: #D6D6D6;
-  border: 1px solid var(--lk-border);
+  background: #612B88;
+  border: none;
   box-shadow: var(--lk-shadow-card);
   overflow: hidden;
 }
@@ -38,8 +38,8 @@
   padding: 0.42rem 0.72rem;
   margin-bottom: 0.9rem;
   border-radius: 999px;
-  background: var(--lk-purple-soft);
-  color: var(--lk-purple);
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.9);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -47,7 +47,7 @@
 
 .lk-rec-hero__title {
   margin: 0;
-  color: var(--lk-text);
+  color: #fff;
   font-family: var(--lk-display-font);
   font-size: clamp(2rem, 3.6vw, 3.05rem);
   font-weight: 700;
@@ -58,7 +58,7 @@
 .lk-rec-hero__subtitle {
   max-width: 52ch;
   margin: 0.9rem 0 0;
-  color: var(--lk-text-soft);
+  color: rgba(255,255,255,0.8);
   font-size: 0.98rem;
   line-height: 1.7;
 }

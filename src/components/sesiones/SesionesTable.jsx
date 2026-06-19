@@ -88,10 +88,14 @@ export default function SesionesTable({
                   <td>
                     <span
                       className={`ses-badge ${
-                        s.estado === "completado" ? "ses-badge--green" : "ses-badge--blue"
+                        s.estado === "completado" ? "ses-badge--green" :
+                        s.estado === "activo" ? "ses-badge--blue" :
+                        s.estado === "abandonado" ? "ses-badge--red" : "ses-badge--blue"
                       }`}
                     >
-                      {s.estado}
+                      {s.estado === "completado" ? "Completado" :
+                       s.estado === "activo" ? "En progreso" :
+                       s.estado === "abandonado" ? "Abandonado" : s.estado}
                     </span>
                   </td>
                 </tr>

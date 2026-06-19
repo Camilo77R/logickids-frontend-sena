@@ -42,18 +42,18 @@
 .tov-hero {
   display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem;
   padding: 1.25rem 1.5rem; border-radius: 1.8rem;
-  background: #D6D6D6; border: none; position: relative;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  border-left: 4px solid var(--lk-brand);
+  background: #612B88; border: none; position: relative;
+  box-shadow: 0 4px 16px rgba(97, 43, 136, 0.3), 0 1px 3px rgba(0,0,0,0.06);
+  border-left: none;
 }
 .tov-hero__h1 {
   font-family: "Fredoka", system-ui, sans-serif;
   font-size: clamp(1.35rem, 2.8vw, 1.75rem); font-weight: 700;
-  color: var(--lk-text); margin: 0; letter-spacing: -0.025em;
+  color: #fff; margin: 0; letter-spacing: -0.025em;
 }
 .tov-hero__sub {
   margin: 0.25rem 0 0; font-size: 0.78rem; font-weight: 400;
-  color: var(--tov-soft); max-width: 46ch;
+  color: rgba(255,255,255,0.75); max-width: 46ch;
 }
 .tov-hero__kpis {
   display: grid;
