@@ -101,8 +101,8 @@
 }
 
 .lk-rec-stat--green .lk-rec-stat__icon {
-  background: rgba(57, 211, 83, 0.14);
-  color: #18853a;
+  background: var(--lk-success-soft);
+  color: var(--lk-success);
 }
 
 .lk-rec-stat__copy {
@@ -283,9 +283,9 @@
 }
 
 .lk-rec-alert--success {
-  background: rgba(57, 211, 83, 0.12);
-  color: #167a34;
-  border: 1px solid rgba(57, 211, 83, 0.14);
+  background: var(--lk-success-soft);
+  color: var(--lk-success);
+  border: 1px solid var(--lk-success-soft);
 }
 
 .lk-rec-source-note {
@@ -386,8 +386,8 @@
 }
 
 .lk-rec-badge--success {
-  background: rgba(57, 211, 83, 0.14);
-  color: #187e36;
+  background: var(--lk-success-soft);
+  color: var(--lk-success);
 }
 
 .lk-rec-meta {

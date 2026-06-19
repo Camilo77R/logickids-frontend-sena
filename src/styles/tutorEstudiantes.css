@@ -481,8 +481,8 @@
 
 .lk-status-activo,
 .lk-session-open {
-  color: #159363 !important;
-  background: #e9fbf3 !important;
+  color: var(--lk-success) !important;
+  background: var(--lk-success-soft) !important;
 }
 
 .lk-status-activo::before,
@@ -1237,7 +1237,7 @@ body:has(.lk-students-page) .tutor-main-content {
 
 .lk-status-activo,
 .lk-session-open {
-  color: #23a972 !important;
+  color: var(--lk-success) !important;
 }
 
 .lk-status-inactivo,
