@@ -232,6 +232,7 @@ export default function TutorDashboardOverview() {
   const [skills, setSkills] = useState([]);
   const [recs, setRecs] = useState([]);
   const [ranking, setRanking] = useState(null);
+  const [rankingGroupId, setRankingGroupId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState(null);
   const [toast, setToast] = useState(null);
@@ -247,6 +248,16 @@ export default function TutorDashboardOverview() {
   const flash = (type, text) => {
     setToast({ type, text });
     window.setTimeout(() => setToast(null), 3500);
+  };
+
+  const fetchRankingForGroup = async (groupId) => {
+    if (!groupId) { setRanking(null); return; }
+    try {
+      const result = await rankingService.obtenerRankingGrupo(groupId);
+      setRanking(result ?? null);
+    } catch {
+      setRanking(null);
+    }
   };
 
   const loadOverview = async () => {
@@ -279,13 +290,11 @@ export default function TutorDashboardOverview() {
         estadisticasService.porGrupo(focusGroup.id),
         recomendacionesService.porGrupo(focusGroup.id),
       ]);
-      const rankingResult = await Promise.allSettled([
-        rankingService.obtenerRankingGrupo(focusGroup.id),
-      ]);
 
       setSkills(skillsResult.status === "fulfilled" ? skillsResult.value ?? [] : []);
       setRecs(recsResult.status === "fulfilled" ? recsResult.value ?? [] : []);
-      setRanking(rankingResult[0]?.status === "fulfilled" ? rankingResult[0].value ?? null : null);
+      setRankingGroupId((prev) => prev ?? focusGroup.id);
+      await fetchRankingForGroup(focusGroup.id);
     } catch (error) {
       flash("err", error?.message ?? "No fue posible cargar el panel del tutor.");
     } finally {
@@ -298,6 +307,11 @@ export default function TutorDashboardOverview() {
   useEffect(() => {
     loadOverview();
   }, []);
+
+  useEffect(() => {
+    if (!rankingGroupId) return;
+    void fetchRankingForGroup(rankingGroupId);
+  }, [rankingGroupId]);
 
   useEffect(() => {
     if (!user?.id) {
@@ -330,6 +344,11 @@ export default function TutorDashboardOverview() {
   );
 
   const sortedStudents = useMemo(() => ranking?.ranking ?? [], [ranking]);
+
+  const selectedGroup = useMemo(
+    () => groups.find((g) => g.id === rankingGroupId) ?? focusGroup ?? null,
+    [groups, rankingGroupId, focusGroup]
+  );
 
   const closeSessionModal = () => {
     setSessionModal({
@@ -566,7 +585,7 @@ export default function TutorDashboardOverview() {
         onClose={() => setActiveModule(null)}
         eyebrow={
           activeModule === "groups" ? "Gestión de clases" :
-          activeModule === "ranking" ? "Actividad de hoy" :
+          activeModule === "ranking" ? (selectedGroup?.nombre ?? "Grupo") :
           activeModule === "activity" ? "Clase destacada" :
           activeModule === "skills" ? (focusGroup?.nombre ?? "Grupo") :
           "IA · Gemini"
@@ -606,14 +625,30 @@ export default function TutorDashboardOverview() {
           )}
 
           {activeModule === "ranking" && (
-            sortedStudents.length === 0 ? (
-              <div className="tov-empty">
-                <Users size={24} />
-                <strong>Sin estudiantes</strong>
-                <p>No hay estudiantes registrados en tus grupos.</p>
-              </div>
-            ) : (
-              <div className="tov-ranking">
+            <div className="tov-ranking">
+              {groups.length > 1 && (
+                <div className="tov-ranking-group-select">
+                  <label className="tov-ranking-group-select__label">Grupo:</label>
+                  <select
+                    className="tov-ranking-group-select__select"
+                    value={rankingGroupId ?? ""}
+                    onChange={(e) => setRankingGroupId(Number(e.target.value))}
+                  >
+                    {groups.map((g) => (
+                      <option key={g.id} value={g.id}>{g.nombre}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {sortedStudents.length === 0 ? (
+                <div className="tov-empty">
+                  <Users size={24} />
+                  <strong>Sin estudiantes</strong>
+                  <p>No hay estudiantes registrados en este grupo.</p>
+                </div>
+              ) : (
+                <>
                 {sortedStudents.length >= 1 && (
                   <div className="tov-podium">
                     {sortedStudents.length >= 2 && (
@@ -641,8 +676,9 @@ export default function TutorDashboardOverview() {
                 <p className="tov-more">
                   {ranking?.metrica?.label ?? "Puntaje oficial"} · {sortedStudents.length} participante{sortedStudents.length !== 1 ? "s" : ""}
                 </p>
-              </div>
-            )
+                </>
+              )}
+            </div>
           )}
 
           {activeModule === "activity" && (
