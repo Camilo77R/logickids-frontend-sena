@@ -788,7 +788,7 @@ body:has(.lk-students-page) .tutor-main-content {
 }
 
 .lk-students-page {
-  --students-pink: #3C3489;
+  --students-pink: #8E35D5;
   --students-pink-dark: #2B173D;
   --students-pink-soft: #F3E8FA;
   --students-purple: var(--students-pink);
@@ -1298,10 +1298,10 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 }
 
 .lk-students-page {
-  --students-pink: #3C3489;
+  --students-pink: #8E35D5;
   --students-pink-dark: #2B173D;
   --students-pink-soft: #F3E8FA;
-  --students-salmon: #3C3489;
+  --students-salmon: #8E35D5;
   --students-salmon-soft: rgba(142, 53, 213, 0.16);
   --students-purple: var(--students-pink);
   --students-purple-dark: var(--students-pink-dark);
@@ -1572,11 +1572,11 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 /* Ajuste de paleta exacta del tutor: sidebar #8E35D5 y amarillo #fdb813. */
 .lk-students-page {
-  --students-pink: #3C3489 !important;
+  --students-pink: #8E35D5 !important;
   --students-pink-dark: #2B173D !important;
   --students-pink-soft: #F3E8FA !important;
-  --students-pink-light: #3C3489 !important;
-  --students-pink-light-2: #3C3489 !important;
+  --students-pink-light: #8E35D5 !important;
+  --students-pink-light-2: #8E35D5 !important;
   --students-yellow: #fdb813 !important;
   --students-yellow-dark: #f5a910 !important;
 }
@@ -1623,8 +1623,8 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-student-form .lk-submit-button:focus,
 .lk-student-form .lk-submit-button:active,
 .lk-student-form .lk-submit-button:disabled {
-  background: #3C3489 !important;
-  border: 1px solid #3C3489 !important;
+  background: #8E35D5 !important;
+  border: 1px solid #8E35D5 !important;
   color: #ffffff !important;
   opacity: 1 !important;
   min-height: 42px !important;
@@ -1653,6 +1653,6 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 .lk-student-form .form-control:focus,
 .lk-student-form .form-select:focus {
-  border-color: #3C3489 !important;
+  border-color: #8E35D5 !important;
   box-shadow: 0 0 0 4px rgba(142, 53, 213, 0.14) !important;
 }

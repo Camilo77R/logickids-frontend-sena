@@ -1,6 +1,6 @@
 .tov {
   --tov-hero-bg: #3C3489;
-  --tov-accent: #534AB7;
+  --tov-accent: #8E35D5;
   --tov-accent-light: #AFA9EC;
   --tov-accent-soft: #EEEDFE;
   --tov-green: #0F6E56;
@@ -437,7 +437,7 @@
   display: flex; align-items: center; justify-content: center;
   background: var(--tov-accent-soft, #EEEDFE);
   border-radius: 0.5rem;
-  color: var(--tov-accent, #534AB7);
+  color: var(--tov-accent, #8E35D5);
   flex-shrink: 0;
 }
 .tov-module-card__text { flex: 1; min-width: 0; }
@@ -493,7 +493,7 @@
 }
 .tov-module-card__preview-skill-fill {
   height: 100%; border-radius: 2px;
-  background: var(--tov-accent, #534AB7);
+  background: var(--tov-accent, #8E35D5);
 }
 .tov-module-card__preview-skill-pct {
   font-family: "Fredoka", system-ui, sans-serif;
@@ -510,7 +510,7 @@
   margin-top: 0.4rem; padding-top: 0.4rem;
   border-top: 1px solid var(--tov-border);
   font-size: 0.7rem; font-weight: 600;
-  color: var(--tov-accent, #534AB7);
+  color: var(--tov-accent, #8E35D5);
   display: flex; align-items: center; gap: 0.2rem;
   opacity: 0; transition: opacity 0.16s ease;
 }
@@ -536,7 +536,7 @@
   display: inline-flex; align-items: center; gap: 0.4rem;
   padding: 0.5rem 1.25rem;
   border-radius: var(--lk-radius-sm, 1rem);
-  background: var(--tov-accent, #534AB7);
+  background: var(--tov-accent, #8E35D5);
   color: #fff; font-size: 0.85rem; font-weight: 600;
   border: none; cursor: pointer;
   transition: filter 0.15s ease;
