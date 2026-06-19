@@ -15,6 +15,7 @@ import {
   PauseCircle,
   TrendingUp,
   Award,
+  Crown,
   Clock,
   ChevronRight,
   Zap,
@@ -124,20 +125,29 @@ function StudentRow({ student, rank }) {
 }
 
 function PodiumSpot({ student, rank }) {
-  const medals = { 1: "👑", 2: "🥈", 3: "🥉" };
-  const colors = { 1: "#FFD700", 2: "#C0C0C0", 3: "#CD7F32" };
-  const size = rank === 1 ? 56 : 44;
+  const colors = {
+    1: { bg: "var(--lk-brand)", icon: "#F9A825" },
+    2: { bg: "var(--lk-accent)", icon: "#fff" },
+    3: { bg: "var(--lk-brand-soft)", icon: "var(--lk-brand)" },
+  };
+  const labels = { 1: "1°", 2: "2°", 3: "3°" };
   const pts = student.puntaje ?? student.valor ?? 0;
   const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
+  const c = colors[rank];
 
   return (
     <div className={`tov-podium-spot tov-podium-spot--${rank}`}>
-      <span className="tov-podium-spot__medal">{medals[rank]}</span>
-      <div className="tov-podium-spot__avatar" style={{ width: size, height: size, background: colors[rank] }}>
+      {rank === 1 ? (
+        <Crown size={22} strokeWidth={2} style={{ color: c.icon }} />
+      ) : (
+        <Award size={18} strokeWidth={2} style={{ color: c.icon }} />
+      )}
+      <div className="tov-podium-spot__avatar" style={{ background: c.bg }}>
         {initials}
       </div>
+      <span className="tov-podium-spot__label">{labels[rank]}</span>
       <span className="tov-podium-spot__name">{student.nombre}</span>
-      <span className="tov-podium-spot__pts">{pts} pts</span>
+      <span className="tov-podium-spot__pts">{pts}</span>
     </div>
   );
 }
@@ -148,10 +158,10 @@ function RankRow({ student, rank }) {
 
   return (
     <div className="tov-rank-row">
-      <span className="tov-rank-row__num">#{student.posicion ?? rank}</span>
+      <span className="tov-rank-row__num">{student.posicion ?? rank}°</span>
       <div className="tov-rank-row__avatar">{initials}</div>
       <span className="tov-rank-row__name">{student.nombre}</span>
-      <span className="tov-rank-row__pts">{pts} pts</span>
+      <span className="tov-rank-row__pts">{pts}</span>
     </div>
   );
 }
