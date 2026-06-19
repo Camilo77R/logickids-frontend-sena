@@ -159,9 +159,9 @@
   transition: all 0.2s;
 }
 .tutor-logout-btn:hover {
-  background: rgba(239, 68, 68, 0.05);
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.2);
+  background: rgba(220, 38, 38, 0.05);
+  color: var(--lk-danger);
+  border-color: rgba(220, 38, 38, 0.2);
 }
 
 /* Main Area */
@@ -244,7 +244,7 @@
 .tutor-badge {
   position: absolute;
   top: -2px; right: -2px;
-  background: #ef4444;
+  background: var(--lk-danger);
   color: white;
   font-size: 10px;
   font-weight: bold;
@@ -464,13 +464,13 @@
 }
 
 .tutor-field--error .tutor-input {
-    border-color: #ef4444;
+    border-color: var(--lk-danger);
 }
 
 .tutor-field-error {
     display: block;
     font-size: 12px;
-    color: #ef4444;
+    color: var(--lk-danger);
     margin-top: 4px;
 }
 
@@ -627,8 +627,8 @@
 }
 
 .tutor-badge--inactivo {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--lk-danger);
 }
 
 /* Action Buttons */
@@ -664,8 +664,8 @@
 }
 
 .tutor-btn-icon--danger:hover {
-    color: #ef4444;
-    border-color: #ef4444;
+    color: var(--lk-danger);
+    border-color: var(--lk-danger);
 }
 
 /* Empty & Loading States */
@@ -709,9 +709,9 @@
 }
 
 .tutor-alert--error {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--lk-danger);
+    border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 /* Modal */
@@ -1737,7 +1737,7 @@
 
 /* Badge de notificaciones: rojo más vivo */
 .tutor-badge {
-  background: #ef4444 !important;
+  background: var(--lk-danger) !important;
   font-size: 9px !important;
   font-weight: 800 !important;
   border: 2px solid white !important;

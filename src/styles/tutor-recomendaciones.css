@@ -278,7 +278,7 @@
 
 .lk-rec-alert--error {
   background: rgba(220, 38, 38, 0.08);
-  color: #b42318;
+  color: var(--lk-danger);
   border: 1px solid rgba(220, 38, 38, 0.12);
 }
 
@@ -377,7 +377,7 @@
 
 .lk-rec-badge--danger {
   background: rgba(220, 38, 38, 0.12);
-  color: #b42318;
+  color: var(--lk-danger);
 }
 
 .lk-rec-badge--warning {
@@ -449,7 +449,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(220, 38, 38, 0.08);
-  color: #b42318;
+  color: var(--lk-danger);
   cursor: pointer;
 }
 
