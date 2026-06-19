@@ -163,7 +163,7 @@ function RankRow({ student, rank }) {
   );
 }
 
-function GroupCard({ group, onToggle, loading }) {
+function GroupCard({ group, onToggle, loading, readonly }) {
   const navigate = useNavigate();
   const active = isSessionActive(group.sesion_activa);
 
@@ -187,18 +187,20 @@ function GroupCard({ group, onToggle, loading }) {
       </div>
       <p className="tov-gcard__desc">{getSessionSummaryText(group)}</p>
 
-      <div className="tov-gcard__footer">
-        <button
-          className={`tov-gcard__btn ${active ? "tov-gcard__btn--close" : "tov-gcard__btn--open"}`}
-          disabled={loading === group.id}
-          onClick={() => onToggle(group)}
-        >
-          {loading === group.id ? "\u2026" : active ? "Cerrar" : "Abrir actividad"}
-        </button>
-        <button className="tov-gcard__arrow" onClick={() => navigate("/tutor/grupos")}>
-          <ChevronRight size={15} />
-        </button>
-      </div>
+      {!readonly && (
+        <div className="tov-gcard__footer">
+          <button
+            className={`tov-gcard__btn ${active ? "tov-gcard__btn--close" : "tov-gcard__btn--open"}`}
+            disabled={loading === group.id}
+            onClick={() => onToggle(group)}
+          >
+            {loading === group.id ? "\u2026" : active ? "Cerrar" : "Abrir actividad"}
+          </button>
+          <button className="tov-gcard__arrow" onClick={() => navigate("/tutor/grupos")}>
+            <ChevronRight size={15} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -617,8 +619,8 @@ export default function TutorDashboardOverview() {
               </div>
             ) : (
               <div className="tov-gcards">
-                {groups.map((group) => (
-                  <GroupCard key={group.id} group={group} onToggle={handleToggle} loading={toggling} />
+                  {groups.map((group) => (
+                    <GroupCard key={group.id} group={group} onToggle={handleToggle} loading={toggling} readonly />
                 ))}
               </div>
             )
