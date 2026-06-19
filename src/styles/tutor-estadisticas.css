@@ -252,7 +252,7 @@
 
 .lk-stats-card--success .lk-stats-card__head strong,
 .lk-stats-card--success .lk-stats-progress i {
-  background: var(--lk-success);
+  background: var(--lk-brand);
 }
 
 .lk-stats-card--warning .lk-stats-card__head strong,
