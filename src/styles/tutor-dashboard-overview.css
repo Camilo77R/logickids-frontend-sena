@@ -204,7 +204,7 @@
 
 .ov-stat-card__label {
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   opacity: 0.88;
@@ -275,7 +275,7 @@
 .ov-panel__eyebrow {
   display: block;
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--lk-purple);
   text-transform: uppercase;
   letter-spacing: 0.07em;

@@ -1,6 +1,6 @@
 .lk-tutor-dashboard-grid {
-  --lk-dashboard-pink: #8E35D5;
-  --lk-dashboard-pink-dark: #2B173D;
+  --lk-dashboard-pink: var(--lk-brand);
+  --lk-dashboard-pink-dark: var(--lk-brand-dark);
   --lk-dashboard-pink-soft: #F3E8FA;
   --lk-dashboard-yellow: #fdb813;
   --lk-dashboard-yellow-deep: #f5a910;
@@ -58,14 +58,14 @@
   background: rgba(139, 47, 201, 0.12);
   color: var(--lk-purple);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .lk-dashboard-hero__title {
   margin: 0;
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.055em;
   color: var(--lk-text);
 }
@@ -98,7 +98,7 @@
   display: block;
   color: var(--lk-text);
   font-size: 1.25rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.04em;
 }
 
@@ -144,7 +144,7 @@
 .lk-dashboard-hero__meter-ring span {
   color: var(--lk-text);
   font-size: 1.3rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.04em;
 }
 
@@ -168,7 +168,7 @@
 .lk-dashboard-hero__meter-copy strong {
   color: var(--lk-text);
   font-size: 1.06rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-hero__meter-copy p {
@@ -199,7 +199,7 @@
   margin-bottom: 0.38rem;
   color: var(--lk-purple);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -208,7 +208,7 @@
   margin: 0;
   color: var(--lk-text);
   font-size: 1.12rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
@@ -243,7 +243,7 @@
   width: 44px;
   height: 44px;
   margin-bottom: 1rem;
-  border-radius: 14px;
+  border-radius: var(--lk-radius-md);
   background: rgba(255, 255, 255, 0.16);
   display: inline-flex;
   align-items: center;
@@ -254,7 +254,7 @@
   display: block;
   margin-bottom: 0.4rem;
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   opacity: 0.86;
@@ -361,7 +361,7 @@
   margin: 0;
   color: var(--lk-text);
   font-size: 0.96rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-group-card__description {
@@ -390,7 +390,7 @@
   padding: 0.32rem 0.62rem;
   border-radius: 999px;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -443,7 +443,7 @@
   margin-bottom: 0.22rem;
   color: var(--lk-text);
   font-size: 0.87rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-action__description {
@@ -485,7 +485,7 @@
   margin-bottom: 0.3rem;
   color: var(--lk-text);
   font-size: 0.9rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-empty p {
@@ -525,7 +525,7 @@
   margin: 0 0 0.4rem;
   color: var(--lk-text);
   font-size: 1.18rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-dashboard-state__message {

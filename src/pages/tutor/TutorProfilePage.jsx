@@ -187,12 +187,12 @@ export default function TutorProfilePage() {
           {success && <Alert variant="success" className="text-center py-2">{success}</Alert>}
 
           {/* Tarjeta */}
-          <Card className="border-0 shadow-sm" style={{ borderRadius: '20px' }}>
+          <Card className="border-0 shadow-sm" style={{ borderRadius: 'var(--lk-radius-lg)' }}>
             <div style={{ 
-              background: '#8E35D5',
+              background: 'var(--lk-brand)',
               padding: '14px 24px',
-              borderTopLeftRadius: '20px',
-              borderTopRightRadius: '20px',
+              borderTopLeftRadius: 'var(--lk-radius-lg)',
+              borderTopRightRadius: 'var(--lk-radius-lg)',
               color: 'white'
             }}>
               <h5 className="mb-0 fw-semibold">Información Personal</h5>
@@ -247,7 +247,7 @@ export default function TutorProfilePage() {
                     type="email" 
                     value={profile?.email || ''} 
                     disabled 
-                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: '#f8f9fa' }}
+                    style={{ padding: '10px 16px', borderRadius: 'var(--lk-radius-icon)', backgroundColor: '#f8f9fa' }}
                   />
                 </Form.Group>
 
@@ -259,7 +259,7 @@ export default function TutorProfilePage() {
                     type="text" 
                     value="Tutor" 
                     disabled 
-                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: '#f8f9fa' }}
+                    style={{ padding: '10px 16px', borderRadius: 'var(--lk-radius-icon)', backgroundColor: '#f8f9fa' }}
                   />
                 </Form.Group>
 
@@ -271,7 +271,7 @@ export default function TutorProfilePage() {
                     type="text" 
                     value={profile?.creado_en ? new Date(profile.creado_en).toLocaleDateString('es-ES') : 'fecha no disponible'} 
                     disabled 
-                    style={{ padding: '10px 16px', borderRadius: '12px', backgroundColor: '#f8f9fa' }}
+                    style={{ padding: '10px 16px', borderRadius: 'var(--lk-radius-icon)', backgroundColor: '#f8f9fa' }}
                   />
                 </Form.Group>
 

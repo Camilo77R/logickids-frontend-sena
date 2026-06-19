@@ -1,9 +1,9 @@
 .tutor-page-container,
 .tg-session-modal {
-  --tg-p: #8E35D5;
-  --tg-pd: #2B173D;
+  --tg-p: var(--lk-brand);
+  --tg-pd: var(--lk-brand-dark);
   --tg-pbg: #F4EAFE;
-  --tg-y: #f9a825;
+  --tg-y: var(--lk-accent);
   --tg-yd: #e8920a;
   --tg-ybg: #fff8e1;
   --tg-surface: #ffffff;
@@ -104,7 +104,7 @@
 
 .tg-group-item {
   border: 1.5px solid var(--tg-border);
-  border-radius: 18px;
+  border-radius: var(--lk-radius-xl);
   background: var(--tg-surface);
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
@@ -445,7 +445,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px;
-  border-radius: 14px;
+  border-radius: var(--lk-radius-md);
   background: #fbf8fc;
 }
 
@@ -493,7 +493,7 @@
 .tg-session-modal .modal-content {
   overflow: hidden;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1.6rem;
+  border-radius: var(--lk-radius-lg);
   background: var(--tg-surface) !important;
   opacity: 1;
   box-shadow: 0 18px 48px rgba(131, 68, 127, 0.16);

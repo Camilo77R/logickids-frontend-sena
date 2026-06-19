@@ -5,9 +5,9 @@
   --lk-tutor-surface: rgba(255, 255, 255, 0.75);
   --lk-tutor-surface-hover: rgba(255, 255, 255, 0.95);
   --lk-tutor-border: rgba(15, 23, 42, 0.08);
-  --lk-tutor-primary: #8E35D5;
-  --lk-tutor-primary-hover: #2B173D;
-  --lk-tutor-accent-blue: #8E35D5;
+  --lk-tutor-primary: var(--lk-brand);
+  --lk-tutor-primary-hover: var(--lk-brand-dark);
+  --lk-tutor-accent-blue: var(--lk-brand);
   --lk-tutor-accent-green: #16A34A;
   --lk-tutor-accent-yellow: #f59e0b;
   --lk-tutor-text: #1e293b;
@@ -110,9 +110,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  color: var(--lk-tutor-text-muted);
+    padding: 12px 16px;
+    border-radius: var(--lk-radius-sm);
+    color: var(--lk-tutor-text-muted);
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
@@ -134,7 +134,7 @@
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background: var(--lk-tutor-primary);
-  border-radius: 10px;
+  border-radius: var(--lk-radius-sm);
   z-index: -1;
   box-shadow: 0 4px 12px var(--lk-tutor-glow);
 }
@@ -153,7 +153,7 @@
   background: transparent;
   border: 1px solid var(--lk-tutor-border);
   color: var(--lk-tutor-text-muted);
-  border-radius: 10px;
+  border-radius: var(--lk-radius-sm);
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s;
@@ -338,7 +338,7 @@
 .tutor-placeholder-page h1 {
   font-size: 28px;
   margin-bottom: 12px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.5px;
 }
 .tutor-placeholder-page p {
@@ -452,7 +452,7 @@
     color: var(--lk-tutor-text);
     background: white;
     border: 1px solid var(--lk-tutor-border);
-    border-radius: 10px;
+    border-radius: var(--lk-radius-sm);
     outline: none;
     transition: all 0.2s;
 }
@@ -484,7 +484,7 @@
 .tutor-color-option {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--lk-radius-xs);
     border: 2px solid transparent;
     cursor: pointer;
     transition: all 0.2s;
@@ -509,7 +509,7 @@
     font-size: 14px;
     font-weight: 600;
     font-family: inherit;
-    border-radius: 10px;
+    border-radius: var(--lk-radius-sm);
     border: none;
     cursor: pointer;
     transition: all 0.2s;
@@ -593,7 +593,7 @@
 .tutor-student-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 10px;
+    border-radius: var(--lk-radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -612,7 +612,7 @@
     padding: 4px 10px;
     font-size: 12px;
     font-weight: 600;
-    border-radius: 6px;
+    border-radius: var(--lk-radius-xs);
     text-transform: capitalize;
 }
 
@@ -645,7 +645,7 @@
     justify-content: center;
     background: white;
     border: 1px solid var(--lk-tutor-border);
-    border-radius: 8px;
+    border-radius: var(--lk-radius-xs);
     color: var(--lk-tutor-text-muted);
     cursor: pointer;
     transition: all 0.2s;
@@ -700,7 +700,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 16px;
-    border-radius: 10px;
+    border-radius: var(--lk-radius-sm);
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 20px;
@@ -898,7 +898,7 @@
   flex: 1;
   min-width: 180px;
   padding: 10px 40px 10px 14px;
-  border-radius: 10px;
+  border-radius: var(--lk-radius-sm);
   border: 1.5px solid var(--lk-tutor-border);
   background: var(--lk-surface);
   color: var(--lk-tutor-text);
@@ -1624,7 +1624,7 @@
 .ses-evento-item {
   background: var(--lk-tutor-bg);
   border: 1px solid var(--lk-tutor-border);
-  border-radius: 10px;
+  border-radius: var(--lk-radius-sm);
   padding: 12px 14px;
 }
 
@@ -1752,7 +1752,7 @@
 .tutor-brand-logo {
   background: var(--lk-tutor-primary) !important;
   box-shadow: 0 4px 14px rgba(142, 53, 213, 0.3) !important;
-  border-radius: 14px !important;
+  border-radius: var(--lk-radius-md) !important;
 }
 
 /* ────────────────────────────────────────────────
@@ -1761,7 +1761,7 @@
 .tutor-avatar {
   background: var(--lk-orange) !important;
   box-shadow: 0 4px 14px var(--lk-orange-glow) !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   border: 2.5px solid rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -1769,7 +1769,7 @@
 .tutor-badge {
   background: var(--lk-danger) !important;
   font-size: 9px !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   border: 2px solid white !important;
   min-width: 17px;
   min-height: 17px;
@@ -1816,7 +1816,7 @@
   align-items: center !important;
   gap: 10px !important;
   font-size: 26px !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   letter-spacing: -0.5px !important;
   color: var(--lk-tutor-text) !important;
   margin: 0 !important;
@@ -1847,7 +1847,7 @@
   background: var(--lk-tutor-primary);
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--lk-radius-sm);
   font-size: 14px;
   font-weight: 700;
   font-family: var(--lk-font);
@@ -1879,7 +1879,7 @@
   backdrop-filter: blur(8px);
   color: var(--lk-tutor-text);
   border: 1.5px solid var(--lk-tutor-border);
-  border-radius: 10px;
+  border-radius: var(--lk-radius-sm);
   font-size: 14px;
   font-weight: 600;
   font-family: var(--lk-font);
@@ -1950,7 +1950,7 @@
    ──────────────────────────────────────────────── */
 .tutor-topbar-search {
   width: 360px !important;
-  border-radius: 14px !important;
+  border-radius: var(--lk-radius-md) !important;
   padding: 11px 18px !important;
   background: rgba(255, 255, 255, 0.85) !important;
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;

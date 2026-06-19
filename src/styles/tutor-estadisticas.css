@@ -24,7 +24,7 @@
   place-items: center;
   width: 62px;
   height: 62px;
-  border-radius: 22px;
+  border-radius: var(--lk-radius-2xl);
   background: var(--lk-purple-soft);
   color: var(--lk-purple);
 }
