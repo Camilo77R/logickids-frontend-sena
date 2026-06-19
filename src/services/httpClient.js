@@ -16,11 +16,12 @@ const resolveBaseUrl = () => {
 const API_BASE_URL = resolveBaseUrl();
 
 class HttpError extends Error {
-  constructor(message, status, details = []) {
+  constructor(message, status, details = [], meta = {}) {
     super(message);
     this.name = "HttpError";
     this.status = status;
     this.details = details;
+    this.meta = meta;
   }
 }
 
@@ -98,11 +99,13 @@ export const request = async (path, { method = "GET", body, auth = true } = {}) 
     const details = payload?.errors || [];
     const detailMessage = formatErrorDetails(details);
     const baseMessage = payload?.message || "No fue posible completar la solicitud.";
+    const { success, message, errors, data, ...meta } = payload ?? {};
 
     throw new HttpError(
       detailMessage ? `${baseMessage}: ${detailMessage}` : baseMessage,
       response.status,
-      details
+      details,
+      meta
     );
   }
 

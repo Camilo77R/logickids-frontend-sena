@@ -18,7 +18,15 @@ import "../../styles/auth.css";
 
 const INITIAL_FORM = { email: "", contrasena: "" };
 
-const isAccessBlockedError = (err) => err instanceof HttpError && err.status === 403;
+const isSuspendedAccountError = (err) =>
+  err instanceof HttpError &&
+  err.status === 403 &&
+  (err.meta?.estado === "suspendido" || err.message?.toLowerCase().includes("suspendida"));
+
+const isInactiveAccountError = (err) =>
+  err instanceof HttpError &&
+  err.status === 403 &&
+  (err.meta?.estado === "inactivo" || err.message?.toLowerCase().includes("inactiva"));
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -58,7 +66,7 @@ export default function LoginPage() {
         setServerErr("Rol no reconocido.");
       } else navigate(path, { replace: true });
     } catch (err) {
-      if (isAccessBlockedError(err)) {
+      if (isSuspendedAccountError(err)) {
         navigate("/solicitar-reactivacion", {
           state: {
             email: form.email.trim().toLowerCase(),
@@ -71,6 +79,13 @@ export default function LoginPage() {
             },
           },
         });
+        return;
+      }
+      if (isInactiveAccountError(err)) {
+        setServerErr(
+          err.message ||
+            "Tu cuenta está pendiente de activación. Un administrador debe habilitarla antes de iniciar sesión."
+        );
         return;
       }
       setServerErr(

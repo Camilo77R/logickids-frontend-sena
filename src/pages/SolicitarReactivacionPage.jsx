@@ -161,37 +161,19 @@ export default function SolicitarReactivacionPage() {
           <AuthFormHeader
             iconSrc={logoWordmark}
             iconAlt="LogicKids"
-            title={authNotice?.title || "Cuenta suspendida"}
-            subtitle="Solicita la reactivación de tu cuenta completando el formulario."
+            title={authNotice?.title || "Reactivación de cuenta"}
+            subtitle="Completa el formulario para que un administrador revise tu acceso."
             variant="poster"
             iconVariant="wordmark"
           />
-
-          {authNotice ? (
-            <AuthInlineNotice
-              tone={authNotice.tone}
-              title={authNotice.title}
-              message={authNotice.message}
-            />
-          ) : null}
-
-          <div
-            style={{
-              background: "#FEF3C7",
-              border: "1px solid #FDE68A",
-              borderRadius: "8px",
-              padding: "0.75rem 1rem",
-              marginBottom: "1.5rem",
-              textAlign: "center",
-            }}
-          >
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#B45309", fontWeight: 500 }}>
-              Tu cuenta ha sido suspendida
-            </p>
-            <p style={{ margin: "0.25rem 0 0", fontSize: "0.75rem", color: "#D97706" }}>
-              Completa el siguiente formulario para solicitar la reactivación.
-            </p>
-          </div>
+          <AuthInlineNotice
+            tone={authNotice?.tone || "info"}
+            title={authNotice?.title || "Revisi�n de acceso"}
+            message={
+              authNotice?.message ||
+              "Usa este formulario si tu cuenta fue suspendida y necesitas que el administrador revise el caso."
+            }
+          />
 
           {serverError ? (
             <div
