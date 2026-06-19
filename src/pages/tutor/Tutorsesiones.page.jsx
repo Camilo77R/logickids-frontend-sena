@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { BarChart3, Calendar, History, Search, X } from "lucide-react";
+import { AlertCircle, BarChart3, Calendar, CheckCircle, Clock, History, Layers, Search, X } from "lucide-react";
 import RoleModal from "../../components/common/RoleModal";
-import SesionesMetricsModal from "../../components/tutor/SesionesMetricsModal";
+import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
 import SesionesTable from "../../components/sesiones/SesionesTable";
 import estudianteService from "../../services/estudianteService";
@@ -43,7 +43,6 @@ export default function SesionesPage() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [metricsModalOpen, setMetricsModalOpen] = useState(false);
 
   /* ── Cargar grupos ── */
   useEffect(() => {
@@ -219,16 +218,6 @@ export default function SesionesPage() {
             estudianteId={estudianteId}
             setEstudiante={setEstudiante}
           />
-          {data.length > 0 && (
-            <button
-              type="button"
-              className="ses-metrics-btn"
-              onClick={() => setMetricsModalOpen(true)}
-            >
-              <BarChart3 size={16} />
-              Actividades · Sesiones
-            </button>
-          )}
         </div>
 
         {data.length > 0 && (
@@ -368,12 +357,52 @@ export default function SesionesPage() {
             )}
           </RoleModal>
 
-          {/* Modal de métricas */}
-          <SesionesMetricsModal
-            show={metricsModalOpen}
-            onClose={() => setMetricsModalOpen(false)}
-            data={data}
-          />
+          {/* Sección de métricas desplegable */}
+          {data.length > 0 && (
+            <details className="ses-metrics-section">
+              <summary>
+                <BarChart3 size={18} />
+                <span>Métricas de sesiones</span>
+              </summary>
+              <div className="ses-stats-grid">
+                <div className="ses-stat-card ses-stat-card--orange">
+                  <div className="ses-stat-info">
+                    <span className="ses-stat-label">Actividades detectadas</span>
+                    <span className="ses-stat-value">{summary.actividades}</span>
+                  </div>
+                  <span className="ses-stat-icon"><Clock size={50} /></span>
+                </div>
+
+                <div className="ses-stat-card ses-stat-card--purple">
+                  <div className="ses-stat-info">
+                    <span className="ses-stat-label">Sesiones / niveles</span>
+                    <span className="ses-stat-value">{summary.sesiones}</span>
+                  </div>
+                  <span className="ses-stat-icon"><Layers size={50} /></span>
+                </div>
+
+                <div className="ses-stat-card ses-stat-card--green">
+                  <div className="ses-stat-info">
+                    <span className="ses-stat-label">Aciertos</span>
+                    <span className="ses-stat-value">{summary.aciertos}</span>
+                  </div>
+                  <span className="ses-stat-icon"><CheckCircle size={50} /></span>
+                </div>
+
+                <div className="ses-stat-card ses-stat-card--red">
+                  <div className="ses-stat-info">
+                    <span className="ses-stat-label">Errores</span>
+                    <span className="ses-stat-value">{summary.errores}</span>
+                  </div>
+                  <span className="ses-stat-icon"><AlertCircle size={50} /></span>
+                </div>
+              </div>
+
+              <div className="ses-charts-card">
+                <SesionesCharts data={data} />
+              </div>
+            </details>
+          )}
         </>
       )}
     </div>

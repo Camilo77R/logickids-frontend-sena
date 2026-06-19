@@ -1009,6 +1009,48 @@
   margin-bottom: 20px;
 }
 
+/* --- Metrics collapsible section --- */
+.ses-metrics-section {
+  margin-top: 1.5rem;
+  border-radius: var(--lk-radius-lg);
+  border: 1.5px solid var(--lk-border);
+  background: var(--lk-surface);
+  box-shadow: var(--lk-shadow-card);
+  overflow: hidden;
+}
+.ses-metrics-section summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  color: var(--lk-brand);
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+.ses-metrics-section summary::-webkit-details-marker { display: none; }
+.ses-metrics-section summary::after {
+  content: "+";
+  margin-left: auto;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.ses-metrics-section[open] summary {
+  border-bottom: 1px solid var(--lk-border);
+}
+.ses-metrics-section[open] summary::after {
+  content: "\2212";
+}
+.ses-metrics-section > .ses-stats-grid,
+.ses-metrics-section > .ses-charts-card {
+  padding: 1.5rem;
+}
+.ses-metrics-section > .ses-charts-card {
+  margin-bottom: 0;
+}
+
 .ses-charts-container {
   display: grid;
   grid-template-columns: 220px 1fr;
