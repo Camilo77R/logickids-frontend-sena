@@ -4,9 +4,10 @@ import { ArrowLeft, CheckCircle, FileText, Mail, MessageSquare } from "lucide-re
 import AuthPosterLayout from "../components/auth/layout/AuthPosterLayout";
 import AuthFormColumn from "../components/auth/form/AuthFormColumn";
 import AuthFormHeader from "../components/auth/form/AuthFormHeader";
+import AuthInlineNotice from "../components/auth/feedback/AuthInlineNotice";
 import LkIconTextField from "../components/auth/form/LkIconTextField";
 import LkPrimaryButton from "../components/auth/form/LkPrimaryButton";
-import { request } from "../services/httpClient";
+import solicitudesService from "../services/solicitudesService";
 import logoWordmark from "../assets/imgs/logoLogickids transparente.png";
 import loginPoster from "../assets/imgs/logickIdsfofndoo.jpg";
 import "../styles/auth.css";
@@ -15,6 +16,7 @@ export default function SolicitarReactivacionPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const emailParam = location.state?.email || "";
+  const authNotice = location.state?.notice ?? null;
 
   const [formData, setFormData] = useState({
     email: emailParam,
@@ -66,15 +68,11 @@ export default function SolicitarReactivacionPage() {
     setServerError("");
 
     try {
-      await request("/solicitudes/reactivacion", {
-        method: "POST",
-        auth: false,
-        body: {
-          email: formData.email,
-          correo_respuesta: formData.correo_respuesta,
-          motivo: formData.motivo,
-          descripcion: formData.descripcion,
-        },
+      await solicitudesService.solicitarReactivacion({
+        email: formData.email,
+        correo_respuesta: formData.correo_respuesta,
+        motivo: formData.motivo,
+        descripcion: formData.descripcion,
       });
 
       setSuccess(true);
@@ -163,11 +161,19 @@ export default function SolicitarReactivacionPage() {
           <AuthFormHeader
             iconSrc={logoWordmark}
             iconAlt="LogicKids"
-            title="Cuenta suspendida"
+            title={authNotice?.title || "Cuenta suspendida"}
             subtitle="Solicita la reactivación de tu cuenta completando el formulario."
             variant="poster"
             iconVariant="wordmark"
           />
+
+          {authNotice ? (
+            <AuthInlineNotice
+              tone={authNotice.tone}
+              title={authNotice.title}
+              message={authNotice.message}
+            />
+          ) : null}
 
           <div
             style={{

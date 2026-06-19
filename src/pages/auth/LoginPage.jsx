@@ -18,6 +18,8 @@ import "../../styles/auth.css";
 
 const INITIAL_FORM = { email: "", contrasena: "" };
 
+const isAccessBlockedError = (err) => err instanceof HttpError && err.status === 403;
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,12 +58,19 @@ export default function LoginPage() {
         setServerErr("Rol no reconocido.");
       } else navigate(path, { replace: true });
     } catch (err) {
-      if (
-        err instanceof HttpError &&
-        err.status === 403 &&
-        err.message?.includes("suspendida")
-      ) {
-        navigate("/solicitar-reactivacion", { state: { email: form.email } });
+      if (isAccessBlockedError(err)) {
+        navigate("/solicitar-reactivacion", {
+          state: {
+            email: form.email.trim().toLowerCase(),
+            notice: {
+              tone: "info",
+              title: "Tu cuenta necesita revisión",
+              message:
+                err.message ||
+                "La cuenta no tiene acceso activo. Solicita la reactivación para que un administrador la revise.",
+            },
+          },
+        });
         return;
       }
       setServerErr(

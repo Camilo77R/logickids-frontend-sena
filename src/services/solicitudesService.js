@@ -4,6 +4,16 @@ const unwrapCollection = (payload) => payload?.data ?? (Array.isArray(payload) ?
 const unwrapEntity = (payload) => payload?.data ?? payload ?? null;
 
 const solicitudesService = {
+  async solicitarReactivacion(data) {
+    const payload = await request("/solicitudes/reactivacion", {
+      method: "POST",
+      auth: false,
+      body: data,
+    });
+
+    return unwrapEntity(payload);
+  },
+
   async listSolicitudes() {
     const payload = await request("/solicitudes/admin/solicitudes");
     return unwrapCollection(payload);
