@@ -42,7 +42,7 @@
 .tov-hero {
   display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem;
   padding: 1.25rem 1.5rem; border-radius: 1.8rem;
-  background: var(--lk-surface); border: 1px solid var(--tov-border); position: relative;
+  background: #F0F0F0; border: 1px solid var(--tov-border); position: relative;
 }
 .tov-hero__h1 {
   font-family: "Fredoka", system-ui, sans-serif;
