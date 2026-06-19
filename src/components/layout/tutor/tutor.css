@@ -902,7 +902,7 @@
   border: 1.5px solid var(--lk-tutor-border);
   background: var(--lk-surface);
   color: var(--lk-tutor-text);
-  font-size: 13px;
+  font-size: 0.88rem;
   font-family: var(--lk-font);
   outline: none;
   transition: all 0.2s ease;

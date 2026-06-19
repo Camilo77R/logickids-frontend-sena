@@ -262,8 +262,9 @@
 .lk-table-filters .form-control,
 .lk-table-filters .form-select {
   min-height: 31px;
-  border: 1px solid var(--students-border);
-  border-radius: 8px;
+  border: 1.5px solid var(--students-border);
+  border-radius: var(--lk-radius-sm);
+  background: var(--lk-surface);
   color: var(--students-text);
   font-weight: 700;
   box-shadow: none;
@@ -273,7 +274,7 @@
 .lk-students-form-card .form-select:focus,
 .lk-table-filters .form-control:focus,
 .lk-table-filters .form-select:focus {
-  border-color: rgba(111, 34, 216, 0.45);
+  border-color: var(--lk-purple);
   box-shadow: 0 0 0 4px var(--students-purple-soft);
 }
 
@@ -1165,7 +1166,7 @@ body:has(.lk-students-page) .tutor-main-content {
 .lk-search-control .form-control,
 .lk-filter-select {
   min-height: 30px;
-  border-color: #eeeaf7;
+  border-color: var(--students-border);
   font-size: 0.68rem;
   font-weight: 700;
 }

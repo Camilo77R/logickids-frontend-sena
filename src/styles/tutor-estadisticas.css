@@ -118,7 +118,7 @@
 
 .lk-stats-field select {
   min-height: 48px;
-  border: 1px solid var(--lk-border);
+  border: 1.5px solid var(--lk-border);
   border-radius: var(--lk-radius-lg);
   background: var(--lk-surface);
   color: var(--lk-text);

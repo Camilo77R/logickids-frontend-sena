@@ -214,8 +214,8 @@
   min-height: 52px;
   padding: 0.9rem 1rem;
   border-radius: var(--lk-radius-xl);
-  border: 1px solid var(--lk-border);
-  background: rgba(255, 255, 255, 0.96);
+  border: 1.5px solid var(--lk-border);
+  background: var(--lk-surface);
   color: var(--lk-text);
   font-size: 0.98rem;
   font-weight: 600;
