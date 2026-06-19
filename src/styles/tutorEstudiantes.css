@@ -30,7 +30,7 @@
   gap: 10px;
   overflow: hidden;
   position: relative;
-  background: var(--lk-purple);
+  background: var(--lk-brand);
   box-shadow: var(--lk-shadow-md);
 }
 
@@ -81,7 +81,7 @@
 .lk-students-hero-card strong {
   font-size: 0.82rem;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
   color: #fff;
 }
 
@@ -102,7 +102,7 @@
   display: inline-flex;
   margin-bottom: 1px;
   font-size: 0.58rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.72);
@@ -111,7 +111,7 @@
 .lk-students-hero h1 {
   margin: 0 0 0px;
   font-size: 0.9rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.4px;
   line-height: 1.1;
   color: #fff;
@@ -173,7 +173,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.64rem;
   transition: all 0.2s ease;
 }
@@ -231,7 +231,7 @@
   margin-bottom: 1px;
   color: var(--students-purple);
   font-size: 0.62rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -240,13 +240,13 @@
   margin: 0;
   color: var(--students-text);
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-section-heading .btn-link {
   padding: 0;
   color: var(--students-muted);
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: none;
 }
 
@@ -254,7 +254,7 @@
 .lk-students-form-card .form-label {
   color: var(--students-text);
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-students-form-card .form-control,
@@ -262,8 +262,9 @@
 .lk-table-filters .form-control,
 .lk-table-filters .form-select {
   min-height: 31px;
-  border: 1px solid var(--students-border);
-  border-radius: 8px;
+  border: 1.5px solid var(--students-border);
+  border-radius: var(--lk-radius-sm);
+  background: var(--lk-surface);
   color: var(--students-text);
   font-weight: 700;
   box-shadow: none;
@@ -273,7 +274,7 @@
 .lk-students-form-card .form-select:focus,
 .lk-table-filters .form-control:focus,
 .lk-table-filters .form-select:focus {
-  border-color: rgba(111, 34, 216, 0.45);
+  border-color: var(--lk-purple);
   box-shadow: 0 0 0 4px var(--students-purple-soft);
 }
 
@@ -286,7 +287,7 @@
   border: 0 !important;
   border-radius: 7px;
   background: var(--students-purple) !important;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.78rem;
   box-shadow: 0 6px 12px rgba(111, 34, 216, 0.14);
   transition: all 0.2s ease;
@@ -344,7 +345,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.7rem;
 }
 
@@ -366,7 +367,7 @@
   background: #f7f5fc;
   color: #807993;
   font-size: 0.63rem;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -402,7 +403,7 @@
   color: #fff;
   display: grid;
   place-items: center;
-  font-weight: 900;
+  font-weight: 700;
   box-shadow: 0 5px 10px rgba(35, 24, 67, 0.1);
 }
 
@@ -422,7 +423,7 @@
 
 .lk-student-cell strong {
   color: var(--students-text);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-student-cell span {
@@ -453,7 +454,7 @@
 .lk-progress-cell span {
   color: var(--students-text);
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 /* Cambio visual: badges de estado y sesion con colores del mockup. */
@@ -464,7 +465,7 @@
   border: 0;
   border-radius: 999px;
   font-size: 0.66rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-status-badge::before,
@@ -481,8 +482,8 @@
 
 .lk-status-activo,
 .lk-session-open {
-  color: #159363 !important;
-  background: #e9fbf3 !important;
+  color: var(--lk-success) !important;
+  background: var(--lk-success-soft) !important;
 }
 
 .lk-status-activo::before,
@@ -561,7 +562,7 @@
   color: #5a536e;
   display: grid;
   place-items: center;
-  font-weight: 800;
+  font-weight: 700;
   box-shadow: none;
 }
 
@@ -624,7 +625,7 @@
 
 .lk-students-page .modal-header .modal-title {
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--students-text);
 }
 
@@ -641,7 +642,7 @@
 .lk-students-page .modal-body .form-label {
   color: var(--students-text);
   font-size: 0.74rem;
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 4px;
 }
 
@@ -669,7 +670,7 @@
 .lk-students-page .modal-body .btn {
   min-height: 32px;
   border-radius: 7px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.76rem;
   border: 0;
 }
@@ -693,7 +694,7 @@
 
 .lk-students-page .modal-header .modal-title {
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--students-text);
 }
 
@@ -788,9 +789,9 @@ body:has(.lk-students-page) .tutor-main-content {
 }
 
 .lk-students-page {
-  --students-pink: #8E35D5;
-  --students-pink-dark: #2B173D;
-  --students-pink-soft: #F3E8FA;
+  --students-pink: var(--lk-brand);
+  --students-pink-dark: var(--lk-brand-dark);
+  --students-pink-soft: var(--lk-brand-soft);
   --students-purple: var(--students-pink);
   --students-purple-dark: var(--students-pink-dark);
   --students-purple-soft: var(--students-pink-soft);
@@ -851,7 +852,7 @@ body:has(.lk-students-page) .tutor-main-content {
   min-height: 38px;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .lk-btn-warning {
@@ -1055,7 +1056,7 @@ body:has(.lk-students-page) .tutor-main-content {
   margin: 0;
   color: var(--students-text);
   font-size: 1.1rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: 0;
 }
 
@@ -1065,7 +1066,7 @@ body:has(.lk-students-page) .tutor-main-content {
   padding: 18px 24px;
   border-radius: 8px;
   grid-template-columns: minmax(0, 1fr) 220px;
-  background: var(--lk-purple);
+  background: var(--lk-brand);
   box-shadow: var(--lk-shadow-sm);
 }
 
@@ -1144,7 +1145,7 @@ body:has(.lk-students-page) .tutor-main-content {
 
 .lk-section-heading h2 {
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .lk-table-filters {
@@ -1165,7 +1166,7 @@ body:has(.lk-students-page) .tutor-main-content {
 .lk-search-control .form-control,
 .lk-filter-select {
   min-height: 30px;
-  border-color: #eeeaf7;
+  border-color: var(--students-border);
   font-size: 0.68rem;
   font-weight: 700;
 }
@@ -1181,6 +1182,7 @@ body:has(.lk-students-page) .tutor-main-content {
   background: #fff !important;
   color: var(--students-purple) !important;
   font-size: 0.68rem;
+  font-family: var(--lk-font);
   white-space: nowrap;
 }
 
@@ -1236,7 +1238,7 @@ body:has(.lk-students-page) .tutor-main-content {
 
 .lk-status-activo,
 .lk-session-open {
-  color: #23a972 !important;
+  color: var(--lk-success) !important;
 }
 
 .lk-status-inactivo,
@@ -1297,10 +1299,10 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 }
 
 .lk-students-page {
-  --students-pink: #8E35D5;
-  --students-pink-dark: #2B173D;
-  --students-pink-soft: #F3E8FA;
-  --students-salmon: #8E35D5;
+  --students-pink: var(--lk-brand);
+  --students-pink-dark: var(--lk-brand-dark);
+  --students-pink-soft: var(--lk-brand-soft);
+  --students-salmon: var(--lk-brand);
   --students-salmon-soft: rgba(142, 53, 213, 0.16);
   --students-purple: var(--students-pink);
   --students-purple-dark: var(--students-pink-dark);
@@ -1322,7 +1324,8 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-students-page-head h1 {
   color: var(--lk-text) !important;
   font-size: 1.25rem !important;
-  font-weight: 900 !important;
+  font-weight: 700 !important;
+  font-family: var(--lk-font) !important;
 }
 
 .lk-students-hero {
@@ -1332,7 +1335,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) 184px !important;
   align-items: stretch !important;
-  border-radius: 8px !important;
+  border-radius: 32px !important;
   background: var(--students-pink) !important;
   box-shadow: none !important;
 }
@@ -1352,7 +1355,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-students-hero p {
   max-width: 470px !important;
   margin: 0 0 14px !important;
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: rgba(255,255,255,0.8) !important;
   font-size: 0.74rem !important;
   line-height: 1.32 !important;
 }
@@ -1370,7 +1373,8 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   padding: 0 16px !important;
   border-radius: 7px !important;
   font-size: 0.74rem !important;
-  font-weight: 900 !important;
+  font-weight: 700 !important;
+  font-family: var(--lk-font) !important;
   display: inline-flex !important;
   align-items: center !important;
 }
@@ -1473,7 +1477,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-students-page .lk-student-form-modal .modal-title {
   color: var(--students-pink-dark) !important;
   font-size: 1.22rem !important;
-  font-weight: 900 !important;
+  font-weight: 700 !important;
 }
 
 .lk-student-form-subtitle {
@@ -1503,7 +1507,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   margin-bottom: 6px !important;
   color: var(--lk-text) !important;
   font-size: 0.76rem !important;
-  font-weight: 900 !important;
+  font-weight: 700 !important;
 }
 
 .lk-student-form .form-control,
@@ -1536,7 +1540,8 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   border-radius: 10px !important;
   background: var(--students-pink) !important;
   color: #fff !important;
-  font-weight: 900 !important;
+  font-weight: 700 !important;
+  font-family: var(--lk-font) !important;
   box-shadow: 0 10px 20px rgba(142, 53, 213, 0.22) !important;
 }
 
@@ -1548,7 +1553,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   border-radius: 10px !important;
   background: rgba(142, 53, 213, 0.08) !important;
   color: var(--students-pink-dark) !important;
-  font-weight: 900 !important;
+  font-weight: 700 !important;
 }
 
 @media (max-width: 768px) {
@@ -1568,17 +1573,17 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 /* Ajuste de paleta exacta del tutor: sidebar #8E35D5 y amarillo #fdb813. */
 .lk-students-page {
-  --students-pink: #8E35D5 !important;
-  --students-pink-dark: #2B173D !important;
-  --students-pink-soft: #F3E8FA !important;
-  --students-pink-light: #8E35D5 !important;
-  --students-pink-light-2: #8E35D5 !important;
-  --students-yellow: #fdb813 !important;
-  --students-yellow-dark: #f5a910 !important;
+  --students-pink: var(--lk-brand) !important;
+  --students-pink-dark: var(--lk-brand-dark) !important;
+  --students-pink-soft: var(--lk-brand-soft) !important;
+  --students-pink-light: var(--lk-brand) !important;
+  --students-pink-light-2: var(--lk-brand) !important;
+  --students-yellow: var(--lk-yellow) !important;
+  --students-yellow-dark: var(--lk-yellow-dark) !important;
 }
 
 .lk-students-hero {
-  background: #8E35D5 !important;
+  background: var(--lk-brand) !important;
 }
 
 .lk-tutor-profile-placeholder {
@@ -1587,7 +1592,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   filter: drop-shadow(0 10px 14px rgba(72, 25, 78, 0.2)) !important;
 }
 
@@ -1619,13 +1624,14 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-student-form .lk-submit-button:focus,
 .lk-student-form .lk-submit-button:active,
 .lk-student-form .lk-submit-button:disabled {
-  background: #8E35D5 !important;
-  border: 1px solid #8E35D5 !important;
+  background: var(--lk-brand) !important;
+  border: 1px solid var(--lk-brand) !important;
   color: #ffffff !important;
   opacity: 1 !important;
   min-height: 42px !important;
   border-radius: 10px !important;
-  font-weight: 900 !important;
+  font-weight: 700 !important;
+  font-family: var(--lk-font) !important;
   box-shadow: 0 10px 18px rgba(142, 53, 213, 0.24) !important;
 }
 
@@ -1638,7 +1644,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-student-form .btn-outline-secondary:focus {
   background: rgba(142, 53, 213, 0.08) !important;
   border-color: rgba(142, 53, 213, 0.28) !important;
-  color: #2B173D !important;
+  color: var(--lk-brand-dark) !important;
 }
 
 .lk-student-form .form-control,
@@ -1648,6 +1654,6 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 
 .lk-student-form .form-control:focus,
 .lk-student-form .form-select:focus {
-  border-color: #8E35D5 !important;
-  box-shadow: 0 0 0 4px rgba(142, 53, 213, 0.14) !important;
+  border-color: var(--lk-brand) !important;
+  box-shadow: 0 0 0 4px var(--lk-brand-glow) !important;
 }

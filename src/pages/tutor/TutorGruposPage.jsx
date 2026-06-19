@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Eye, Play, Route, Square, Users } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { BookOpen, Eye, Play, Route, Search, Square, Users, X } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
+import RoleModal from "../../components/common/RoleModal";
 import tutorGroupsService from "../../services/tutorGroupsService";
 import {
   getSessionOpenSuccessMessage,
@@ -89,6 +90,31 @@ export default function TutorGruposPage() {
     group: null,
     error: "",
   });
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const feedbackTimer = useRef(null);
+  const errorTimer = useRef(null);
+
+  const clearFeedback = useCallback(() => { setFeedback(null); }, []);
+  const clearError = useCallback(() => { setError(null); }, []);
+
+  useEffect(() => {
+    if (feedback) {
+      clearTimeout(feedbackTimer.current);
+      feedbackTimer.current = setTimeout(clearFeedback, 5000);
+    }
+    return () => clearTimeout(feedbackTimer.current);
+  }, [feedback, clearFeedback]);
+
+  useEffect(() => {
+    if (error) {
+      clearTimeout(errorTimer.current);
+      errorTimer.current = setTimeout(clearError, 5000);
+    }
+    return () => clearTimeout(errorTimer.current);
+  }, [error, clearError]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const selectedGroup = useMemo(
     () => grupos.find((grupo) => normalizeGroupId(grupo) === selectedGroupId) ?? null,
@@ -104,6 +130,20 @@ export default function TutorGruposPage() {
     () => selectedStudents.filter((student) => isSessionActive(student?.sesion_activa)).length,
     [selectedStudents]
   );
+
+  const filteredGroups = useMemo(() => {
+    let result = grupos;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter((g) => (g.nombre || "").toLowerCase().includes(q));
+    }
+    if (statusFilter === "open") {
+      result = result.filter((g) => isSessionActive(g.sesion_activa));
+    } else if (statusFilter === "closed") {
+      result = result.filter((g) => !isSessionActive(g.sesion_activa));
+    }
+    return result;
+  }, [grupos, searchQuery, statusFilter]);
 
   const loadGroupsAndCatalog = async (nextSelectedGroupId = selectedGroupId) => {
     try {
@@ -191,6 +231,11 @@ export default function TutorGruposPage() {
     });
   };
 
+  const handleOpenDetail = (groupId) => {
+    setSelectedGroupId(groupId);
+    setDetailModalOpen(true);
+  };
+
   const handleToggleSesion = async (grupo) => {
     const groupId = normalizeGroupId(grupo);
 
@@ -263,11 +308,17 @@ export default function TutorGruposPage() {
 
       {feedback ? (
         <div className={`tutor-alert ${feedback.type === "success" ? "tutor-alert--success" : "tutor-alert--error"}`}>
-          {feedback.message}
+          <span>{feedback.message}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearFeedback} aria-label="Cerrar"><X size={16} /></button>
         </div>
       ) : null}
 
-      {error ? <div className="tutor-alert tutor-alert--error">{error}</div> : null}
+      {error ? (
+        <div className="tutor-alert tutor-alert--error">
+          <span>{error}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearError} aria-label="Cerrar"><X size={16} /></button>
+        </div>
+      ) : null}
 
       {!cargando && !grupos.length ? (
         <div className="tutor-card tutor-empty">
@@ -276,8 +327,7 @@ export default function TutorGruposPage() {
           <p>Cuando la institución te asigne grupos, aquí podrás abrir actividades y revisar a tus estudiantes.</p>
         </div>
       ) : (
-        <div className="tutor-grid">
-          <section className="tutor-card tutor-card--span-8">
+        <div className="tutor-card">
             <div className="tg-section-head">
               <div>
                 <span className="tg-section-head__eyebrow">Operación pedagógica</span>
@@ -286,13 +336,51 @@ export default function TutorGruposPage() {
                   Grupos asignados
                 </h2>
               </div>
+              <div className="tg-toolbar">
+                <div className="tg-search">
+                  <Search size={15} className="tg-search__icon" />
+                  <input
+                    type="text"
+                    className="tg-search__input"
+                    placeholder="Buscar grupo..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  {searchQuery && (
+                    <button type="button" className="tg-search__clear" onClick={() => setSearchQuery("")}>
+                      &times;
+                    </button>
+                  )}
+                </div>
+                <div className="tg-filters">
+                  {[
+                    { key: "all", label: "Todos" },
+                    { key: "open", label: "Abiertas" },
+                    { key: "closed", label: "Cerradas" },
+                  ].map((f) => (
+                    <button
+                      key={f.key}
+                      type="button"
+                      className={`tg-filter-pill${statusFilter === f.key ? " is-active" : ""}`}
+                      onClick={() => setStatusFilter(f.key)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {cargando ? (
               <div className="tutor-loading">Cargando grupos...</div>
+            ) : filteredGroups.length === 0 ? (
+              <div className="tutor-empty">
+                <Search size={30} />
+                <p>No se encontraron grupos con esos criterios.</p>
+              </div>
             ) : (
               <div className="tg-group-list">
-                {grupos.map((grupo) => {
+                {filteredGroups.map((grupo) => {
                   const groupId = normalizeGroupId(grupo);
 
                   return (
@@ -300,120 +388,12 @@ export default function TutorGruposPage() {
                       key={groupId}
                       grupo={grupo}
                       selected={groupId === selectedGroupId}
-                      onSelect={setSelectedGroupId}
+                      onSelect={handleOpenDetail}
                     />
                   );
                 })}
               </div>
             )}
-          </section>
-
-          <aside className="tutor-card tutor-card--span-4">
-            <div className="tg-section-head">
-              <div>
-                <span className="tg-section-head__eyebrow">Contexto del aula</span>
-                <h2 className="tutor-card-title">
-                  <Eye size={18} />
-                  Detalle del grupo
-                </h2>
-              </div>
-            </div>
-
-            {!selectedGroup ? (
-              <div className="tutor-empty">
-                <Users size={30} />
-                <p>Selecciona un grupo para revisar su contexto y activar la clase.</p>
-              </div>
-            ) : (
-              <div className="tg-detail-stack">
-                <div className="tg-detail-hero">
-                  <div>
-                    <h3>{selectedGroup.nombre}</h3>
-                    <p>{selectedGroup.descripcion || "Sin descripción institucional registrada."}</p>
-                  </div>
-                  <StatusChip
-                    label={isSessionActive(selectedGroup.sesion_activa) ? "clase abierta" : "clase cerrada"}
-                    tone={isSessionActive(selectedGroup.sesion_activa) ? "active" : "closed"}
-                  />
-                </div>
-
-                <div className="tg-detail-metrics">
-                  <DetailMetric
-                    label="Modo"
-                    value={getSessionModeLabel(selectedGroup)}
-                    helper={getSessionSummaryText(selectedGroup)}
-                  />
-                  <DetailMetric
-                    label="Estudiantes"
-                    value={cargandoDetalle ? "..." : selectedStudents.length}
-                    helper={`${activeStudentsCount} con actividad reciente o sesión abierta`}
-                  />
-                </div>
-
-                <div className="tg-detail-actions">
-                  <button
-                    type="button"
-                    className={`tg-primary-btn${isSessionActive(selectedGroup.sesion_activa) ? " is-secondary" : ""}`}
-                    onClick={() => handleToggleSesion(selectedGroup)}
-                    disabled={cargandoAccion === normalizeGroupId(selectedGroup)}
-                  >
-                    {cargandoAccion === normalizeGroupId(selectedGroup) ? (
-                      "Procesando..."
-                    ) : isSessionActive(selectedGroup.sesion_activa) ? (
-                      <>
-                        <Square size={15} />
-                        Cerrar clase
-                      </>
-                    ) : (
-                      <>
-                        <Play size={15} />
-                        Abrir actividad
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <div className="tg-students-panel">
-                  <div className="tg-students-panel__head">
-                    <strong>Estudiantes del grupo</strong>
-                    <span>{cargandoDetalle ? "..." : selectedStudents.length}</span>
-                  </div>
-
-                  {cargandoDetalle ? (
-                    <div className="tutor-loading">Cargando detalle del grupo...</div>
-                  ) : selectedStudents.length ? (
-                    <div className="tg-students-list">
-                      {selectedStudents.map((student) => {
-                        const badge = getStudentSessionBadge(student);
-
-                        return (
-                          <div key={student.id ?? student.id_estudiante} className="tg-student-row">
-                            <div className="tg-student-row__identity">
-                              <div
-                                className="tg-student-row__avatar"
-                                style={{ backgroundColor: student.color_avatar || "var(--lk-tutor-primary)" }}
-                              >
-                                {(student.nombre || "?").slice(0, 2).toUpperCase()}
-                              </div>
-                              <div>
-                                <strong>{student.nombre}</strong>
-                                <p>{student.edad ? `${student.edad} años` : "Edad no disponible"}</p>
-                              </div>
-                            </div>
-                            <StatusChip label={badge.label} tone={badge.tone} />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className="tg-empty-copy">
-                      Este grupo aún no tiene estudiantes activos visibles para el tutor. La institución puede completarlo desde el módulo administrativo.
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </aside>
         </div>
       )}
 
@@ -427,6 +407,104 @@ export default function TutorGruposPage() {
         isSubmitting={Boolean(cargandoAccion)}
         errorMessage={sessionModal.error}
       />
+
+      <RoleModal
+        open={detailModalOpen && Boolean(selectedGroup)}
+        onClose={() => setDetailModalOpen(false)}
+        eyebrow="Contexto del aula"
+        title="Detalle del grupo"
+        width={640}
+        actions={
+          selectedGroup ? (
+            <>
+              <button
+                type="button"
+                className={`tg-primary-btn${isSessionActive(selectedGroup.sesion_activa) ? " tg-primary-btn--danger" : ""}`}
+                onClick={() => { handleToggleSesion(selectedGroup); setDetailModalOpen(false); }}
+                disabled={cargandoAccion === normalizeGroupId(selectedGroup)}
+              >
+                {cargandoAccion === normalizeGroupId(selectedGroup) ? (
+                  "Procesando..."
+                ) : isSessionActive(selectedGroup.sesion_activa) ? (
+                  <><Square size={15} /> Cerrar clase</>
+                ) : (
+                  <><Play size={15} /> Abrir actividad</>
+                )}
+              </button>
+              <button type="button" className="tg-primary-btn tg-primary-btn--ghost" onClick={() => setDetailModalOpen(false)}>
+                Cerrar
+              </button>
+            </>
+          ) : null
+        }
+      >
+        {selectedGroup && (
+          <div className="tg-detail-stack">
+            <div className="tg-detail-hero">
+              <div>
+                <h3>{selectedGroup.nombre}</h3>
+                <p>{selectedGroup.descripcion || "Sin descripción institucional registrada."}</p>
+              </div>
+              <StatusChip
+                label={isSessionActive(selectedGroup.sesion_activa) ? "clase abierta" : "clase cerrada"}
+                tone={isSessionActive(selectedGroup.sesion_activa) ? "active" : "closed"}
+              />
+            </div>
+
+            <div className="tg-detail-metrics">
+              <DetailMetric
+                label="Modo"
+                value={getSessionModeLabel(selectedGroup)}
+                helper={getSessionSummaryText(selectedGroup)}
+              />
+              <DetailMetric
+                label="Estudiantes"
+                value={cargandoDetalle ? "..." : selectedStudents.length}
+                helper={`${activeStudentsCount} con actividad reciente o sesión abierta`}
+              />
+            </div>
+
+            <div className="tg-students-panel">
+              <div className="tg-students-panel__head">
+                <strong>Estudiantes del grupo</strong>
+                <span>{cargandoDetalle ? "..." : selectedStudents.length}</span>
+              </div>
+
+              {cargandoDetalle ? (
+                <div className="tutor-loading">Cargando detalle del grupo...</div>
+              ) : selectedStudents.length ? (
+                <div className="tg-students-list">
+                  {selectedStudents.map((student) => {
+                    const badge = getStudentSessionBadge(student);
+
+                    return (
+                      <div key={student.id ?? student.id_estudiante} className="tg-student-row">
+                        <div className="tg-student-row__identity">
+                          <div
+                            className="tg-student-row__avatar"
+                            style={{ backgroundColor: student.color_avatar || "var(--lk-tutor-primary)" }}
+                          >
+                            {(student.nombre || "?").slice(0, 2).toUpperCase()}
+                          </div>
+                          <div>
+                            <strong>{student.nombre}</strong>
+                            <p>{student.edad ? `${student.edad} años` : "Edad no disponible"}</p>
+                          </div>
+                        </div>
+                        <StatusChip label={badge.label} tone={badge.tone} />
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="tg-empty-copy">
+                  Este grupo aún no tiene estudiantes activos visibles para el tutor.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </RoleModal>
     </div>
   );
 }

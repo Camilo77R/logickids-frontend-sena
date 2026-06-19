@@ -6,8 +6,8 @@
  * - la UI no debe inventar estadísticas cuando el backend no trae datos
  * - separa presentación de lectura de datos para que la pantalla sea mantenible
  */
-import { useEffect, useMemo, useState } from "react";
-import { BarChart2, RefreshCw, User, Users } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { BarChart2, RefreshCw, User, Users, X } from "lucide-react";
 import { useEstadisticasEstudiante, useEstadisticasGrupo } from "../../hooks/useEstadisticas";
 import estudianteService from "../../services/estudianteService";
 import tutorGroupsService from "../../services/tutorGroupsService";
@@ -58,6 +58,17 @@ export default function TutorEstadisticasPage() {
   const [estudianteId, setEstudianteId] = useState("");
   const [loadingCatalog, setLoadingCatalog] = useState(true);
   const [catalogError, setCatalogError] = useState("");
+  const catalogErrorTimer = useRef(null);
+  const clearCatalogError = useCallback(() => setCatalogError(""), []);
+
+  useEffect(() => {
+    if (catalogError) {
+      clearTimeout(catalogErrorTimer.current);
+      catalogErrorTimer.current = setTimeout(clearCatalogError, 5000);
+    }
+    return () => clearTimeout(catalogErrorTimer.current);
+  }, [catalogError, clearCatalogError]);
+
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -295,7 +306,12 @@ export default function TutorEstadisticasPage() {
         </strong>
       </div>
 
-      {pageError ? <div className="lk-stats-alert">{pageError}</div> : null}
+      {pageError ? (
+        <div className="lk-stats-alert">
+          <span>{pageError}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearCatalogError} aria-label="Cerrar"><X size={16} /></button>
+        </div>
+      ) : null}
 
       {loading ? (
         <div className="lk-stats-state">

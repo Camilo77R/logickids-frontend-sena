@@ -20,11 +20,16 @@ import {
   Zap,
   Lightbulb,
   BarChart2,
+  BarChart3,
   Star,
   Target,
   Route,
+  Gamepad2,
+  Layers,
 } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
+import SesionesMetricsModal from "../../components/tutor/SesionesMetricsModal";
+import RoleModal from "../../components/common/RoleModal";
 import { useAuth } from "../../hooks/useAuth";
 import tutorGroupsService from "../../services/tutorGroupsService";
 import estudianteService from "../../services/estudianteService";
@@ -41,13 +46,6 @@ import {
   isSessionActive,
 } from "../../utils/sessionClassUi";
 import "../../styles/tutor-ov.css";
-
-const getSaludo = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Buenos días";
-  if (hour < 18) return "Buenas tardes";
-  return "Buenas noches";
-};
 
 const AVATAR_COLORS = ["#8E35D5", "#2B173D", "#F9A825", "#e8920a", "#7a3575", "#f0b429"];
 const avatarColor = (index) => AVATAR_COLORS[index % AVATAR_COLORS.length];
@@ -89,21 +87,15 @@ const loadStudentsForTutorGroups = async (groups) => {
   return [...uniqueStudents.values()];
 };
 
-function KpiCard({ value, label, sublabel, Icon, accent }) {
+function KpiCard({ value, label, sublabel, Icon, variant }) {
   return (
-    <div className="tov-kpi">
-      <div className="tov-kpi__left">
-        <div className="tov-kpi__ico" style={{ background: accent }}>
-          <Icon size={18} strokeWidth={2.2} />
-        </div>
-        <div>
-          <span className="tov-kpi__lbl">{label}</span>
-          {sublabel && <span className="tov-kpi__sub">{sublabel}</span>}
-        </div>
+    <div className={`tov-kpi ${variant ? `tov-kpi--${variant}` : ""}`}>
+      <div className="tov-kpi__ico">
+        <Icon size={16} strokeWidth={1.5} />
       </div>
-      <strong className="tov-kpi__val" style={{ color: accent }}>
-        {value}
-      </strong>
+      <strong className="tov-kpi__val">{value}</strong>
+      <span className="tov-kpi__lbl">{label}</span>
+      {sublabel && <span className="tov-kpi__sub">{sublabel}</span>}
     </div>
   );
 }
@@ -137,15 +129,20 @@ function GroupCard({ group, onToggle, loading }) {
   return (
     <div className={`tov-gcard ${active ? "tov-gcard--on" : ""}`}>
       <div className="tov-gcard__header">
-        <div className={`tov-gcard__dot ${active ? "tov-gcard__dot--on" : "tov-gcard__dot--off"}`} />
-        <span className="tov-gcard__status">{active ? "Clase abierta" : "Cerrada"}</span>
+        <span className={`tov-gcard__badge ${active ? "tov-gcard__badge--on" : "tov-gcard__badge--off"}`}>
+          {active ? "Clase abierta" : "Cerrada"}
+        </span>
       </div>
 
       <h3 className="tov-gcard__name">{group.nombre}</h3>
       <p className="tov-gcard__desc">{group.descripcion?.slice(0, 56) || "Sin descripción"}</p>
-      <div className="d-flex flex-wrap gap-2 mb-2">
-        <span className="badge bg-light text-dark border">{getSessionModeLabel(group)}</span>
-        <span className="badge bg-light text-dark border">{getSessionStepsLabel(group)}</span>
+      <div className="tov-gcard__meta">
+        <span className="tov-gcard__meta-item">
+          <Gamepad2 size={11} strokeWidth={1.5} /> {getSessionModeLabel(group) || "Actividad de un juego"}
+        </span>
+        <span className="tov-gcard__meta-item">
+          <Layers size={11} strokeWidth={1.5} /> {getSessionStepsLabel(group) || "2 niveles"}
+        </span>
       </div>
       <p className="tov-gcard__desc">{getSessionSummaryText(group)}</p>
 
@@ -155,7 +152,7 @@ function GroupCard({ group, onToggle, loading }) {
           disabled={loading === group.id}
           onClick={() => onToggle(group)}
         >
-          {loading === group.id ? "…" : active ? "Cerrar" : "Abrir actividad"}
+          {loading === group.id ? "\u2026" : active ? "Cerrar" : "Abrir actividad"}
         </button>
         <button className="tov-gcard__arrow" onClick={() => navigate("/tutor/grupos")}>
           <ChevronRight size={15} />
@@ -203,6 +200,8 @@ export default function TutorDashboardOverview() {
     group: null,
     error: "",
   });
+  const [activeModule, setActiveModule] = useState(null);
+  const [metricsModalOpen, setMetricsModalOpen] = useState(false);
 
   const flash = (type, text) => {
     setToast({ type, text });
@@ -361,11 +360,7 @@ export default function TutorDashboardOverview() {
     );
   }
 
-  const spotlightTitle = getSessionHeadline(focusGroup);
-
-  const spotlightDescription = isSessionActive(focusGroup?.sesion_activa)
-    ? getSessionSummaryText(focusGroup)
-    : "Abre una clase individual o construye una ruta pedagógica para que el estudiante avance paso a paso sin saltarse actividades.";
+  const navLinks = { groups: "/tutor/grupos", ranking: "/tutor/estudiantes", activity: "/tutor/grupos", skills: "/tutor/estadisticas", recs: "/tutor/recomendaciones" };
 
   return (
     <div className="tov">
@@ -373,9 +368,6 @@ export default function TutorDashboardOverview() {
 
       <div className="tov-hero">
         <div className="tov-hero__text">
-          <p className="tov-hero__eye">
-            {getSaludo()}, {firstName} 👋
-          </p>
           <h1 className="tov-hero__h1">Panel del Tutor</h1>
           <p className="tov-hero__sub">
             {activeGroups > 0
@@ -383,43 +375,181 @@ export default function TutorDashboardOverview() {
               : "No hay clases activas. Abre una actividad pedagógica cuando quieras empezar."}
           </p>
         </div>
-        <div className="tov-hero__pills">
-          {[
-            { n: totalGroups, l: "Grupos" },
-            { n: activeGroups, l: "Activos" },
-            { n: totalStudents, l: "Estudiantes" },
-            { n: liveStudents, l: "Jugando" },
-          ].map(({ n, l }) => (
-            <div key={l} className="tov-hero__pill">
-              <strong>{n}</strong>
-              <span>{l}</span>
-            </div>
-          ))}
+        <div className="tov-hero__kpis">
+          <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} />
+          <KpiCard value={activeGroups} label="Clases abiertas" sublabel="Sesión activa" Icon={PlayCircle} variant="green" />
+          <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} />
+          <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} />
+          <KpiCard value={liveStudents} label="Jugando ahora" sublabel="Con sesión activa" Icon={Target} variant="purple" />
+          <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} />
         </div>
       </div>
 
-      <div className="tov-kpis">
-        <KpiCard value={totalGroups} label="Total grupos" sublabel="Creados" Icon={BookOpen} accent="#8E35D5" />
-        <KpiCard value={activeGroups} label="Clases abiertas" sublabel="Sesión activa" Icon={PlayCircle} accent="#F9A825" />
-        <KpiCard value={pausedGroups} label="Clases cerradas" sublabel="Sin sesión" Icon={PauseCircle} accent="#8E35D5" />
-        <KpiCard value={totalStudents} label="Estudiantes" sublabel="Registrados" Icon={Users} accent="#8E35D5" />
-        <KpiCard value={liveStudents} label="Jugando ahora" sublabel="Con sesión activa" Icon={Target} accent="#F9A825" />
-        <KpiCard value={games.length} label="Juegos activos" sublabel="Catálogo pedagógico" Icon={Zap} accent="#8E35D5" />
+      {/* MODULE GRID */}
+      <div className="tov-module-grid">
+        <button className="tov-module-card" onClick={() => setActiveModule("groups")}>
+          <div className="tov-module-card__header">
+            <div className="tov-module-card__icon"><BookOpen size={18} strokeWidth={1.5} /></div>
+            <div className="tov-module-card__text">
+              <span className="tov-module-card__title">Grupos</span>
+              <span className="tov-module-card__subtitle">{totalGroups} grupo{totalGroups !== 1 ? "s" : ""}</span>
+            </div>
+          </div>
+          <div className="tov-module-card__preview">
+            {groups.length === 0 ? (
+              <div className="tov-module-card__preview-empty">Sin grupos</div>
+            ) : (
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-label">{groups[0].nombre}</span>
+                <span className={`tov-module-card__preview-dot ${isSessionActive(groups[0].sesion_activa) ? "tov-module-card__preview-dot--live" : ""}`} />
+              </div>
+            )}
+          </div>
+          <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
+        </button>
+
+        <button className="tov-module-card" onClick={() => setActiveModule("ranking")}>
+          <div className="tov-module-card__header">
+            <div className="tov-module-card__icon"><Award size={18} strokeWidth={1.5} /></div>
+            <div className="tov-module-card__text">
+              <span className="tov-module-card__title">Ranking</span>
+              <span className="tov-module-card__subtitle">{sortedStudents.length} estudiante{sortedStudents.length !== 1 ? "s" : ""}</span>
+            </div>
+          </div>
+          <div className="tov-module-card__preview">
+            {sortedStudents.length === 0 ? (
+              <div className="tov-module-card__preview-empty">Sin estudiantes</div>
+            ) : (
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-name">
+                  {isSessionActive(sortedStudents[0].sesion_activa) && <span className="tov-module-card__preview-dot tov-module-card__preview-dot--live" />}
+                  {sortedStudents[0].nombre}
+                </span>
+                <span className="tov-module-card__preview-value">#1</span>
+              </div>
+            )}
+          </div>
+          <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
+        </button>
+
+        <button className="tov-module-card" onClick={() => setActiveModule("activity")}>
+          <div className="tov-module-card__header">
+            <div className="tov-module-card__icon"><Star size={18} strokeWidth={1.5} /></div>
+            <div className="tov-module-card__text">
+              <span className="tov-module-card__title">Actividad</span>
+              <span className="tov-module-card__subtitle">{focusGroup?.nombre ?? "Clase destacada"}</span>
+            </div>
+          </div>
+          <div className="tov-module-card__preview">
+            {focusGroup ? (
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-label">{getSessionModeLabel(focusGroup) || "Individual"}</span>
+                <span className="tov-module-card__preview-value">{getSessionStepsLabel(focusGroup) || "1 nivel"}</span>
+              </div>
+            ) : (
+              <div className="tov-module-card__preview-empty">Sin clase activa</div>
+            )}
+          </div>
+          <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
+        </button>
+
+        <button className="tov-module-card" onClick={() => setActiveModule("skills")}>
+          <div className="tov-module-card__header">
+            <div className="tov-module-card__icon"><BarChart2 size={18} strokeWidth={1.5} /></div>
+            <div className="tov-module-card__text">
+              <span className="tov-module-card__title">Precisi&oacute;n</span>
+              <span className="tov-module-card__subtitle">{skills.length > 0 ? `${skills.length} habilidad${skills.length !== 1 ? "es" : ""}` : "Sin datos"}</span>
+            </div>
+          </div>
+          <div className="tov-module-card__preview">
+            {skills.length === 0 ? (
+              <div className="tov-module-card__preview-empty">Sin datos de precisi&oacute;n</div>
+            ) : (
+              <div className="tov-module-card__preview-skill">
+                <span className="tov-module-card__preview-skill-name">{skills[0].habilidad}</span>
+                <div className="tov-module-card__preview-skill-bar">
+                  <div className="tov-module-card__preview-skill-fill" style={{ width: `${Math.min(100, Math.round(Number(skills[0].precision_promedio ?? 0)))}%` }} />
+                </div>
+                <span className="tov-module-card__preview-skill-pct">{Math.round(Number(skills[0].precision_promedio ?? 0))}%</span>
+              </div>
+            )}
+          </div>
+          <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
+        </button>
+
+        <button className="tov-module-card" onClick={() => setActiveModule("recs")}>
+          <div className="tov-module-card__header">
+            <div className="tov-module-card__icon"><Lightbulb size={18} strokeWidth={1.5} /></div>
+            <div className="tov-module-card__text">
+              <span className="tov-module-card__title">Recomendaciones</span>
+              <span className="tov-module-card__subtitle">{recs.length} pendiente{recs.length !== 1 ? "s" : ""}</span>
+            </div>
+          </div>
+          <div className="tov-module-card__preview">
+            {recs.length === 0 ? (
+              <div className="tov-module-card__preview-empty">Sin recomendaciones</div>
+            ) : (
+              <div className="tov-module-card__preview-rec">
+                <strong>{recs[0].habilidad ?? recs[0].skill ?? "General"}:</strong> {recs[0].mensaje ?? recs[0].message ?? recs[0].recomendacion}
+              </div>
+            )}
+          </div>
+          <div className="tov-module-card__footer">Ver detalle <ChevronRight size={12} strokeWidth={2} /></div>
+        </button>
+
+        <button className="tov-module-card" onClick={() => setMetricsModalOpen(true)}>
+          <div className="tov-module-card__header">
+            <div className="tov-module-card__icon"><BarChart3 size={18} strokeWidth={1.5} /></div>
+            <div className="tov-module-card__text">
+              <span className="tov-module-card__title">M&eacute;tricas</span>
+              <span className="tov-module-card__subtitle">Resumen de sesiones</span>
+            </div>
+          </div>
+          <div className="tov-module-card__preview">
+            {students.length === 0 ? (
+              <div className="tov-module-card__preview-empty">Sin datos</div>
+            ) : (
+              <div className="tov-module-card__preview-row">
+                <span className="tov-module-card__preview-label">{totalStudents} estudiante{totalStudents !== 1 ? "s" : ""}</span>
+                <span className="tov-module-card__preview-value">{liveStudents} activo{liveStudents !== 1 ? "s" : ""}</span>
+              </div>
+            )}
+          </div>
+          <div className="tov-module-card__footer">Abrir <ChevronRight size={12} strokeWidth={2} /></div>
+        </button>
       </div>
 
-      <div className="tov-bento">
-        <div className="tov-main">
-          <div className="tov-panel">
-            <div className="tov-ph">
-              <div>
-                <span className="tov-eye">Gestión de clases</span>
-                <h2 className="tov-ptitle">Tus grupos</h2>
-              </div>
-              <button className="tov-ilink" onClick={() => navigate("/tutor/grupos")}>
-                Ver todos <ChevronRight size={13} />
-              </button>
-            </div>
-            {groups.length === 0 ? (
+      {/* MODAL */}
+      <RoleModal
+        open={Boolean(activeModule)}
+        onClose={() => setActiveModule(null)}
+        eyebrow={
+          activeModule === "groups" ? "Gestión de clases" :
+          activeModule === "ranking" ? "Actividad de hoy" :
+          activeModule === "activity" ? "Clase destacada" :
+          activeModule === "skills" ? (focusGroup?.nombre ?? "Grupo") :
+          "IA · Gemini"
+        }
+        title={
+          activeModule === "groups" ? "Tus grupos" :
+          activeModule === "ranking" ? "Ranking de estudiantes" :
+          activeModule === "activity" ? (getSessionHeadline(focusGroup) || "Clase activa") :
+          activeModule === "skills" ? "Precisión por habilidad" :
+          "Recomendaciones"
+        }
+        width={640}
+        actions={
+          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "space-between", width: "100%" }}>
+            <button className="tov-modal-action" onClick={() => { const k = activeModule; setActiveModule(null); navigate(navLinks[k]); }}>
+              Ir a {activeModule === "groups" ? "Grupos" : activeModule === "ranking" ? "Estudiantes" : activeModule === "activity" ? "Grupos" : activeModule === "skills" ? "Estadísticas" : "Recomendaciones"} <ChevronRight size={14} />
+            </button>
+            <button className="tov-modal-close" onClick={() => setActiveModule(null)}>Cerrar</button>
+          </div>
+        }
+      >
+        <div className="tov-modal-inner">
+          {activeModule === "groups" && (
+            groups.length === 0 ? (
               <div className="tov-empty">
                 <BookOpen size={24} />
                 <strong>Sin grupos</strong>
@@ -431,20 +561,17 @@ export default function TutorDashboardOverview() {
                   <GroupCard key={group.id} group={group} onToggle={handleToggle} loading={toggling} />
                 ))}
               </div>
-            )}
-          </div>
+            )
+          )}
 
-          {students.length > 0 && (
-            <div className="tov-panel">
-              <div className="tov-ph">
-                <div>
-                  <span className="tov-eye">Actividad de hoy</span>
-                  <h2 className="tov-ptitle">Ranking de estudiantes</h2>
-                </div>
-                <button className="tov-ilink" onClick={() => navigate("/tutor/estudiantes")}>
-                  Ver todos <ChevronRight size={13} />
-                </button>
+          {activeModule === "ranking" && (
+            sortedStudents.length === 0 ? (
+              <div className="tov-empty">
+                <Users size={24} />
+                <strong>Sin estudiantes</strong>
+                <p>No hay estudiantes registrados en tus grupos.</p>
               </div>
+            ) : (
               <div className="tov-students">
                 {sortedStudents.slice(0, 8).map((student, index) => (
                   <StudentRow
@@ -465,40 +592,38 @@ export default function TutorDashboardOverview() {
                   </p>
                 )}
               </div>
+            )
+          )}
+
+          {activeModule === "activity" && (
+            <div className="tov-spotlight" style={{ border: "none", padding: 0, margin: 0, background: "transparent", boxShadow: "none" }}>
+              <div className="tov-spotlight__ico">
+                {isSessionActive(focusGroup?.sesion_activa) ? (
+                  <Star size={20} strokeWidth={2} />
+                ) : (
+                  <Route size={20} strokeWidth={2} />
+                )}
+              </div>
+              <span className="tov-spotlight__tag">
+                {isSessionActive(focusGroup?.sesion_activa) ? getSessionModeLabel(focusGroup) : "Ruta pedagógica"}
+              </span>
+              <strong className="tov-spotlight__game">{getSessionHeadline(focusGroup)}</strong>
+              <p className="tov-spotlight__desc">
+                {isSessionActive(focusGroup?.sesion_activa)
+                  ? getSessionSummaryText(focusGroup)
+                  : "Abre una clase individual o construye una ruta pedagógica para que el estudiante avance paso a paso sin saltarse actividades."}
+              </p>
             </div>
           )}
-        </div>
 
-        <div className="tov-side">
-          <div className="tov-spotlight">
-            <div className="tov-spotlight__ico">
-              {isSessionActive(focusGroup?.sesion_activa) ? (
-                <Star size={20} strokeWidth={2} />
-              ) : (
-                <Route size={20} strokeWidth={2} />
-              )}
-            </div>
-            <span className="tov-spotlight__tag">
-              {isSessionActive(focusGroup?.sesion_activa) ? getSessionModeLabel(focusGroup) : "Ruta pedagógica"}
-            </span>
-            <strong className="tov-spotlight__game">{spotlightTitle}</strong>
-            <p className="tov-spotlight__desc">{spotlightDescription}</p>
-            <button className="tov-spotlight__btn" onClick={() => navigate("/tutor/grupos")}>
-              Configurar clases <ChevronRight size={13} />
-            </button>
-          </div>
-
-          {skills.length > 0 && (
-            <div className="tov-panel">
-              <div className="tov-ph">
-                <div>
-                  <span className="tov-eye">{focusGroup?.nombre ?? "Grupo"}</span>
-                  <h2 className="tov-ptitle">Precisión por habilidad</h2>
-                </div>
-                <button className="tov-ilink" onClick={() => navigate("/tutor/estadisticas")}>
-                  <BarChart2 size={14} />
-                </button>
+          {activeModule === "skills" && (
+            skills.length === 0 ? (
+              <div className="tov-empty">
+                <BarChart2 size={24} />
+                <strong>Sin datos</strong>
+                <p>Abre una clase para ver la precisi&oacute;n por habilidad.</p>
               </div>
+            ) : (
               <div className="tov-sbars">
                 {skills.map((skill) => (
                   <SkillBar
@@ -509,58 +634,33 @@ export default function TutorDashboardOverview() {
                 ))}
                 {skills[0]?.reaccion_promedio != null && (
                   <p className="tov-snote">
-                    ⚡ Reacción prom: <strong>{Math.round(skills[0].reaccion_promedio)} ms</strong>
+                    &#9889; Reacci&oacute;n prom: <strong>{Math.round(skills[0].reaccion_promedio)} ms</strong>
                   </p>
                 )}
               </div>
-            </div>
+            )
           )}
 
-          {recs.length > 0 && (
-            <div className="tov-panel">
-              <div className="tov-ph">
-                <div>
-                  <span className="tov-eye">IA · Gemini</span>
-                  <h2 className="tov-ptitle">Recomendaciones</h2>
-                </div>
-                <Lightbulb size={15} color="#8E35D5" />
+          {activeModule === "recs" && (
+            recs.length === 0 ? (
+              <div className="tov-empty">
+                <Lightbulb size={24} />
+                <strong>Sin recomendaciones</strong>
+                <p>Abre una clase para recibir recomendaciones pedag&oacute;gicas.</p>
               </div>
+            ) : (
               <div className="tov-recs">
-                {recs.slice(0, 3).map((rec, index) => (
+                {recs.map((rec, index) => (
                   <div key={index} className="tov-rec">
                     <span className="tov-rec__tag">{rec.habilidad ?? rec.skill ?? "General"}</span>
                     <p className="tov-rec__msg">{rec.mensaje ?? rec.message ?? rec.recomendacion}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            )
           )}
-
-          <div className="tov-panel">
-            <span className="tov-eye">Navegación</span>
-            <h2 className="tov-ptitle" style={{ marginBottom: "0.7rem" }}>
-              Ir a
-            </h2>
-            <div className="tov-actions">
-              {[
-                { Icon: BookOpen, label: "Mis grupos", path: "/tutor/grupos" },
-                { Icon: Users, label: "Estudiantes", path: "/tutor/estudiantes" },
-                { Icon: Clock, label: "Sesiones", path: "/tutor/sesiones" },
-                { Icon: TrendingUp, label: "Estadísticas", path: "/tutor/estadisticas" },
-                { Icon: Award, label: "Logros", path: "/tutor/logros" },
-              ].map(({ Icon, label, path }) => (
-                <button key={label} className="tov-act" onClick={() => navigate(path)}>
-                  <div className="tov-act__ico">
-                    <Icon size={14} strokeWidth={2.3} />
-                  </div>
-                  <span>{label}</span>
-                  <ChevronRight size={13} className="tov-act__arr" />
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
-      </div>
+      </RoleModal>
 
       <SessionClassModal
         show={sessionModal.open}
@@ -571,6 +671,11 @@ export default function TutorDashboardOverview() {
         onConfirm={handleConfirmOpenSession}
         isSubmitting={Boolean(toggling)}
         errorMessage={sessionModal.error}
+      />
+
+      <SesionesMetricsModal
+        show={metricsModalOpen}
+        onClose={() => setMetricsModalOpen(false)}
       />
     </div>
   );

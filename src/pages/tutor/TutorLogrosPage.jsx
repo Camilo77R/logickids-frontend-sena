@@ -44,11 +44,7 @@ const resolveCatalogKey = (achievement) =>
   achievement?.clave ?? achievement?.clave_logro ?? achievement?.id_catalogo_logro;
 
 const resolveIcon = (achievement, unlocked) => {
-  if (achievement?.icono) {
-    return achievement.icono;
-  }
-
-  return unlocked ? "★" : "☆";
+  return unlocked ? "star" : "lock";
 };
 
 const buildInitials = (name = "") =>
@@ -292,7 +288,7 @@ export default function TutorLogrosPage() {
           <div className="lk-achievements-kpis">
             <article className="lk-achievements-kpi lk-achievements-kpi--highlight">
               <div className="lk-achievements-kpi__icon">
-                <Trophy size={42} aria-hidden="true" />
+                <Trophy size={32} aria-hidden="true" />
               </div>
               <div>
                 <span>Logros totales</span>
@@ -351,7 +347,7 @@ export default function TutorLogrosPage() {
                     >
                       <div className="lk-achievement-card__top">
                         <div className="lk-achievement-card__icon" aria-hidden="true">
-                          {item.desbloqueado ? item.iconoFinal : <Lock size={20} />}
+                          {item.desbloqueado ? <Star size={20} /> : <Lock size={20} />}
                         </div>
                         <span>{item.desbloqueado ? "Desbloqueado" : "Pendiente"}</span>
                       </div>

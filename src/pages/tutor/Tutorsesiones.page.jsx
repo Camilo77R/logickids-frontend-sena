@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { History, MousePointerClick } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AlertCircle, BarChart3, Calendar, CheckCircle, Clock, History, Layers, Search, X } from "lucide-react";
+import RoleModal from "../../components/common/RoleModal";
 import SesionesCharts from "../../components/sesiones/SesionesCharts";
 import SesionesFilters from "../../components/sesiones/SesionesFilters";
 import SesionesTable from "../../components/sesiones/SesionesTable";
@@ -26,6 +27,22 @@ export default function SesionesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingEventos, setIsLoadingEventos] = useState(false);
   const [error, setError] = useState("");
+  const errorTimer = useRef(null);
+  const clearError = useCallback(() => setError(""), []);
+
+  useEffect(() => {
+    if (error) {
+      clearTimeout(errorTimer.current);
+      errorTimer.current = setTimeout(clearError, 5000);
+    }
+    return () => clearTimeout(errorTimer.current);
+  }, [error, clearError]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("todas");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   /* ── Cargar grupos ── */
   useEffect(() => {
@@ -94,6 +111,7 @@ export default function SesionesPage() {
   /* ── Seleccionar sesión → cargar eventos ── */
   const handleSelectSession = async (session) => {
     setSelectedSession(session);
+    setModalOpen(true);
     setIsLoadingEventos(true);
     try {
       const eventos = await getEventosSesion(session.id);
@@ -104,6 +122,12 @@ export default function SesionesPage() {
     } finally {
       setIsLoadingEventos(false);
     }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedSession(null);
+    setEventosSesion([]);
   };
 
   /* ── Totales ── */
@@ -131,6 +155,31 @@ export default function SesionesPage() {
     [data]
   );
 
+  /* ── Filtrado local ── */
+  const filteredData = useMemo(() => {
+    return data.filter((s) => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch = !q ||
+        (s.actividad_titulo || "").toLowerCase().includes(q) ||
+        (s.minijuego || "").toLowerCase().includes(q) ||
+        (s.actividad_detalle || "").toLowerCase().includes(q);
+      const matchesStatus = statusFilter === "todas" ||
+        (statusFilter === "completado" && s.estado === "completado") ||
+        (statusFilter === "abandonado" && s.estado === "abandonado");
+
+      let matchesDate = true;
+      if (s.iniciada_en) {
+        const fecha = new Date(s.iniciada_en).toISOString().slice(0, 10);
+        if (dateFrom && fecha < dateFrom) matchesDate = false;
+        if (dateTo && fecha > dateTo) matchesDate = false;
+      } else {
+        if (dateFrom || dateTo) matchesDate = false;
+      }
+
+      return matchesSearch && matchesStatus && matchesDate;
+    });
+  }, [data, searchQuery, statusFilter, dateFrom, dateTo]);
+
   /* ─────────────── RENDER ─────────────── */
   return (
     <div className="tutor-page-container">
@@ -149,55 +198,128 @@ export default function SesionesPage() {
       </div>
 
       {/* Error */}
-      {error && <div className="tutor-alert tutor-alert--error">{error}</div>}
+      {error && (
+        <div className="tutor-alert tutor-alert--error">
+          <span>{error}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearError} aria-label="Cerrar"><X size={16} /></button>
+        </div>
+      )}
 
-      {/* Filtros */}
+      {/* Sección de métricas desplegable */}
+      {data.length > 0 && (
+        <details className="ses-metrics-section">
+          <summary>
+            <BarChart3 size={18} />
+            <span>Métricas de sesiones</span>
+          </summary>
+          <div className="ses-stats-grid">
+            <div className="ses-stat-card ses-stat-card--orange">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Actividades detectadas</span>
+                <span className="ses-stat-value">{summary.actividades}</span>
+              </div>
+              <span className="ses-stat-icon"><Clock size={50} /></span>
+            </div>
+
+            <div className="ses-stat-card ses-stat-card--purple">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Sesiones / niveles</span>
+                <span className="ses-stat-value">{summary.sesiones}</span>
+              </div>
+              <span className="ses-stat-icon"><Layers size={50} /></span>
+            </div>
+
+            <div className="ses-stat-card ses-stat-card--green">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Aciertos</span>
+                <span className="ses-stat-value">{summary.aciertos}</span>
+              </div>
+              <span className="ses-stat-icon"><CheckCircle size={50} /></span>
+            </div>
+
+            <div className="ses-stat-card ses-stat-card--red">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Errores</span>
+                <span className="ses-stat-value">{summary.errores}</span>
+              </div>
+              <span className="ses-stat-icon"><AlertCircle size={50} /></span>
+            </div>
+          </div>
+
+          <div className="ses-charts-card">
+            <SesionesCharts data={data} />
+          </div>
+        </details>
+      )}
+
+      {/* Filtros + Toolbar */}
       <div className="tutor-card ses-filters-card">
-        <SesionesFilters
-          tipo={tipo}
-          setTipo={setTipo}
-          grupos={grupos}
-          grupoId={grupoId}
-          setGrupoId={setGrupoId}
-          estudiantes={estudiantes}
-          estudianteId={estudianteId}
-          setEstudiante={setEstudiante}
-        />
-      </div>
-
-      {/* Stat Cards */}
-      <div className="ses-stats-grid">
-        <div className="ses-stat-card ses-stat-card--orange">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Actividades detectadas</span>
-            <span className="ses-stat-value">{summary.actividades}</span>
-          </div>
-          <span className="ses-stat-icon">⏱️</span>
+        <div className="ses-filters-row">
+          <SesionesFilters
+            tipo={tipo}
+            setTipo={setTipo}
+            grupos={grupos}
+            grupoId={grupoId}
+            setGrupoId={setGrupoId}
+            estudiantes={estudiantes}
+            estudianteId={estudianteId}
+            setEstudiante={setEstudiante}
+          />
         </div>
 
-        <div className="ses-stat-card ses-stat-card--purple">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Sesiones / niveles</span>
-            <span className="ses-stat-value">{summary.sesiones}</span>
+        {data.length > 0 && (
+          <div className="ses-toolbar">
+            <div className="ses-search">
+              <Search size={15} className="ses-search__icon" />
+              <input
+                className="ses-search__input"
+                type="text"
+                placeholder="Buscar actividad, minijuego..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button className="ses-search__clear" onClick={() => setSearchQuery("")}>
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            <div className="ses-filters">
+              {["todas", "completado", "abandonado"].map((f) => (
+                <button
+                  key={f}
+                  className={`ses-filter-pill${statusFilter === f ? " is-active" : ""}`}
+                  onClick={() => setStatusFilter(f)}
+                >
+                  {f === "todas" ? "Todas" : f === "completado" ? "Completadas" : "Abandonadas"}
+                </button>
+              ))}
+            </div>
+            <div className="ses-date-filter">
+              <Calendar size={14} className="ses-date-icon" />
+              <input
+                type="date"
+                className="ses-date-input"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                title="Fecha desde"
+              />
+              <span className="ses-date-sep">—</span>
+              <input
+                type="date"
+                className="ses-date-input"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                title="Fecha hasta"
+              />
+              {(dateFrom || dateTo) && (
+                <button className="ses-date-clear" onClick={() => { setDateFrom(""); setDateTo(""); }}>
+                  <X size={14} />
+                </button>
+              )}
+            </div>
           </div>
-          <span className="ses-stat-icon">🏆</span>
-        </div>
-
-        <div className="ses-stat-card ses-stat-card--green">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Aciertos</span>
-            <span className="ses-stat-value">{summary.aciertos}</span>
-          </div>
-          <span className="ses-stat-icon">⚡</span>
-        </div>
-
-        <div className="ses-stat-card ses-stat-card--red">
-          <div className="ses-stat-info">
-            <span className="ses-stat-label">Errores</span>
-            <span className="ses-stat-value">{summary.errores}</span>
-          </div>
-          <span className="ses-stat-icon">⚠️</span>
-        </div>
+        )}
       </div>
 
       {/* Estado: cargando */}
@@ -213,61 +335,54 @@ export default function SesionesPage() {
         </div>
       ) : (
         <>
-          {/* Charts */}
-          <div className="tutor-card ses-charts-card">
-            <SesionesCharts data={data} />
-          </div>
-
-          {/* Tabla + Detalle */}
-          <div className="ses-bottom-grid">
-
-            {/* Historial */}
+          {/* Tabla */}
             <div className="tutor-card">
               <div className="ses-section-title">
                 <History size={16} />
                 Historial de sesiones
               </div>
-              <p className="ses-history-note">
-                Cada fila es una sesión hija. Las que comparten la misma actividad muestran el mismo bloque de contexto pedagógico.
-              </p>
+
               <SesionesTable
-                data={data}
+                data={filteredData}
                 onSelectSession={handleSelectSession}
                 selectedSessionId={selectedSession?.id}
                 showStudentColumn={tipo === "grupo"}
               />
             </div>
 
-            {/* Detalle de eventos */}
-            <div className="tutor-card ses-detalle-card">
-              <div className="ses-section-title">
-                <MousePointerClick size={16} />
-                Detalle de eventos
-              </div>
-
-              {!selectedSession ? (
-                <p className="ses-detalle-empty">
-                  Selecciona una sesión de la tabla para ver sus eventos.
-                </p>
-              ) : isLoadingEventos ? (
-                <div className="tutor-loading">
-                  <span>Cargando eventos...</span>
-                </div>
-              ) : !eventosSesion.length ? (
-                <p className="ses-detalle-empty">
-                  Esta sesión no tiene eventos registrados.
-                </p>
-              ) : (
-                <div className="ses-eventos-list">
-                  <div className="ses-activity-summary">
-                    <div className="ses-cell-primary">
-                      {selectedSession.actividad_titulo || "Actividad seleccionada"}
-                    </div>
-                    <div className="ses-cell-secondary">
-                      {selectedSession.actividad_detalle || "Sin detalle de actividad"}
-                    </div>
+          {/* Modal de detalle de eventos */}
+          <RoleModal
+            open={modalOpen}
+            onClose={closeModal}
+            eyebrow="Detalle de sesión"
+            title={selectedSession?.actividad_titulo || "Sesión"}
+            width={560}
+            actions={
+              <button type="button" className="ses-modal-close-btn" onClick={closeModal}>
+                Cerrar
+              </button>
+            }
+          >
+            {selectedSession && (
+              <div className="ses-eventos-list">
+                <div className="ses-activity-summary">
+                  <div className="ses-cell-primary">
+                    {selectedSession.actividad_titulo || "Actividad seleccionada"}
                   </div>
-                  {eventosSesion.map((evento) => (
+                  <div className="ses-cell-secondary">
+                    {selectedSession.actividad_detalle || "Sin detalle de actividad"}
+                  </div>
+                </div>
+                {isLoadingEventos ? (
+                  <div className="tutor-loading">
+                    <span>Cargando eventos...</span>
+                  </div>
+                ) : !eventosSesion.length ? (
+                  <p className="ses-detalle-empty">
+                    Esta sesión no tiene eventos registrados.
+                  </p>
+                ) : (
+                  eventosSesion.map((evento) => (
                     <div key={evento.id} className="ses-evento-item">
                       <div className="ses-evento-header">
                         <strong>{evento.tipo_evento}</strong>
@@ -283,12 +398,12 @@ export default function SesionesPage() {
                         </span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                  ))
+                )}
+              </div>
+            )}
+          </RoleModal>
 
-          </div>
         </>
       )}
     </div>

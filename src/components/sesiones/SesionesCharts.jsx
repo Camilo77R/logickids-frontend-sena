@@ -22,7 +22,7 @@ export default function SesionesCharts({ data }) {
     datasets: [
       {
         data: [totalAciertos, totalErrores],
-        backgroundColor: ["#10b981", "#ef4444"],
+        backgroundColor: ["#1D9E75", "#E24B4A"],
         borderWidth: 0,
         hoverOffset: 4,
       },
@@ -50,7 +50,7 @@ export default function SesionesCharts({ data }) {
       {
         label: "Puntaje",
         data: data.map((s) => s.puntaje),
-        backgroundColor: "rgba(139, 92, 246, 0.75)",
+        backgroundColor: data.map((_, i) => i % 2 === 0 ? "#534AB7" : "#AFA9EC"),
         borderRadius: 6,
         borderSkipped: false,
       },

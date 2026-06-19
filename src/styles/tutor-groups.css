@@ -1,10 +1,10 @@
 .tutor-page-container,
 .tg-session-modal {
-  --tg-p: #8E35D5;
-  --tg-pd: #2B173D;
+  --tg-p: var(--lk-brand);
+  --tg-pd: var(--lk-brand-dark);
   --tg-pbg: #F4EAFE;
-  --tg-y: #f9a825;
-  --tg-yd: #e8920a;
+  --tg-y: var(--lk-accent);
+  --tg-yd: var(--lk-accent-dark);
   --tg-ybg: #fff8e1;
   --tg-surface: #ffffff;
   --tg-border: #e8e2f0;
@@ -12,7 +12,11 @@
   --tg-soft: #5e5a72;
   --tg-muted: #9896a8;
   color: var(--tg-text);
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
+}
+
+.tutor-page-header {
+  margin-bottom: 12px !important;
 }
 
 .tutor-page-container .tutor-page-title,
@@ -72,6 +76,16 @@
   margin-bottom: 18px;
 }
 
+.tutor-card > .tg-section-head {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--tg-surface, #fff);
+  padding: 8px 0;
+  margin: -8px 0 8px;
+  border-bottom: 1px solid var(--tg-border);
+}
+
 .tg-section-head__eyebrow {
   display: inline-block;
   margin-bottom: 6px;
@@ -90,10 +104,16 @@
 
 .tg-group-item {
   border: 1.5px solid var(--tg-border);
-  border-radius: 18px;
+  border-radius: var(--lk-radius-xl);
   background: var(--tg-surface);
   font-family: inherit;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+.tov-module-card:hover,
+.tg-group-item:hover:not(.is-selected) {
+  border-color: #AFA9EC;
+  box-shadow: 0 4px 16px rgba(83, 74, 183, 0.1);
+  transform: translateY(-1px);
 }
 
 .tg-group-item.is-selected {
@@ -125,7 +145,7 @@
   color: var(--tg-text);
   font-size: 1.02rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
   line-height: 1.3;
 }
 
@@ -190,15 +210,22 @@
 .tg-link-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 0;
+  padding: 10px 16px;
   background: transparent;
-  border: 0;
-  color: var(--tg-p);
+  border: 1.5px solid var(--tg-border);
+  border-radius: var(--lk-radius-icon);
+  color: var(--tg-soft);
   font-family: inherit;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.tg-link-btn:hover {
+  border-color: var(--tg-p);
+  color: var(--tg-p);
 }
 
 .tg-primary-btn {
@@ -209,9 +236,9 @@
   min-height: 42px;
   padding: 10px 16px;
   border: 1px solid transparent;
-  border-radius: 12px;
-  background: var(--tg-y);
-  color: #2d1600;
+  border-radius: var(--lk-radius-sm);
+  background: var(--tg-p, #534AB7);
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
   font-family: inherit;
@@ -221,7 +248,7 @@
 }
 
 .tg-primary-btn:hover:not(:disabled) {
-  background: var(--tg-yd);
+  background: var(--tg-pd, #3C3489);
 }
 
 .tg-primary-btn.is-secondary {
@@ -232,9 +259,33 @@
 }
 
 .tg-primary-btn.is-secondary:hover:not(:disabled) {
-  background: #edd7eb;
+  background: #ddd5f0;
   border-color: transparent;
   color: var(--tg-pd);
+}
+
+.tg-primary-btn--danger {
+  background: #DC2626;
+  color: #fff;
+  border-color: transparent;
+}
+.tg-primary-btn--danger:hover:not(:disabled) {
+  background: #B91C1C;
+}
+
+.tg-primary-btn--ghost {
+  background: transparent;
+  color: var(--tg-soft);
+  border: 1.5px solid #d1cdd9;
+  border-radius: var(--lk-radius-sm);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.tg-primary-btn--ghost:hover:not(:disabled) {
+  border-color: var(--tg-p);
+  color: var(--tg-p);
+  background: transparent;
 }
 
 .tg-primary-btn:disabled {
@@ -264,7 +315,7 @@
   color: var(--tg-text);
   font-size: 1.08rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
   line-height: 1.3;
 }
 
@@ -331,7 +382,7 @@
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.3;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-detail-metric__helper {
@@ -368,7 +419,7 @@
   color: var(--tg-text);
   font-size: 15px;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-students-panel__head span {
@@ -394,7 +445,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px;
-  border-radius: 14px;
+  border-radius: var(--lk-radius-md);
   background: #fbf8fc;
 }
 
@@ -410,7 +461,7 @@
   color: var(--tg-text);
   font-size: 14px;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-student-row__identity p {
@@ -422,7 +473,7 @@
 .tg-student-row__avatar {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-icon);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -442,11 +493,11 @@
 .tg-session-modal .modal-content {
   overflow: hidden;
   border: 1.5px solid var(--tg-border);
-  border-radius: 1.6rem;
+  border-radius: var(--lk-radius-lg);
   background: var(--tg-surface) !important;
   opacity: 1;
   box-shadow: 0 18px 48px rgba(131, 68, 127, 0.16);
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal .modal-dialog {
@@ -518,7 +569,7 @@
   color: var(--tg-text);
   font-size: 0.86rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal__mode-list {
@@ -563,7 +614,7 @@
   color: var(--tg-text);
   font-size: 0.92rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal__mode-copy {
@@ -633,7 +684,7 @@
   color: var(--tg-soft);
   font-size: 0.74rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
   cursor: pointer;
   transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
 }
@@ -672,7 +723,7 @@
   color: var(--tg-text);
   font-size: 0.98rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal__preview-description {
@@ -765,7 +816,7 @@
   color: var(--tg-text);
   font-size: 0.9rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal__route-block-copy {
@@ -810,7 +861,7 @@
   color: var(--tg-text);
   font-size: 0.92rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal__step-copy,
@@ -825,7 +876,7 @@
   color: var(--tg-pd);
   font-size: 0.8rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal__ghost-btn:hover:not(:disabled) {
@@ -861,7 +912,7 @@
   border-radius: 999px;
   font-size: 0.84rem;
   font-weight: 700;
-  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  font-family: var(--lk-font);
 }
 
 .tg-session-modal__footer-btn--secondary {
@@ -885,6 +936,17 @@
   border-color: var(--tg-yd);
   background: var(--tg-yd);
   color: #2d1600;
+}
+
+.tg-session-modal__footer-btn--primary:disabled {
+  --bs-btn-disabled-bg: var(--tg-y);
+  --bs-btn-disabled-border-color: var(--tg-y);
+  --bs-btn-disabled-color: #2d1600;
+  background-color: var(--tg-y);
+  border-color: var(--tg-y);
+  color: #2d1600;
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 @media (max-width: 1100px) {
@@ -932,4 +994,163 @@
   .tg-students-panel__head span {
     align-self: flex-start;
   }
+}
+
+/* ─── TOOLBAR + SEARCH + FILTERS ─── */
+.tg-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.tg-search {
+  position: relative;
+  width: 200px;
+  flex-shrink: 0;
+}
+.tg-search__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tg-muted);
+  pointer-events: none;
+}
+.tg-search__input {
+  width: 100%;
+  height: 36px;
+  padding: 0 32px 0 34px;
+  border: 1.5px solid var(--tg-border);
+  border-radius: 999px;
+  background: #f7f5fa;
+  color: var(--tg-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.tg-search__input::placeholder {
+  color: var(--tg-muted);
+  font-weight: 400;
+}
+.tg-search__input:focus {
+  border-color: var(--tg-p);
+  box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
+  background: var(--tg-surface);
+}
+.tg-search__clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: var(--tg-border);
+  color: var(--tg-soft);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.tg-search__clear:hover {
+  background: var(--tg-p);
+  color: #fff;
+}
+
+.tg-filters {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.tg-filter-pill {
+  padding: 5px 14px;
+  border: 1.5px solid var(--tg-border);
+  border-radius: 999px;
+  background: #f7f5fa;
+  color: var(--tg-soft);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.tg-filter-pill:hover {
+  border-color: var(--tg-p);
+  color: var(--tg-p);
+  background: var(--tg-pbg);
+}
+.tg-filter-pill.is-active {
+  background: var(--tg-p);
+  border-color: var(--tg-p);
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .tg-toolbar {
+    flex-wrap: wrap;
+  }
+  .tg-search {
+    width: 100%;
+  }
+  .tg-filters {
+    margin-left: auto;
+  }
+}
+
+/* ─── ROLE MODAL (inline for this page) ─── */
+.lk-role-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(30, 27, 46, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.lk-role-modal {
+  width: min(560px, 100%);
+  background: var(--tg-surface, #fff);
+  border-radius: var(--lk-radius-lg, 1.5rem);
+  border: 1.5px solid var(--tg-border, #e8e2f0);
+  box-shadow: var(--lk-shadow-panel, 0 20px 52px rgba(0,0,0,0.08));
+  overflow: hidden;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+}
+.lk-role-modal--large { width: min(640px, 100%); }
+.lk-role-modal__header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 1.5rem 1.75rem 0;
+  gap: 1rem;
+}
+.lk-role-modal__eyebrow {
+  display: block;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--tg-p, #534AB7);
+  margin-bottom: 0.25rem;
+}
+.lk-role-modal__title {
+  font-family: "Fredoka", system-ui, sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--tg-text, #1c1730);
+  margin: 0;
+}
+.lk-role-modal__content {
+  padding: 1.25rem 1.75rem 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+.lk-role-modal__actions {
+  padding: 1rem 1.75rem;
+  border-top: 1px solid var(--tg-border, #e8e2f0);
+  display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem;
 }
