@@ -1012,6 +1012,7 @@
 /* --- Metrics collapsible section --- */
 .ses-metrics-section {
   margin-top: 1.5rem;
+  margin-bottom: 1rem;
   border-radius: var(--lk-radius-lg);
   border: 1.5px solid var(--lk-border);
   background: var(--lk-surface);

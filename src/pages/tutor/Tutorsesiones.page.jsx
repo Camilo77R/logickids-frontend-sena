@@ -205,6 +205,53 @@ export default function SesionesPage() {
         </div>
       )}
 
+      {/* Sección de métricas desplegable */}
+      {data.length > 0 && (
+        <details className="ses-metrics-section">
+          <summary>
+            <BarChart3 size={18} />
+            <span>Métricas de sesiones</span>
+          </summary>
+          <div className="ses-stats-grid">
+            <div className="ses-stat-card ses-stat-card--orange">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Actividades detectadas</span>
+                <span className="ses-stat-value">{summary.actividades}</span>
+              </div>
+              <span className="ses-stat-icon"><Clock size={50} /></span>
+            </div>
+
+            <div className="ses-stat-card ses-stat-card--purple">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Sesiones / niveles</span>
+                <span className="ses-stat-value">{summary.sesiones}</span>
+              </div>
+              <span className="ses-stat-icon"><Layers size={50} /></span>
+            </div>
+
+            <div className="ses-stat-card ses-stat-card--green">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Aciertos</span>
+                <span className="ses-stat-value">{summary.aciertos}</span>
+              </div>
+              <span className="ses-stat-icon"><CheckCircle size={50} /></span>
+            </div>
+
+            <div className="ses-stat-card ses-stat-card--red">
+              <div className="ses-stat-info">
+                <span className="ses-stat-label">Errores</span>
+                <span className="ses-stat-value">{summary.errores}</span>
+              </div>
+              <span className="ses-stat-icon"><AlertCircle size={50} /></span>
+            </div>
+          </div>
+
+          <div className="ses-charts-card">
+            <SesionesCharts data={data} />
+          </div>
+        </details>
+      )}
+
       {/* Filtros + Toolbar */}
       <div className="tutor-card ses-filters-card">
         <div className="ses-filters-row">
@@ -357,52 +404,6 @@ export default function SesionesPage() {
             )}
           </RoleModal>
 
-          {/* Sección de métricas desplegable */}
-          {data.length > 0 && (
-            <details className="ses-metrics-section">
-              <summary>
-                <BarChart3 size={18} />
-                <span>Métricas de sesiones</span>
-              </summary>
-              <div className="ses-stats-grid">
-                <div className="ses-stat-card ses-stat-card--orange">
-                  <div className="ses-stat-info">
-                    <span className="ses-stat-label">Actividades detectadas</span>
-                    <span className="ses-stat-value">{summary.actividades}</span>
-                  </div>
-                  <span className="ses-stat-icon"><Clock size={50} /></span>
-                </div>
-
-                <div className="ses-stat-card ses-stat-card--purple">
-                  <div className="ses-stat-info">
-                    <span className="ses-stat-label">Sesiones / niveles</span>
-                    <span className="ses-stat-value">{summary.sesiones}</span>
-                  </div>
-                  <span className="ses-stat-icon"><Layers size={50} /></span>
-                </div>
-
-                <div className="ses-stat-card ses-stat-card--green">
-                  <div className="ses-stat-info">
-                    <span className="ses-stat-label">Aciertos</span>
-                    <span className="ses-stat-value">{summary.aciertos}</span>
-                  </div>
-                  <span className="ses-stat-icon"><CheckCircle size={50} /></span>
-                </div>
-
-                <div className="ses-stat-card ses-stat-card--red">
-                  <div className="ses-stat-info">
-                    <span className="ses-stat-label">Errores</span>
-                    <span className="ses-stat-value">{summary.errores}</span>
-                  </div>
-                  <span className="ses-stat-icon"><AlertCircle size={50} /></span>
-                </div>
-              </div>
-
-              <div className="ses-charts-card">
-                <SesionesCharts data={data} />
-              </div>
-            </details>
-          )}
         </>
       )}
     </div>
