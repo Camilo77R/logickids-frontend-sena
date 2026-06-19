@@ -549,8 +549,9 @@
   border-radius: var(--lk-radius-sm, 1rem);
   background: transparent;
   color: var(--tov-soft); font-size: 0.85rem; font-weight: 600;
-  border: 1.5px solid var(--tov-border); cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  border: 1.5px solid var(--lk-border-strong);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
   font-family: var(--lk-font);
 }
-.tov-modal-close:hover { border-color: var(--tov-accent); color: var(--tov-accent); }
+.tov-modal-close:hover { border-color: var(--lk-brand); color: var(--lk-brand); background: var(--lk-brand-soft); }
