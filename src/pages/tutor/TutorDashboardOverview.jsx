@@ -6,7 +6,7 @@
  * - usa el contrato nuevo de sesiones de clase (`single` / `path`)
  * - relee el estado desde backend después de cada cambio importante
  */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
@@ -33,6 +33,8 @@ import tutorGroupsService from "../../services/tutorGroupsService";
 import estudianteService from "../../services/estudianteService";
 import estadisticasService from "../../services/estadisticasService";
 import recomendacionesService from "../../services/recomendacionesService";
+import rankingService from "../../services/rankingService";
+import realtimeService from "../../services/realtimeService";
 import {
   getSessionHeadline,
   getSessionOpenSuccessMessage,
@@ -97,22 +99,23 @@ function KpiCard({ value, label, sublabel, Icon, variant }) {
 }
 
 function StudentRow({ student, rank }) {
-  const active = isSessionActive(student.sesion_activa);
+  const active = ["pendiente", "en_progreso"].includes(student.participante_estado);
   const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
 
   return (
     <div className={`tov-student ${active ? "tov-student--live" : ""}`}>
-      <span className="tov-student__rank">#{rank}</span>
+      <span className="tov-student__rank">#{student.posicion ?? rank}</span>
       <div className="tov-student__avatar" style={{ background: avatarColor(rank - 1) }}>
         {initials}
       </div>
       <div className="tov-student__info">
         <span className="tov-student__name">{student.nombre}</span>
         <span className="tov-student__meta">
-          {active ? "● Jugando ahora" : "Sin sesión activa"} · Edad {student.edad ?? "—"}
+          {active ? "● Participando ahora" : "Resultado oficial"} · {student.puntaje ?? student.valor ?? 0} pts ·{" "}
+          {student.aciertos ?? 0} aciertos
         </span>
       </div>
-      {active && <span className="tov-student__live">Live</span>}
+      <span className="tov-student__live">{student.valor ?? student.puntaje ?? 0} pts</span>
     </div>
   );
 }
@@ -175,7 +178,7 @@ function SkillBar({ habilidad, precision }) {
 }
 
 export default function TutorDashboardOverview() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   const firstName = user?.nombre?.split(" ")[0] || "Profe";
 
@@ -185,9 +188,11 @@ export default function TutorDashboardOverview() {
   const [routes, setRoutes] = useState([]);
   const [skills, setSkills] = useState([]);
   const [recs, setRecs] = useState([]);
+  const [ranking, setRanking] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState(null);
   const [toast, setToast] = useState(null);
+  const loadOverviewRef = useRef(null);
   const [sessionModal, setSessionModal] = useState({
     open: false,
     group: null,
@@ -222,6 +227,7 @@ export default function TutorDashboardOverview() {
       if (!focusGroup?.id) {
         setSkills([]);
         setRecs([]);
+        setRanking(null);
         return;
       }
 
@@ -229,9 +235,13 @@ export default function TutorDashboardOverview() {
         estadisticasService.porGrupo(focusGroup.id),
         recomendacionesService.porGrupo(focusGroup.id),
       ]);
+      const rankingResult = await Promise.allSettled([
+        rankingService.obtenerRankingGrupo(focusGroup.id),
+      ]);
 
       setSkills(skillsResult.status === "fulfilled" ? skillsResult.value ?? [] : []);
       setRecs(recsResult.status === "fulfilled" ? recsResult.value ?? [] : []);
+      setRanking(rankingResult[0]?.status === "fulfilled" ? rankingResult[0].value ?? null : null);
     } catch (error) {
       flash("err", error?.message ?? "No fue posible cargar el panel del tutor.");
     } finally {
@@ -239,9 +249,30 @@ export default function TutorDashboardOverview() {
     }
   };
 
+  loadOverviewRef.current = loadOverview;
+
   useEffect(() => {
     loadOverview();
   }, []);
+
+  useEffect(() => {
+    if (!user?.id) {
+      return undefined;
+    }
+
+    return realtimeService.subscribe({
+      token,
+      onClassSessionChanged: () => {
+        void loadOverviewRef.current?.();
+      },
+      onRankingUpdated: () => {
+        void loadOverviewRef.current?.();
+      },
+      onStudentAccessChanged: () => {
+        void loadOverviewRef.current?.();
+      },
+    });
+  }, [token, user?.id]);
 
   const totalGroups = groups.length;
   const activeGroups = groups.filter((group) => isSessionActive(group.sesion_activa)).length;
@@ -254,15 +285,7 @@ export default function TutorDashboardOverview() {
     [groups]
   );
 
-  const sortedStudents = useMemo(
-    () =>
-      [...students].sort((a, b) => {
-        const aLive = isSessionActive(a.sesion_activa) ? 0 : 1;
-        const bLive = isSessionActive(b.sesion_activa) ? 0 : 1;
-        return aLive - bLive || a.nombre.localeCompare(b.nombre);
-      }),
-    [students]
-  );
+  const sortedStudents = useMemo(() => ranking?.ranking ?? [], [ranking]);
 
   const closeSessionModal = () => {
     setSessionModal({
@@ -527,9 +550,23 @@ export default function TutorDashboardOverview() {
             ) : (
               <div className="tov-students">
                 {sortedStudents.slice(0, 8).map((student, index) => (
-                  <StudentRow key={student.id} student={student} rank={index + 1} />
+                  <StudentRow
+                    key={student.estudiante_id ?? student.id ?? `${student.nombre}-${index}`}
+                    student={student}
+                    rank={index + 1}
+                  />
                 ))}
-                {sortedStudents.length > 8 && <p className="tov-more">+{sortedStudents.length - 8} estudiantes m&aacute;s</p>}
+                {sortedStudents.length === 0 && (
+                  <p className="tov-more">Todavía no hay resultados oficiales para esta sesión de clase.</p>
+                )}
+                {sortedStudents.length > 8 && (
+                  <p className="tov-more">+{sortedStudents.length - 8} estudiantes más</p>
+                )}
+                {sortedStudents.length > 0 && (
+                  <p className="tov-more">
+                    Ranking oficial del backend · métrica: {ranking?.metrica?.label ?? "puntaje oficial"}
+                  </p>
+                )}
               </div>
             )
           )}

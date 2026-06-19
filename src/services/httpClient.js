@@ -96,4 +96,6 @@ export const request = async (path, { method = "GET", body, auth = true } = {}) 
   return payload;
 };
 
+export const resolveApiBaseUrl = () => import.meta.env.VITE_API_URL || DEFAULT_API_URL;
+
 export { HttpError };
