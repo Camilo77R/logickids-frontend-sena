@@ -4,7 +4,7 @@
   --tg-pd: var(--lk-brand-dark);
   --tg-pbg: #F4EAFE;
   --tg-y: var(--lk-accent);
-  --tg-yd: #e8920a;
+  --tg-yd: var(--lk-accent-dark);
   --tg-ybg: #fff8e1;
   --tg-surface: #ffffff;
   --tg-border: #e8e2f0;
@@ -215,7 +215,7 @@
   padding: 10px 16px;
   background: transparent;
   border: 1.5px solid var(--tg-border);
-  border-radius: 12px;
+  border-radius: var(--lk-radius-icon);
   color: var(--tg-soft);
   font-family: inherit;
   font-size: 13px;
@@ -236,7 +236,7 @@
   min-height: 42px;
   padding: 10px 16px;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-sm);
   background: var(--tg-p, #534AB7);
   color: #fff;
   font-size: 14px;
@@ -277,7 +277,7 @@
   background: transparent;
   color: var(--tg-soft);
   border: 1.5px solid #d1cdd9;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-sm);
   padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
@@ -473,7 +473,7 @@
 .tg-student-row__avatar {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-icon);
   display: flex;
   align-items: center;
   justify-content: center;

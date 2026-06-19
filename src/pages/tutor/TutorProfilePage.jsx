@@ -214,9 +214,9 @@ export default function TutorProfilePage() {
                       disabled={!isEditing}
                       required
                       style={{
-                        padding: '10px 16px',
-                        borderRadius: '12px',
-                        border: '1px solid #e0e0e0',
+                        padding: '8px 16px',
+                        borderRadius: 'var(--lk-radius-icon)',
+                        border: '1px solid var(--lk-border)',
                         backgroundColor: isEditing ? '#fff' : '#f8f9fa'
                       }}
                     />
@@ -229,7 +229,7 @@ export default function TutorProfilePage() {
                           right: '12px',
                           top: '50%',
                           transform: 'translateY(-50%)',
-                          color: '#667eea',
+                          color: 'var(--lk-brand)',
                           textDecoration: 'none'
                         }}
                       >
@@ -280,7 +280,7 @@ export default function TutorProfilePage() {
                     <Button variant="outline-secondary" onClick={handleCancel} className="px-4 py-2 rounded-pill">
                       <X size={16} className="me-1" /> Cancelar
                     </Button>
-                    <Button variant="primary" type="submit" disabled={saving} className="px-4 py-2 rounded-pill" style={{ background: '#667eea', border: 'none' }}>
+                    <Button variant="primary" type="submit" disabled={saving} className="px-4 py-2 rounded-pill" style={{ background: 'var(--lk-brand)', border: 'none' }}>
                       <Save size={16} className="me-1" /> {saving ? 'Guardando...' : 'Guardar cambios'}
                     </Button>
                   </div>
@@ -404,7 +404,7 @@ export default function TutorProfilePage() {
               <Button variant="secondary" onClick={() => setShowPasswordModal(false)}>
                 Cancelar
               </Button>
-              <Button variant="primary" type="submit" disabled={passwordSaving} style={{ background: '#667eea', border: 'none' }}>
+              <Button variant="primary" type="submit" disabled={passwordSaving} style={{ background: 'var(--lk-brand)', border: 'none' }}>
                 {passwordSaving ? 'Actualizando...' : 'Actualizar contraseña'}
               </Button>
             </div>

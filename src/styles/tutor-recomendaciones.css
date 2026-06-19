@@ -444,7 +444,7 @@
   width: 34px;
   height: 34px;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--lk-radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
