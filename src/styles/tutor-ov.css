@@ -6,11 +6,11 @@
   --tov-green: #0F6E56;
   --tov-green-soft: #E1F5EE;
   --tov-bg: #f4f2f8;
-  --tov-bg-card: #E4E4E9;
+  --tov-bg-card: #EBE7F0;
   --tov-surface: #FFFFFF;
   --tov-text: #1c1730;
   --tov-soft: #5e5a72;
-  --tov-muted: #9896a8;
+  --tov-muted: #7A7A8A;
   --tov-border: #e8e2f0;
 }
 
@@ -242,7 +242,7 @@
 .tov-spotlight__tag {
   font-size: 0.63rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--tov-accent);
+  color: var(--lk-accent);
 }
 .tov-spotlight__game {
   font-family: "Fredoka", system-ui, sans-serif;
