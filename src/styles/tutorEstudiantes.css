@@ -1582,7 +1582,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 }
 
 .lk-students-hero {
-  background: #FCD34D !important;
+  background: var(--lk-yellow) !important;
 }
 
 .lk-tutor-profile-placeholder {

@@ -42,8 +42,8 @@
 .tov-hero {
   display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem;
   padding: 1.25rem 1.5rem; border-radius: 1.8rem;
-  background: #FCD34D; border: none; position: relative;
-  box-shadow: 0 4px 16px rgba(252, 211, 77, 0.3), 0 1px 3px rgba(0,0,0,0.06);
+  background: var(--lk-yellow); border: none; position: relative;
+  box-shadow: 0 4px 16px rgba(247, 223, 70, 0.3), 0 1px 3px rgba(0,0,0,0.06);
   border-left: 4px solid var(--lk-brand);
 }
 .tov-hero__h1 {

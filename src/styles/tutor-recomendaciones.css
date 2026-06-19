@@ -11,7 +11,7 @@
   gap: 1.25rem;
   padding: 1.6rem;
   border-radius: var(--lk-radius-2xl);
-  background: #FCD34D;
+  background: var(--lk-yellow);
   border: 1px solid var(--lk-border);
   box-shadow: var(--lk-shadow-card);
   overflow: hidden;
