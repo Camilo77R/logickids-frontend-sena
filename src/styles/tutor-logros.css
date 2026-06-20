@@ -478,7 +478,7 @@
   height: 82px;
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1200px) {
   .lk-achievements-topbar,
   .lk-achievements-layout,
   .lk-achievements-banner {
@@ -490,7 +490,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .lk-achievements-page {
     padding: 0.9rem;
   }

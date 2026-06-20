@@ -311,7 +311,7 @@
   font-weight: 700;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .lk-stats-page {
     padding-inline: 0;
   }

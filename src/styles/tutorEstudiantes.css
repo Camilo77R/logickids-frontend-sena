@@ -355,7 +355,7 @@
 }
 
 .lk-students-table {
-  min-width: 800px;
+  min-width: 600px;
   margin: 0;
   border-collapse: separate;
   border-spacing: 0;
@@ -609,6 +609,21 @@
   }
 }
 
+@media (max-width: 992px) {
+  .lk-table-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .lk-table-filters {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .lk-filter-select {
+    width: min(100%, 220px);
+  }
+}
+
 /* Estilos mejorados para el Modal del formulario de estudiantes */
 .lk-students-page .modal-content {
   border: 1px solid var(--students-border);
@@ -780,6 +795,33 @@
   .lk-table-footer {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  body:has(.lk-students-page) .tutor-main-content {
+    padding: 16px !important;
+  }
+
+  .lk-students-page {
+    padding: 0;
+  }
+
+  .lk-students-hero {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .lk-students-hero-image {
+    display: none;
+  }
+
+  .lk-tutor-profile-placeholder {
+    width: 76px;
+    height: 72px;
+  }
+
+  body:has(.lk-students-page) .lk-tutor-content {
+    overflow-y: auto;
+    padding: 1rem;
   }
 }
 
@@ -996,33 +1038,20 @@ body:has(.lk-students-page) .tutor-main-content {
   color: var(--students-pink-dark);
 }
 
-@media (max-width: 992px) {
-  .lk-table-toolbar {
-    grid-template-columns: 1fr;
-  }
-
-  .lk-table-filters {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .lk-filter-select {
-    width: min(100%, 220px);
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 576px) {
   body:has(.lk-students-page) .tutor-main-content {
-    padding: 16px !important;
+    padding: 12px !important;
   }
 
   .lk-students-page {
-    padding: 0;
+    min-height: auto;
+    padding: 12px;
   }
 
   .lk-students-hero {
+    min-height: auto;
     grid-template-columns: 1fr;
-    padding: 18px;
+    padding: 14px;
   }
 
   .lk-students-hero-image {
@@ -1186,10 +1215,6 @@ body:has(.lk-students-page) .tutor-main-content {
   white-space: nowrap;
 }
 
-.lk-students-table {
-  min-width: 880px;
-}
-
 .lk-students-table thead th {
   padding: 9px 12px;
   background: #faf9fe;
@@ -1263,28 +1288,6 @@ body:has(.lk-students-page) .tutor-main-content {
   height: 24px;
   border-radius: 6px !important;
   font-size: 0.68rem;
-}
-
-@media (max-width: 768px) {
-  body:has(.lk-students-page) .tutor-main-content {
-    padding: 12px !important;
-  }
-
-  .lk-students-page {
-    min-height: auto;
-    padding: 12px;
-  }
-
-  .lk-students-hero {
-    min-height: auto;
-    grid-template-columns: 1fr 84px;
-    padding: 14px;
-  }
-
-  .lk-tutor-profile-placeholder {
-    width: 76px;
-    height: 72px;
-  }
 }
 
 /* Override definitivo: este bloque va al final porque el archivo tenia reglas duplicadas. */
@@ -1554,21 +1557,6 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   background: rgba(142, 53, 213, 0.08) !important;
   color: var(--students-pink-dark) !important;
   font-weight: 700 !important;
-}
-
-@media (max-width: 768px) {
-  body:has(.lk-students-page) .lk-tutor-content {
-    overflow-y: auto !important;
-    padding: 1rem !important;
-  }
-
-  .lk-students-hero {
-    grid-template-columns: 1fr !important;
-  }
-
-  .lk-students-hero-image {
-    display: none !important;
-  }
 }
 
 /* Ajuste de paleta exacta del tutor: sidebar #8E35D5 y amarillo #fdb813. */

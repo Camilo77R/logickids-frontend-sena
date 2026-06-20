@@ -330,11 +330,11 @@
   .tov-hero__kpis { grid-template-columns: repeat(3, 1fr); }
   .tov-module-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 960px) {
+@media (max-width: 992px) {
   .tov-hero { flex-direction: column; align-items: flex-start; }
   .tov-hero__kpis  { width: 100%; }
 }
-@media (max-width: 640px) {
+@media (max-width: 576px) {
   .tov-hero  { padding: 1.3rem 1.2rem; }
   .tov-hero__h1    { font-size: 1.75rem; }
   .tov-hero__kpis { grid-template-columns: repeat(2, 1fr); }

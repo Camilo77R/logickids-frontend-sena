@@ -23,7 +23,7 @@
 .lk-portal-sidebar {
   height: 100%;
   border-radius: 2.4rem;
-  background: #612B88;
+  background: var(--lk-purple);
   border: none;
   display: flex;
   flex-direction: column;
@@ -105,8 +105,8 @@
 }
 
 .lk-portal-sidebar__link.active {
-  background: #F7DF46;
-  color: #612B88;
+  background: var(--lk-yellow);
+  color: var(--lk-purple);
 }
 
 .lk-portal-sidebar__link-icon {
@@ -413,8 +413,8 @@
   border-radius: 50%;
   display: inline-grid;
   place-items: center;
-  background: #F7DF46;
-  color: #612B88;
+  background: var(--lk-yellow);
+  color: var(--lk-purple);
   font-weight: 900;
   line-height: 1;
 }
@@ -449,7 +449,7 @@
   padding: 0.75rem 1.2rem 1rem;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
   .lk-portal-shell {
     grid-template-columns: 1fr;
     padding: 0;
@@ -563,16 +563,16 @@
   }
 
   .lk-portal-mobile-nav__link.active .lk-portal-mobile-nav__icon {
-    background: #F7DF46;
+    background: var(--lk-yellow);
     border-color: transparent;
-    color: #612B88;
+    color: var(--lk-purple);
   }
 
   .lk-portal-mobile-nav__link:hover .lk-portal-mobile-nav__icon,
   .lk-portal-mobile-nav__power:hover .lk-portal-mobile-nav__icon {
     transform: translateY(-1px);
     border-color: rgba(97, 43, 136, 0.18);
-    color: #612B88;
+    color: var(--lk-purple);
   }
 
   .lk-portal-shell__content {
@@ -580,7 +580,7 @@
   }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
   .lk-portal-topbar__brand {
     font-size: 1.42rem;
   }
@@ -607,5 +607,38 @@
 
   .lk-portal-mobile-nav__label {
     font-size: 0.64rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .lk-portal-topbar {
+    padding: 0.7rem;
+    gap: 0.6rem;
+  }
+
+  .lk-portal-topbar__brand {
+    font-size: 1.2rem;
+  }
+
+  .lk-portal-topbar__title {
+    font-size: 1.1rem;
+  }
+
+  .lk-portal-mobile-nav__link,
+  .lk-portal-mobile-nav__power {
+    flex: 0 0 72px;
+  }
+
+  .lk-portal-mobile-nav__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .lk-portal-mobile-nav__label {
+    font-size: 0.6rem;
+  }
+
+  .lk-portal-shell__content {
+    padding: 0.6rem 0.6rem 1rem;
   }
 }

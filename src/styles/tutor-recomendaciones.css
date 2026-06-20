@@ -457,19 +457,19 @@
   background: rgba(220, 38, 38, 0.14);
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1200px) {
   .lk-rec-hero {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 899.98px) {
+@media (max-width: 992px) {
   .lk-rec-form {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .lk-rec-page {
     padding-top: 0.75rem;
   }

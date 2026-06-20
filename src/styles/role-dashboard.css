@@ -1004,7 +1004,7 @@
   opacity: 1;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
   .lk-admin-dashboard .lk-role-dashboard__hero-logo {
     width: 100%;
   }
@@ -1015,7 +1015,7 @@
 }
 /* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1200px) {
   .lk-role-dashboard__metrics {
     grid-template-columns: 1fr 1fr;
   }
@@ -1024,7 +1024,7 @@
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .lk-role-dashboard__metrics,
   .lk-role-dashboard__grid {
     grid-template-columns: 1fr;
@@ -1244,14 +1244,14 @@
   gap: 0.75rem;
 }
 
-@media (max-width: 1023.98px) {
+@media (max-width: 992px) {
   .lk-admin-module-grid,
   .lk-admin-metrics {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 639.98px) {
+@media (max-width: 576px) {
   .lk-admin-module-grid,
   .lk-admin-metrics {
     grid-template-columns: 1fr;
