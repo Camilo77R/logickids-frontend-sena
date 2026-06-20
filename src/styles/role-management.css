@@ -256,7 +256,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 8px;
 }
 
 .lk-role-page__toolbar--stacked {
@@ -1083,6 +1083,11 @@
   .lk-role-page__select {
     flex: none;
     min-width: 100%;
+  }
+
+  .lk-role-page__filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 }
 

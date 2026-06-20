@@ -1028,6 +1028,13 @@
     grid-template-columns: 1fr;
   }
 
+  .lk-role-page__filters {
+    flex-wrap: wrap;
+    padding-bottom: 4px;
+  }
+}
+
+@media (max-width: 576px) {
   .lk-role-page__toolbar {
     flex-direction: column;
     align-items: stretch;
@@ -1039,13 +1046,6 @@
     max-width: none;
   }
 
-  .lk-role-page__filters {
-    flex-wrap: wrap;
-    padding-bottom: 4px;
-  }
-}
-
-@media (max-width: 576px) {
   .lk-role-page__date-filter {
     flex-wrap: wrap;
     gap: 0.35rem;
