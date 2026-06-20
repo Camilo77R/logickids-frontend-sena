@@ -15,8 +15,10 @@ import {
   PauseCircle,
   TrendingUp,
   Award,
+  Crown,
   Clock,
   ChevronRight,
+  ChevronDown,
   Zap,
   Lightbulb,
   BarChart2,
@@ -103,6 +105,7 @@ function KpiCard({ value, label, sublabel, Icon, variant }) {
 function StudentRow({ student, rank }) {
   const active = ["pendiente", "en_progreso"].includes(student.participante_estado);
   const initials = student.nombre?.slice(0, 2).toUpperCase() || "??";
+  const pts = student.puntaje ?? student.valor ?? 0;
 
   return (
     <div className={`tov-student ${active ? "tov-student--live" : ""}`}>
@@ -113,16 +116,72 @@ function StudentRow({ student, rank }) {
       <div className="tov-student__info">
         <span className="tov-student__name">{student.nombre}</span>
         <span className="tov-student__meta">
-          {active ? "● Participando ahora" : "Resultado oficial"} · {student.puntaje ?? student.valor ?? 0} pts ·{" "}
+          {active ? "● Participando ahora" : "Resultado oficial"} · {pts} pts ·{" "}
           {student.aciertos ?? 0} aciertos
         </span>
       </div>
-      <span className="tov-student__live">{student.valor ?? student.puntaje ?? 0} pts</span>
+      <span className="tov-student__live">{pts} pts</span>
     </div>
   );
 }
 
-function GroupCard({ group, onToggle, loading }) {
+function PodiumSpot({ student, rank }) {
+  const pts = student.puntaje ?? student.valor ?? 0;
+  const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(student.nombre || student.estudiante_id || "")}`;
+
+  return (
+    <div className={`tov-podium-spot tov-podium-spot--${rank}`}>
+      <div className="tov-podium-spot__icon">
+        {rank === 1 ? (
+          <Crown size={20} strokeWidth={2} />
+        ) : (
+          <Award size={16} strokeWidth={2} />
+        )}
+      </div>
+      <img className="tov-podium-spot__avatar" src={avatarUrl} alt={student.nombre} />
+      <span className="tov-podium-spot__name">{student.nombre}</span>
+      <span className="tov-podium-spot__label">
+        {student.posicion ?? rank}°
+      </span>
+      <span className="tov-podium-spot__pts">{pts} pts</span>
+    </div>
+  );
+}
+
+function PodiumSpotEmpty({ rank }) {
+  return (
+    <div className={`tov-podium-spot tov-podium-spot--${rank} tov-podium-spot--empty`}>
+      <div className="tov-podium-spot__icon tov-podium-spot__icon--empty">
+        {rank === 1 ? <Crown size={20} strokeWidth={2} /> : <Award size={16} strokeWidth={2} />}
+      </div>
+      <div className="tov-podium-spot__avatar tov-podium-spot__avatar--empty" />
+      <span className="tov-podium-spot__label">{rank}°</span>
+    </div>
+  );
+}
+
+function RankRow({ student, rank }) {
+  const pts = student.puntaje ?? student.valor ?? 0;
+  const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(student.nombre || student.estudiante_id || "")}`;
+  const active = student.participacion !== false;
+
+  return (
+    <div className={`tov-rank-row ${!active ? "tov-rank-row--inactive" : ""}`}>
+      <span className="tov-rank-row__num">
+        {active ? `${student.posicion ?? rank}°` : "\u2014"}
+      </span>
+      <img className="tov-rank-row__avatar" src={avatarUrl} alt={student.nombre} />
+      <span className="tov-rank-row__name">{student.nombre}</span>
+      {active ? (
+        <span className="tov-rank-row__pts">{pts} pts</span>
+      ) : (
+        <span className="tov-rank-row__badge">Sin jugar</span>
+      )}
+    </div>
+  );
+}
+
+function GroupCard({ group, onToggle, loading, readonly }) {
   const navigate = useNavigate();
   const active = isSessionActive(group.sesion_activa);
 
@@ -146,18 +205,20 @@ function GroupCard({ group, onToggle, loading }) {
       </div>
       <p className="tov-gcard__desc">{getSessionSummaryText(group)}</p>
 
-      <div className="tov-gcard__footer">
-        <button
-          className={`tov-gcard__btn ${active ? "tov-gcard__btn--close" : "tov-gcard__btn--open"}`}
-          disabled={loading === group.id}
-          onClick={() => onToggle(group)}
-        >
-          {loading === group.id ? "\u2026" : active ? "Cerrar" : "Abrir actividad"}
-        </button>
-        <button className="tov-gcard__arrow" onClick={() => navigate("/tutor/grupos")}>
-          <ChevronRight size={15} />
-        </button>
-      </div>
+      {!readonly && (
+        <div className="tov-gcard__footer">
+          <button
+            className={`tov-gcard__btn ${active ? "tov-gcard__btn--close" : "tov-gcard__btn--open"}`}
+            disabled={loading === group.id}
+            onClick={() => onToggle(group)}
+          >
+            {loading === group.id ? "\u2026" : active ? "Cerrar" : "Abrir actividad"}
+          </button>
+          <button className="tov-gcard__arrow" onClick={() => navigate("/tutor/grupos")}>
+            <ChevronRight size={15} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -191,6 +252,7 @@ export default function TutorDashboardOverview() {
   const [skills, setSkills] = useState([]);
   const [recs, setRecs] = useState([]);
   const [ranking, setRanking] = useState(null);
+  const [rankingGroupId, setRankingGroupId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState(null);
   const [toast, setToast] = useState(null);
@@ -202,10 +264,22 @@ export default function TutorDashboardOverview() {
   });
   const [activeModule, setActiveModule] = useState(null);
   const [metricsModalOpen, setMetricsModalOpen] = useState(false);
+  const [showClassif, setShowClassif] = useState(false);
+  const [showNonPart, setShowNonPart] = useState(false);
 
   const flash = (type, text) => {
     setToast({ type, text });
     window.setTimeout(() => setToast(null), 3500);
+  };
+
+  const fetchRankingForGroup = async (groupId) => {
+    if (!groupId) { setRanking(null); return; }
+    try {
+      const result = await rankingService.obtenerRankingGrupo(groupId);
+      setRanking(result ?? null);
+    } catch {
+      setRanking(null);
+    }
   };
 
   const loadOverview = async () => {
@@ -238,13 +312,15 @@ export default function TutorDashboardOverview() {
         estadisticasService.porGrupo(focusGroup.id),
         recomendacionesService.porGrupo(focusGroup.id),
       ]);
-      const rankingResult = await Promise.allSettled([
-        rankingService.obtenerRankingGrupo(focusGroup.id),
-      ]);
 
       setSkills(skillsResult.status === "fulfilled" ? skillsResult.value ?? [] : []);
       setRecs(recsResult.status === "fulfilled" ? recsResult.value ?? [] : []);
-      setRanking(rankingResult[0]?.status === "fulfilled" ? rankingResult[0].value ?? null : null);
+      if (rankingGroupId) {
+        await fetchRankingForGroup(rankingGroupId);
+      } else {
+        setRankingGroupId(focusGroup.id);
+        await fetchRankingForGroup(focusGroup.id);
+      }
     } catch (error) {
       flash("err", error?.message ?? "No fue posible cargar el panel del tutor.");
     } finally {
@@ -289,6 +365,18 @@ export default function TutorDashboardOverview() {
   );
 
   const sortedStudents = useMemo(() => ranking?.ranking ?? [], [ranking]);
+  const podiumStudents = useMemo(() => sortedStudents.filter((s) => s.participacion !== false), [sortedStudents]);
+  const listStudents = useMemo(() => {
+    const podiumIds = new Set(podiumStudents.slice(0, 3).map((s) => s.estudiante_id));
+    return sortedStudents.filter((s) => !podiumIds.has(s.estudiante_id));
+  }, [sortedStudents, podiumStudents]);
+  const listParticipants = useMemo(() => listStudents.filter((s) => s.participacion !== false), [listStudents]);
+  const listNonParticipants = useMemo(() => listStudents.filter((s) => s.participacion === false), [listStudents]);
+
+  const selectedGroup = useMemo(
+    () => groups.find((g) => g.id === rankingGroupId) ?? focusGroup ?? null,
+    [groups, rankingGroupId, focusGroup]
+  );
 
   const closeSessionModal = () => {
     setSessionModal({
@@ -525,7 +613,7 @@ export default function TutorDashboardOverview() {
         onClose={() => setActiveModule(null)}
         eyebrow={
           activeModule === "groups" ? "Gestión de clases" :
-          activeModule === "ranking" ? "Actividad de hoy" :
+          activeModule === "ranking" ? (selectedGroup?.nombre ?? "Grupo") :
           activeModule === "activity" ? "Clase destacada" :
           activeModule === "skills" ? (focusGroup?.nombre ?? "Grupo") :
           "IA · Gemini"
@@ -557,42 +645,120 @@ export default function TutorDashboardOverview() {
               </div>
             ) : (
               <div className="tov-gcards">
-                {groups.map((group) => (
-                  <GroupCard key={group.id} group={group} onToggle={handleToggle} loading={toggling} />
+                  {groups.map((group) => (
+                    <GroupCard key={group.id} group={group} onToggle={handleToggle} loading={toggling} readonly />
                 ))}
               </div>
             )
           )}
 
           {activeModule === "ranking" && (
-            sortedStudents.length === 0 ? (
-              <div className="tov-empty">
-                <Users size={24} />
-                <strong>Sin estudiantes</strong>
-                <p>No hay estudiantes registrados en tus grupos.</p>
-              </div>
-            ) : (
-              <div className="tov-students">
-                {sortedStudents.slice(0, 8).map((student, index) => (
-                  <StudentRow
-                    key={student.estudiante_id ?? student.id ?? `${student.nombre}-${index}`}
-                    student={student}
-                    rank={index + 1}
-                  />
-                ))}
-                {sortedStudents.length === 0 && (
-                  <p className="tov-more">Todavía no hay resultados oficiales para esta sesión de clase.</p>
+            <div className="tov-ranking">
+              {groups.length > 1 && (
+                <div className="tov-ranking-group-select">
+                  <label className="tov-ranking-group-select__label">Grupo:</label>
+                  <select
+                    className="tov-ranking-group-select__select"
+                    value={rankingGroupId ?? ""}
+                    onChange={(e) => {
+                      const id = Number(e.target.value);
+                      setRankingGroupId(id);
+                      setShowClassif(false);
+                      setShowNonPart(false);
+                      void fetchRankingForGroup(id);
+                    }}
+                  >
+                    {groups.map((g) => (
+                      <option key={g.id} value={g.id}>{g.nombre}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {sortedStudents.length === 0 ? (
+                <div className="tov-empty">
+                  <Users size={24} />
+                  <strong>Sin estudiantes</strong>
+                  <p>No hay estudiantes registrados en este grupo.</p>
+                </div>
+              ) : (
+                <>
+                <div className="tov-podium">
+                  {podiumStudents[1]
+                    ? <PodiumSpot student={podiumStudents[1]} rank={2} />
+                    : <PodiumSpotEmpty rank={2} />}
+                  {podiumStudents[0]
+                    ? <PodiumSpot student={podiumStudents[0]} rank={1} />
+                    : <PodiumSpotEmpty rank={1} />}
+                  {podiumStudents[2]
+                    ? <PodiumSpot student={podiumStudents[2]} rank={3} />
+                    : <PodiumSpotEmpty rank={3} />}
+                </div>
+
+                {listParticipants.length > 0 && (
+                  <>
+                    <button
+                      className="tov-rank-toggle"
+                      onClick={() => setShowClassif((v) => !v)}
+                    >
+                      <span className="tov-rank-toggle__left">
+                        <Award size={14} strokeWidth={1.5} />
+                        Clasificación
+                      </span>
+                      <span className="tov-rank-toggle__right">
+                        <span className="tov-rank-toggle__badge">{listParticipants.length} más</span>
+                        <ChevronDown size={16} className={`tov-rank-toggle__chevron ${showClassif ? "tov-rank-toggle__chevron--open" : ""}`} />
+                      </span>
+                    </button>
+                    {showClassif && (
+                      <div className="tov-rank-toggle__list">
+                        {listParticipants.map((s, i) => (
+                          <RankRow
+                            key={s.estudiante_id ?? `p-${i}`}
+                            student={s}
+                            rank={podiumStudents.length + i + 1}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
-                {sortedStudents.length > 8 && (
-                  <p className="tov-more">+{sortedStudents.length - 8} estudiantes más</p>
+
+                {listNonParticipants.length > 0 && (
+                  <>
+                    <button
+                      className="tov-rank-toggle tov-rank-toggle--muted"
+                      onClick={() => setShowNonPart((v) => !v)}
+                    >
+                      <span className="tov-rank-toggle__left">
+                        <Clock size={14} strokeWidth={1.5} />
+                        Sin participación
+                      </span>
+                      <span className="tov-rank-toggle__right">
+                        <span className="tov-rank-toggle__badge tov-rank-toggle__badge--muted">{listNonParticipants.length}</span>
+                        <ChevronDown size={16} className={`tov-rank-toggle__chevron ${showNonPart ? "tov-rank-toggle__chevron--open" : ""}`} />
+                      </span>
+                    </button>
+                    {showNonPart && (
+                      <div className="tov-rank-toggle__list">
+                        {listNonParticipants.map((s, i) => (
+                          <RankRow
+                            key={s.estudiante_id ?? `np-${i}`}
+                            student={s}
+                            rank={podiumStudents.length + listParticipants.length + i + 1}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
-                {sortedStudents.length > 0 && (
-                  <p className="tov-more">
-                    Ranking oficial del backend · métrica: {ranking?.metrica?.label ?? "puntaje oficial"}
-                  </p>
-                )}
-              </div>
-            )
+
+                <p className="tov-rank-footer">
+                  {ranking?.metrica?.label ?? "Puntaje oficial"} · {sortedStudents.length} inscrito{sortedStudents.length !== 1 ? "s" : ""} · {podiumStudents.length} con participación
+                </p>
+                </>
+              )}
+            </div>
           )}
 
           {activeModule === "activity" && (
