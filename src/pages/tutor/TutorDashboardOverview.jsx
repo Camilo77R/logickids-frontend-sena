@@ -351,6 +351,10 @@ export default function TutorDashboardOverview() {
 
   const sortedStudents = useMemo(() => ranking?.ranking ?? [], [ranking]);
   const podiumStudents = useMemo(() => sortedStudents.filter((s) => s.participacion !== false), [sortedStudents]);
+  const listStudents = useMemo(() => {
+    const podiumIds = new Set(podiumStudents.slice(0, 3).map((s) => s.estudiante_id));
+    return sortedStudents.filter((s) => !podiumIds.has(s.estudiante_id));
+  }, [sortedStudents, podiumStudents]);
 
   const selectedGroup = useMemo(
     () => groups.find((g) => g.id === rankingGroupId) ?? focusGroup ?? null,
@@ -668,13 +672,13 @@ export default function TutorDashboardOverview() {
                   </div>
                 )}
 
-                {sortedStudents.length > 3 && (
+                {listStudents.length > 0 && (
                   <div className="tov-rank-list">
-                    {sortedStudents.slice(3).map((s, i) => (
+                    {listStudents.map((s, i) => (
                       <RankRow
                         key={s.estudiante_id ?? `${s.nombre}-${i}`}
                         student={s}
-                        rank={i + 4}
+                        rank={podiumStudents.length + i + 1}
                       />
                     ))}
                   </div>
