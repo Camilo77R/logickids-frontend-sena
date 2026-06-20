@@ -1512,6 +1512,45 @@
     height: 150px !important;
   }
 }
+
+@media (max-width: 480px) {
+  .lk-role-modal--wide {
+    width: min(100%, 95vw);
+    margin: 0.5rem;
+  }
+  .lk-role-modal--wide .lk-role-modal__content {
+    padding: 1rem;
+    max-height: calc(90vh - 80px);
+  }
+  .lk-role-modal--wide .ses-stats-grid {
+    gap: 8px;
+  }
+  .lk-role-modal--wide .ses-stat-card {
+    padding: 10px 8px;
+    min-height: 70px;
+  }
+  .lk-role-modal--wide .ses-stat-value {
+    font-size: 20px;
+  }
+  .lk-role-modal--wide .ses-charts-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas {
+    width: 140px;
+    height: 140px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas canvas {
+    width: 140px !important;
+    height: 140px !important;
+  }
+  .lk-role-modal--wide .ses-bar-wrapper {
+    height: 180px;
+  }
+  .lk-role-modal--wide .ses-bar-wrapper canvas {
+    height: 180px !important;
+  }
+}
 .lk-role-modal__content .ses-charts-card {
   margin-top: 16px;
 }

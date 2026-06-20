@@ -338,14 +338,17 @@
   .tov-hero  { padding: 1.3rem 1.2rem; }
   .tov-hero__h1    { font-size: 1.75rem; }
   .tov-hero__kpis { grid-template-columns: repeat(2, 1fr); }
-  .tov-module-grid { grid-template-columns: 1fr; }
+  .tov-module-grid { grid-template-columns: repeat(2, 1fr); }
   .tov-podium {
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 0.5rem;
   }
-  .tov-podium-spot {
-    min-width: 80px;
-    flex: 1 1 80px;
+  .tov-podium-spot,
+  .tov-podium-spot--1,
+  .tov-podium-spot--2,
+  .tov-podium-spot--3 {
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 0.6rem 0.4rem 0.5rem;
   }
 }
 
