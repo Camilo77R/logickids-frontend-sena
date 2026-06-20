@@ -525,4 +525,7 @@
   .lk-achievements-banner {
     padding: 1rem;
   }
+  .lk-achievements-banner h2 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
 }
