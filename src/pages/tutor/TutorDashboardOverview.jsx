@@ -355,6 +355,8 @@ export default function TutorDashboardOverview() {
     const podiumIds = new Set(podiumStudents.slice(0, 3).map((s) => s.estudiante_id));
     return sortedStudents.filter((s) => !podiumIds.has(s.estudiante_id));
   }, [sortedStudents, podiumStudents]);
+  const listParticipants = useMemo(() => listStudents.filter((s) => s.participacion !== false), [listStudents]);
+  const listNonParticipants = useMemo(() => listStudents.filter((s) => s.participacion === false), [listStudents]);
 
   const selectedGroup = useMemo(
     () => groups.find((g) => g.id === rankingGroupId) ?? focusGroup ?? null,
@@ -661,7 +663,7 @@ export default function TutorDashboardOverview() {
               ) : (
                 <>
                 {podiumStudents.length >= 1 && (
-                  <div className="tov-podium">
+                  <div className={`tov-podium ${podiumStudents.length === 1 ? "tov-podium--single" : ""}`}>
                     {podiumStudents.length >= 2 && (
                       <PodiumSpot student={podiumStudents[1]} rank={2} />
                     )}
@@ -674,13 +676,36 @@ export default function TutorDashboardOverview() {
 
                 {listStudents.length > 0 && (
                   <div className="tov-rank-list">
-                    {listStudents.map((s, i) => (
-                      <RankRow
-                        key={s.estudiante_id ?? `${s.nombre}-${i}`}
-                        student={s}
-                        rank={podiumStudents.length + i + 1}
-                      />
-                    ))}
+                    {listParticipants.length > 0 && (
+                      <>
+                        <div className="tov-rank-divider">
+                          <Users size={14} strokeWidth={1.5} />
+                          Participantes
+                        </div>
+                        {listParticipants.map((s, i) => (
+                          <RankRow
+                            key={s.estudiante_id ?? `p-${i}`}
+                            student={s}
+                            rank={podiumStudents.length + i + 1}
+                          />
+                        ))}
+                      </>
+                    )}
+                    {listNonParticipants.length > 0 && (
+                      <>
+                        <div className="tov-rank-divider tov-rank-divider--muted">
+                          <Clock size={14} strokeWidth={1.5} />
+                          Sin participación
+                        </div>
+                        {listNonParticipants.map((s, i) => (
+                          <RankRow
+                            key={s.estudiante_id ?? `np-${i}`}
+                            student={s}
+                            rank={podiumStudents.length + listParticipants.length + i + 1}
+                          />
+                        ))}
+                      </>
+                    )}
                   </div>
                 )}
 

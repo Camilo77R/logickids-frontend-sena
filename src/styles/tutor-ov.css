@@ -445,18 +445,18 @@
   justify-content: center;
   align-items: flex-end;
   gap: 1rem;
-  padding: 1rem 0 0.5rem;
+  padding: 0.75rem 0 0.25rem;
 }
 
 .tov-podium-spot {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   border-radius: var(--lk-radius-lg);
-  padding: 1rem 1rem 0.85rem;
+  padding: 0.85rem 0.9rem 0.75rem;
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  min-width: 100px;
+  min-width: 90px;
   position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -466,12 +466,16 @@
 
 .tov-podium-spot--1 {
   background: var(--lk-accent-soft);
-  padding: 1.5rem 1.2rem 1.1rem;
+  padding: 1.25rem 1.1rem 1rem;
   border: 1.5px solid var(--lk-accent);
-  box-shadow: 0 8px 32px rgba(249, 168, 37, 0.18), 0 0 0 1px var(--lk-accent-soft);
+  box-shadow: 0 8px 28px rgba(249, 168, 37, 0.16);
   order: 1;
   z-index: 2;
-  min-width: 120px;
+  min-width: 110px;
+}
+.tov-podium--single .tov-podium-spot--1 {
+  min-width: 180px;
+  padding: 1.4rem 1.5rem 1.1rem;
 }
 .tov-podium-spot--2 {
   background: rgba(142, 53, 213, 0.06);
@@ -485,19 +489,19 @@
 }
 
 .tov-podium-spot__icon {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.05rem;
 }
 .tov-podium-spot--1 .tov-podium-spot__icon {
   background: var(--lk-accent-soft);
   color: var(--lk-accent-dark);
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
 }
 .tov-podium-spot--2 .tov-podium-spot__icon {
   background: #F0F0F5;
@@ -509,74 +513,108 @@
 }
 
 .tov-podium-spot__avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
   background: var(--lk-brand-soft);
   border: 2px solid var(--lk-brand-border-strong);
 }
 .tov-podium-spot--1 .tov-podium-spot__avatar {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-color: var(--lk-accent);
   box-shadow: 0 4px 12px var(--lk-brand-shadow);
 }
+.tov-podium--single .tov-podium-spot--1 .tov-podium-spot__avatar {
+  width: 60px;
+  height: 60px;
+}
 
 .tov-podium-spot__name {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--tov-text);
   text-align: center;
-  max-width: 100px;
+  max-width: 90px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
 }
 .tov-podium-spot--1 .tov-podium-spot__name {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
+  max-width: 110px;
 }
 
 .tov-podium-spot__label {
   font-family: "Fredoka", system-ui, sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 600;
   color: var(--tov-muted);
 }
 .tov-podium-spot--1 .tov-podium-spot__label {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--lk-accent-dark);
 }
 
 .tov-podium-spot__pts {
   font-family: "Fredoka", system-ui, sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: var(--tov-text);
   background: var(--tov-bg);
-  padding: 0.15rem 0.65rem;
+  padding: 0.15rem 0.6rem;
   border-radius: 999px;
-  margin-top: 0.1rem;
+  margin-top: 0.05rem;
 }
 .tov-podium-spot--1 .tov-podium-spot__pts {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   background: var(--lk-accent-soft);
   color: var(--lk-accent-dark);
 }
+.tov-podium--single .tov-podium-spot--1 .tov-podium-spot__pts {
+  font-size: 1rem;
+  padding: 0.2rem 0.8rem;
+}
 
+/* ─── RANK LIST ─── */
 .tov-rank-list {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
 
+.tov-rank-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--tov-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.tov-rank-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--tov-border);
+}
+.tov-rank-divider--muted {
+  color: var(--tov-muted);
+}
+.tov-rank-divider--muted::after {
+  background: var(--tov-border);
+}
+
 .tov-rank-row {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  padding: 0.55rem 0.65rem;
+  padding: 0.5rem 0.65rem;
   border-radius: var(--lk-radius-sm);
   background: var(--tov-surface);
   border: 1px solid var(--tov-border);
@@ -628,18 +666,20 @@
 }
 
 .tov-rank-row--inactive {
-  opacity: 0.6;
+  background: var(--tov-bg);
+  border: 1.5px dashed var(--tov-border);
 }
 .tov-rank-row--inactive:hover {
-  background: var(--tov-surface);
+  background: var(--tov-bg);
   border-color: var(--tov-border);
+  filter: none;
 }
 
 .tov-rank-row__badge {
   font-size: 0.68rem;
   font-weight: 600;
   color: var(--tov-muted);
-  background: var(--tov-bg);
+  background: var(--tov-surface);
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
   flex-shrink: 0;
