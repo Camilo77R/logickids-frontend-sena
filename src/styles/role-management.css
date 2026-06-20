@@ -18,7 +18,7 @@
 
 .lk-role-search {
   position: relative;
-  min-width: min(360px, 100%);
+  min-width: min(280px, 100%);
 }
 
 .lk-role-search__icon {
@@ -222,8 +222,8 @@
   gap: 0.6rem;
   min-height: 0;
   flex: 1;
-  overflow: hidden;
-  padding-right: 0.15rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 .lk-role-modal__actions {
@@ -1058,6 +1058,11 @@
     justify-self: center;
     transform: rotate(90deg);
   }
+
+  .lk-role-page__filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
 }
 
 /* ── ADMIN-SCOPED PASTEL COLOR OVERRIDES ── */
@@ -1069,3 +1074,39 @@
 
 .lk-admin-dashboard .lk-role-accordion,
 .lk-admin-modal .lk-role-accordion { background: #f9fafb !important; }
+
+@media (max-width: 576px) {
+  .lk-role-search {
+    min-width: 100%;
+  }
+
+  .lk-role-page__select {
+    flex: none;
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .lk-role-modal {
+    padding: 0.85rem;
+    border-radius: 1rem;
+  }
+
+  .lk-role-entity-card {
+    padding: 0.75rem;
+  }
+
+  .lk-role-form__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lk-role-modal__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lk-role-modal__actions .lk-btn {
+    justify-content: center;
+  }
+}

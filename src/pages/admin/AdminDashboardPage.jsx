@@ -72,7 +72,7 @@ function DataTable({ columns, data, searchValue, onSearchChange, searchPlacehold
 
   return (
     <div className="lk-role-detail-stack">
-      <div style={{ position: "sticky", top: 0, zIndex: 1, background: "#f8f9fa", paddingBottom: "0.5rem" }}>
+      <div className="lk-datatable-search">
         <div className="lk-role-search">
           <Search size={18} className="lk-role-search__icon" aria-hidden="true" />
           <input
@@ -89,7 +89,7 @@ function DataTable({ columns, data, searchValue, onSearchChange, searchPlacehold
           ) : null}
         </div>
       </div>
-      <div className="lk-table-wrap">
+      <div className="lk-table-wrap lk-role-table--desktop">
         <table className="lk-table">
           <thead>
             <tr>
@@ -109,13 +109,42 @@ function DataTable({ columns, data, searchValue, onSearchChange, searchPlacehold
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length} style={{ textAlign: "center", padding: "2rem", color: "#9ca3af", fontSize: "0.85rem" }}>
+                <td colSpan={columns.length} className="lk-datatable-empty">
                   No hay resultados con ese filtro
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+      <div className="lk-role-mobile-list">
+        {paginated.length ? (
+          paginated.map((row) => (
+            <article key={row.id} className="lk-role-mobile-card">
+              <header className="lk-role-mobile-card__header">
+                <div>
+                  <h3 className="lk-role-mobile-card__title">{row.nombre}</h3>
+                  <p className="lk-role-mobile-card__subtitle">{row.email || ""}</p>
+                </div>
+                {columns.find(c => c.key === "estado") && (
+                  <div>{columns.find(c => c.key === "estado").render(row)}</div>
+                )}
+              </header>
+              <dl className="lk-role-entity-card__meta">
+                {columns.filter(c => c.key !== "nombre" && c.key !== "estado").map((col) => (
+                  <div key={col.key}>
+                    <dt>{col.label}</dt>
+                    <dd>{col.render ? col.render(row) : row[col.key]}</dd>
+                  </div>
+                ))}
+              </dl>
+            </article>
+          ))
+        ) : (
+          <p className="lk-datatable-empty">
+            No hay resultados con ese filtro
+          </p>
+        )}
       </div>
       <Pagination
         currentPage={page}
@@ -241,7 +270,7 @@ export default function AdminDashboardPage() {
           {preview.length ? preview.map((a) => (
             <div key={a.id || a.email} className="lk-admin-module-card__preview-row">
               <span className="lk-admin-module-card__preview-label">{a.nombre}</span>
-              <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#9ca3af" }}>
+              <span className="lk-admin-module-card__preview-value lk-admin-module-card__preview-value--muted">
                 {a.es_admin_principal ? "Principal" : ""}
               </span>
             </div>
@@ -278,7 +307,7 @@ export default function AdminDashboardPage() {
           {preview.length ? preview.map((s) => (
             <div key={s.id || s.email} className="lk-admin-module-card__preview-row">
               <span className="lk-admin-module-card__preview-label">{s.nombre}</span>
-              <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#9ca3af" }}>
+              <span className="lk-admin-module-card__preview-value lk-admin-module-card__preview-value--muted">
                 {s.grupo_nombre || ""}
               </span>
             </div>
@@ -297,7 +326,7 @@ export default function AdminDashboardPage() {
             pendingRequestsList.slice(0, 3).map((r) => (
               <div key={r.id} className="lk-admin-module-card__preview-row">
                 <span className="lk-admin-module-card__preview-label">{r.tutor_nombre}</span>
-                <span className="lk-admin-module-card__preview-value" style={{ fontSize: "0.6rem", color: "#92400e" }}>
+                <span className="lk-admin-module-card__preview-value lk-admin-module-card__preview-value--warn">
                   pendiente
                 </span>
               </div>

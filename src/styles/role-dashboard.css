@@ -202,6 +202,7 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 .lk-role-panel__aside {
@@ -416,10 +417,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: nowrap;
+  gap: 8px;
+  flex-wrap: wrap;
   background: white;
-  padding: 8px 12px;
+  padding: 8px;
   border-radius: 1rem;
   border: 1px solid rgba(97, 43, 136, 0.08);
   width: 100%;
@@ -435,6 +436,7 @@
   padding: 0;
   min-height: 0;
   gap: 8px;
+  position: static;
 }
 
 .lk-role-page__filters {
@@ -950,10 +952,6 @@
   flex-shrink: 0;
 }
 
-.lk-role-dashboard--fill .lk-role-page__toolbar {
-  position: static;
-}
-
 .lk-role-dashboard--fill .lk-table-wrap {
   flex: 1;
   min-height: 0;
@@ -1037,13 +1035,58 @@
   }
 
   .lk-role-page__search {
+    flex: none;
     max-width: none;
   }
 
   .lk-role-page__filters {
-    overflow-x: auto;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding-bottom: 4px;
+  }
+}
+
+@media (max-width: 576px) {
+  .lk-role-page__date-filter {
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .lk-role-page__date-filter input {
+    width: 90px;
+    font-size: 0.72rem;
+  }
+
+  .lk-role-page__date-filter span {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .lk-role-page__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lk-role-page__date-filter {
+    width: 100%;
+    border-radius: var(--lk-radius-sm);
+    justify-content: center;
+  }
+
+  .lk-role-page__date-filter input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .lk-role-entity-card__meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .lk-role-dashboard__hero-subtitle {
+    max-width: none;
   }
 }
 
@@ -1221,12 +1264,44 @@
   font-weight: 600;
   color: var(--lk-brand);
   border-top: 1px solid #f0f0f0;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.12s ease;
 }
 
-.lk-admin-module-card:hover .lk-admin-module-card__footer {
-  opacity: 1;
+@media (hover: hover) {
+  .lk-admin-module-card__footer {
+    opacity: 0;
+  }
+
+  .lk-admin-module-card:hover .lk-admin-module-card__footer {
+    opacity: 1;
+  }
+}
+
+/* ── DATATABLE SEARCH (AdminDashboardPage modal) ── */
+.lk-datatable-search {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8f9fa;
+  padding-bottom: 0.5rem;
+}
+
+.lk-datatable-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.lk-admin-module-card__preview-value--muted {
+  font-size: 0.6rem;
+  color: #9ca3af;
+}
+
+.lk-admin-module-card__preview-value--warn {
+  font-size: 0.6rem;
+  color: #92400e;
 }
 
 /* ── ADMIN INSTITUTION LABEL ── */
@@ -1272,7 +1347,6 @@
 
 .lk-admin-modal .lk-role-modal__content {
   background: #f8f9fa !important;
-  overflow-y: auto !important;
 }
 
 /* Entity cards admin: blanco limpio, sin colores cálidos */
