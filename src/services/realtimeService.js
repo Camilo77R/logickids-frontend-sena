@@ -1,14 +1,12 @@
 import { io } from "socket.io-client";
 import { clearStoredSession } from "../utils/sessionStorage";
-import { resolveApiBaseUrl } from "./httpClient";
+import { resolveSocketBaseUrl } from "./httpClient";
 
 const SOCKET_EVENTS = Object.freeze({
   classSessionChanged: "class_session:changed",
   rankingUpdated: "ranking:updated",
   studentAccessChanged: "student_access:changed",
 });
-
-const resolveSocketBaseUrl = () => resolveApiBaseUrl().replace(/\/api\/?$/, "");
 
 const emitSessionExpired = () => {
   clearStoredSession();
