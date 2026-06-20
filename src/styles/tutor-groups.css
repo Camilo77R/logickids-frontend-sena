@@ -1103,11 +1103,6 @@
 
 @media (max-width: 576px) {
   .tutor-page-header {
-    position: sticky;
-    top: 0;
-    z-index: 9;
-    background: var(--lk-bg, #f4f2f8);
-    padding: 8px 0;
     margin-bottom: 0 !important;
   }
   .tg-section-head {
