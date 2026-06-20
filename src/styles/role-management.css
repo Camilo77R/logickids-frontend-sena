@@ -983,13 +983,13 @@
   text-align: center;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1200px) {
   .lk-role-section-grid {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
   .lk-role-table--desktop {
     display: none;
   }
@@ -1032,7 +1032,7 @@
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .lk-role-modal-overlay {
     padding: 0.9rem;
   }
