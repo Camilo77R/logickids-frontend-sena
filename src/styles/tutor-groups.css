@@ -1109,7 +1109,8 @@
     width: 100%;
   }
   .tg-filters {
-    margin-left: auto;
+    flex-wrap: wrap;
+    margin-left: 0;
   }
 }
 

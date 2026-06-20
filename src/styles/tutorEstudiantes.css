@@ -1296,7 +1296,7 @@ body:has(.lk-students-page) .tutor-main-content {
 
 /* Override definitivo: este bloque va al final porque el archivo tenia reglas duplicadas. */
 body:has(.lk-students-page) .lk-tutor-content {
-  overflow-y: hidden !important;
+  overflow-y: auto !important;
   padding: 1rem 1.55rem 1rem !important;
 }
 
