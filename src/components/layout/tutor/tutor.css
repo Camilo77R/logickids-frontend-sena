@@ -872,9 +872,15 @@
   position: sticky;
   top: -1.55rem;
   z-index: 10;
-  border-radius: 32px;
-  border: 1px solid var(--lk-tutor-border);
-  box-shadow: var(--lk-shadow-sm);
+  border-radius: var(--lk-radius-lg);
+  padding: 18px 22px;
+  box-shadow: 0 4px 20px rgba(142, 53, 213, 0.18);
+}
+
+@media (max-width: 768px) {
+  .ses-filters-card {
+    position: static;
+  }
 }
 
 .ses-filters-row {

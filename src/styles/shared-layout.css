@@ -631,6 +631,9 @@ a {
   font-weight: 800;
   line-height: 1.1;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .lk-tutor-mobile-nav__link.active,
