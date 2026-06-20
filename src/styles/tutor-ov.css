@@ -627,6 +627,24 @@
   flex-shrink: 0;
 }
 
+.tov-rank-row--inactive {
+  opacity: 0.6;
+}
+.tov-rank-row--inactive:hover {
+  background: var(--tov-surface);
+  border-color: var(--tov-border);
+}
+
+.tov-rank-row__badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--tov-muted);
+  background: var(--tov-bg);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
 /* ─── MODULE GRID ─── */
 .tov-module-grid {
   display: grid;

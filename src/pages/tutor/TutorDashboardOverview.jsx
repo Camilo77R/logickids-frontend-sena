@@ -150,15 +150,20 @@ function PodiumSpot({ student, rank }) {
 function RankRow({ student, rank }) {
   const pts = student.puntaje ?? student.valor ?? 0;
   const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(student.nombre || student.estudiante_id || "")}`;
+  const active = student.participacion !== false;
 
   return (
-    <div className="tov-rank-row">
+    <div className={`tov-rank-row ${!active ? "tov-rank-row--inactive" : ""}`}>
       <span className="tov-rank-row__num">
-        {student.posicion ?? rank}°
+        {active ? `${student.posicion ?? rank}°` : "\u2014"}
       </span>
       <img className="tov-rank-row__avatar" src={avatarUrl} alt={student.nombre} />
       <span className="tov-rank-row__name">{student.nombre}</span>
-      <span className="tov-rank-row__pts">{pts} pts</span>
+      {active ? (
+        <span className="tov-rank-row__pts">{pts} pts</span>
+      ) : (
+        <span className="tov-rank-row__badge">Sin jugar</span>
+      )}
     </div>
   );
 }
@@ -345,6 +350,7 @@ export default function TutorDashboardOverview() {
   );
 
   const sortedStudents = useMemo(() => ranking?.ranking ?? [], [ranking]);
+  const podiumStudents = useMemo(() => sortedStudents.filter((s) => s.participacion !== false), [sortedStudents]);
 
   const selectedGroup = useMemo(
     () => groups.find((g) => g.id === rankingGroupId) ?? focusGroup ?? null,
@@ -650,14 +656,14 @@ export default function TutorDashboardOverview() {
                 </div>
               ) : (
                 <>
-                {sortedStudents.length >= 1 && (
+                {podiumStudents.length >= 1 && (
                   <div className="tov-podium">
-                    {sortedStudents.length >= 2 && (
-                      <PodiumSpot student={sortedStudents[1]} rank={2} />
+                    {podiumStudents.length >= 2 && (
+                      <PodiumSpot student={podiumStudents[1]} rank={2} />
                     )}
-                    <PodiumSpot student={sortedStudents[0]} rank={1} />
-                    {sortedStudents.length >= 3 && (
-                      <PodiumSpot student={sortedStudents[2]} rank={3} />
+                    <PodiumSpot student={podiumStudents[0]} rank={1} />
+                    {podiumStudents.length >= 3 && (
+                      <PodiumSpot student={podiumStudents[2]} rank={3} />
                     )}
                   </div>
                 )}
@@ -675,7 +681,7 @@ export default function TutorDashboardOverview() {
                 )}
 
                 <p className="tov-more">
-                  {ranking?.metrica?.label ?? "Puntaje oficial"} · {sortedStudents.length} participante{sortedStudents.length !== 1 ? "s" : ""}
+                  {ranking?.metrica?.label ?? "Puntaje oficial"} · {sortedStudents.length} inscrito{sortedStudents.length !== 1 ? "s" : ""} · {podiumStudents.length} con participación
                 </p>
                 </>
               )}
