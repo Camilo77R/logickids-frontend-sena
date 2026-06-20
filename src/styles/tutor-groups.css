@@ -78,7 +78,7 @@
 
 .tutor-card > .tg-section-head {
   position: sticky;
-  top: 0;
+  top: -1.55rem;
   z-index: 10;
   background: var(--tg-surface, #fff);
   padding: 8px 0;
