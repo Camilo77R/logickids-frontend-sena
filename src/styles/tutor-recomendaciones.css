@@ -484,3 +484,16 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 576px) {
+  .lk-rec-page {
+    padding: 0.5rem;
+  }
+  .lk-rec-hero,
+  .lk-rec-panel {
+    padding: 0.8rem;
+  }
+  .lk-rec-form {
+    gap: 0.5rem;
+  }
+}

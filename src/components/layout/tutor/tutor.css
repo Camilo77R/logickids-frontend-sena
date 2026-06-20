@@ -1146,6 +1146,7 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  flex-wrap: wrap;
   padding-top: 12px;
   margin-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.18);
@@ -1473,10 +1474,37 @@
 }
 .lk-role-modal--wide .ses-stat-value {
   font-size: 32px;
+  word-break: break-all;
 }
 .lk-role-modal--wide .ses-stat-label {
   font-size: 12px;
   letter-spacing: 1.5px;
+}
+
+@media (max-width: 600px) {
+  .lk-role-modal--wide .ses-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .lk-role-modal--wide .ses-stat-card {
+    padding: 14px 10px;
+    min-height: 80px;
+  }
+  .lk-role-modal--wide .ses-stat-value {
+    font-size: 24px;
+  }
+  .lk-role-modal--wide .ses-stat-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas {
+    width: 150px;
+    height: 150px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas canvas {
+    width: 150px !important;
+    height: 150px !important;
+  }
 }
 .lk-role-modal__content .ses-charts-card {
   margin-top: 16px;
@@ -1538,6 +1566,39 @@
   text-transform: uppercase;
   color: var(--lk-tutor-text-muted);
   border-bottom: 1.5px solid var(--lk-tutor-border);
+}
+
+.ses-table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--lk-surface);
+}
+
+.ses-table tbody tr {
+  position: relative;
+}
+
+.ses-table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--lk-surface);
+}
+
+.ses-table-row:hover td:first-child {
+  background: rgba(142, 53, 213, 0.04);
+}
+
+.ses-table tbody td:first-child::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--lk-tutor-border);
+  pointer-events: none;
 }
 
 .ses-table-row {
@@ -1730,6 +1791,20 @@
 
   .ses-stat-value {
     font-size: 28px;
+  }
+
+  .ses-search {
+    width: 100%;
+  }
+
+  .ses-date-filter {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .ses-date-filter .ses-date-input {
+    flex: 1;
+    min-width: 0;
   }
 }
 /* ================================================================

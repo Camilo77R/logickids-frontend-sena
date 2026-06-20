@@ -334,3 +334,18 @@
     flex: 1;
   }
 }
+
+@media (max-width: 576px) {
+  .lk-stats-page {
+    padding: 0.5rem;
+  }
+  .lk-stats-hero {
+    padding: 1rem;
+  }
+  .lk-stats-hero h1 {
+    font-size: 1.1rem;
+  }
+  .lk-stats-grid {
+    gap: 0.6rem;
+  }
+}

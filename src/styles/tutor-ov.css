@@ -339,6 +339,14 @@
   .tov-hero__h1    { font-size: 1.75rem; }
   .tov-hero__kpis { grid-template-columns: repeat(2, 1fr); }
   .tov-module-grid { grid-template-columns: 1fr; }
+  .tov-podium {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .tov-podium-spot {
+    min-width: 80px;
+    flex: 1 1 80px;
+  }
 }
 
 /* ─── MODAL (RoleModal) ─── */

@@ -806,12 +806,12 @@
   }
 
   .lk-students-hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     padding: 18px;
   }
 
   .lk-students-hero-image {
-    display: none;
+    display: none !important;
   }
 
   .lk-tutor-profile-placeholder {
@@ -1056,6 +1056,10 @@ body:has(.lk-students-page) .tutor-main-content {
 
   .lk-students-hero-image {
     display: none;
+  }
+
+  .lk-table-toolbar {
+    grid-template-columns: 1fr !important;
   }
 }
 

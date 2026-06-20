@@ -497,3 +497,9 @@
   .ov-hero__pills { flex-wrap: wrap; }
   .ov-hero__pill { flex: 1; min-width: 70px; }
 }
+
+@media (max-width: 576px) {
+  .ov-hero { padding: 1rem; }
+  .ov-stats { grid-template-columns: 1fr; }
+  .ov-page { padding: 0.5rem; }
+}

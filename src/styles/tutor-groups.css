@@ -147,6 +147,9 @@
   font-weight: 700;
   font-family: var(--lk-font);
   line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tg-group-item__description {
@@ -154,6 +157,10 @@
   color: var(--tg-muted);
   font-size: 13px;
   line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .tg-group-item__status {

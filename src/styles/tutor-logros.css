@@ -514,3 +514,15 @@
     width: 100%;
   }
 }
+
+@media (max-width: 576px) {
+  .lk-achievements-page {
+    padding: 0.6rem;
+  }
+  .lk-achievements-kpis {
+    gap: 0.6rem;
+  }
+  .lk-achievements-banner {
+    padding: 1rem;
+  }
+}
