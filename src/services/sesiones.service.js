@@ -36,14 +36,64 @@ const buildActivityContext = (session) => {
 
   return {
     actividad_clave: `sesion-clase-${sesionClaseId}`,
-    actividad_titulo: "Actividad single",
-    actividad_detalle: `Actividad #${sesionClaseId} · Nivel ${nivelEnBloque} de ${totalPasos}`,
+    actividad_titulo: session?.minijuego
+      ? `Práctica de ${session.minijuego}`
+      : "Práctica de juego",
+    actividad_detalle: `Misión ${nivelEnBloque} de ${totalPasos}`,
+  };
+};
+
+const getSessionConfig = (session) => {
+  const config = session?.configuracion_aplicada;
+
+  if (!config) return {};
+  if (typeof config === "object") return config;
+
+  try {
+    return JSON.parse(config);
+  } catch {
+    return {};
+  }
+};
+
+const buildAdaptationContext = (session) => {
+  const config = getSessionConfig(session);
+  const adaptacion = config?.adaptacion ?? null;
+  const fuente = session?.fuente_adaptacion ?? adaptacion?.fuente ?? "base";
+  const dificultad = Number(session?.dificultad ?? config?.dificultad ?? 1);
+  const metricas = adaptacion?.metricas ?? {};
+
+  return {
+    dificultad,
+    ajuste_fuente: fuente,
+    ajuste_titulo:
+      fuente === "reglas" || fuente === "ia"
+        ? "Dificultad personalizada"
+        : "Dificultad definida",
+    ajuste_motivo:
+      adaptacion?.motivo ??
+      (fuente === "base"
+        ? "La partida uso un nivel definido manualmente."
+        : "El sistema ajusto el nivel con el historial disponible."),
+    ajuste_metricas: metricas,
+    ajuste_decision: metricas?.decision ?? "mantener",
+    dificultad_anterior: metricas?.ultima_dificultad ?? null,
+    dificultad_maxima: metricas?.dificultad_maxima ?? null,
+    precision_historica: metricas?.precision_historica ?? null,
+    precision_reciente: metricas?.precision_reciente ?? null,
+    intentos_acumulados: metricas?.total_intentos ?? null,
+    ajuste_alcance: metricas?.alcance ?? "historico",
+    aciertos_mision_anterior: metricas?.aciertos_mision_anterior ?? null,
+    errores_mision_anterior: metricas?.errores_mision_anterior ?? null,
+    intentos_mision_anterior: metricas?.intentos_mision_anterior ?? null,
+    estado_mision_anterior: metricas?.estado_mision_anterior ?? null,
   };
 };
 
 const decorateSession = (session) => ({
   ...session,
   ...buildActivityContext(session),
+  ...buildAdaptationContext(session),
 });
 
 export const getSesionesByEstudiante = async (id) => {

@@ -37,7 +37,8 @@ export default function SesionesTable({
               <th>Fecha</th>
               {showStudentColumn && <th>Estudiante</th>}
               <th>Actividad</th>
-              <th>Minijuego</th>
+              <th>Juego</th>
+              <th>Dificultad aplicada</th>
               <th>Puntaje</th>
               <th>Aciertos</th>
               <th>Errores</th>
@@ -48,7 +49,7 @@ export default function SesionesTable({
           <tbody>
             {paginatedData.length === 0 ? (
               <tr>
-                <td colSpan={showStudentColumn ? 8 : 7} className="ses-empty-row">
+                <td colSpan={showStudentColumn ? 9 : 8} className="ses-empty-row">
                   No se encontraron sesiones con los filtros actuales.
                 </td>
               </tr>
@@ -79,6 +80,15 @@ export default function SesionesTable({
                     {s.habilidad ? (
                       <div className="ses-cell-secondary">Habilidad: {s.habilidad}</div>
                     ) : null}
+                  </td>
+
+                  <td>
+                    <div className="ses-level-pill">
+                      <strong>Nivel {s.dificultad}</strong>
+                      <span className={`ses-adapt-badge ses-adapt-badge--${s.ajuste_fuente || "base"}`}>
+                        {s.ajuste_titulo || "Dificultad definida"}
+                      </span>
+                    </div>
                   </td>
 
                   <td className="ses-td-bold">{s.puntaje}</td>

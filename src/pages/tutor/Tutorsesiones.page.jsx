@@ -14,6 +14,35 @@ import tutorGroupsService from "../../services/tutorGroupsService";
 
 const normalizeId = (value) => String(value ?? "");
 const resolveActivityKey = (session) => session?.actividad_clave || `sesion-${session?.id ?? "sin-clave"}`;
+const formatPercent = (value) => {
+  if (value === null || value === undefined || value === "") return "Sin dato";
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? `${numeric.toFixed(1)}%` : "Sin dato";
+};
+const formatMetric = (value) => {
+  if (value === null || value === undefined || value === "") return "Sin dato";
+  return Number.isFinite(Number(value)) ? Number(value).toLocaleString("es-CO") : String(value);
+};
+const ADAPTATION_LABELS = {
+  subir: "La dificultad subió",
+  bajar: "La dificultad bajó",
+  mantener: "La dificultad se mantuvo",
+  inicial: "Nivel inicial asignado",
+};
+const EVENT_LABELS = {
+  acierto: "Respuesta correcta",
+  error: "Intento por mejorar",
+  nivel_completado: "Misión completada",
+  pista: "Pista utilizada",
+};
+const formatReactionTime = (value) => {
+  const milliseconds = Number(value);
+  if (!Number.isFinite(milliseconds) || milliseconds < 0) return "Sin registro";
+  if (milliseconds < 1000) return `${milliseconds} ms`;
+  return `${(milliseconds / 1000).toFixed(1).replace(".", ",")} segundos`;
+};
+const formatEventLabel = (value) =>
+  EVENT_LABELS[value] ?? String(value ?? "Evento").replaceAll("_", " ");
 
 export default function SesionesPage() {
   const [tipo, setTipo] = useState("estudiante");
@@ -180,6 +209,15 @@ export default function SesionesPage() {
     });
   }, [data, searchQuery, statusFilter, dateFrom, dateTo]);
 
+  const selectedActivityProgress = useMemo(() => {
+    if (!selectedSession) return [];
+
+    return data
+      .filter((session) => resolveActivityKey(session) === resolveActivityKey(selectedSession))
+      .sort((left, right) => Number(left.orden_en_ruta ?? 0) - Number(right.orden_en_ruta ?? 0))
+      .map((session) => `Nivel ${session.dificultad}`);
+  }, [data, selectedSession]);
+
   /* ─────────────── RENDER ─────────────── */
   return (
     <div className="tutor-page-container">
@@ -223,7 +261,7 @@ export default function SesionesPage() {
 
             <div className="ses-stat-card ses-stat-card--purple">
               <div className="ses-stat-info">
-                <span className="ses-stat-label">Sesiones / niveles</span>
+                <span className="ses-stat-label">Misiones jugadas</span>
                 <span className="ses-stat-value">{summary.sesiones}</span>
               </div>
               <span className="ses-stat-icon"><Layers size={50} /></span>
@@ -339,8 +377,12 @@ export default function SesionesPage() {
             <div className="tutor-card">
               <div className="ses-section-title">
                 <History size={16} />
-                Historial de sesiones
+                Historial de misiones
               </div>
+
+              <p className="ses-history-note">
+                Cada fila muestra una misión jugada y la dificultad aplicada al estudiante.
+              </p>
 
               <SesionesTable
                 data={filteredData}
@@ -354,8 +396,8 @@ export default function SesionesPage() {
           <RoleModal
             open={modalOpen}
             onClose={closeModal}
-            eyebrow="Detalle de sesión"
-            title={selectedSession?.actividad_titulo || "Sesión"}
+            eyebrow="Detalle de la misión"
+            title={selectedSession?.actividad_titulo || "Misión"}
             width={560}
             actions={
               <button type="button" className="ses-modal-close-btn" onClick={closeModal}>
@@ -373,28 +415,68 @@ export default function SesionesPage() {
                     {selectedSession.actividad_detalle || "Sin detalle de actividad"}
                   </div>
                 </div>
+                <div className="ses-adaptation-summary">
+                  <div className="ses-adaptation-head">
+                    <span className={`ses-adapt-badge ses-adapt-badge--${selectedSession.ajuste_fuente || "base"}`}>
+                      {selectedSession.ajuste_titulo || "Dificultad definida"}
+                    </span>
+                    <strong>Dificultad de esta misión: Nivel {selectedSession.dificultad}</strong>
+                  </div>
+                  <div className={`ses-adaptation-decision ses-adaptation-decision--${selectedSession.ajuste_decision || "mantener"}`}>
+                    {ADAPTATION_LABELS[selectedSession.ajuste_decision] || ADAPTATION_LABELS.mantener}
+                  </div>
+                  <p>{selectedSession.ajuste_motivo}</p>
+                  {selectedActivityProgress.length > 1 ? (
+                    <div className="ses-adaptation-progress">
+                      <span>Evolución de la actividad</span>
+                      <strong>{selectedActivityProgress.join(" → ")}</strong>
+                    </div>
+                  ) : null}
+                  <details className="ses-adaptation-details">
+                    <summary>Ver detalles del progreso</summary>
+                    <div className="ses-adaptation-metrics">
+                      <span>Nivel anterior: {formatMetric(selectedSession.dificultad_anterior)}</span>
+                      <span>Nivel máximo: {formatMetric(selectedSession.dificultad_maxima)}</span>
+                      {selectedSession.ajuste_alcance === "actividad" ? (
+                        <>
+                          <span>Aciertos en la misión anterior: {formatMetric(selectedSession.aciertos_mision_anterior)}</span>
+                          <span>Intentos por mejorar: {formatMetric(selectedSession.errores_mision_anterior)}</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Precisión histórica: {formatPercent(selectedSession.precision_historica)}</span>
+                          <span>Precisión reciente: {formatPercent(selectedSession.precision_reciente)}</span>
+                          <span>Intentos acumulados: {formatMetric(selectedSession.intentos_acumulados)}</span>
+                        </>
+                      )}
+                    </div>
+                  </details>
+                </div>
                 {isLoadingEventos ? (
                   <div className="tutor-loading">
                     <span>Cargando eventos...</span>
                   </div>
                 ) : !eventosSesion.length ? (
                   <p className="ses-detalle-empty">
-                    Esta sesión no tiene eventos registrados.
+                    Esta misión no tiene intentos registrados.
                   </p>
                 ) : (
                   eventosSesion.map((evento) => (
                     <div key={evento.id} className="ses-evento-item">
                       <div className="ses-evento-header">
-                        <strong>{evento.tipo_evento}</strong>
+                        <strong>{formatEventLabel(evento.tipo_evento)}</strong>
                         <small>
                           {new Date(evento.ocurrido_en).toLocaleTimeString("es-CO")}
                         </small>
                       </div>
                       <div className="ses-evento-meta">
                         <span>Habilidad: {evento.habilidad || "No aplica"}</span>
-                        <span>Reacción: {evento.tiempo_reaccion_ms ?? "—"} ms</span>
+                        <span>Tiempo de respuesta: {formatReactionTime(evento.tiempo_reaccion_ms)}</span>
                         <span>
-                          Puntos: {evento.puntos ?? 0} · Combo: {evento.combo_en_evento ?? 0}
+                          Puntos: {evento.puntos ?? 0}
+                          {Number(evento.combo_en_evento) > 0
+                            ? ` · Racha: ${evento.combo_en_evento}`
+                            : ""}
                         </span>
                       </div>
                     </div>
