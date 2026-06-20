@@ -1,16 +1,22 @@
 import { clearStoredSession, getStoredSession } from "../utils/sessionStorage";
 
 const DEFAULT_API_URL = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
-const RENDER_API_URL = "https://logickids-backend-sena.onrender.com/api";
+const DIRECT_BACKEND_ORIGIN = "https://logickids-backend-sena.onrender.com";
+const RENDER_API_URL = `${DIRECT_BACKEND_ORIGIN}/api`;
+
+const normalizeBaseUrl = (value) =>
+  typeof value === "string" ? value.trim().replace(/\/+$/, "") : "";
+
+const isAbsoluteHttpUrl = (value) => /^https?:\/\//i.test(value);
 
 const resolveBaseUrl = () => {
-  const configuredUrl = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
+  const configuredUrl = normalizeBaseUrl(import.meta.env.VITE_API_URL || DEFAULT_API_URL);
 
-  if (import.meta.env.PROD && configuredUrl.replace(/\/+$/, "") === RENDER_API_URL) {
+  if (import.meta.env.PROD && configuredUrl === RENDER_API_URL) {
     return "/api";
   }
 
-  return configuredUrl.replace(/\/+$/, "");
+  return configuredUrl;
 };
 
 const API_BASE_URL = resolveBaseUrl();
@@ -113,5 +119,28 @@ export const request = async (path, { method = "GET", body, auth = true } = {}) 
 };
 
 export const resolveApiBaseUrl = () => API_BASE_URL;
+
+/**
+ * En Vercel el frontend puede hablar con REST via rewrite `/api`, pero los
+ * sockets deben apuntar al backend real porque Vercel no hospeda nuestro
+ * servidor Socket.IO. Por eso resolvemos una base separada para realtime.
+ */
+export const resolveSocketBaseUrl = () => {
+  const configuredSocketUrl = normalizeBaseUrl(import.meta.env.VITE_SOCKET_URL);
+  if (configuredSocketUrl) {
+    return configuredSocketUrl;
+  }
+
+  const configuredApiUrl = normalizeBaseUrl(import.meta.env.VITE_API_URL);
+  if (import.meta.env.PROD && isAbsoluteHttpUrl(configuredApiUrl)) {
+    return configuredApiUrl.replace(/\/api\/?$/, "");
+  }
+
+  if (import.meta.env.PROD && API_BASE_URL === "/api") {
+    return DIRECT_BACKEND_ORIGIN;
+  }
+
+  return API_BASE_URL.replace(/\/api\/?$/, "");
+};
 
 export { HttpError };
