@@ -78,7 +78,7 @@
 
 .tutor-card > .tg-section-head {
   position: sticky;
-  top: 0;
+  top: -1px;
   z-index: 10;
   background: var(--tg-surface, #fff);
   padding: 8px 0;
@@ -1104,6 +1104,7 @@
 @media (max-width: 576px) {
   .tg-toolbar {
     flex-wrap: wrap;
+    width: 100%;
   }
   .tg-search {
     width: 100%;

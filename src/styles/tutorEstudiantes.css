@@ -322,7 +322,7 @@
 .lk-search-control .input-group-text {
   border: 1px solid var(--students-border);
   border-right: 0;
-  border-radius: 7px 0 0 7px;
+  border-radius: var(--lk-radius-sm) 0 0 var(--lk-radius-sm);
   background: #fff;
   color: var(--students-muted);
   padding: 4px 8px;
@@ -330,7 +330,7 @@
 
 .lk-search-control .form-control {
   border-left: 0;
-  border-radius: 0 7px 7px 0;
+  border-radius: 0 var(--lk-radius-sm) var(--lk-radius-sm) 0;
   font-size: 0.76rem;
 }
 
@@ -1165,11 +1165,13 @@ body:has(.lk-students-page) .tutor-main-content {
   padding: 0;
 }
 
+@media (min-width: 1201px) {
 .lk-table-toolbar {
   grid-template-columns: auto 220px minmax(0, 1fr);
   align-items: center;
   gap: 14px;
   margin-bottom: 10px;
+}
 }
 
 .lk-section-heading span {
@@ -1440,9 +1442,11 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   padding: 12px 14px !important;
 }
 
+@media (min-width: 1201px) {
 .lk-table-toolbar {
   margin-bottom: 8px !important;
-  grid-template-columns: auto 220px minmax(0, 1fr) !important;
+  grid-template-columns: auto 220px minmax(0, 1fr);
+}
 }
 
 .lk-students-table {

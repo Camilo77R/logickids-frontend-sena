@@ -353,6 +353,10 @@
 }
 @media (max-width: 400px) {
   .tov-module-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .tov-hero__kpis { grid-template-columns: repeat(2, 1fr); gap: 0.25rem; }
+  .tov-hero .tov-kpi { padding: 0.4rem 0.5rem; }
+  .tov-hero .tov-kpi__val { font-size: 0.95rem; }
+  .tov-hero .tov-kpi__lbl { font-size: 0.62rem; }
 }
 
 /* ─── MODAL (RoleModal) ─── */
