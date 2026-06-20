@@ -1371,6 +1371,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   grid-column: 2 !important;
   height: 100% !important;
   align-self: stretch !important;
+  justify-self: end !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1530,6 +1531,7 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-tutor-profile-placeholder {
   width: 174px !important;
   height: 116px !important;
+  margin-left: auto !important;
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
