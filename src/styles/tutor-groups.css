@@ -1102,7 +1102,12 @@
 }
 
 @media (max-width: 576px) {
+  .tg-section-head {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
   .tg-toolbar {
+    flex: 0 0 100%;
     flex-wrap: wrap;
     width: 100%;
   }
