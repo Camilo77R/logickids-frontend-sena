@@ -963,9 +963,7 @@
 }
 
 .lk-role-dashboard--fill .lk-role-mobile-list {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .lk-role-dashboard--fill .lk-table thead th {
