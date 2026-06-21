@@ -516,17 +516,15 @@
     display: none;
   }
 
-  .lk-portal-topbar__row {
-    flex-wrap: wrap;
-  }
-
   .lk-portal-topbar__left,
   .lk-portal-topbar__right {
-    width: 100%;
+    width: auto;
   }
 
   .lk-portal-topbar__left {
     align-items: flex-start;
+    min-width: 0;
+    flex: 1;
   }
 
   .lk-portal-topbar__right {
@@ -535,6 +533,7 @@
     align-items: center;
     justify-content: flex-end;
     gap: 0.65rem;
+    flex-shrink: 0;
   }
 
   .lk-portal-topbar__actions {
