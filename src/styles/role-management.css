@@ -1017,9 +1017,8 @@
 
   .lk-role-page__filters {
     width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.2rem;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 
   .lk-role-inline-actions {
