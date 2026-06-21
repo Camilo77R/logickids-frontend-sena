@@ -1003,6 +1003,22 @@
 }
 
 @media (max-width: 992px) {
+  .lk-portal-topbar {
+    position: static;
+    z-index: auto;
+    background: rgba(255, 255, 255, 0.88);
+  }
+
+  .lk-role-page__toolbar {
+    position: static;
+    z-index: auto;
+    background: transparent;
+  }
+
+  .lk-role-dashboard .lk-table thead th {
+    position: static;
+  }
+
   .lk-admin-dashboard .lk-role-dashboard__hero-logo {
     width: 100%;
   }

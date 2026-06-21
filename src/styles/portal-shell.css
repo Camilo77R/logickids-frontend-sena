@@ -466,14 +466,16 @@
     min-height: 100dvh;
     height: auto;
     overflow: visible;
+    backdrop-filter: none;
+    background: transparent;
   }
 
   .lk-portal-topbar {
-    padding: 1rem;
+    padding: 0.6rem 0.8rem;
     align-items: flex-start;
     flex-direction: column;
     min-height: auto;
-    gap: 0.9rem;
+    gap: 0.5rem;
     position: static;
   }
 
@@ -611,6 +613,7 @@
 
   .lk-portal-topbar__tertiary {
     font-size: 0.7rem;
+    display: none;
   }
 
   .lk-portal-topbar__profile {
@@ -628,8 +631,8 @@
 
 @media (max-width: 400px) {
   .lk-portal-topbar {
-    padding: 0.7rem;
-    gap: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    gap: 0.3rem;
   }
 
   .lk-portal-topbar__brand {
@@ -638,6 +641,10 @@
 
   .lk-portal-topbar__title {
     font-size: 1.1rem;
+  }
+
+  .lk-portal-topbar__subtitle {
+    display: none;
   }
 
   .lk-portal-mobile-nav__link,
