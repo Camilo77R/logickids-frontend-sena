@@ -1044,14 +1044,35 @@
 
   .lk-role-entity-card {
     padding: 0.75rem;
+    overflow: hidden;
   }
 
   .lk-role-entity-card__header {
     margin-bottom: 0.5rem;
   }
 
+  .lk-role-entity-card__title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+  }
+
+  .lk-role-entity-card__subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.75rem;
+  }
+
   .lk-role-entity-card__meta {
     margin: 0.5rem 0;
+  }
+
+  .lk-role-entity-card__meta dd {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    font-size: 0.8rem;
   }
 
   .lk-role-entity-grid {
@@ -1152,7 +1173,17 @@
   }
 
   .lk-role-entity-card__title {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lk-role-entity-card__subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.7rem;
   }
 
   .lk-role-entity-card__header {
@@ -1162,6 +1193,12 @@
   .lk-role-entity-card__meta {
     gap: 0.35rem;
     font-size: 0.7rem;
+  }
+
+  .lk-role-entity-card__meta dd {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    font-size: 0.75rem;
   }
 
   .lk-role-entity-grid {
