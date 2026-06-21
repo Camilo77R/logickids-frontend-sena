@@ -1014,16 +1014,10 @@
     position: static;
     z-index: auto;
     background: transparent;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    gap: 4px;
-    padding: 4px 0;
-  }
-
-  .lk-role-page__toolbar::-webkit-scrollbar,
-  .lk-portal-topbar--merged .lk-role-page__toolbar::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 6px;
+    padding: 6px 0;
   }
 
   .lk-role-dashboard .lk-table thead th {
@@ -1060,28 +1054,17 @@
   }
 
   .lk-role-page__toolbar .lk-role-page__filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-  }
-
-  .lk-role-page__toolbar .lk-role-page__filters::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 }
 
 @media (max-width: 576px) {
   .lk-role-page__toolbar {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    gap: 4px;
-    padding: 4px 0;
-  }
-
-  .lk-role-page__toolbar::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 6px;
+    padding: 6px 0;
   }
 
   .lk-role-page__filters {
