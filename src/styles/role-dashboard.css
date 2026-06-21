@@ -937,7 +937,7 @@
 .lk-role-dashboard--fill {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
   overflow: hidden;
 }
 
@@ -1038,6 +1038,11 @@
 
   .lk-admin-dashboard .lk-hero-logo {
     width: min(100px, 50vw);
+  }
+
+  .lk-role-dashboard:not(.lk-role-dashboard--fill) {
+    overflow-y: auto;
+    min-height: 0;
   }
 }
 /* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */

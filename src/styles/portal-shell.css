@@ -588,9 +588,11 @@
   }
 
   .lk-portal-shell__content {
-    padding: 0.5rem 0.5rem 5.5rem;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    overflow: hidden;
+    padding: 0.5rem 0.5rem 5.5rem;
   }
 
 }
@@ -677,6 +679,10 @@
   }
 
   .lk-portal-shell__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
     padding: 0.35rem 0.35rem 5rem;
   }
 }
