@@ -1042,6 +1042,31 @@
     flex: 1 1 100%;
   }
 
+  .lk-role-entity-card {
+    padding: 0.75rem;
+  }
+
+  .lk-role-entity-card__header {
+    margin-bottom: 0.5rem;
+  }
+
+  .lk-role-entity-card__meta {
+    margin: 0.5rem 0;
+  }
+
+  .lk-role-entity-grid {
+    gap: 0.7rem;
+    margin-top: 0.5rem;
+  }
+
+  .lk-role-quick-link {
+    padding: 0.7rem 0.8rem;
+  }
+
+  .lk-role-quick-grid {
+    gap: 0.6rem;
+  }
+
   .lk-role-panel {
     overflow: visible;
     border-radius: 0;
@@ -1114,6 +1139,37 @@
 
   .lk-role-modal__content {
     overflow: visible;
+  }
+
+  .lk-role-entity-card {
+    padding: 0.65rem;
+    border-radius: 0.9rem;
+  }
+
+  .lk-role-entity-card__title {
+    font-size: 0.88rem;
+  }
+
+  .lk-role-entity-card__header {
+    gap: 0.35rem;
+  }
+
+  .lk-role-entity-card__meta {
+    gap: 0.35rem;
+    font-size: 0.7rem;
+  }
+
+  .lk-role-entity-grid {
+    gap: 0.5rem;
+  }
+
+  .lk-role-quick-link {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.82rem;
+  }
+
+  .lk-role-quick-grid {
+    gap: 0.5rem;
   }
 }
 
