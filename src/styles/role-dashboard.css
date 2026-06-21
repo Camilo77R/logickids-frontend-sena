@@ -1033,12 +1033,7 @@
   }
 
   .lk-role-dashboard--fill {
-    overflow: hidden;
-    min-height: 0;
-  }
-
-  .lk-role-dashboard--fill .lk-role-panel {
-    overflow-y: auto;
+    overflow: visible;
   }
 
   .lk-role-dashboard--fill .lk-role-mobile-list {
@@ -1047,14 +1042,9 @@
   }
 
   .lk-role-dashboard--fill .lk-admin-pagination {
-    position: sticky;
-    bottom: 0;
-    margin-top: 0;
-    padding: 10px 0;
-    background: #ffffff;
-    z-index: 1;
-    border-top: 1px solid rgba(97, 43, 136, 0.08);
+    margin-top: auto;
   }
+}
 }
 /* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */
 
