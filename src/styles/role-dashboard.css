@@ -1058,6 +1058,11 @@
     gap: 4px;
   }
 
+  .lk-role-page__filter {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+
   .lk-role-page__date-filter {
     display: none;
   }
