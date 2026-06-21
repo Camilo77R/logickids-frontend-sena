@@ -534,16 +534,12 @@
 
   .lk-portal-topbar__profile {
     margin-left: 0;
+    max-width: 100%;
   }
 
   .lk-portal-topbar__actions {
     order: 3;
     justify-content: flex-start;
-  }
-
-  .lk-portal-topbar__profile {
-    max-width: 100%;
-    margin-left: auto;
   }
 
   .lk-portal-topbar__profile-copy small {
