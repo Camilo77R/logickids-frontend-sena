@@ -465,7 +465,7 @@
     border-radius: 0;
     min-height: 100dvh;
     height: auto;
-    overflow: visible;
+    overflow: hidden;
     backdrop-filter: none;
     background: transparent;
   }
@@ -477,6 +477,10 @@
     min-height: auto;
     gap: 0.5rem;
     position: static;
+  }
+
+  .lk-portal-topbar__subtitle {
+    display: none;
   }
 
   .lk-portal-topbar__left,
@@ -514,9 +518,12 @@
 
   .lk-portal-mobile-nav {
     display: block;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
     padding: 0 1rem 0.95rem;
     background: rgba(255, 255, 255, 0.88);
-    border-bottom: 1px solid rgba(97, 43, 136, 0.08);
+    border-top: 1px solid rgba(97, 43, 136, 0.08);
   }
 
   .lk-portal-mobile-nav__track {
@@ -582,9 +589,9 @@
   }
 
   .lk-portal-shell__content {
-    padding: 1.1rem 1rem 1.35rem;
-    overflow: visible;
-    flex: none;
+    padding: 1.1rem 1rem 5.5rem;
+    overflow-y: auto;
+    flex: 1;
   }
 
   .lk-role-dashboard--fill {
@@ -614,6 +621,16 @@
   .lk-portal-topbar__tertiary {
     font-size: 0.7rem;
     display: none;
+  }
+
+  .lk-portal-topbar__profile-copy {
+    display: none;
+  }
+
+  .lk-portal-topbar__profile-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.78rem;
   }
 
   .lk-portal-topbar__profile {
@@ -647,6 +664,14 @@
     display: none;
   }
 
+  .lk-portal-topbar__right {
+    gap: 0.3rem;
+  }
+
+  .lk-portal-topbar__profile {
+    padding-right: 0.25rem;
+  }
+
   .lk-portal-mobile-nav__link,
   .lk-portal-mobile-nav__power {
     flex: 0 0 72px;
@@ -662,6 +687,6 @@
   }
 
   .lk-portal-shell__content {
-    padding: 0.6rem 0.6rem 1rem;
+    padding: 0.6rem 0.6rem 5rem;
   }
 }
