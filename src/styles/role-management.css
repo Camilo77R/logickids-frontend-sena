@@ -1104,6 +1104,17 @@
   .lk-role-page__filters {
     flex-wrap: wrap;
   }
+
+  .lk-role-modal {
+    width: 90vw;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .lk-role-modal__content {
+    overflow: visible;
+  }
 }
 
 @media (max-width: 400px) {
