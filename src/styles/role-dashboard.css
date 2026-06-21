@@ -1028,28 +1028,52 @@
     grid-template-columns: 1fr;
   }
 
-  .lk-role-page__filters {
-    flex-wrap: wrap;
-    padding-bottom: 4px;
+  .lk-role-page__toolbar .lk-role-page__filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .lk-role-page__toolbar .lk-role-page__filters::-webkit-scrollbar {
+    display: none;
   }
 }
 
 @media (max-width: 576px) {
   .lk-role-page__toolbar {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
     flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .lk-role-page__filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .lk-role-page__filters::-webkit-scrollbar {
+    display: none;
   }
 
   .lk-role-page__search {
-    flex: none;
+    flex: 1;
+    min-width: 140px;
     max-width: none;
   }
 
+  .lk-role-page__actions {
+    flex-shrink: 0;
+  }
+
   .lk-role-page__date-filter {
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    padding: 0.35rem 0.5rem;
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+    padding: 0.2rem 0.4rem;
   }
 
   .lk-role-page__date-filter input {
@@ -1064,8 +1088,28 @@
 
 @media (max-width: 400px) {
   .lk-role-page__toolbar {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+  }
+
+  .lk-role-page__filters {
+    flex: 1;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .lk-role-page__filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lk-role-page__search {
+    flex: 1 1 100%;
+    min-width: 0;
   }
 
   .lk-role-page__date-filter {

@@ -454,6 +454,7 @@
     grid-template-columns: 1fr;
     padding: 0;
     gap: 0;
+    overflow-y: auto;
   }
 
   .lk-portal-sidebar {
@@ -462,7 +463,9 @@
 
   .lk-portal-shell__main {
     border-radius: 0;
-    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+    overflow: visible;
   }
 
   .lk-portal-topbar {
@@ -471,6 +474,7 @@
     flex-direction: column;
     min-height: auto;
     gap: 0.9rem;
+    position: static;
   }
 
   .lk-portal-topbar__left,
@@ -577,6 +581,18 @@
 
   .lk-portal-shell__content {
     padding: 1.1rem 1rem 1.35rem;
+    overflow: visible;
+    flex: none;
+  }
+
+  .lk-role-dashboard--fill {
+    height: auto;
+    overflow: visible;
+  }
+
+  .lk-role-dashboard--fill .lk-table-wrap {
+    overflow-y: visible;
+    max-height: none;
   }
 }
 
