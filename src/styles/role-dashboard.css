@@ -1020,6 +1020,14 @@
     padding: 6px 0;
   }
 
+  .lk-role-page__search {
+    min-width: 0;
+  }
+
+  .lk-role-page__actions {
+    flex-shrink: 1;
+  }
+
   .lk-role-dashboard .lk-table thead th {
     position: static;
   }
