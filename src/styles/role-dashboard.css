@@ -1009,10 +1009,21 @@
     background: rgba(255, 255, 255, 0.88);
   }
 
-  .lk-role-page__toolbar {
+  .lk-role-page__toolbar,
+  .lk-portal-topbar--merged .lk-role-page__toolbar {
     position: static;
     z-index: auto;
     background: transparent;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 4px;
+    padding: 4px 0;
+  }
+
+  .lk-role-page__toolbar::-webkit-scrollbar,
+  .lk-portal-topbar--merged .lk-role-page__toolbar::-webkit-scrollbar {
+    display: none;
   }
 
   .lk-role-dashboard .lk-table thead th {
@@ -1058,80 +1069,86 @@
 
 @media (max-width: 576px) {
   .lk-role-page__toolbar {
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 4px;
+    padding: 4px 0;
+  }
+
+  .lk-role-page__toolbar::-webkit-scrollbar {
+    display: none;
   }
 
   .lk-role-page__filters {
     flex-wrap: nowrap;
     overflow-x: auto;
-    padding-bottom: 2px;
     scrollbar-width: none;
+    gap: 4px;
   }
 
   .lk-role-page__filters::-webkit-scrollbar {
     display: none;
   }
 
+  .lk-role-page__filter {
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
   .lk-role-page__search {
-    flex: 1;
-    min-width: 140px;
-    max-width: none;
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 130px;
+  }
+
+  .lk-role-page__search .lk-search-input {
+    padding: 5px 28px 5px 30px;
+    font-size: 0.78rem;
+    height: 30px;
+  }
+
+  .lk-role-page__date-filter {
+    display: none;
   }
 
   .lk-role-page__actions {
     flex-shrink: 0;
+    gap: 4px;
   }
 
-  .lk-role-page__date-filter {
-    flex-wrap: nowrap;
-    gap: 0.3rem;
-    padding: 0.2rem 0.4rem;
+  .lk-btn--icon {
+    padding: 5px;
+    width: 28px;
+    height: 28px;
   }
 
-  .lk-role-page__date-filter input {
-    width: 90px;
+  .lk-btn--primary span {
     font-size: 0.72rem;
-  }
-
-  .lk-role-page__date-filter span {
-    font-size: 0.68rem;
   }
 }
 
 @media (max-width: 400px) {
   .lk-role-page__toolbar {
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 4px;
-  }
-
-  .lk-role-page__filters {
-    flex: 1;
     flex-wrap: nowrap;
     overflow-x: auto;
-    padding-bottom: 2px;
     scrollbar-width: none;
+    gap: 3px;
+    padding: 3px 0;
   }
 
-  .lk-role-page__filters::-webkit-scrollbar {
-    display: none;
+  .lk-role-page__filter {
+    padding: 2px 8px;
+    font-size: 0.65rem;
   }
 
   .lk-role-page__search {
-    flex: 1 1 100%;
-    min-width: 0;
+    width: 100px;
   }
 
   .lk-role-page__date-filter {
-    width: 100%;
-    border-radius: var(--lk-radius-sm);
-    justify-content: center;
+    display: none;
   }
 
   .lk-role-page__date-filter input {

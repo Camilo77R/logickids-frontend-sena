@@ -470,11 +470,11 @@
   }
 
   .lk-portal-topbar {
-    padding: 0.6rem 0.8rem;
+    padding: 0.4rem 0.6rem;
     align-items: flex-start;
     flex-direction: column;
     min-height: auto;
-    gap: 0.5rem;
+    gap: 0.3rem;
     position: static;
   }
 
@@ -597,11 +597,11 @@
 
 @media (max-width: 576px) {
   .lk-portal-topbar__brand {
-    font-size: 1.42rem;
+    font-size: 1.2rem;
   }
 
   .lk-portal-topbar__title {
-    font-size: 1.28rem;
+    font-size: 1rem;
   }
 
   .lk-portal-topbar__subtitle {
