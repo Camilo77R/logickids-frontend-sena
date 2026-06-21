@@ -493,7 +493,7 @@
   }
 
   .lk-portal-topbar--merged .lk-portal-topbar__right {
-    gap: 0.4rem;
+    gap: 8px;
   }
 
   .lk-portal-topbar--merged .lk-portal-topbar__profile-avatar {
@@ -516,15 +516,8 @@
     display: none;
   }
 
-  .lk-portal-topbar__left,
-  .lk-portal-topbar__right {
-    width: auto;
-  }
-
   .lk-portal-topbar__left {
-    align-items: flex-start;
     min-width: 0;
-    flex: 1;
   }
 
   .lk-portal-topbar__copy {
@@ -533,17 +526,13 @@
 
   .lk-portal-topbar__right {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end;
-    gap: 0.65rem;
+    gap: 8px;
     flex-shrink: 0;
   }
 
   .lk-portal-topbar__actions {
     order: 3;
-    flex: 1 1 100%;
-    width: 100%;
     justify-content: flex-start;
   }
 
