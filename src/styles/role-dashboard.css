@@ -1035,6 +1035,15 @@
   .lk-role-dashboard--fill {
     overflow: visible;
   }
+
+  .lk-role-dashboard--fill .lk-role-mobile-list {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .lk-role-dashboard--fill .lk-admin-pagination {
+    margin-top: auto;
+  }
 }
 /* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */
 

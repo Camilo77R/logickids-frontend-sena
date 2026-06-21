@@ -516,6 +516,10 @@
     display: none;
   }
 
+  .lk-portal-topbar__row {
+    flex-wrap: wrap;
+  }
+
   .lk-portal-topbar__left,
   .lk-portal-topbar__right {
     width: 100%;
