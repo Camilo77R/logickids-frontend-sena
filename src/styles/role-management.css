@@ -997,10 +997,6 @@
     display: grid;
   }
 
-  .lk-role-dashboard--fill .lk-role-panel {
-    overflow-y: auto;
-  }
-
   .lk-admin-pagination {
     align-items: stretch;
     flex-direction: column;
