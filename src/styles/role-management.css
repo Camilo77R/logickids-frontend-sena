@@ -1089,8 +1089,7 @@
   }
 
   .lk-role-page__filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    flex-wrap: wrap;
   }
 }
 
