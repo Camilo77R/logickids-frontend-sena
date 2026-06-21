@@ -963,9 +963,7 @@
 }
 
 .lk-role-dashboard--fill .lk-role-mobile-list {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .lk-role-dashboard--fill .lk-table thead th {
@@ -1040,9 +1038,8 @@
     width: min(100px, 50vw);
   }
 
-  .lk-role-dashboard:not(.lk-role-dashboard--fill) {
-    overflow-y: auto;
-    min-height: 0;
+  .lk-role-dashboard--fill {
+    overflow: visible;
   }
 }
 /* ── BREAKPOINTS ──────────────────────────────────────────────────────────── */
