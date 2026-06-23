@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { QrCode, RefreshCw, Search, Users } from "lucide-react";
+import { MonitorSmartphone, QrCode, RefreshCw, Search, Users } from "lucide-react";
 import {
   Alert,
   Badge,
@@ -18,6 +18,7 @@ import {
   Table,
 } from "react-bootstrap";
 import StudentQrPreview from "../../components/account/StudentQrPreview";
+import StudentDeviceSessionModal from "../../components/students/StudentDeviceSessionModal";
 import estudianteService from "../../services/estudianteService";
 import tutorGroupsService from "../../services/tutorGroupsService";
 import profesorImage from "../../assets/imgs/imagen profe.png";
@@ -47,6 +48,7 @@ export default function TutorEstudiantesPage() {
   const [qrData, setQrData] = useState(null);
   const [loadingQr, setLoadingQr] = useState(false);
   const [selectedQrStudentName, setSelectedQrStudentName] = useState("");
+  const [deviceSessionStudent, setDeviceSessionStudent] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [estadoFilter, setEstadoFilter] = useState("activo");
   const [currentPage, setCurrentPage] = useState(1);
@@ -262,7 +264,7 @@ export default function TutorEstudiantesPage() {
                           <th>Progreso</th>
                           <th>Estado</th>
                           <th>Sesion</th>
-                          <th>QR</th>
+                          <th>Acceso</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -306,14 +308,26 @@ export default function TutorEstudiantesPage() {
                                 </Badge>
                               </td>
                               <td>
-                                <Button
-                                  size="sm"
-                                  variant="outline-primary"
-                                  onClick={() => handleObtenerQr(estudiante)}
-                                  title="Ver QR"
-                                >
-                                  <QrCode size={16} />
-                                </Button>
+                                <div className="lk-student-access-actions">
+                                  <Button
+                                    size="sm"
+                                    variant="outline-primary"
+                                    onClick={() => handleObtenerQr(estudiante)}
+                                    title="Ver QR"
+                                    aria-label={`Ver QR de ${estudiante.nombre}`}
+                                  >
+                                    <QrCode size={16} />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline-primary"
+                                    onClick={() => setDeviceSessionStudent(estudiante)}
+                                    title="Ver sesión de dispositivo"
+                                    aria-label={`Ver sesión de dispositivo de ${estudiante.nombre}`}
+                                  >
+                                    <MonitorSmartphone size={16} />
+                                  </Button>
+                                </div>
                               </td>
                             </tr>
                           );
@@ -367,6 +381,13 @@ export default function TutorEstudiantesPage() {
           )}
         </Modal.Body>
       </Modal>
+
+      <StudentDeviceSessionModal
+        open={Boolean(deviceSessionStudent)}
+        student={deviceSessionStudent}
+        onClose={() => setDeviceSessionStudent(null)}
+        onRecovered={() => loadEstudiantes(selectedGrupoId, estadoFilter !== "activo")}
+      />
     </Container>
   );
 }
