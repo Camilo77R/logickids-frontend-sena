@@ -1657,3 +1657,8 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   border-color: var(--lk-brand) !important;
   box-shadow: 0 0 0 4px var(--lk-brand-glow) !important;
 }
+.lk-student-access-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
