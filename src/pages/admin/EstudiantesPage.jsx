@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart3,
   GraduationCap,
+  MonitorSmartphone,
   PencilLine,
   QrCode,
   RefreshCw,
@@ -23,6 +24,7 @@ import DashboardMetricCard from "../../components/dashboard/DashboardMetricCard"
 import DashboardPanel from "../../components/dashboard/DashboardPanel";
 import AppShell from "../../components/layout/AppShell";
 import StudentQrPreview from "../../components/account/StudentQrPreview";
+import StudentDeviceSessionModal from "../../components/students/StudentDeviceSessionModal";
 import adminStudentsService from "../../services/adminStudentsService";
 import "../../styles/role-dashboard.css";
 
@@ -147,6 +149,7 @@ export default function EstudiantesPage() {
   const [showMetricsModal, setShowMetricsModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedStudentDetail, setSelectedStudentDetail] = useState(null);
+  const [deviceSessionStudent, setDeviceSessionStudent] = useState(null);
   const [studentModal, setStudentModal] = useState({
     open: false,
     mode: "create",
@@ -716,6 +719,12 @@ export default function EstudiantesPage() {
               }}>
                 <QrCode size={16} /> Ver QR
               </button>
+              <button className="lk-btn lk-btn--secondary" onClick={() => {
+                setShowDetailModal(false);
+                setDeviceSessionStudent(selectedStudentDetail);
+              }}>
+                <MonitorSmartphone size={16} /> Dispositivo
+              </button>
               {getStudentState(selectedStudentDetail) === "activo" ? (
                 <button className="lk-btn lk-btn--ghost-danger" onClick={() => {
                   setShowDetailModal(false);
@@ -766,6 +775,13 @@ export default function EstudiantesPage() {
             </div>
           )}
         </RoleModal>
+
+        <StudentDeviceSessionModal
+          open={Boolean(deviceSessionStudent)}
+          student={deviceSessionStudent}
+          onClose={() => setDeviceSessionStudent(null)}
+          onRecovered={() => loadStudents(selectedGroupId, { clearFeedback: false })}
+        />
 
         <RoleModal
           open={studentModal.open}
