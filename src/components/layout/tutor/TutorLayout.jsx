@@ -7,6 +7,7 @@
 import { motion } from "framer-motion";
 import TutorSidebar from "./TutorSidebar";
 import TutorTopbar from "./TutorTopbar";
+import TutorMobileNav from "./TutorMobileNav";
 import "./tutor.css";
 
 export default function TutorLayout({ children }) {
@@ -16,6 +17,7 @@ export default function TutorLayout({ children }) {
 
       <div className="lk-tutor-main-wrapper">
         <TutorTopbar />
+        <TutorMobileNav />
 
         <motion.main
           className="lk-tutor-content"

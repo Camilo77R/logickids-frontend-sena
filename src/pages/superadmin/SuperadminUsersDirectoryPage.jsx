@@ -133,7 +133,7 @@ export default function SuperadminUsersDirectoryPage({ type }) {
       title={config.title}
       description={config.description}
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-admin-dashboard">
         {feedback ? <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div> : null}
 
         <section className="lk-role-dashboard__grid">

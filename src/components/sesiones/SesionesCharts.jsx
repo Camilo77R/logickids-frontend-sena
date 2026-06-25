@@ -84,7 +84,7 @@ export default function SesionesCharts({ data }) {
     <div className="ses-charts-container">
       {/* Donut + leyenda */}
       <div className="ses-donut-wrapper">
-      <div className="ses-donut-canvas" style={{ width: "160px", height: "160px", position: "relative" }}>
+      <div className="ses-donut-canvas">
       <Doughnut data={doughnutData} options={doughnutOptions} width={160} height={160} />
       <div className="ses-donut-center">
       <span className="ses-donut-pct">{pct}%</span>

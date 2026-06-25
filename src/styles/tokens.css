@@ -84,6 +84,13 @@
   --lk-topbar-height: 70px;
   --lk-topbar-bg: rgba(255, 255, 255, 0.92);
 
+  /* ── Breakpoints Responsive ──────────────────────────── */
+  --lk-bp-xs: 400px;
+  --lk-bp-sm: 576px;
+  --lk-bp-md: 768px;
+  --lk-bp-lg: 992px;
+  --lk-bp-xl: 1200px;
+
   /* ── Bootstrap 5 overrides ──────────────────────── */
   --bs-primary: var(--lk-purple);
   --bs-primary-rgb: 97, 43, 136;

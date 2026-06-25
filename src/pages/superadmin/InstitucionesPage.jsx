@@ -226,7 +226,7 @@ export default function InstitucionesPage() {
       title="Instituciones"
       description="Gestiona el directorio institucional y aplica acciones operativas sin duplicar el tablero global."
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-admin-dashboard">
         {feedback ? <div className={`lk-alert lk-alert--${feedback.type}`}>{feedback.message}</div> : null}
 
         <section className="lk-role-dashboard__hero">

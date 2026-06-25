@@ -478,7 +478,7 @@
   height: 82px;
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1200px) {
   .lk-achievements-topbar,
   .lk-achievements-layout,
   .lk-achievements-banner {
@@ -490,7 +490,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .lk-achievements-page {
     padding: 0.9rem;
   }
@@ -512,5 +512,36 @@
 
   .lk-achievements-user {
     width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .lk-achievements-page {
+    padding: 0.6rem;
+  }
+  .lk-achievements-kpis {
+    gap: 0.6rem;
+  }
+  .lk-achievements-banner {
+    padding: 0.8rem;
+    margin-top: 0.8rem;
+  }
+  .lk-achievements-banner h2 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+  .lk-achievements-banner p {
+    font-size: 0.8rem;
+    margin: 0.4rem 0 0;
+  }
+  .lk-achievements-banner__actions {
+    margin-top: 0.8rem;
+    gap: 0.6rem;
+  }
+  .lk-achievements-banner__actions button {
+    min-height: 40px;
+    font-size: 0.8rem;
+  }
+  .lk-achievements-rocket {
+    display: none;
   }
 }

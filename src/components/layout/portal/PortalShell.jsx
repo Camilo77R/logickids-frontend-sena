@@ -53,12 +53,6 @@ export default function PortalShell({
           toolbar={toolbar}
         />
 
-        <PortalMobileNav
-          navigation={navigation}
-          roleLabel={roleLabel}
-          onLogout={onLogout}
-        />
-
         <motion.main
           className="lk-portal-shell__content"
           initial={{ opacity: 0, y: 10 }}
@@ -67,6 +61,12 @@ export default function PortalShell({
         >
           {children}
         </motion.main>
+
+        <PortalMobileNav
+          navigation={navigation}
+          roleLabel={roleLabel}
+          onLogout={onLogout}
+        />
       </div>
     </div>
   );

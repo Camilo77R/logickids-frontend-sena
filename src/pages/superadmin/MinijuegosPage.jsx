@@ -83,7 +83,7 @@ export default function MinijuegosPage() {
         </button>
       }
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-admin-dashboard">
         <section className="lk-role-dashboard__hero">
           <span className="lk-role-dashboard__hero-badge">Catalogo global</span>
           <h2 className="lk-role-dashboard__hero-title">Disponibilidad de minijuegos</h2>

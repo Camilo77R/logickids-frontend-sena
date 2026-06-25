@@ -170,6 +170,7 @@
   display: flex;
   flex-direction: column;
   z-index: 10;
+  overflow-y: auto;
 }
 
 /* Topbar */
@@ -872,9 +873,15 @@
   position: sticky;
   top: -1.55rem;
   z-index: 10;
-  border-radius: 32px;
-  border: 1px solid var(--lk-tutor-border);
-  box-shadow: var(--lk-shadow-sm);
+  border-radius: var(--lk-radius-lg);
+  padding: 18px 22px;
+  box-shadow: 0 4px 20px rgba(142, 53, 213, 0.18);
+}
+
+@media (max-width: 768px) {
+  .ses-filters-card {
+    position: static;
+  }
 }
 
 .ses-filters-row {
@@ -1146,6 +1153,7 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  flex-wrap: wrap;
   padding-top: 12px;
   margin-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.18);
@@ -1473,10 +1481,76 @@
 }
 .lk-role-modal--wide .ses-stat-value {
   font-size: 32px;
+  word-break: break-all;
 }
 .lk-role-modal--wide .ses-stat-label {
   font-size: 12px;
   letter-spacing: 1.5px;
+}
+
+@media (max-width: 600px) {
+  .lk-role-modal--wide .ses-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .lk-role-modal--wide .ses-stat-card {
+    padding: 14px 10px;
+    min-height: 80px;
+  }
+  .lk-role-modal--wide .ses-stat-value {
+    font-size: 24px;
+  }
+  .lk-role-modal--wide .ses-stat-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas {
+    width: 150px;
+    height: 150px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas canvas {
+    width: 150px !important;
+    height: 150px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .lk-role-modal--wide {
+    width: min(100%, 95vw);
+    margin: 0.5rem;
+  }
+  .lk-role-modal--wide .lk-role-modal__content {
+    padding: 1rem;
+    max-height: calc(90vh - 80px);
+  }
+  .lk-role-modal--wide .ses-stats-grid {
+    gap: 8px;
+  }
+  .lk-role-modal--wide .ses-stat-card {
+    padding: 10px 8px;
+    min-height: 70px;
+  }
+  .lk-role-modal--wide .ses-stat-value {
+    font-size: 20px;
+  }
+  .lk-role-modal--wide .ses-charts-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas {
+    width: 140px;
+    height: 140px;
+  }
+  .lk-role-modal--wide .ses-donut-canvas canvas {
+    width: 140px !important;
+    height: 140px !important;
+  }
+  .lk-role-modal--wide .ses-bar-wrapper {
+    height: 180px;
+  }
+  .lk-role-modal--wide .ses-bar-wrapper canvas {
+    height: 180px !important;
+  }
 }
 .lk-role-modal__content .ses-charts-card {
   margin-top: 16px;
@@ -1538,6 +1612,39 @@
   text-transform: uppercase;
   color: var(--lk-tutor-text-muted);
   border-bottom: 1.5px solid var(--lk-tutor-border);
+}
+
+.ses-table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--lk-surface);
+}
+
+.ses-table tbody tr {
+  position: relative;
+}
+
+.ses-table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--lk-surface);
+}
+
+.ses-table-row:hover td:first-child {
+  background: rgba(142, 53, 213, 0.04);
+}
+
+.ses-table tbody td:first-child::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--lk-tutor-border);
+  pointer-events: none;
 }
 
 .ses-table-row {
@@ -1866,6 +1973,10 @@
     flex-direction: row;
     justify-content: center;
   }
+  .ses-chart-legend {
+    flex: 1;
+    width: auto;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1879,6 +1990,20 @@
 
   .ses-adaptation-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .ses-search {
+    width: 100%;
+  }
+
+  .ses-date-filter {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .ses-date-filter .ses-date-input {
+    flex: 1;
+    min-width: 0;
   }
 }
 /* ================================================================
@@ -1984,7 +2109,6 @@
 
 .tutor-card:hover {
   box-shadow: var(--lk-card-shadow-hover) !important;
-  transform: translateY(-2px);
 }
 
 /* Evitar hover en cards que contienen tablas o charts grandes */

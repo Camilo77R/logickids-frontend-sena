@@ -347,7 +347,7 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 992px) {
   .lk-span-3,
   .lk-span-4,
   .lk-span-5,

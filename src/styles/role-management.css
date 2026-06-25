@@ -18,7 +18,7 @@
 
 .lk-role-search {
   position: relative;
-  min-width: min(360px, 100%);
+  min-width: min(280px, 100%);
 }
 
 .lk-role-search__icon {
@@ -222,8 +222,8 @@
   gap: 0.6rem;
   min-height: 0;
   flex: 1;
-  overflow: hidden;
-  padding-right: 0.15rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 .lk-role-modal__actions {
@@ -256,7 +256,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 8px;
 }
 
 .lk-role-page__toolbar--stacked {
@@ -565,14 +565,14 @@
 
 .lk-role-mobile-list {
   display: none;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .lk-role-mobile-card {
   display: grid;
-  gap: 0.85rem;
-  padding: 1rem;
-  border-radius: 1.2rem;
+  gap: 0.65rem;
+  padding: 0.9rem 0.85rem;
+  border-radius: 1rem;
   border: 1px solid rgba(97, 43, 136, 0.08);
   background: rgba(255, 255, 255, 0.98);
 }
@@ -735,10 +735,9 @@
   width: fit-content;
 }
 
-.lk-role-panel--compact {
-  padding: 0.9rem 1rem 1rem;
-  border-radius: 1.05rem;
-}
+  .lk-role-panel--compact {
+    padding: 0.5rem 0.6rem;
+  }
 
 .lk-role-panel--compact .lk-role-panel__header {
   align-items: center;
@@ -983,19 +982,32 @@
   text-align: center;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1200px) {
   .lk-role-section-grid {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
   .lk-role-table--desktop {
     display: none;
   }
 
   .lk-role-mobile-list {
     display: grid;
+  }
+
+  .lk-role-panel--compact .lk-role-panel__header {
+    margin-bottom: 0.25rem;
+  }
+
+  .lk-role-mobile-card {
+    gap: 0.5rem;
+    padding: 0.75rem 0.7rem;
+  }
+
+  .lk-role-entity-card__meta {
+    gap: 0.5rem;
   }
 
   .lk-admin-pagination {
@@ -1018,9 +1030,8 @@
 
   .lk-role-page__filters {
     width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.2rem;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 
   .lk-role-inline-actions {
@@ -1030,9 +1041,65 @@
   .lk-role-inline-actions .lk-btn {
     flex: 1 1 100%;
   }
+
+  .lk-role-entity-card {
+    padding: 0.75rem;
+    overflow: hidden;
+  }
+
+  .lk-role-entity-card__header {
+    margin-bottom: 0.5rem;
+  }
+
+  .lk-role-entity-card__title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+  }
+
+  .lk-role-entity-card__subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.75rem;
+  }
+
+  .lk-role-entity-card__meta {
+    margin: 0.5rem 0;
+  }
+
+  .lk-role-entity-card__meta dd {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    font-size: 0.8rem;
+  }
+
+  .lk-role-entity-grid {
+    gap: 0.7rem;
+    margin-top: 0.5rem;
+  }
+
+  .lk-role-quick-link {
+    padding: 0.7rem 0.8rem;
+  }
+
+  .lk-role-quick-grid {
+    gap: 0.6rem;
+  }
+
+  .lk-role-panel {
+    overflow: visible;
+    border-radius: 0;
+    overflow-x: hidden;
+  }
+
+  .lk-role-entity-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .lk-role-modal-overlay {
     padding: 0.9rem;
   }
@@ -1058,6 +1125,11 @@
     justify-self: center;
     transform: rotate(90deg);
   }
+
+  .lk-role-page__filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
 }
 
 /* ── ADMIN-SCOPED PASTEL COLOR OVERRIDES ── */
@@ -1069,3 +1141,101 @@
 
 .lk-admin-dashboard .lk-role-accordion,
 .lk-admin-modal .lk-role-accordion { background: #f9fafb !important; }
+
+@media (max-width: 576px) {
+  .lk-role-search {
+    min-width: 100%;
+  }
+
+  .lk-role-page__select {
+    flex: none;
+    min-width: 100%;
+  }
+
+  .lk-role-page__filters {
+    flex-wrap: wrap;
+  }
+
+  .lk-role-modal {
+    width: 90vw;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .lk-role-modal__content {
+    overflow: visible;
+  }
+
+  .lk-role-entity-card {
+    padding: 0.65rem;
+    border-radius: 0.9rem;
+  }
+
+  .lk-role-entity-card__title {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lk-role-entity-card__subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.7rem;
+  }
+
+  .lk-role-entity-card__header {
+    gap: 0.35rem;
+  }
+
+  .lk-role-entity-card__meta {
+    gap: 0.35rem;
+    font-size: 0.7rem;
+  }
+
+  .lk-role-entity-card__meta dd {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    font-size: 0.75rem;
+  }
+
+  .lk-role-entity-grid {
+    gap: 0.5rem;
+  }
+
+  .lk-role-quick-link {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.82rem;
+  }
+
+  .lk-role-quick-grid {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .lk-role-modal {
+    padding: 0.85rem;
+    border-radius: 1rem;
+  }
+
+  .lk-role-entity-card {
+    padding: 0.75rem;
+  }
+
+  .lk-role-form__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lk-role-modal__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lk-role-modal__actions .lk-btn {
+    justify-content: center;
+  }
+}

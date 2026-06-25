@@ -247,7 +247,7 @@ export default function SolicitudesPage() {
             />
           ) : (
             <>
-              <div className="lk-table-wrap">
+              <div className="lk-table-wrap lk-role-table--desktop">
                 <table className="lk-table">
                   <thead>
                     <tr>
@@ -281,6 +281,41 @@ export default function SolicitudesPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              <div className="lk-role-mobile-list">
+                {paginatedSolicitudes.map((solicitud) => (
+                  <article key={solicitud.id} className="lk-role-mobile-card">
+                    <header className="lk-role-mobile-card__header">
+                      <div>
+                        <h3 className="lk-role-mobile-card__title">{solicitud.tutor_nombre}</h3>
+                        <p className="lk-role-mobile-card__subtitle">{solicitud.tutor_email}</p>
+                      </div>
+                      <StatusBadge label={solicitud.estado_solicitud} variant={solicitud.estado_solicitud} />
+                    </header>
+                    <dl className="lk-role-entity-card__meta">
+                      <div>
+                        <dt>Fecha</dt>
+                        <dd>{formatDate(solicitud.fecha_solicitud)}</dd>
+                      </div>
+                      <div>
+                        <dt>Contacto</dt>
+                        <dd>{solicitud.correo_contacto}</dd>
+                      </div>
+                      <div>
+                        <dt>Motivo</dt>
+                        <dd>{solicitud.motivo}</dd>
+                      </div>
+                    </dl>
+                    <button
+                      type="button"
+                      className="lk-btn lk-btn--secondary"
+                      onClick={() => handleViewDetail(solicitud)}
+                    >
+                      <Eye size={16} /> Ver detalle
+                    </button>
+                  </article>
+                ))}
               </div>
               <Pagination
                 currentPage={currentPage}
