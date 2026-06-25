@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 const PAGE_SIZE = 10;
+const resolveAdaptationBadgeTone = (source) =>
+  source === "reglas" || source === "ia" || source === "base" ? source : "unknown";
 
 export default function SesionesTable({
   data,
@@ -37,7 +39,8 @@ export default function SesionesTable({
               <th>Fecha</th>
               {showStudentColumn && <th>Estudiante</th>}
               <th>Actividad</th>
-              <th>Minijuego</th>
+              <th>Juego</th>
+              <th>Dificultad aplicada</th>
               <th>Puntaje</th>
               <th>Aciertos</th>
               <th>Errores</th>
@@ -48,7 +51,7 @@ export default function SesionesTable({
           <tbody>
             {paginatedData.length === 0 ? (
               <tr>
-                <td colSpan={showStudentColumn ? 8 : 7} className="ses-empty-row">
+                <td colSpan={showStudentColumn ? 9 : 8} className="ses-empty-row">
                   No se encontraron sesiones con los filtros actuales.
                 </td>
               </tr>
@@ -79,6 +82,23 @@ export default function SesionesTable({
                     {s.habilidad ? (
                       <div className="ses-cell-secondary">Habilidad: {s.habilidad}</div>
                     ) : null}
+                  </td>
+
+                  <td>
+                    <div className="ses-level-pill">
+                      <strong>{s.dificultad ? `Nivel ${s.dificultad}` : "Sin nivel"}</strong>
+                      {s.ajuste_titulo ? (
+                        <span
+                          className={`ses-adapt-badge ses-adapt-badge--${resolveAdaptationBadgeTone(
+                            s.ajuste_fuente
+                          )}`}
+                        >
+                          {s.ajuste_titulo}
+                        </span>
+                      ) : (
+                        <span className="ses-cell-secondary">Sin fuente oficial</span>
+                      )}
+                    </div>
                   </td>
 
                   <td className="ses-td-bold">{s.puntaje}</td>
