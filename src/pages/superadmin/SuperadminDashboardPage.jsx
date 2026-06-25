@@ -59,10 +59,10 @@ export default function SuperadminDashboardPage() {
       title={`Hola, ${firstName}`}
       description="Monitorea la plataforma completa y entra solo a los modulos que necesitan accion."
     >
-      <div className="lk-role-dashboard">
+      <div className="lk-role-dashboard lk-admin-dashboard">
         {error ? <div className="lk-alert lk-alert--error">{error}</div> : null}
 
-        <section className="lk-role-dashboard__hero">
+        <section className="lk-role-dashboard__hero lk-role-dashboard__hero--superadmin">
           <div className="lk-role-dashboard__hero-header">
             <div>
               <span className="lk-role-dashboard__hero-badge">Resumen global</span>
@@ -72,18 +72,11 @@ export default function SuperadminDashboardPage() {
                 Instituciones y Minijuegos para evitar duplicidad y mezclar decision con ejecucion.
               </p>
             </div>
-            <div className="lk-role-dashboard__hero-logo" style={{ marginLeft: "auto" }}>
+            <div className="lk-role-dashboard__hero-logo">
               <img
                 src={logoWordmark}
                 alt="LogicKids"
                 className="lk-hero-logo"
-                style={{
-                  width: "400px",
-                  height: "auto",
-                  display: "block",
-                  transform: "scale(1.6)",
-                  transformOrigin: "center",
-                }}
               />
             </div>
           </div>

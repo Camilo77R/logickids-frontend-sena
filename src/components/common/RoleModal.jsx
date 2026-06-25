@@ -7,7 +7,7 @@ export default function RoleModal({
   eyebrow,
   title,
   warning,
-  width = 520,
+  width = 640,
   actions,
   children,
   overlayClassName = "",

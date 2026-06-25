@@ -311,7 +311,7 @@
   font-weight: 700;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .lk-stats-page {
     padding-inline: 0;
   }
@@ -332,5 +332,20 @@
 
   .lk-stats-toggle button {
     flex: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .lk-stats-page {
+    padding: 0.5rem;
+  }
+  .lk-stats-hero {
+    padding: 1rem;
+  }
+  .lk-stats-hero h1 {
+    font-size: 1.1rem;
+  }
+  .lk-stats-grid {
+    gap: 0.6rem;
   }
 }

@@ -4,8 +4,8 @@
 /* ── Tokens mockup (logos siguen siendo assets LogicKids) ───── */
 .lk-auth-page {
   /* Mockup LogicKids (referencia imagen) */
-  --auth-purple: #9b4d96;
-  --auth-purple-dark: #83447f;
+  --auth-purple: var(--lk-brand);
+  --auth-purple-dark: var(--lk-brand-dark);
   --auth-yellow: #fdb813;
   --auth-yellow-deep: #f5a910;
   --auth-bg-form: #f9f9fb;
@@ -575,7 +575,7 @@
   font-size: 0.7rem;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .lk-auth-right {
     flex: 1;
     padding: 2rem 1.35rem;
@@ -707,7 +707,7 @@
   color: #7f7890;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
   .lk-auth-page--poster-auth::before {
     background-position: center center;
   }
@@ -732,7 +732,7 @@
   }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
   .lk-auth-page--poster-auth .lk-auth-right--register {
     overflow-y: auto;
     padding-top: 1.5rem;

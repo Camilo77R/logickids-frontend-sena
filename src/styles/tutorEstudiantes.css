@@ -322,7 +322,7 @@
 .lk-search-control .input-group-text {
   border: 1px solid var(--students-border);
   border-right: 0;
-  border-radius: 7px 0 0 7px;
+  border-radius: var(--lk-radius-sm) 0 0 var(--lk-radius-sm);
   background: #fff;
   color: var(--students-muted);
   padding: 4px 8px;
@@ -330,7 +330,7 @@
 
 .lk-search-control .form-control {
   border-left: 0;
-  border-radius: 0 7px 7px 0;
+  border-radius: 0 var(--lk-radius-sm) var(--lk-radius-sm) 0;
   font-size: 0.76rem;
 }
 
@@ -355,7 +355,7 @@
 }
 
 .lk-students-table {
-  min-width: 800px;
+  min-width: 600px;
   margin: 0;
   border-collapse: separate;
   border-spacing: 0;
@@ -609,6 +609,21 @@
   }
 }
 
+@media (max-width: 992px) {
+  .lk-table-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .lk-table-filters {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .lk-filter-select {
+    width: min(100%, 220px);
+  }
+}
+
 /* Estilos mejorados para el Modal del formulario de estudiantes */
 .lk-students-page .modal-content {
   border: 1px solid var(--students-border);
@@ -781,6 +796,28 @@
     align-items: flex-start;
     flex-direction: column;
   }
+
+  body:has(.lk-students-page) .tutor-main-content {
+    padding: 16px !important;
+  }
+
+  .lk-students-page {
+    padding: 0;
+  }
+
+  .lk-students-hero {
+    grid-template-columns: 1fr !important;
+    padding: 18px;
+  }
+
+  .lk-students-hero-image {
+    display: none !important;
+  }
+
+  body:has(.lk-students-page) .lk-tutor-content {
+    overflow-y: auto;
+    padding: 1rem;
+  }
 }
 
 /* Integracion final con el shell del tutor: una sola superficie visual, como Mis Grupos. */
@@ -873,27 +910,6 @@ body:has(.lk-students-page) .tutor-main-content {
   align-self: stretch;
   align-items: center;
   justify-content: center;
-}
-
-.lk-tutor-profile-placeholder {
-  width: 156px;
-  height: 112px;
-  transform: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 18px;
-  overflow: hidden;
-  filter: drop-shadow(0 10px 18px rgba(44, 18, 58, 0.22));
-}
-
-.lk-tutor-profile-placeholder img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
 }
 
 .lk-students-card {
@@ -996,37 +1012,28 @@ body:has(.lk-students-page) .tutor-main-content {
   color: var(--students-pink-dark);
 }
 
-@media (max-width: 992px) {
-  .lk-table-toolbar {
-    grid-template-columns: 1fr;
-  }
-
-  .lk-table-filters {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .lk-filter-select {
-    width: min(100%, 220px);
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 576px) {
   body:has(.lk-students-page) .tutor-main-content {
-    padding: 16px !important;
+    padding: 12px !important;
   }
 
   .lk-students-page {
-    padding: 0;
+    min-height: auto;
+    padding: 12px;
   }
 
   .lk-students-hero {
+    min-height: auto;
     grid-template-columns: 1fr;
-    padding: 18px;
+    padding: 14px;
   }
 
   .lk-students-hero-image {
     display: none;
+  }
+
+  .lk-table-toolbar {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -1114,13 +1121,6 @@ body:has(.lk-students-page) .tutor-main-content {
   height: 100%;
 }
 
-.lk-tutor-profile-placeholder {
-  width: 128px;
-  height: 108px;
-  transform: translateY(8px);
-  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.14));
-}
-
 .lk-students-card {
   border: 0;
   border-radius: 0;
@@ -1132,11 +1132,13 @@ body:has(.lk-students-page) .tutor-main-content {
   padding: 0;
 }
 
+@media (min-width: 1201px) {
 .lk-table-toolbar {
   grid-template-columns: auto 220px minmax(0, 1fr);
   align-items: center;
   gap: 14px;
   margin-bottom: 10px;
+}
 }
 
 .lk-section-heading span {
@@ -1184,10 +1186,6 @@ body:has(.lk-students-page) .tutor-main-content {
   font-size: 0.68rem;
   font-family: var(--lk-font);
   white-space: nowrap;
-}
-
-.lk-students-table {
-  min-width: 880px;
 }
 
 .lk-students-table thead th {
@@ -1265,31 +1263,9 @@ body:has(.lk-students-page) .tutor-main-content {
   font-size: 0.68rem;
 }
 
-@media (max-width: 768px) {
-  body:has(.lk-students-page) .tutor-main-content {
-    padding: 12px !important;
-  }
-
-  .lk-students-page {
-    min-height: auto;
-    padding: 12px;
-  }
-
-  .lk-students-hero {
-    min-height: auto;
-    grid-template-columns: 1fr 84px;
-    padding: 14px;
-  }
-
-  .lk-tutor-profile-placeholder {
-    width: 76px;
-    height: 72px;
-  }
-}
-
 /* Override definitivo: este bloque va al final porque el archivo tenia reglas duplicadas. */
 body:has(.lk-students-page) .lk-tutor-content {
-  overflow-y: hidden !important;
+  overflow-y: auto !important;
   padding: 1rem 1.55rem 1rem !important;
 }
 
@@ -1395,31 +1371,10 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   grid-column: 2 !important;
   height: 100% !important;
   align-self: stretch !important;
+  justify-self: end !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-}
-
-.lk-tutor-profile-placeholder {
-  width: 166px !important;
-  height: 104px !important;
-  transform: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  border-radius: 16px !important;
-  overflow: hidden !important;
-  background: rgba(255, 255, 255, 0.18) !important;
-  border: 1px solid rgba(255, 255, 255, 0.24) !important;
-  filter: drop-shadow(0 9px 16px rgba(53, 22, 65, 0.24)) !important;
-}
-
-.lk-tutor-profile-placeholder img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  object-position: center bottom !important;
 }
 
 .lk-students-card {
@@ -1433,9 +1388,11 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   padding: 12px 14px !important;
 }
 
+@media (min-width: 1201px) {
 .lk-table-toolbar {
   margin-bottom: 8px !important;
-  grid-template-columns: auto 220px minmax(0, 1fr) !important;
+  grid-template-columns: auto 220px minmax(0, 1fr);
+}
 }
 
 .lk-students-table {
@@ -1556,21 +1513,6 @@ body:has(.lk-students-page) .lk-tutor-main-content {
   font-weight: 700 !important;
 }
 
-@media (max-width: 768px) {
-  body:has(.lk-students-page) .lk-tutor-content {
-    overflow-y: auto !important;
-    padding: 1rem !important;
-  }
-
-  .lk-students-hero {
-    grid-template-columns: 1fr !important;
-  }
-
-  .lk-students-hero-image {
-    display: none !important;
-  }
-}
-
 /* Ajuste de paleta exacta del tutor: sidebar #8E35D5 y amarillo #fdb813. */
 .lk-students-page {
   --students-pink: var(--lk-brand) !important;
@@ -1589,10 +1531,11 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-tutor-profile-placeholder {
   width: 174px !important;
   height: 116px !important;
+  margin-left: auto !important;
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   filter: drop-shadow(0 10px 14px rgba(72, 25, 78, 0.2)) !important;
 }
 
@@ -1656,9 +1599,4 @@ body:has(.lk-students-page) .lk-tutor-main-content {
 .lk-student-form .form-select:focus {
   border-color: var(--lk-brand) !important;
   box-shadow: 0 0 0 4px var(--lk-brand-glow) !important;
-}
-.lk-student-access-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }

@@ -457,19 +457,19 @@
   background: rgba(220, 38, 38, 0.14);
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1200px) {
   .lk-rec-hero {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 899.98px) {
+@media (max-width: 992px) {
   .lk-rec-form {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
   .lk-rec-page {
     padding-top: 0.75rem;
   }
@@ -482,5 +482,18 @@
   .lk-rec-card__header,
   .lk-rec-panel__header {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .lk-rec-page {
+    padding: 0.5rem;
+  }
+  .lk-rec-hero,
+  .lk-rec-panel {
+    padding: 0.8rem;
+  }
+  .lk-rec-form {
+    gap: 0.5rem;
   }
 }
