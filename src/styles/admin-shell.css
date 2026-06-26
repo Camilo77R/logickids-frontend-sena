@@ -260,3 +260,43 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* DISEÑO ADMIN DASHBOARD — Mockup aprobado */
+.lk-admin-shell { display:flex; height:100vh; background:#EDE8F5; }
+.lk-admin-sidebar { width:200px; flex-shrink:0; background:#1C1033; display:flex; flex-direction:column; padding:1.25rem 0; }
+.lk-admin-sidebar-brand { padding:0 1.25rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:0.75rem; display:flex; align-items:center; gap:0.6rem; }
+.lk-admin-sidebar-brand span { font-size:1rem; font-weight:800; color:#fff; font-family:'Fredoka',sans-serif; }
+.lk-admin-nav { flex:1; padding:0 0.75rem; display:flex; flex-direction:column; gap:0.2rem; }
+.lk-admin-nav-link { display:flex; align-items:center; gap:0.65rem; padding:0.6rem 0.85rem; border-radius:0.75rem; color:rgba(255,255,255,0.65); font-size:0.82rem; font-weight:600; text-decoration:none; transition:background 0.15s,color 0.15s; }
+.lk-admin-nav-link:hover { background:rgba(255,255,255,0.08); color:#fff; }
+.lk-admin-nav-link.active { background:#F5A623; color:#1C1033; font-weight:700; }
+.lk-admin-main { flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1.25rem; }
+.lk-admin-topbar { display:flex; align-items:center; justify-content:space-between; background:#fff; border-radius:1rem; padding:0.75rem 1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+.lk-admin-topbar h1 { font-size:1.5rem; font-weight:800; color:#1A1A2E; margin:0; font-family:'Fredoka',sans-serif; }
+.lk-admin-kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.lk-admin-kpi { background:#fff; border:1px solid #E2DCF0; border-radius:1rem; padding:1.1rem 1.25rem; display:flex; align-items:center; gap:0.85rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+.lk-admin-kpi__icon { width:44px; height:44px; border-radius:0.75rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.lk-admin-kpi__icon--purple { background:#EDE8F5; color:#5B2D8E; }
+.lk-admin-kpi__icon--green  { background:#DCFCE7; color:#16A34A; }
+.lk-admin-kpi__icon--blue   { background:#DBEAFE; color:#2563EB; }
+.lk-admin-kpi__icon--yellow { background:#FEF9C3; color:#CA8A04; }
+.lk-admin-kpi__val { font-size:1.6rem; font-weight:800; color:#1A1A2E; line-height:1.1; font-family:'Fredoka',sans-serif; }
+.lk-admin-kpi__label { font-size:0.78rem; color:#6B6B8A; font-weight:500; }
+.lk-admin-content-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:1.25rem; }
+.lk-admin-panel { background:#fff; border:1px solid #E2DCF0; border-radius:1.1rem; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+.lk-admin-panel__head { padding:0.9rem 1.25rem; border-bottom:1px solid #F0EEF5; font-size:0.95rem; font-weight:800; color:#1A1A2E; }
+.lk-admin-table { width:100%; border-collapse:collapse; }
+.lk-admin-table th { padding:0.6rem 1rem; text-align:left; font-size:0.75rem; font-weight:700; color:#6B6B8A; background:#FAFAF9; border-bottom:1px solid #F0EEF5; }
+.lk-admin-table td { padding:0.75rem 1rem; border-bottom:1px solid #F0EEF5; font-size:0.83rem; color:#1A1A2E; }
+.lk-admin-table tr:last-child td { border-bottom:none; }
+.lk-admin-badge-active   { display:inline-block; padding:0.18rem 0.6rem; border-radius:99px; font-size:0.7rem; font-weight:700; background:#DCFCE7; color:#16A34A; }
+.lk-admin-badge-pending  { display:inline-block; padding:0.18rem 0.6rem; border-radius:99px; font-size:0.7rem; font-weight:700; background:#FEF9C3; color:#CA8A04; }
+.lk-admin-badge-inactive { display:inline-block; padding:0.18rem 0.6rem; border-radius:99px; font-size:0.7rem; font-weight:700; background:#FEE2E2; color:#DC2626; }
+.lk-admin-req-item { display:flex; align-items:center; gap:0.85rem; padding:0.75rem 1.25rem; border-bottom:1px solid #F0EEF5; }
+.lk-admin-req-item:last-child { border-bottom:none; }
+.lk-admin-req-avatar { width:36px; height:36px; border-radius:50%; background:#5B2D8E; color:#fff; font-size:0.72rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; object-fit:cover; }
+.lk-admin-req-copy { flex:1; min-width:0; }
+.lk-admin-req-copy strong { display:block; font-size:0.83rem; font-weight:700; color:#1A1A2E; }
+.lk-admin-req-copy span { font-size:0.75rem; color:#6B6B8A; }
+.lk-admin-btn-approve { padding:0.3rem 0.75rem; background:#16A34A; color:#fff; border:none; border-radius:0.5rem; font-size:0.75rem; font-weight:700; cursor:pointer; }
+.lk-admin-btn-reject  { padding:0.3rem 0.75rem; background:#DC2626; color:#fff; border:none; border-radius:0.5rem; font-size:0.75rem; font-weight:700; cursor:pointer; }

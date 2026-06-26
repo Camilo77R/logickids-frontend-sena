@@ -2,9 +2,9 @@
  * TutorEstadisticasPage
  *
  * POR QUE:
- * - la DB es la fuente de verdad para intentos, aciertos, errores y reacción
- * - la UI no debe inventar estadísticas cuando el backend no trae datos
- * - separa presentación de lectura de datos para que la pantalla sea mantenible
+ * - la DB es la fuente de verdad para intentos, aciertos, errores y reacciÃ³n
+ * - la UI no debe inventar estadÃ­sticas cuando el backend no trae datos
+ * - separa presentaciÃ³n de lectura de datos para que la pantalla sea mantenible
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BarChart2, RefreshCw, User, Users, X } from "lucide-react";
@@ -32,12 +32,12 @@ const formatPercent = (value) => {
 };
 
 const formatNumber = (value) => {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined || value === "") return "â€”";
   return Number.isFinite(Number(value)) ? Number(value).toLocaleString("es-CO") : String(value);
 };
 
 const formatReaction = (value) => {
-  if (value === null || value === undefined || value === "") return "—";
+  if (value === null || value === undefined || value === "") return "â€”";
   return `${formatNumber(value)} ms`;
 };
 
@@ -222,171 +222,88 @@ export default function TutorEstadisticasPage() {
   }, [habilidadesOficiales, stats]);
 
   return (
-    <section className="lk-stats-page">
-      <header className="lk-stats-hero">
-        <div className="lk-stats-hero__icon">
-          <BarChart2 size={28} aria-hidden="true" />
-        </div>
-        <div className="lk-stats-hero__copy">
-          <span>Progreso pedagógico</span>
-          <h1>Estadísticas de habilidades</h1>
-          <p>
-            Lectura real de precisión, intentos y reacción según los resultados guardados en la
-            base de datos.
-          </p>
-        </div>
-        <button
-          className="lk-stats-refresh"
-          type="button"
-          onClick={() => setRefreshKey((current) => current + 1)}
-          disabled={loading}
-        >
-          <RefreshCw size={16} aria-hidden="true" />
-          Actualizar
-        </button>
-      </header>
-
-      <section className="lk-stats-controls" aria-label="Filtros de estadísticas">
-        <div className="lk-stats-toggle" role="tablist" aria-label="Modo de consulta">
-          <button
-            type="button"
-            className={modo === "estudiante" ? "active" : ""}
-            onClick={() => setModo("estudiante")}
-          >
-            <User size={16} aria-hidden="true" />
-            Por estudiante
-          </button>
-          <button
-            type="button"
-            className={modo === "grupo" ? "active" : ""}
-            onClick={() => setModo("grupo")}
-          >
-            <Users size={16} aria-hidden="true" />
-            Por grupo
-          </button>
-        </div>
-
-        <label className="lk-stats-field">
-          <span>Grupo</span>
-          <select value={grupoId} onChange={(event) => setGrupoId(event.target.value)}>
-            <option value="">Selecciona grupo</option>
-            {grupos.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.nombre}
-              </option>
-            ))}
+    <div className="lk-stats-page">
+      <div className="lk-stats-page-header">
+        <h1>Estadísticas</h1>
+        <div className="lk-stats-controls">
+          <select className="lk-stats-group-select" value={grupoId} onChange={(e) => setGrupoId(e.target.value)} disabled={loadingCatalog}>
+            <option value="">Seleccionar Grupo</option>
+            {grupos.map((g) => <option key={g.id} value={normalizeId(g.id)}>{g.nombre}</option>)}
           </select>
-        </label>
-
-        {modo === "estudiante" ? (
-          <label className="lk-stats-field">
-            <span>Estudiante</span>
-            <select
-              value={estudianteId}
-              onChange={(event) => setEstudianteId(event.target.value)}
-              disabled={!estudiantes.length}
-            >
-              <option value="">Selecciona estudiante</option>
-              {estudiantes.map((student) => (
-                <option key={student.id} value={student.id}>
-                  {student.nombre}
-                </option>
-              ))}
+          {grupoId && (
+            <select className="lk-stats-group-select" value={estudianteId} onChange={(e) => { setEstudianteId(e.target.value); setModo(e.target.value ? "estudiante" : "grupo"); }}>
+              <option value="">Todo el grupo</option>
+              {estudiantes.map((s) => <option key={s.id} value={normalizeId(s.id)}>{s.nombre}</option>)}
             </select>
-          </label>
-        ) : null}
-      </section>
-
-      <div className="lk-stats-context">
-        <span>{selectedGroup?.nombre ?? "Sin grupo seleccionado"}</span>
-        <strong>
-          {modo === "estudiante"
-            ? selectedStudent?.nombre ?? "Selecciona un estudiante"
-            : "Promedio del grupo"}
-        </strong>
+          )}
+          {catalogError && <span style={{ color:"#DC2626", fontSize:"0.8rem" }}>{catalogError}</span>}
+          <button
+            type="button"
+            onClick={() => setRefreshKey((k) => k + 1)}
+            style={{ display:"flex", alignItems:"center", gap:"0.4rem", padding:"0.5rem 1rem", background:"#5B2D8E", color:"#fff", border:"none", borderRadius:"0.75rem", fontWeight:700, cursor:"pointer", fontSize:"0.82rem" }}
+          >
+            <RefreshCw size={15} /> Actualizar
+          </button>
+        </div>
       </div>
 
-      {pageError ? (
-        <div className="lk-stats-alert">
-          <span>{pageError}</span>
-          <button type="button" className="tutor-alert__close" onClick={clearCatalogError} aria-label="Cerrar"><X size={16} /></button>
+      {!grupoId ? (
+        <div style={{ background:"#fff", borderRadius:"1.25rem", padding:"3rem", textAlign:"center", border:"1px solid #E2DCF0" }}>
+          <BarChart2 size={48} style={{ color:"#C4AEE0", marginBottom:"0.75rem" }} />
+          <h3 style={{ margin:"0 0 0.4rem", color:"#1A1A2E" }}>Selecciona un grupo</h3>
+          <p style={{ color:"#6B6B8A", margin:0 }}>Las estadísticas aparecerán cuando elijas un grupo.</p>
         </div>
-      ) : null}
-
-      {loading ? (
-        <div className="lk-stats-state">
-          <div className="lk-stats-spinner" />
-          <p>Cargando estadísticas reales...</p>
-        </div>
-      ) : statsVisibles.length === 0 ? (
-        <div className="lk-stats-empty">
-          <BarChart2 size={42} aria-hidden="true" />
-          <strong>Sin estadísticas todavía</strong>
-          <p>
-            Cuando el estudiante complete partidas de los minijuegos oficiales, aquí aparecerán sus
-            resultados por habilidad.
-          </p>
+      ) : loading ? (
+        <div style={{ background:"#fff", borderRadius:"1.25rem", padding:"3rem", textAlign:"center", border:"1px solid #E2DCF0", color:"#6B6B8A" }}>
+          Cargando estadísticas...
         </div>
       ) : (
-        <div className="lk-stats-grid">
-          {statsVisibles.map((stat) => (
-            <SkillStatsCard
-              key={stat.catalogKey ?? stat.id ?? stat.id_habilidad ?? stat.habilidad}
-              stat={stat}
-              modo={modo}
-            />
-          ))}
+        <div className="lk-stats-charts-grid">
+          {statsVisibles.length === 0 ? (
+            <div style={{ gridColumn:"1/-1", background:"#fff", borderRadius:"1.25rem", padding:"3rem", textAlign:"center", border:"1px solid #E2DCF0" }}>
+              <BarChart2 size={40} style={{ color:"#C4AEE0", marginBottom:"0.75rem" }} />
+              <strong style={{ display:"block", color:"#1A1A2E", marginBottom:"0.4rem" }}>Sin datos de estadísticas</strong>
+              <p style={{ color:"#6B6B8A", margin:0, fontSize:"0.85rem" }}>Abre una clase para empezar a registrar estadísticas.</p>
+            </div>
+          ) : (
+            statsVisibles.map((stat, i) => {
+              const pct = Math.min(100, Math.round(Number(stat.precision_promedio ?? stat.aciertos ?? 0)));
+              const colors = ["#5B2D8E", "#16A34A", "#F5A623", "#2563EB"];
+              const color = colors[i % colors.length];
+              return (
+                <div key={stat.catalogKey ?? stat.id_habilidad ?? i} className="lk-stats-chart-card">
+                  <h3 className="lk-stats-chart-card__title">{stat.habilidad}</h3>
+                  <p className="lk-stats-chart-card__subtitle">{stat.juego || "Juego pedagógico"}</p>
+                  {stat.sin_datos ? (
+                    <p style={{ color:"#6B6B8A", fontSize:"0.82rem", marginTop:"0.5rem" }}>Sin partidas registradas aún.</p>
+                  ) : (
+                    <>
+                      <div style={{ display:"flex", alignItems:"flex-end", gap:"0.75rem", margin:"0.75rem 0" }}>
+                        <div style={{ flex:1 }}>
+                          <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"0.4rem" }}>
+                            <span style={{ fontSize:"0.75rem", color:"#6B6B8A", fontWeight:600 }}>Precisión</span>
+                            <span style={{ fontSize:"1rem", fontWeight:800, color }}>{pct}%</span>
+                          </div>
+                          <div style={{ height:8, background:"#EDE8F5", borderRadius:99, overflow:"hidden" }}>
+                            <div style={{ height:"100%", width:`${pct}%`, background:color, borderRadius:99 }} />
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ display:"flex", gap:"1rem", flexWrap:"wrap" }}>
+                        {stat.total_intentos != null && <span style={{ fontSize:"0.78rem", color:"#6B6B8A" }}>🎯 {stat.total_intentos} intentos</span>}
+                        {stat.aciertos != null && <span style={{ fontSize:"0.78rem", color:"#16A34A", fontWeight:600 }}>✓ {stat.aciertos} aciertos</span>}
+                        {stat.promedio_reaccion_ms != null && <span style={{ fontSize:"0.78rem", color:"#6B6B8A" }}>⚡ {Math.round(stat.promedio_reaccion_ms)}ms</span>}
+                        {stat.reaccion_promedio != null && <span style={{ fontSize:"0.78rem", color:"#6B6B8A" }}>⚡ {Math.round(stat.reaccion_promedio)}ms</span>}
+                        {stat.estudiantes_evaluados != null && <span style={{ fontSize:"0.78rem", color:"#6B6B8A" }}>👤 {stat.estudiantes_evaluados} evaluados</span>}
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       )}
-    </section>
-  );
-}
-
-function SkillStatsCard({ stat, modo }) {
-  const rawPrecision = modo === "estudiante" ? stat.precision_pct : stat.precision_promedio;
-  const precision = clampPercent(rawPrecision);
-  const tone = getPrecisionTone(rawPrecision);
-
-  return (
-    <article className={`lk-stats-card lk-stats-card--${tone} ${stat.sin_datos ? "lk-stats-card--empty" : ""}`}>
-      <div className="lk-stats-card__head">
-        <div>
-          <span>Habilidad</span>
-          <h2>{stat.habilidad ?? "Habilidad sin nombre"}</h2>
-          {stat.juego ? <small>Juego: {stat.juego}</small> : null}
-        </div>
-        <strong>{formatPercent(rawPrecision)}</strong>
-      </div>
-
-      <div className="lk-stats-progress" aria-hidden="true">
-        <i style={{ width: `${precision ?? 0}%` }} />
-      </div>
-
-      <div className="lk-stats-metrics">
-        {modo === "estudiante" ? (
-          <>
-            <Metric label="Intentos" value={formatNumber(stat.total_intentos)} />
-            <Metric label="Aciertos" value={formatNumber(stat.aciertos)} />
-            <Metric label="Errores" value={formatNumber(stat.errores)} />
-            <Metric label="Reacción" value={formatReaction(stat.promedio_reaccion_ms)} />
-          </>
-        ) : (
-          <>
-            <Metric label="Precisión prom." value={formatPercent(stat.precision_promedio)} />
-            <Metric label="Reacción prom." value={formatReaction(stat.reaccion_promedio)} />
-            <Metric label="Evaluados" value={formatNumber(stat.estudiantes_evaluados)} />
-          </>
-        )}
-      </div>
-    </article>
-  );
-}
-
-function Metric({ label, value }) {
-  return (
-    <div className="lk-stats-metric">
-      <span>{label}</span>
-      <strong>{value}</strong>
     </div>
   );
 }

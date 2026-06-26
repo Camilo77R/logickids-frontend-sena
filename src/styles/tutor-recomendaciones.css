@@ -497,3 +497,26 @@
     gap: 0.5rem;
   }
 }
+
+/* DISEÑO RECOMENDACIONES — Mockup aprobado */
+.lk-rec-page-header { margin-bottom:1.5rem; }
+.lk-rec-page-header h1 { font-size:1.75rem; font-weight:800; color:#1A1A2E; margin:0 0 0.2rem; font-family:'Fredoka',sans-serif; }
+.lk-rec-page-header p { font-size:0.85rem; color:#6B6B8A; margin:0; }
+.lk-rec-filter-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem; }
+.lk-rec-filter-row label { font-size:0.85rem; font-weight:600; color:#1A1A2E; }
+.lk-rec-filter-select { padding:0.5rem 0.9rem; border:1.5px solid #E2DCF0; border-radius:0.75rem; background:#fff; font-size:0.85rem; color:#1A1A2E; cursor:pointer; font-family:inherit; }
+.lk-rec-list { display:flex; flex-direction:column; gap:0.85rem; }
+.lk-rec-card { display:flex; align-items:center; gap:1rem; padding:1rem 1.25rem; background:#fff; border:1px solid #E2DCF0; border-radius:1.1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:border-color 0.15s; }
+.lk-rec-card:hover { border-color:#C4AEE0; }
+.lk-rec-card--yellow { background:#FFFBEB; border-color:#FDE68A; }
+.lk-rec-card--purple { background:#F5F3FF; border-color:#DDD6FE; }
+.lk-rec-card__icon { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.lk-rec-card__icon--yellow { background:#F5A623; color:#fff; }
+.lk-rec-card__icon--purple { background:#5B2D8E; color:#fff; }
+.lk-rec-card__body { flex:1; min-width:0; }
+.lk-rec-skill-badge { display:inline-block; padding:0.2rem 0.6rem; border-radius:99px; font-size:0.7rem; font-weight:700; margin-bottom:0.35rem; background:#EDE8F5; color:#5B2D8E; }
+.lk-rec-card__text { font-size:0.85rem; color:#1A1A2E; margin:0 0 0.25rem; line-height:1.45; }
+.lk-rec-card__student { font-size:0.78rem; color:#6B6B8A; font-weight:600; }
+.lk-rec-btn-detail { padding:0.4rem 1rem; border:1.5px solid #E2DCF0; border-radius:0.65rem; background:#fff; font-size:0.78rem; font-weight:700; color:#5B2D8E; cursor:pointer; white-space:nowrap; transition:background 0.15s,border-color 0.15s; flex-shrink:0; }
+.lk-rec-btn-detail:hover { background:#EDE8F5; border-color:#5B2D8E; }
+.lk-rec-empty { background:#fff; border:1px solid #E2DCF0; border-radius:1.25rem; padding:3rem 1.5rem; text-align:center; }

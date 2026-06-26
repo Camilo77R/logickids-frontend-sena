@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Brain,
   Eraser,
@@ -66,7 +66,7 @@ const parseRecommendationSections = (text) => {
 
   for (const line of lines) {
     const headingMatch = line.match(
-      /^(Hallazgo principal|Interpretacion|Interpretación|Acciones sugeridas|Seguimiento)\s*:\s*(.*)$/i
+      /^(Hallazgo principal|Interpretacion|InterpretaciÃ³n|Acciones sugeridas|Seguimiento)\s*:\s*(.*)$/i
     );
 
     if (headingMatch) {
@@ -74,12 +74,12 @@ const parseRecommendationSections = (text) => {
       const rawTitle = headingMatch[1].toLowerCase();
       const title =
         rawTitle.startsWith("hallazgo")
-          ? "Qué está pasando"
+          ? "QuÃ© estÃ¡ pasando"
           : rawTitle.startsWith("interpret")
-            ? "Cómo entenderlo"
+            ? "CÃ³mo entenderlo"
             : rawTitle.startsWith("acciones")
-              ? "Qué puede hacer el tutor"
-              : "Cómo darle seguimiento";
+              ? "QuÃ© puede hacer el tutor"
+              : "CÃ³mo darle seguimiento";
 
       current = {
         title,
@@ -90,7 +90,7 @@ const parseRecommendationSections = (text) => {
 
     if (!current) {
       current = {
-        title: "Recomendación",
+        title: "RecomendaciÃ³n",
         content: line,
       };
       continue;
@@ -121,7 +121,7 @@ function RecommendationSections({ text }) {
   const sections = parseRecommendationSections(text);
 
   if (sections.length === 0) {
-    return <p className="lk-rec-copy">{text || "Sin recomendación disponible."}</p>;
+    return <p className="lk-rec-copy">{text || "Sin recomendaciÃ³n disponible."}</p>;
   }
 
   return (
@@ -148,7 +148,7 @@ function RecommendationCard({ item, subjectName, onDelete }) {
             <span className="lk-rec-card__student">{subjectName}</span>
           </div>
           <h3 className="lk-rec-card__title">
-            Enfoque principal: {item.habilidad ?? "Acompañamiento general"}
+            Enfoque principal: {item.habilidad ?? "AcompaÃ±amiento general"}
           </h3>
         </div>
         <div className="lk-rec-card__actions">
@@ -157,7 +157,7 @@ function RecommendationCard({ item, subjectName, onDelete }) {
             className="lk-rec-icon-button"
             onClick={onDelete}
             type="button"
-            title="Archivar esta recomendación"
+            title="Archivar esta recomendaciÃ³n"
           >
             <Trash2 size={16} />
           </button>
@@ -173,7 +173,7 @@ function RecommendationCard({ item, subjectName, onDelete }) {
           <Brain size={14} />
           {item.modelo_ia
             ? `Generado con IA: ${item.modelo_ia}`
-            : "Análisis automático local"}
+            : "AnÃ¡lisis automÃ¡tico local"}
         </span>
       </div>
 
@@ -356,13 +356,13 @@ export default function TutorRecomendacionesPage() {
       await loadRecommendations({ groupId: grupoId, studentId: estudianteId });
       setNotice(
         generated
-          ? "Listo: creamos una recomendación nueva con los datos reales del juego."
+          ? "Listo: creamos una recomendaciÃ³n nueva con los datos reales del juego."
           : "Listo: actualizamos las recomendaciones."
       );
     } catch (error) {
       setPageError(
         error.message ||
-          "No fue posible crear la recomendación. Revisa que existan estadísticas del juego."
+          "No fue posible crear la recomendaciÃ³n. Revisa que existan estadÃ­sticas del juego."
       );
     } finally {
       setIsGenerating(false);
@@ -376,9 +376,9 @@ export default function TutorRecomendacionesPage() {
     try {
       await recomendacionesService.archivar(recommendationId);
       await loadRecommendations({ groupId: grupoId, studentId: estudianteId });
-      setNotice("Recomendación archivada correctamente.");
+      setNotice("RecomendaciÃ³n archivada correctamente.");
     } catch (error) {
-      setPageError(error.message || "No fue posible archivar esta recomendación.");
+      setPageError(error.message || "No fue posible archivar esta recomendaciÃ³n.");
     }
   };
 
@@ -406,171 +406,79 @@ export default function TutorRecomendacionesPage() {
 
   return (
     <div className="lk-rec-page">
-      <section className="lk-rec-hero">
-        <div className="lk-rec-hero__glow" />
-        <div className="lk-rec-hero__copy">
-          <span className="lk-rec-hero__eyebrow">
-            <Sparkles size={15} />
-            Acompañamiento pedagógico
-          </span>
-          <h1 className="lk-rec-hero__title">Recomendaciones para acompañar a tus estudiantes</h1>
-          <p className="lk-rec-hero__subtitle">
-            Usa los resultados reales de los juegos para crear sugerencias prácticas, revisar el
-            seguimiento y decidir el próximo apoyo en clase.
-          </p>
+      {/* Header */}
+      <div className="lk-rec-page-header">
+        <h1>Recomendaciones Pedagógicas</h1>
+        <p>Sugerencias generadas por IA Gemini</p>
+      </div>
+
+      {/* Alertas */}
+      {pageError && (
+        <div className="lk-rec-alert lk-rec-alert--error">
+          <span>{pageError}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearPageError} aria-label="Cerrar"><X size={16} /></button>
         </div>
-
-        <div className="lk-rec-hero__summary">
-          <StatCard
-            icon={Users}
-            label="Grupo elegido"
-            value={selectedGroup?.nombre ?? "Sin grupo"}
-            tone="purple"
-          />
-          <StatCard
-            icon={Target}
-            label="Enfoque"
-            value={selectedStudent?.nombre || "Todo el grupo"}
-            tone="orange"
-          />
-          <StatCard
-            icon={History}
-            label="Recomendaciones activas"
-            value={recomendaciones.length}
-            tone="green"
-          />
+      )}
+      {notice && (
+        <div className="lk-rec-alert lk-rec-alert--success">
+          <span>{notice}</span>
+          <button type="button" className="tutor-alert__close" onClick={clearNotice} aria-label="Cerrar"><X size={16} /></button>
         </div>
-      </section>
+      )}
 
-      <section className="lk-rec-panel lk-rec-panel--builder">
-        <div className="lk-rec-panel__header">
-          <div>
-            <span className="lk-rec-panel__eyebrow">Paso 1</span>
-            <h2 className="lk-rec-panel__title">Crear una recomendación</h2>
-            <p className="lk-rec-panel__subtitle">
-              Escoge un grupo y, si quieres, enfócate en un estudiante puntual. La recomendación se
-              genera con estadísticas reales guardadas por los juegos.
-            </p>
-          </div>
-          <div className="lk-rec-callout">
-            <Wand2 size={18} />
-            <span>Consejos claros y listos para aplicar</span>
-          </div>
-        </div>
-
-        <div className="lk-rec-form">
-          <label className="lk-rec-field">
-            <span className="lk-rec-field__label">Grupo del curso</span>
-            <select
-              className="lk-rec-select"
-              value={grupoId}
-              onChange={(event) => setGrupoId(event.target.value)}
-            >
-              <option value="">Selecciona un grupo</option>
-              {grupos.map((group) => (
-                <option key={group.id} value={String(group.id)}>
-                  {group.nombre}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="lk-rec-field">
-            <span className="lk-rec-field__label">Estudiante</span>
-            <select
-              className="lk-rec-select"
-              value={estudianteId}
-              onChange={(event) => setEstudianteId(event.target.value)}
-              disabled={!grupoId || isLoadingStudents}
-            >
+      {/* Filtros */}
+      <div className="lk-rec-filter-row">
+        <label className="lk-rec-filter-row">
+          <span style={{ fontWeight: 600, fontSize: "0.85rem", color: "#1A1A2E" }}>Grupo:</span>
+          <select className="lk-rec-filter-select" value={grupoId} onChange={(e) => setGrupoId(e.target.value)}>
+            <option value="">Todos los Grupos</option>
+            {grupos.map((g) => <option key={g.id} value={String(g.id)}>{g.nombre}</option>)}
+          </select>
+          {grupoId && (
+            <select className="lk-rec-filter-select" value={estudianteId} onChange={(e) => setEstudianteId(e.target.value)} disabled={!grupoId || isLoadingStudents}>
               <option value="">Todo el grupo</option>
-              {estudiantes.map((student) => (
-                <option key={student.id} value={String(student.id)}>
-                  {student.nombre}
-                </option>
-              ))}
+              {estudiantes.map((s) => <option key={s.id} value={String(s.id)}>{s.nombre}</option>)}
             </select>
-          </label>
-
-          <button
-            className="lk-rec-button lk-rec-button--primary"
-            onClick={handleGenerate}
-            disabled={isGenerating || !grupoId}
-            type="button"
-          >
-            <RefreshCw size={16} />
-            {isGenerating ? "Creando recomendación..." : "Crear recomendación"}
+          )}
+          <button className="lk-rec-button lk-rec-button--primary" onClick={handleGenerate} disabled={isGenerating || !grupoId} type="button" style={{ padding: "0.5rem 1rem", background: "#5B2D8E", color: "#fff", border: "none", borderRadius: "0.75rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <RefreshCw size={15} />{isGenerating ? "Creando..." : "Crear recomendación"}
           </button>
+        </label>
+      </div>
+
+      {/* Lista de cards estilo mockup */}
+      {isLoadingRecommendations ? (
+        <LoadingState message="Buscando recomendaciones..." />
+      ) : recomendaciones.length === 0 ? (
+        <div className="lk-rec-empty">
+          <Brain size={48} style={{ color: "#C4AEE0", marginBottom: "1rem" }} />
+          <strong style={{ display: "block", fontSize: "1rem", fontWeight: 700, color: "#1A1A2E", marginBottom: "0.4rem" }}>No hay recomendaciones generadas por el momento.</strong>
+          <p style={{ fontSize: "0.85rem", color: "#6B6B8A" }}>Selecciona un grupo y genera recomendaciones con estadísticas reales.</p>
         </div>
-
-        {pageError ? (
-          <div className="lk-rec-alert lk-rec-alert--error">
-            <span>{pageError}</span>
-            <button type="button" className="tutor-alert__close" onClick={clearPageError} aria-label="Cerrar"><X size={16} /></button>
-          </div>
-        ) : null}
-        {notice ? (
-          <div className="lk-rec-alert lk-rec-alert--success">
-            <span>{notice}</span>
-            <button type="button" className="tutor-alert__close" onClick={clearNotice} aria-label="Cerrar"><X size={16} /></button>
-          </div>
-        ) : null}
-
-        <div className="lk-rec-source-note">
-          <Brain size={16} />
-          <span>
-            Fuente actual: resultados guardados por los juegos en sesiones y estadísticas del
-            estudiante.
-          </span>
+      ) : (
+        <div className="lk-rec-list">
+          {recomendaciones.map((item, index) => {
+            const isYellow = index % 2 === 0;
+            const habilidad = item.habilidad || item.skill || item.area || "General";
+            const studentName = item.nombre_estudiante || item.estudiante?.nombre || subjectName || "Grupo";
+            return (
+              <div key={item.id} className={`lk-rec-card ${isYellow ? "lk-rec-card--yellow" : "lk-rec-card--purple"}`}>
+                <div className={`lk-rec-card__icon ${isYellow ? "lk-rec-card__icon--yellow" : "lk-rec-card__icon--purple"}`}>
+                  {isYellow ? <Sparkles size={22} /> : <Brain size={22} />}
+                </div>
+                <div className="lk-rec-card__body">
+                  <span className="lk-rec-skill-badge">{habilidad}</span>
+                  <p className="lk-rec-card__text">{item.contenido || item.recomendacion || item.texto}</p>
+                  <span className="lk-rec-card__student">{studentName}</span>
+                </div>
+                <button type="button" className="lk-rec-btn-detail" onClick={() => handleDeleteRecommendation(item.id)} title="Archivar">
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            );
+          })}
         </div>
-      </section>
-
-      <section className="lk-rec-panel lk-rec-panel--history">
-        <div className="lk-rec-panel__header">
-          <div>
-            <span className="lk-rec-panel__eyebrow">Paso 2</span>
-            <h2 className="lk-rec-panel__title">
-              Seguimiento de recomendaciones {targetMode === "estudiante" ? "del estudiante" : "del grupo"}
-            </h2>
-            <p className="lk-rec-panel__subtitle">
-              Aquí ves las recomendaciones activas guardadas en la base de datos. Puedes archivarlas
-              cuando ya no sean necesarias.
-            </p>
-          </div>
-
-          <button
-            className="lk-rec-button lk-rec-button--ghost"
-            onClick={handleClearCurrent}
-            disabled={isClearing || !recomendaciones.length}
-            type="button"
-          >
-            <Eraser size={16} />
-            {isClearing ? "Archivando..." : "Archivar seguimiento actual"}
-          </button>
-        </div>
-
-        {isLoadingRecommendations ? (
-          <LoadingState message="Buscando el seguimiento guardado..." />
-        ) : recomendaciones.length === 0 ? (
-          <div className="lk-rec-empty-wrap">
-            <EmptyState
-              title="Aún no hay recomendaciones activas"
-              description="Cuando existan partidas con estadísticas, podrás crear recomendaciones y verlas aquí."
-            />
-          </div>
-        ) : (
-          <div className="lk-rec-results">
-            {recomendaciones.map((item) => (
-              <RecommendationCard
-                key={item.id}
-                item={item}
-                subjectName={subjectName}
-                onDelete={() => handleDeleteRecommendation(item.id)}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+      )}
     </div>
   );
 }
