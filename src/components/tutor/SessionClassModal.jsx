@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 
-const DEFAULT_SINGLE_LEVELS = 3;
+const DEFAULT_SINGLE_LEVELS = 1;
 
 const resolveMinigameTitle = (minijuego) =>
   minijuego?.titulo ?? minijuego?.nombre ?? minijuego?.nombre_minijuego ?? minijuego?.slug ?? "Minijuego";

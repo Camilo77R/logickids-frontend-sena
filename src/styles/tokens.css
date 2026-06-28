@@ -66,6 +66,17 @@
   --lk-text-soft: #4B4B6B;
   --lk-text-muted: #9CA3AF;
 
+  /* Superficies oscuras del portal tutor */
+  --lk-night-bg: #07071B;
+  --lk-night-shell: #0C0B27;
+  --lk-night-panel: #121033;
+  --lk-night-panel-soft: #191545;
+  --lk-night-border: rgba(164, 139, 255, 0.16);
+  --lk-night-border-strong: rgba(164, 139, 255, 0.28);
+  --lk-night-text: #F8F7FF;
+  --lk-night-text-soft: #C6C0DF;
+  --lk-night-text-muted: #918AAE;
+
   /* ── Radios ─────────────────────────────────────── */
   --lk-radius-xs: 0.5rem;
   --lk-radius-sm: 0.75rem;
