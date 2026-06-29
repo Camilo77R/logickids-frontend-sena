@@ -1,0 +1,567 @@
+.tov {
+  gap: 1rem;
+  color: var(--lk-night-text);
+}
+
+.tov-reference-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(280px, 0.95fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.tov-reference-grid .tov-panel {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--lk-night-border);
+  border-radius: var(--lk-radius-xl);
+  background: var(--lk-night-panel);
+  color: var(--lk-night-text);
+  box-shadow: none;
+}
+
+.tov-reference-grid .tov-hero {
+  grid-column: 1 / 3;
+  min-height: 304px;
+  margin: 0;
+  padding: 1.5rem;
+  border-color: var(--lk-night-border-strong);
+  border-radius: var(--lk-radius-xl);
+  background: var(--lk-brand);
+  box-shadow: none;
+  overflow: visible;
+}
+
+.tov-reference-grid .tov-hero::before {
+  inset: 0;
+  border-radius: inherit;
+  background: var(--lk-brand);
+}
+
+.tov-reference-grid .tov-hero__text {
+  width: 57%;
+}
+
+.tov-reference-grid .tov-hero__status {
+  margin-bottom: 0.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--lk-green);
+  font-size: 0.7rem;
+  text-transform: none;
+}
+
+.tov-reference-grid .tov-hero__h1 {
+  max-width: 18ch;
+  font-size: clamp(1.55rem, 2.5vw, 2rem);
+}
+
+.tov-hero__activity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.tov-hero__activity-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: var(--lk-radius-lg);
+  background: var(--lk-brand-dark);
+  color: var(--lk-night-text);
+}
+
+.tov-hero__activity > span:last-child,
+.tov-hero__activity small,
+.tov-hero__activity strong {
+  display: block;
+}
+
+.tov-hero__activity small {
+  margin-bottom: 0.25rem;
+  color: var(--lk-night-text-soft);
+  font-size: 0.65rem;
+}
+
+.tov-hero__activity strong {
+  max-width: 28ch;
+  color: var(--lk-night-text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tov-reference-grid .tov-hero__summary {
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tov-reference-grid .tov-hero__summary > div {
+  min-width: 132px;
+  padding: 0.5rem 0.75rem;
+  border-color: var(--lk-night-border-strong);
+  border-radius: var(--lk-radius-lg);
+  background: var(--lk-brand-dark);
+}
+
+.tov-reference-grid .tov-hero__actions {
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.tov-reference-grid .tov-hero__primary,
+.tov-reference-grid .tov-hero__secondary {
+  min-height: 40px;
+  padding: 0 1rem;
+  border-radius: var(--lk-radius-pill, 999px);
+  font-size: 0.74rem;
+}
+
+.tov-reference-grid .tov-hero__mascot {
+  right: -1rem;
+  bottom: -1.5rem;
+  width: min(48%, 470px);
+  filter: drop-shadow(0 24px 24px var(--lk-brand-dark));
+}
+
+.tov-board-card { min-height: 220px; }
+.tov-board-card--ranking { grid-column: 3; grid-row: 1; }
+.tov-board-card--attention { grid-column: 1; }
+.tov-board-card--recommendation { grid-column: 2; }
+.tov-board-card--alerts { grid-column: 3; }
+.tov-board-card--performance { grid-column: 1 / 3; }
+.tov-board-card--recent { grid-column: 3; }
+
+.tov-board-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tov-board-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--lk-night-text);
+  font-family: var(--lk-display-font);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.tov-board-head h2 svg { color: var(--lk-accent); }
+
+.tov-board-head button {
+  padding: 0.4rem 0.65rem;
+  border: 0;
+  border-radius: var(--lk-radius-pill, 999px);
+  background: var(--lk-night-panel-soft);
+  color: #C8A7FF;
+  font-family: var(--lk-font);
+  font-size: 0.66rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tov-board-empty {
+  min-height: 130px;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  border: 1px dashed var(--lk-night-border-strong);
+  border-radius: var(--lk-radius-lg);
+  color: var(--lk-night-text-muted);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.tov-board-card .tov-home-ranking,
+.tov-attention-list,
+.tov-alert-list,
+.tov-recent-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tov-board-card .tov-rank-row,
+.tov-attention-row,
+.tov-alert-row,
+.tov-recent-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 54px;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--lk-night-border);
+  border-radius: var(--lk-radius-lg);
+  background: var(--lk-night-panel-soft);
+}
+
+.tov-board-card .tov-rank-row__num {
+  width: 24px;
+  min-width: 24px;
+  color: var(--lk-accent);
+  font-size: 0.76rem;
+  text-align: center;
+}
+
+.tov-board-card .tov-rank-row__name,
+.tov-board-card .tov-rank-row__pts { color: var(--lk-night-text); }
+.tov-board-card .tov-rank-row__pts { color: var(--lk-night-text-soft); font-size: 0.68rem; }
+.tov-rank-row__avatar { width: 34px; height: 34px; }
+
+.tov-attention-row > span,
+.tov-alert-row > span:last-child,
+.tov-recent-row > span:last-child { flex: 1; min-width: 0; }
+
+.tov-attention-row strong,
+.tov-attention-row small,
+.tov-alert-row strong,
+.tov-alert-row small,
+.tov-recent-row strong,
+.tov-recent-row small { display: block; }
+
+.tov-attention-row strong,
+.tov-alert-row strong,
+.tov-recent-row strong {
+  overflow: hidden;
+  color: var(--lk-night-text);
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tov-attention-row small,
+.tov-alert-row small,
+.tov-recent-row small {
+  margin-top: 0.2rem;
+  overflow: hidden;
+  color: var(--lk-night-text-muted);
+  font-size: 0.62rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tov-attention-row em {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--lk-danger);
+  border-radius: 999px;
+  color: var(--lk-danger);
+  font-size: 0.58rem;
+  font-style: normal;
+}
+
+.tov-ai-badge {
+  padding: 0.25rem 0.45rem;
+  border-radius: 999px;
+  background: var(--lk-success-soft);
+  color: var(--lk-green);
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+.tov-recommendation-copy {
+  min-height: 66px;
+  margin: 0 0 0.75rem;
+  color: var(--lk-night-text-soft);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.tov-recommendation-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tov-recommendation-tags span {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: var(--lk-night-panel-soft);
+  color: #C8A7FF;
+  font-size: 0.62rem;
+}
+
+.tov-apply-button {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  border: 0;
+  border-radius: var(--lk-radius-pill, 999px);
+  background: var(--lk-success);
+  color: #fff;
+  font-family: var(--lk-font);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tov-alert-row__icon,
+.tov-recent-row__icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--lk-brand);
+  color: #fff;
+}
+
+.tov-alert-row__icon--warning { background: var(--lk-accent); color: var(--lk-brand-dark); }
+.tov-alert-row__icon--info { background: var(--lk-danger); }
+.tov-alert-row__icon--success { background: var(--lk-success); }
+
+.tov-performance-layout {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.tov-score-ring {
+  width: 128px;
+  height: 128px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: conic-gradient(var(--lk-accent) 0 var(--score), var(--lk-brand) var(--score) 360deg);
+  position: relative;
+}
+
+.tov-score-ring::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: var(--lk-night-panel);
+}
+
+.tov-score-ring strong,
+.tov-score-ring span { position: relative; z-index: 1; }
+.tov-score-ring strong { font-family: var(--lk-display-font); color: var(--lk-night-text); font-size: 1.75rem; }
+.tov-score-ring span { color: var(--lk-night-text-soft); font-size: 0.65rem; }
+
+.tov-performance-layout .tov-sbars { gap: 0.75rem; }
+.tov-performance-layout .tov-sbar__name,
+.tov-performance-layout .tov-sbar__pct { color: var(--lk-night-text-soft); }
+.tov-performance-layout .tov-sbar__track { background: var(--lk-night-panel-soft); }
+
+.tov-loading { color: var(--lk-night-text-muted); }
+.tov-loading__ring { border-color: var(--lk-night-panel-soft); border-top-color: var(--lk-accent); }
+
+@media (max-width: 1180px) {
+  .tov-reference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tov-reference-grid .tov-hero { grid-column: 1 / 3; }
+  .tov-board-card--ranking,
+  .tov-board-card--attention,
+  .tov-board-card--recommendation,
+  .tov-board-card--alerts,
+  .tov-board-card--performance,
+  .tov-board-card--recent { grid-column: auto; grid-row: auto; }
+  .tov-board-card--performance { grid-column: 1 / 3; }
+}
+
+@media (max-width: 850px) {
+  .tov-reference-grid .tov-hero { min-height: 480px; }
+  .tov-reference-grid .tov-hero__text { width: 100%; }
+  .tov-reference-grid .tov-hero__mascot { right: 50%; bottom: -1.5rem; width: min(72%, 440px); transform: translateX(50%); opacity: 0.72; }
+  .tov-reference-grid .tov-hero__text { z-index: 4; }
+}
+
+@media (max-width: 680px) {
+  .tov-reference-grid { grid-template-columns: 1fr; }
+  .tov-reference-grid .tov-hero,
+  .tov-board-card--performance { grid-column: auto; }
+  .tov-reference-grid .tov-hero { min-height: 520px; padding: 1rem; }
+  .tov-reference-grid .tov-hero__summary { max-width: none; flex-direction: row; }
+  .tov-reference-grid .tov-hero__summary > div { min-width: 0; flex: 1; }
+  .tov-reference-grid .tov-hero__mascot { width: min(96%, 440px); }
+  .tov-performance-layout { grid-template-columns: 1fr; justify-items: center; }
+  .tov-performance-layout .tov-sbars { width: 100%; }
+}
+
+/* Redondeado de componentes internos del dashboard */
+.tov-reference-grid .tov-hero__activity-icon,
+.tov-reference-grid .tov-hero__summary > div,
+.tov-reference-grid .tov-board-empty,
+.tov-reference-grid .tov-rank-row,
+.tov-reference-grid .tov-attention-row,
+.tov-reference-grid .tov-alert-row,
+.tov-reference-grid .tov-recent-row,
+.tov-reference-grid .tov-gcard,
+.tov-reference-grid .tov-empty,
+.tov-reference-grid .tov-spotlight,
+.tov-reference-grid .tov-rec {
+  border-radius: var(--lk-radius-xl);
+}
+
+.tov-reference-grid .tov-board-head button,
+.tov-reference-grid .tov-hero__primary,
+.tov-reference-grid .tov-hero__secondary,
+.tov-reference-grid .tov-apply-button,
+.tov-reference-grid .tov-attention-row em,
+.tov-reference-grid .tov-recommendation-tags span,
+.tov-reference-grid .tov-ai-badge,
+.tov-reference-grid .tov-gcard__badge,
+.tov-reference-grid .tov-gcard__btn,
+.tov-reference-grid .tov-gcard__arrow {
+  border-radius: var(--lk-radius-pill, 999px);
+}
+
+.tov-reference-grid .tov-sbar__track,
+.tov-reference-grid .tov-sbar__fill {
+  border-radius: var(--lk-radius-pill, 999px);
+}
+
+.tov-reference-grid .tov-rank-row__avatar,
+.tov-reference-grid .tov-alert-row__icon,
+.tov-reference-grid .tov-recent-row__icon {
+  border-radius: 50%;
+}
+
+/* Radios forzados: prevalecen sobre los estilos heredados de tutor-ov.css */
+.tov .tov-reference-grid > .tov-hero,
+.tov .tov-reference-grid > .tov-panel {
+  border-radius: 28px !important;
+}
+
+.tov .tov-reference-grid .tov-hero::before {
+  border-radius: 28px !important;
+}
+
+.tov .tov-reference-grid .tov-hero__activity,
+.tov .tov-reference-grid .tov-hero__activity-icon,
+.tov .tov-reference-grid .tov-hero__summary > div,
+.tov .tov-reference-grid .tov-board-empty,
+.tov .tov-reference-grid .tov-rank-row,
+.tov .tov-reference-grid .tov-attention-row,
+.tov .tov-reference-grid .tov-alert-row,
+.tov .tov-reference-grid .tov-recent-row,
+.tov .tov-reference-grid .tov-gcard,
+.tov .tov-reference-grid .tov-empty,
+.tov .tov-reference-grid .tov-spotlight,
+.tov .tov-reference-grid .tov-rec,
+.tov .tov-reference-grid .tov-ranking-group-select__select {
+  border-radius: 18px !important;
+}
+
+.tov .tov-reference-grid .tov-hero__primary,
+.tov .tov-reference-grid .tov-hero__secondary,
+.tov .tov-reference-grid .tov-board-head button,
+.tov .tov-reference-grid .tov-apply-button,
+.tov .tov-reference-grid .tov-attention-row em,
+.tov .tov-reference-grid .tov-recommendation-tags span,
+.tov .tov-reference-grid .tov-ai-badge,
+.tov .tov-reference-grid .tov-gcard__badge,
+.tov .tov-reference-grid .tov-gcard__btn,
+.tov .tov-reference-grid .tov-gcard__arrow,
+.tov .tov-reference-grid .tov-sbar__track,
+.tov .tov-reference-grid .tov-sbar__fill {
+  border-radius: 999px !important;
+}
+
+.tov .tov-reference-grid .tov-rank-row__avatar,
+.tov .tov-reference-grid .tov-alert-row__icon,
+.tov .tov-reference-grid .tov-recent-row__icon,
+.tov .tov-reference-grid .tov-score-ring,
+.tov .tov-reference-grid .tov-score-ring::before {
+  border-radius: 50% !important;
+}
+
+/* Ajuste de densidad y jerarquía visual */
+.tov .tov-reference-grid .tov-board-head h2 {
+  font-size: 1.05rem !important;
+  line-height: 1.25;
+}
+
+.tov .tov-reference-grid .tov-board-head h2 svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.tov .tov-reference-grid .tov-ptitle {
+  font-size: 1.05rem !important;
+}
+
+.tov .tov-board-card--ranking .tov-home-ranking {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tov .tov-board-card--ranking .tov-rank-row {
+  width: 100%;
+  min-width: 0;
+  display: grid !important;
+  grid-template-columns: 20px 34px minmax(0, 1fr) minmax(42px, max-content);
+  column-gap: 0.55rem;
+  padding: 0.55rem 0.75rem !important;
+  overflow: hidden;
+}
+
+.tov .tov-board-card--ranking .tov-rank-row__num {
+  width: 20px;
+  min-width: 20px;
+  font-size: 0.68rem;
+}
+
+.tov .tov-board-card--ranking .tov-rank-row__avatar {
+  width: 34px;
+  height: 34px;
+  font-size: 0.62rem;
+}
+
+.tov .tov-board-card--ranking .tov-rank-row__name {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tov .tov-board-card--ranking .tov-rank-row__pts {
+  min-width: 42px;
+  max-width: 58px;
+  overflow: hidden;
+  font-size: 0.64rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: right;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1280px) {
+  .tov .tov-board-card--ranking .tov-rank-row {
+    grid-template-columns: 18px 30px minmax(0, 1fr) minmax(38px, max-content);
+    column-gap: 0.4rem;
+    padding-inline: 0.6rem !important;
+  }
+
+  .tov .tov-board-card--ranking .tov-rank-row__avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .tov .tov-board-card--ranking .tov-rank-row__name {
+    font-size: 0.7rem;
+  }
+}
