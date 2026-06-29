@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://logickids-backend-sena.onrender.com/api/:path*"
+      "destination": "https://logickids-backend-sena-production.up.railway.app/api/:path*"
     },
     {
       "source": "/(.*)",

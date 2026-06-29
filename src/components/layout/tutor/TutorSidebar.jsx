@@ -23,21 +23,17 @@ import {
 /** Ítems de navegación del tutor */
 const NAV_ITEMS = [
   { path: "/tutor/dashboard",        label: "Inicio",            icon: LayoutDashboard },
-  { path: "/tutor/grupos",           label: "Mis Grupos",        icon: Users },
+  { path: "/tutor/grupos",           label: "Grupos",            icon: Users },
   { path: "/tutor/estudiantes",      label: "Estudiantes",       icon: UserPlus },
-  { path: "/tutor/estadisticas",     label: "Estadísticas",      icon: BarChart3 },
+  { path: "/tutor/estadisticas",     label: "Reportes",           icon: BarChart3 },
   { path: "/tutor/recomendaciones",  label: "Recomendaciones IA",icon: MessageSquareWarning },
-  { path: "/tutor/sesiones",         label: "Sesiones",          icon: History },
   { path: "/tutor/logros",           label: "Logros",            icon: Trophy },
+  { path: "/tutor/sesiones",         label: "Sesiones",          icon: History },
 ];
 
 export default function TutorSidebar() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-
-  const initials = user?.nombre
-    ? user.nombre.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase()).join("")
-    : "TU";
 
   const handleLogout = () => {
     signOut();
@@ -96,10 +92,8 @@ export default function TutorSidebar() {
           aria-label="Cerrar sesión"
           title={`Cerrar sesión de ${user?.nombre || "Tutor"}`}
         >
-          <span className="lk-tutor-sidebar-power__avatar" aria-hidden="true">
-            {initials}
-          </span>
           <LogOut size={18} aria-hidden="true" />
+          <span className="lk-tutor-sidebar-power__label">Cerrar sesión</span>
         </button>
       </div>
     </motion.aside>
