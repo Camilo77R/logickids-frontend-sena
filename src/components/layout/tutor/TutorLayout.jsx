@@ -9,7 +9,6 @@ import TutorSidebar from "./TutorSidebar";
 import TutorTopbar from "./TutorTopbar";
 import TutorMobileNav from "./TutorMobileNav";
 import "./tutor.css";
-import "./tutor-shell-dark.css";
 
 export default function TutorLayout({ children }) {
   return (

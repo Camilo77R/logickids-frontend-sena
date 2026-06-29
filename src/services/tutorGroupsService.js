@@ -30,7 +30,7 @@ const normalizeSessionOpenPayload = ({ modo, minijuegoId, niveles, rutaId }) => 
     sesion_activa: true,
     modo: "single",
     minijuego_id: normalizePositiveInt(minijuegoId),
-    niveles: normalizePositiveInt(niveles, 1),
+    niveles: normalizePositiveInt(niveles, 3),
   };
 };
 

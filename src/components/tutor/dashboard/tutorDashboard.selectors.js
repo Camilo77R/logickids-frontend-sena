@@ -11,21 +11,6 @@ const DEFAULT_GROUP_DESCRIPTION = "Sin descripción pedagógica configurada.";
 const isSesionActiva = (value) =>
   value === true || value === "true" || value === "t" || value === 1;
 
-const resolveSessionOpenedAt = (group) => {
-  const value = group?.sesion_abierta_en ?? group?.ultima_sesion_abierta_en;
-  const timestamp = value ? Date.parse(value) : 0;
-  return Number.isFinite(timestamp) ? timestamp : 0;
-};
-
-export const selectLatestOpenedGroup = (groups = []) => {
-  const activeGroups = groups.filter((group) => isSesionActiva(group.sesion_activa));
-  const candidates = activeGroups.length > 0 ? activeGroups : groups;
-
-  return [...candidates].sort(
-    (left, right) => resolveSessionOpenedAt(right) - resolveSessionOpenedAt(left)
-  )[0] ?? null;
-};
-
 const normalizeGroup = (group) => ({
   id: group.id ?? group.id_grupo ?? crypto.randomUUID(),
   nombre: group.nombre?.trim() || "Grupo sin nombre",

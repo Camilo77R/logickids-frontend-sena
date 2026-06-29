@@ -1,8 +1,8 @@
 import { clearStoredSession, getStoredSession } from "../utils/sessionStorage";
 
-const DEFAULT_API_URL = "/api";
-const DIRECT_BACKEND_ORIGIN = "https://logickids-backend-sena-production.up.railway.app";
-const RAILWAY_API_URL = `${DIRECT_BACKEND_ORIGIN}/api`;
+const DEFAULT_API_URL = import.meta.env.PROD ? "/api" : "http://localhost:3000/api";
+const DIRECT_BACKEND_ORIGIN = "https://logickids-backend-sena.onrender.com";
+const RENDER_API_URL = `${DIRECT_BACKEND_ORIGIN}/api`;
 
 const normalizeBaseUrl = (value) =>
   typeof value === "string" ? value.trim().replace(/\/+$/, "") : "";
@@ -12,7 +12,7 @@ const isAbsoluteHttpUrl = (value) => /^https?:\/\//i.test(value);
 const resolveBaseUrl = () => {
   const configuredUrl = normalizeBaseUrl(import.meta.env.VITE_API_URL || DEFAULT_API_URL);
 
-  if (import.meta.env.PROD && configuredUrl === RAILWAY_API_URL) {
+  if (import.meta.env.PROD && configuredUrl === RENDER_API_URL) {
     return "/api";
   }
 
