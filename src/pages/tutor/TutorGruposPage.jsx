@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, Eye, Play, Route, Search, Square, Users, X } from "lucide-react";
 import SessionClassModal from "../../components/tutor/SessionClassModal";
 import RoleModal from "../../components/common/RoleModal";
@@ -35,7 +35,7 @@ function GroupListItem({ grupo, selected, onSelect }) {
           <div>
             <h3 className="tg-group-item__title">{grupo.nombre}</h3>
             <p className="tg-group-item__description">
-              {grupo.descripcion || "Grupo asignado para operaciÃ³n pedagÃ³gica."}
+              {grupo.descripcion || "Grupo asignado para operación pedagógica."}
             </p>
           </div>
           <span className={`tg-group-item__status${sessionOpen ? " is-open" : ""}`}>
@@ -219,7 +219,7 @@ export default function TutorGruposPage() {
     if (!minijuegos.length && !rutasPedagogicas.length) {
       setFeedback({
         type: "danger",
-        message: "No hay actividades pedagÃ³gicas disponibles para abrir la clase.",
+        message: "No hay actividades pedagógicas disponibles para abrir la clase.",
       });
       return;
     }
@@ -251,7 +251,7 @@ export default function TutorGruposPage() {
       await loadSelectedGroupDetail(groupId);
       setFeedback({
         type: "success",
-        message: `La actividad pedagÃ³gica de "${grupo.nombre}" quedÃ³ cerrada.`,
+        message: `La actividad pedagógica de "${grupo.nombre}" quedó cerrada.`,
       });
     } catch (toggleError) {
       setFeedback({
@@ -294,119 +294,213 @@ export default function TutorGruposPage() {
 
   return (
     <div className="tutor-page-container">
-      {feedback && (
+      <div className="tutor-page-header">
+        <div>
+          <h1 className="tutor-page-title tg-page-title">
+            <Users size={26} />
+            Mis grupos
+          </h1>
+          <p className="tutor-page-subtitle tg-page-subtitle">
+            Consulta tus grupos asignados, revisa a tus estudiantes y prepara la próxima actividad pedagógica.
+          </p>
+        </div>
+      </div>
+
+      {feedback ? (
         <div className={`tutor-alert ${feedback.type === "success" ? "tutor-alert--success" : "tutor-alert--error"}`}>
           <span>{feedback.message}</span>
           <button type="button" className="tutor-alert__close" onClick={clearFeedback} aria-label="Cerrar"><X size={16} /></button>
         </div>
-      )}
-      {error && (
+      ) : null}
+
+      {error ? (
         <div className="tutor-alert tutor-alert--error">
           <span>{error}</span>
           <button type="button" className="tutor-alert__close" onClick={clearError} aria-label="Cerrar"><X size={16} /></button>
         </div>
-      )}
+      ) : null}
 
-      <div className="tg-page-header">
-        <div className="tg-page-header__copy">
-          <h1>Mis Grupos</h1>
-          <p>Gestione sus grupos y actividades para LogicKids</p>
-        </div>
-        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-          <div className="tg-search">
-            <Search size={15} className="tg-search__icon" />
-            <input type="text" className="tg-search__input" placeholder="Buscar grupo..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-            {searchQuery && <button type="button" className="tg-search__clear" onClick={() => setSearchQuery("")}>&times;</button>}
-          </div>
-          {[{ key: "all", label: "Todos" }, { key: "open", label: "Abiertas" }, { key: "closed", label: "Cerradas" }].map((f) => (
-            <button key={f.key} type="button" className={`tg-filter-pill${statusFilter === f.key ? " is-active" : ""}`} onClick={() => setStatusFilter(f.key)}>{f.label}</button>
-          ))}
-        </div>
-      </div>
-
-      {cargando ? (
-        <div className="tutor-loading">Cargando grupos...</div>
-      ) : !grupos.length ? (
+      {!cargando && !grupos.length ? (
         <div className="tutor-card tutor-empty">
           <BookOpen size={42} />
           <strong>Aún no tienes grupos asignados</strong>
           <p>Cuando la institución te asigne grupos, aquí podrás abrir actividades y revisar a tus estudiantes.</p>
         </div>
-      ) : filteredGroups.length === 0 ? (
-        <div className="tutor-empty"><Search size={30} /><p>No se encontraron grupos con esos criterios.</p></div>
       ) : (
-        <div className="tg-cards-grid">
-          {filteredGroups.map((grupo) => {
-            const groupId = normalizeGroupId(grupo);
-            const sessionOpen = isSessionActive(grupo?.sesion_activa);
-            const isProcessing = cargandoAccion === groupId;
-            return (
-              <div key={groupId} className="tg-group-card">
-                <h3 className="tg-group-card__name">{grupo.nombre}</h3>
-                <p className="tg-group-card__desc">{grupo.descripcion || "Grupo asignado para operación pedagógica."}</p>
-                <div className="tg-group-card__badges">
-                  <span className="tg-badge-count"><Users size={12} />{grupo.total_estudiantes ?? "–"} Estudiantes</span>
-                  <span className={`tg-badge-status ${sessionOpen ? "tg-badge-status--open" : "tg-badge-status--closed"}`}>{sessionOpen ? "✓ Clase abierta" : "Cerrada"}</span>
+        <div className="tutor-card">
+            <div className="tg-section-head">
+              <div>
+                <span className="tg-section-head__eyebrow">Operación pedagógica</span>
+                <h2 className="tutor-card-title">
+                  <Route size={18} />
+                  Grupos asignados
+                </h2>
+              </div>
+              <div className="tg-toolbar">
+                <div className="tg-search">
+                  <Search size={15} className="tg-search__icon" />
+                  <input
+                    type="text"
+                    className="tg-search__input"
+                    placeholder="Buscar grupo..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  {searchQuery && (
+                    <button type="button" className="tg-search__clear" onClick={() => setSearchQuery("")}>
+                      &times;
+                    </button>
+                  )}
                 </div>
-                <div className="tg-group-card__activity">
-                  <span>Actividad actual:</span>
-                  <strong>{getSessionModeLabel(grupo)}</strong>
-                  <div className="tg-group-card__progress-bar">
-                    <div className="tg-group-card__progress-fill" style={{ width: sessionOpen ? "65%" : "0%" }} />
-                  </div>
-                </div>
-                <div className="tg-group-card__actions">
-                  <button type="button" className={sessionOpen ? "tg-btn-close" : "tg-btn-open"} disabled={isProcessing} onClick={() => handleToggleSesion(grupo)}>
-                    {isProcessing ? "Procesando..." : sessionOpen ? "Cerrar" : "Abrir actividad"}
-                  </button>
-                  <button type="button" className="tg-btn-arrow" onClick={() => handleOpenDetail(groupId)} aria-label="Ver detalle"><Eye size={16} /></button>
+                <div className="tg-filters">
+                  {[
+                    { key: "all", label: "Todos" },
+                    { key: "open", label: "Abiertas" },
+                    { key: "closed", label: "Cerradas" },
+                  ].map((f) => (
+                    <button
+                      key={f.key}
+                      type="button"
+                      className={`tg-filter-pill${statusFilter === f.key ? " is-active" : ""}`}
+                      onClick={() => setStatusFilter(f.key)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
                 </div>
               </div>
-            );
-          })}
+            </div>
+
+            {cargando ? (
+              <div className="tutor-loading">Cargando grupos...</div>
+            ) : filteredGroups.length === 0 ? (
+              <div className="tutor-empty">
+                <Search size={30} />
+                <p>No se encontraron grupos con esos criterios.</p>
+              </div>
+            ) : (
+              <div className="tg-group-list">
+                {filteredGroups.map((grupo) => {
+                  const groupId = normalizeGroupId(grupo);
+
+                  return (
+                    <GroupListItem
+                      key={groupId}
+                      grupo={grupo}
+                      selected={groupId === selectedGroupId}
+                      onSelect={handleOpenDetail}
+                    />
+                  );
+                })}
+              </div>
+            )}
         </div>
       )}
 
-      <SessionClassModal show={sessionModal.open} groupName={sessionModal.group?.nombre ?? "grupo"} minijuegos={minijuegos} rutasPedagogicas={rutasPedagogicas} onClose={closeSessionModal} onConfirm={handleConfirmOpenSession} isSubmitting={Boolean(cargandoAccion)} errorMessage={sessionModal.error} />
+      <SessionClassModal
+        show={sessionModal.open}
+        groupName={sessionModal.group?.nombre ?? "grupo"}
+        minijuegos={minijuegos}
+        rutasPedagogicas={rutasPedagogicas}
+        onClose={closeSessionModal}
+        onConfirm={handleConfirmOpenSession}
+        isSubmitting={Boolean(cargandoAccion)}
+        errorMessage={sessionModal.error}
+      />
 
-      <RoleModal open={detailModalOpen && Boolean(selectedGroup)} onClose={() => setDetailModalOpen(false)} eyebrow="Contexto del aula" title="Detalle del grupo" width={640}
-        actions={selectedGroup ? (
-          <>
-            <button type="button" className={`tg-primary-btn${isSessionActive(selectedGroup.sesion_activa) ? " tg-primary-btn--danger" : ""}`} onClick={() => { handleToggleSesion(selectedGroup); setDetailModalOpen(false); }} disabled={cargandoAccion === normalizeGroupId(selectedGroup)}>
-              {cargandoAccion === normalizeGroupId(selectedGroup) ? "Procesando..." : isSessionActive(selectedGroup.sesion_activa) ? <><Square size={15} /> Cerrar clase</> : <><Play size={15} /> Abrir actividad</>}
-            </button>
-            <button type="button" className="tg-primary-btn tg-primary-btn--ghost" onClick={() => setDetailModalOpen(false)}>Cerrar</button>
-          </>
-        ) : null}
+      <RoleModal
+        open={detailModalOpen && Boolean(selectedGroup)}
+        onClose={() => setDetailModalOpen(false)}
+        eyebrow="Contexto del aula"
+        title="Detalle del grupo"
+        width={640}
+        actions={
+          selectedGroup ? (
+            <>
+              <button
+                type="button"
+                className={`tg-primary-btn${isSessionActive(selectedGroup.sesion_activa) ? " tg-primary-btn--danger" : ""}`}
+                onClick={() => { handleToggleSesion(selectedGroup); setDetailModalOpen(false); }}
+                disabled={cargandoAccion === normalizeGroupId(selectedGroup)}
+              >
+                {cargandoAccion === normalizeGroupId(selectedGroup) ? (
+                  "Procesando..."
+                ) : isSessionActive(selectedGroup.sesion_activa) ? (
+                  <><Square size={15} /> Cerrar clase</>
+                ) : (
+                  <><Play size={15} /> Abrir actividad</>
+                )}
+              </button>
+              <button type="button" className="tg-primary-btn tg-primary-btn--ghost" onClick={() => setDetailModalOpen(false)}>
+                Cerrar
+              </button>
+            </>
+          ) : null
+        }
       >
         {selectedGroup && (
           <div className="tg-detail-stack">
             <div className="tg-detail-hero">
-              <div><h3>{selectedGroup.nombre}</h3><p>{selectedGroup.descripcion || "Sin descripción institucional registrada."}</p></div>
-              <StatusChip label={isSessionActive(selectedGroup.sesion_activa) ? "clase abierta" : "clase cerrada"} tone={isSessionActive(selectedGroup.sesion_activa) ? "active" : "closed"} />
+              <div>
+                <h3>{selectedGroup.nombre}</h3>
+                <p>{selectedGroup.descripcion || "Sin descripción institucional registrada."}</p>
+              </div>
+              <StatusChip
+                label={isSessionActive(selectedGroup.sesion_activa) ? "clase abierta" : "clase cerrada"}
+                tone={isSessionActive(selectedGroup.sesion_activa) ? "active" : "closed"}
+              />
             </div>
+
             <div className="tg-detail-metrics">
-              <DetailMetric label="Modo" value={getSessionModeLabel(selectedGroup)} helper={getSessionSummaryText(selectedGroup)} />
-              <DetailMetric label="Estudiantes" value={cargandoDetalle ? "..." : selectedStudents.length} helper={`${activeStudentsCount} con actividad reciente o sesión abierta`} />
+              <DetailMetric
+                label="Modo"
+                value={getSessionModeLabel(selectedGroup)}
+                helper={getSessionSummaryText(selectedGroup)}
+              />
+              <DetailMetric
+                label="Estudiantes"
+                value={cargandoDetalle ? "..." : selectedStudents.length}
+                helper={`${activeStudentsCount} con actividad reciente o sesión abierta`}
+              />
             </div>
+
             <div className="tg-students-panel">
-              <div className="tg-students-panel__head"><strong>Estudiantes del grupo</strong><span>{cargandoDetalle ? "..." : selectedStudents.length}</span></div>
-              {cargandoDetalle ? <div className="tutor-loading">Cargando detalle del grupo...</div> : selectedStudents.length ? (
+              <div className="tg-students-panel__head">
+                <strong>Estudiantes del grupo</strong>
+                <span>{cargandoDetalle ? "..." : selectedStudents.length}</span>
+              </div>
+
+              {cargandoDetalle ? (
+                <div className="tutor-loading">Cargando detalle del grupo...</div>
+              ) : selectedStudents.length ? (
                 <div className="tg-students-list">
                   {selectedStudents.map((student) => {
                     const badge = getStudentSessionBadge(student);
+
                     return (
                       <div key={student.id ?? student.id_estudiante} className="tg-student-row">
                         <div className="tg-student-row__identity">
-                          <div className="tg-student-row__avatar" style={{ backgroundColor: student.color_avatar || "var(--lk-brand)" }}>{(student.nombre || "?").slice(0, 2).toUpperCase()}</div>
-                          <div><strong>{student.nombre}</strong><p>{student.edad ? `${student.edad} años` : "Edad no disponible"}</p></div>
+                          <div
+                            className="tg-student-row__avatar"
+                            style={{ backgroundColor: student.color_avatar || "var(--lk-tutor-primary)" }}
+                          >
+                            {(student.nombre || "?").slice(0, 2).toUpperCase()}
+                          </div>
+                          <div>
+                            <strong>{student.nombre}</strong>
+                            <p>{student.edad ? `${student.edad} años` : "Edad no disponible"}</p>
+                          </div>
                         </div>
                         <StatusChip label={badge.label} tone={badge.tone} />
                       </div>
                     );
                   })}
                 </div>
-              ) : <p className="tg-empty-copy">Este grupo aún no tiene estudiantes activos visibles para el tutor.</p>}
+              ) : (
+                <p className="tg-empty-copy">
+                  Este grupo aún no tiene estudiantes activos visibles para el tutor.
+                </p>
+              )}
             </div>
           </div>
         )}

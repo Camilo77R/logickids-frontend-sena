@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert, Spinner } from "react-bootstrap";
 import {
   Award,
@@ -226,119 +226,199 @@ export default function TutorLogrosPage() {
 
   return (
     <section className="lk-achievements-page">
+      <header className="lk-achievements-topbar">
+        <label className="lk-achievements-search">
+          <Search size={18} aria-hidden="true" />
+          <input
+            type="search"
+            value={busqueda}
+            onChange={(event) => setBusqueda(event.target.value)}
+            placeholder="Buscar logros o desafios..."
+          />
+        </label>
 
-      {/* Header */}
-      <div className="lk-ach-page-header">
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:"1rem", flexWrap:"wrap" }}>
-          <h1>Logros de Estudiantes</h1>
-          <select className="lk-ach-filter-select" value={grupoId} onChange={(e) => { setGrupoId(e.target.value); setEstudianteId(""); }}>
-            <option value="">Grupo A, Grupo B, Todos</option>
-            {grupos.map((g) => <option key={g.id} value={g.id}>{g.nombre}</option>)}
+        <div className="lk-achievements-toolbar">
+          <select value={grupoId} onChange={(event) => setGrupoId(event.target.value)}>
+            <option value="">Selecciona un grupo</option>
+            {grupos.map((grupo) => (
+              <option key={grupo.id} value={grupo.id}>
+                {grupo.nombre}
+              </option>
+            ))}
           </select>
-        </div>
-        {estudianteId === "" && grupoId && (
-          <div style={{ marginTop:"0.5rem" }}>
-            <select className="lk-ach-filter-select" value={estudianteId} onChange={(e) => setEstudianteId(e.target.value)}>
-              <option value="">Seleccionar estudiante</option>
-              {estudiantes.map((s) => <option key={s.id} value={s.id}>{s.nombre}</option>)}
-            </select>
-          </div>
-        )}
-      </div>
 
-      {error && <div className="tutor-alert tutor-alert--error" style={{ marginBottom:"1rem" }}><span>{error}</span></div>}
+          <select
+            value={estudianteId}
+            onChange={(event) => setEstudianteId(event.target.value)}
+            disabled={!estudiantes.length}
+          >
+            <option value="">Selecciona un estudiante</option>
+            {estudiantes.map((student) => (
+              <option key={student.id} value={student.id}>
+                {student.nombre}
+              </option>
+            ))}
+          </select>
+
+          <div className="lk-achievements-user">
+            <span>{studentName || "Estudiante"}</span>
+            <small>
+              {grupoActual?.nombre ?? "Grupo"} · {resumen.desbloqueados}/{resumen.total} logros
+            </small>
+            <div aria-hidden="true">{buildInitials(studentName)}</div>
+          </div>
+        </div>
+      </header>
+
+      {error ? <Alert variant="danger">{error}</Alert> : null}
 
       {isLoading ? (
-        <div style={{ textAlign:"center", padding:"3rem", color:"#6B6B8A" }}>Cargando logros...</div>
+        <div className="lk-achievements-loading">
+          <Spinner animation="border" variant="primary" />
+          <p>Cargando logros...</p>
+        </div>
       ) : !estudianteId ? (
-        <div style={{ background:"#fff", borderRadius:"1.25rem", padding:"3rem", textAlign:"center", border:"1px solid #E2DCF0" }}>
-          <Trophy size={48} style={{ color:"#C4AEE0" }} />
-          <strong style={{ display:"block", marginTop:"0.75rem", color:"#1A1A2E" }}>Selecciona un grupo y un estudiante</strong>
-          <span style={{ color:"#6B6B8A", fontSize:"0.85rem" }}>El catálogo de logros aparecerá aquí.</span>
+        <div className="lk-achievements-empty">
+          <Trophy size={48} aria-hidden="true" />
+          <strong>Selecciona un estudiante</strong>
+          <span>El catálogo de logros aparecerá cuando elijas un perfil.</span>
         </div>
       ) : (
         <>
-          {/* TOP 3 Podio */}
-          <div className="lk-ach-podium-card">
-            <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:"1.25rem" }}>
-              <div style={{ fontWeight:800, fontSize:"1rem", color:"#1A1A2E" }}>TOP 3</div>
-              <div style={{ display:"flex", flexDirection:"column", gap:"0.2rem", fontSize:"0.72rem", color:"#6B6B8A" }}>
-                <span style={{ display:"flex", alignItems:"center", gap:"0.4rem" }}><span style={{ width:10, height:10, borderRadius:"50%", background:"#F5A623", display:"inline-block" }} /> #F9A825</span>
-                <span style={{ display:"flex", alignItems:"center", gap:"0.4rem" }}><span style={{ width:10, height:10, borderRadius:"50%", background:"#D1D5DB", display:"inline-block" }} /> #Silver</span>
-                <span style={{ display:"flex", alignItems:"center", gap:"0.4rem" }}><span style={{ width:10, height:10, borderRadius:"50%", background:"#CD7C2F", display:"inline-block" }} /> #Bronze</span>
+          <div className="lk-achievements-kpis">
+            <article className="lk-achievements-kpi lk-achievements-kpi--highlight">
+              <div className="lk-achievements-kpi__icon">
+                <Trophy size={32} aria-hidden="true" />
               </div>
-            </div>
+              <div>
+                <span>Logros totales</span>
+                <strong>{resumen.desbloqueados}</strong>
+              </div>
+            </article>
 
-            <div className="lk-ach-podium">
-              {/* 2do lugar */}
-              <div className="lk-ach-podium-slot lk-ach-podium-slot--2">
-                <div className="lk-ach-avatar" style={{ background:"#9CA3AF", width:48, height:48, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontWeight:800, fontSize:"0.85rem", marginBottom:"0.35rem" }}>
-                  {(actividadReciente[1]?.nombre || "??").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
-                </div>
-                <div className="lk-ach-podium-name">{actividadReciente[1]?.nombre || studentName || "Estudiante"}</div>
-                <div className="lk-ach-podium-pts">Score: {actividadReciente[1]?.xp != null ? `${actividadReciente[1].xp} pts` : `${(resumen.desbloqueados || 0) * 20 + 10} pts`}</div>
-                <div className="lk-ach-platform lk-ach-platform--2">2</div>
+            <article className="lk-achievements-kpi">
+              <div className="lk-achievements-kpi__icon lk-achievements-kpi__icon--lock">
+                <Lock size={40} aria-hidden="true" />
               </div>
+              <div>
+                <span>Pendientes</span>
+                <strong>{resumen.pendientes}</strong>
+              </div>
+            </article>
 
-              {/* 1er lugar */}
-              <div className="lk-ach-podium-slot lk-ach-podium-slot--1">
-                <div style={{ fontSize:"1.5rem", marginBottom:"0.2rem" }}>👑</div>
-                <div className="lk-ach-avatar" style={{ background:"#F5A623", width:62, height:62, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontWeight:800, fontSize:"1rem", marginBottom:"0.35rem" }}>
-                  {(studentName || "??").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
-                </div>
-                <div className="lk-ach-podium-name" style={{ fontWeight:800, fontSize:"0.9rem" }}>{studentName || "Estudiante"}</div>
-                <div className="lk-ach-podium-pts">Score: {(resumen.desbloqueados || 0) * 25 + 50} pts</div>
-                <div className="lk-ach-platform lk-ach-platform--1">1</div>
-              </div>
-
-              {/* 3er lugar */}
-              <div className="lk-ach-podium-slot lk-ach-podium-slot--3">
-                <div className="lk-ach-avatar" style={{ background:"#CD7C2F", width:48, height:48, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontWeight:800, fontSize:"0.85rem", marginBottom:"0.35rem" }}>
-                  {(actividadReciente[2]?.nombre || "??").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase()}
-                </div>
-                <div className="lk-ach-podium-name">{actividadReciente[2]?.nombre || "—"}</div>
-                <div className="lk-ach-podium-pts">Score: {actividadReciente[2]?.xp != null ? `${actividadReciente[2].xp} pts` : `${(resumen.desbloqueados || 0) * 15} pts`}</div>
-                <div className="lk-ach-platform lk-ach-platform--3">3</div>
-              </div>
-            </div>
           </div>
 
-          {/* Grid 2 columnas — cards horizontales como en mockup */}
-          {!catalogoFiltrado.length ? (
-            <div style={{ textAlign:"center", padding:"2rem", color:"#6B6B8A" }}>
-              <Star size={30} style={{ color:"#C4AEE0" }} /><strong style={{ display:"block", marginTop:"0.5rem" }}>No hay logros con ese filtro</strong>
-            </div>
-          ) : (
-            <div className="lk-ach-grid">
-              {catalogoFiltrado.map((item, index) => {
-                const colorKeys = ["green","blue","orange","cyan"];
-                const color = item.desbloqueado ? colorKeys[index % 4] : "locked";
-                const iconBg = { green:"#DCFCE7", blue:"#DBEAFE", orange:"#FFEDD5", cyan:"#CFFAFE", locked:"#F3F4F6" }[color];
-                const icons = { green:"🏆", blue:"⭐", orange:"🔥", cyan:"⚡", locked:"🚀" };
-                const studentCount = item.desbloqueado ? (item.total_estudiantes ?? item.estudiantes_count ?? 1) : 0;
-                return (
-                  <div key={item.id_catalogo_logro ?? item.key ?? index} className={`lk-ach-item lk-ach-item--${color}`}>
-                    {/* Icono circular */}
-                    <div className="lk-ach-item__icon" style={{ background: iconBg }}>
-                      <span style={{ fontSize:"1.4rem" }}>{icons[color]}</span>
-                    </div>
-                    {/* Cuerpo */}
-                    <div className="lk-ach-item__body">
-                      <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between" }}>
-                        <h4 className="lk-ach-item__name">{item.nombre}</h4>
-                        {!item.desbloqueado && <Lock size={14} className="lk-ach-item__lock" style={{ color:"#9CA3AF", marginLeft:"0.5rem", flexShrink:0 }} />}
+          <div className="lk-achievements-layout">
+            <main>
+              <div className="lk-achievements-section-head">
+                <div>
+                  <h1>Catálogo de Logros</h1>
+                  <p>{studentName || "Este estudiante"} tiene {resumen.total} desafíos disponibles.</p>
+                </div>
+
+                <div className="lk-achievements-tabs" role="tablist" aria-label="Filtro de logros">
+                  {ACHIEVEMENT_FILTERS.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={filtro === item.id ? "active" : ""}
+                      onClick={() => setFiltro(item.id)}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {!catalogoFiltrado.length ? (
+                <div className="lk-achievements-empty lk-achievements-empty--inline">
+                  <Star size={34} aria-hidden="true" />
+                  <strong>No hay logros con ese filtro</strong>
+                  <span>Prueba con otra búsqueda o cambia el estado.</span>
+                </div>
+              ) : (
+                <div className="lk-achievements-grid">
+                  {catalogoFiltrado.map((item, index) => (
+                    <article
+                      key={item.id_catalogo_logro ?? item.key}
+                      className={`lk-achievement-card ${
+                        item.desbloqueado ? "is-unlocked" : "is-locked"
+                      }`}
+                    >
+                      <div className="lk-achievement-card__top">
+                        <div className="lk-achievement-card__icon" aria-hidden="true">
+                          {item.desbloqueado ? <Star size={20} /> : <Lock size={20} />}
+                        </div>
+                        <span>{item.desbloqueado ? "Desbloqueado" : "Pendiente"}</span>
                       </div>
-                      <p className="lk-ach-item__desc">{item.descripcion}</p>
-                      <div className="lk-ach-item__count">
-                        <span style={{ fontSize:"0.85rem" }}>👤</span>
-                        <span>{studentCount} Estudiantes</span>
+
+                      <h2>{item.nombre}</h2>
+                      <p>{item.descripcion}</p>
+
+                      <footer>
+                        <strong>{item.xp != null ? `+${item.xp} XP` : "Logro pedagógico"}</strong>
+                        {item.desbloqueado ? (
+                          <small>{formatDate(item.unlocked?.desbloqueado_en)}</small>
+                        ) : (
+                          <small>Aún no desbloqueado</small>
+                        )}
+                      </footer>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </main>
+
+            <aside className="lk-achievements-activity">
+              <h2>Actividad Reciente</h2>
+
+              {!actividadReciente.length ? (
+                <div className="lk-achievements-activity__empty">
+                  <Award size={28} aria-hidden="true" />
+                  <span>Sin desbloqueos todavía</span>
+                </div>
+              ) : (
+                <div className="lk-achievements-timeline">
+                  {actividadReciente.map((logro) => (
+                    <article key={logro.id}>
+                      <div className="lk-achievements-timeline__dot">
+                        <Medal size={16} aria-hidden="true" />
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                      <span>{formatDate(logro.desbloqueado_en)}</span>
+                      <strong>{logro.nombre_logro}</strong>
+                      <p>{logro.descripcion}</p>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </aside>
+          </div>
+
+          <section className="lk-achievements-banner">
+            <div>
+              <span>Potencial LogicKids</span>
+              <h2>¡Tu progreso está despegando!</h2>
+              <p>
+                {studentName || "El estudiante"} ya desbloqueó {resumen.desbloqueados} logros.
+                Usa esta lectura para celebrar avances y orientar el siguiente reto.
+              </p>
+              <div className="lk-achievements-banner__actions">
+                <button type="button">
+                  <Download size={17} aria-hidden="true" />
+                  Descargar reporte
+                </button>
+                <button type="button">
+                  <Share2 size={17} aria-hidden="true" />
+                  Compartir logros
+                </button>
+              </div>
             </div>
-          )}
+
+            <div className="lk-achievements-rocket" aria-hidden="true">
+              <Rocket size={82} />
+              <Zap size={28} />
+            </div>
+          </section>
         </>
       )}
     </section>
