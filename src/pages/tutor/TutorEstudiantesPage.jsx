@@ -218,12 +218,18 @@ export default function TutorEstudiantesPage() {
               <tbody>
                 {estudiantesPaginados.map((est) => {
                   const estado = getEstado(est);
-                  const initials = (est.nombre || "??").split(" ").slice(0,2).map((w) => w[0]?.toUpperCase()).join("");
                   return (
                     <tr key={est.id}>
                       <td>
                         <div className="lk-est-avatar">
-                          {initials}
+                          <Image
+                            src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${est.nombre || est.id}`}
+                            roundedCircle
+                            className="lk-student-avatar-img"
+                            alt={est.nombre}
+                            width={40}
+                            height={40}
+                          />
                           <span className="lk-est-avatar-dot" />
                         </div>
                       </td>
