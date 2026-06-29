@@ -25,7 +25,7 @@ const NAV_ITEMS = [
   { path: "/tutor/dashboard",        label: "Inicio",            icon: LayoutDashboard },
   { path: "/tutor/grupos",           label: "Grupos",            icon: Users },
   { path: "/tutor/estudiantes",      label: "Estudiantes",       icon: UserPlus },
-  { path: "/tutor/estadisticas",     label: "Reportes",           icon: BarChart3 },
+  { path: "/tutor/estadisticas",     label: "Estadisticas",           icon: BarChart3 },
   { path: "/tutor/recomendaciones",  label: "Recomendaciones IA",icon: MessageSquareWarning },
   { path: "/tutor/logros",           label: "Logros",            icon: Trophy },
   { path: "/tutor/sesiones",         label: "Sesiones",          icon: History },

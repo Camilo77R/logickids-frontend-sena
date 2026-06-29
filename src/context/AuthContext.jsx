@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import authService from "../services/authService";
+import { isSessionExpirationError } from "../services/httpClient";
 import { clearStoredSession, getStoredSession, saveStoredSession } from "../utils/sessionStorage";
 import { getHomePathByRole } from "../utils/paths";
 import { AuthContext } from "./auth-context";
@@ -39,9 +40,13 @@ export function AuthProvider({ children }) {
 
         saveStoredSession(nextSession);
         setSession(nextSession);
-      } catch {
-        clearStoredSession();
-        setSession(null);
+      } catch (error) {
+        if (isSessionExpirationError(error)) {
+          clearStoredSession();
+          setSession(null);
+        } else {
+          setSession(storedSession);
+        }
       } finally {
         setIsBootstrapping(false);
       }

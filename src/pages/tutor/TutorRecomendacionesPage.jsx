@@ -2,12 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Brain,
   Eraser,
-  History,
   RefreshCw,
-  Sparkles,
   Target,
   Trash2,
-  Users,
   X,
   Wand2,
 } from "lucide-react";
@@ -16,6 +13,7 @@ import LoadingState from "../../components/common/LoadingState";
 import estudianteService from "../../services/estudianteService";
 import recomendacionesService from "../../services/recomendacionesService";
 import tutorGroupsService from "../../services/tutorGroupsService";
+import recommendationsMascot from "../../assets/imgs/tutor-recommendations-mascot.png";
 import "../../styles/tutor-recomendaciones.css";
 
 const SEVERIDAD_META = {
@@ -102,20 +100,6 @@ const parseRecommendationSections = (text) => {
   pushCurrent();
   return sections;
 };
-
-function StatCard({ icon: Icon, label, value, tone = "purple" }) {
-  return (
-    <div className={`lk-rec-stat lk-rec-stat--${tone}`}>
-      <div className="lk-rec-stat__icon">
-        <Icon size={18} strokeWidth={2.2} />
-      </div>
-      <div className="lk-rec-stat__copy">
-        <span className="lk-rec-stat__label">{label}</span>
-        <strong className="lk-rec-stat__value">{value}</strong>
-      </div>
-    </div>
-  );
-}
 
 function RecommendationSections({ text }) {
   const sections = parseRecommendationSections(text);
@@ -406,47 +390,11 @@ export default function TutorRecomendacionesPage() {
 
   return (
     <div className="lk-rec-page">
-      <section className="lk-rec-hero">
-        <div className="lk-rec-hero__glow" />
-        <div className="lk-rec-hero__copy">
-          <span className="lk-rec-hero__eyebrow">
-            <Sparkles size={15} />
-            Acompañamiento pedagógico
-          </span>
-          <h1 className="lk-rec-hero__title">Recomendaciones para acompañar a tus estudiantes</h1>
-          <p className="lk-rec-hero__subtitle">
-            Usa los resultados reales de los juegos para crear sugerencias prácticas, revisar el
-            seguimiento y decidir el próximo apoyo en clase.
-          </p>
-        </div>
-
-        <div className="lk-rec-hero__summary">
-          <StatCard
-            icon={Users}
-            label="Grupo elegido"
-            value={selectedGroup?.nombre ?? "Sin grupo"}
-            tone="purple"
-          />
-          <StatCard
-            icon={Target}
-            label="Enfoque"
-            value={selectedStudent?.nombre || "Todo el grupo"}
-            tone="orange"
-          />
-          <StatCard
-            icon={History}
-            label="Recomendaciones activas"
-            value={recomendaciones.length}
-            tone="green"
-          />
-        </div>
-      </section>
-
       <section className="lk-rec-panel lk-rec-panel--builder">
         <div className="lk-rec-panel__header">
           <div>
             <span className="lk-rec-panel__eyebrow">Paso 1</span>
-            <h2 className="lk-rec-panel__title">Crear una recomendación</h2>
+            <h1 className="lk-rec-panel__title">Crea una recomendación usando IA</h1>
             <p className="lk-rec-panel__subtitle">
               Escoge un grupo y, si quieres, enfócate en un estudiante puntual. La recomendación se
               genera con estadísticas reales guardadas por los juegos.
@@ -523,6 +471,13 @@ export default function TutorRecomendacionesPage() {
             estudiante.
           </span>
         </div>
+
+        <img
+          src={recommendationsMascot}
+          alt=""
+          className="lk-rec-builder__mascot"
+          aria-hidden="true"
+        />
       </section>
 
       <section className="lk-rec-panel lk-rec-panel--history">
