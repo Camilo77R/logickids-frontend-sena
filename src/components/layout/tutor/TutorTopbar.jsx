@@ -6,9 +6,8 @@
  * Refactorizado aplicando SOLID (SRP).
  */
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Bell, ChevronDown } from "lucide-react";
+import { Bell, ChevronDown, Star } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import AccountCenterModal from "../../account/AccountCenterModal";
 
@@ -16,20 +15,13 @@ import AccountCenterModal from "../../account/AccountCenterModal";
 // Subcomponentes (SOLID: Single Responsibility)
 // ==========================================
 
-const TopbarBrand = () => (
-  <div className="lk-tutor-topbar-brand">
-    <span style={{ color: "var(--lk-purple)" }}>Logic</span>
-    <span style={{ color: "var(--lk-yellow)" }}>Kids</span>
-  </div>
-);
-
 const TopbarGreeting = ({ firstName }) => (
   <div className="lk-tutor-topbar-greeting-container">
     <div className="lk-tutor-topbar-greeting">
       ¡Hola, {firstName}!
     </div>
     <div className="lk-tutor-topbar-subtitle">
-      Revisa el progreso, resultados y tiempo de juego
+      Aquí tienes un resumen de lo que está pasando hoy.
     </div>
   </div>
 );
@@ -55,6 +47,13 @@ const TopbarProfile = ({ initials, name, onClick }) => (
   </div>
 );
 
+const TopbarLevel = () => (
+  <div className="lk-tutor-level" aria-label="Nivel de tutor avanzado">
+    <span className="lk-tutor-level__icon"><Star size={19} fill="currentColor" /></span>
+    <span><small>Nivel Tutor</small><strong>Avanzado</strong></span>
+  </div>
+);
+
 // ==========================================
 // Componente Principal
 // ==========================================
@@ -77,14 +76,12 @@ export default function TutorTopbar() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.30, ease: "easeOut" }}
       >
-        {/* Lado Izquierdo: Branding y Saludo */}
         <div className="lk-tutor-topbar-left">
-          <TopbarBrand />
           <TopbarGreeting firstName={firstName} />
         </div>
 
-        {/* Lado Derecho: Acciones y Perfil */}
         <div className="lk-tutor-topbar-right">
+          <TopbarLevel />
           <TopbarButton 
             icon={Bell} 
             variant="icon" 
