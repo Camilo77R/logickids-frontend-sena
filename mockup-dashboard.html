@@ -927,23 +927,8 @@
         </div>
       </div>
 
-      <!-- COL 2: RECOMENDACIÓN DEL DÍA -->
+      <!-- COL 2: ESTADÍSTICAS + RECOMENDACIONES -->
       <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-        <div class="panel">
-          <div class="panel__head">
-            <div class="panel__title"><span class="panel__title-icon">💡</span> Recomendación del día</div>
-            <span class="rec-daily__ia">IA</span>
-          </div>
-          <div class="rec-daily">
-            <div class="rec-daily__text">Se detectaron patrones de error recurrentes en secuencias. Reforzar ejercicios de memoria visual con imágenes y repetición espaciada.</div>
-            <div class="rec-daily__tags">
-              <span class="rec-daily__tag">Atención</span>
-              <span class="rec-daily__tag">Grupo 3A - Primero</span>
-            </div>
-            <button class="rec-daily__cta">⚡ Ver recomendación ›</button>
-          </div>
-        </div>
-
         <div class="panel" style="background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border-color: rgba(22,163,74,0.18);">
           <div class="panel__head">
             <div class="panel__title" style="color:#16A34A;"><span class="panel__title-icon">📊</span> Rendimiento semanal</div>
@@ -987,6 +972,21 @@
             </div>
           </div>
         </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            <div class="panel__title"><span class="panel__title-icon">💡</span> Recomendación del día</div>
+            <span class="rec-daily__ia">IA</span>
+          </div>
+          <div class="rec-daily">
+            <div class="rec-daily__text">Se detectaron patrones de error recurrentes en secuencias. Reforzar ejercicios de memoria visual con imágenes y repetición espaciada.</div>
+            <div class="rec-daily__tags">
+              <span class="rec-daily__tag">Atención</span>
+              <span class="rec-daily__tag">Grupo 3A - Primero</span>
+            </div>
+            <button class="rec-daily__cta">⚡ Ver recomendación ›</button>
+          </div>
+        </div>
       </div>
 
       <!-- COL 3: TOP ESTUDIANTES + ALERTAS -->
@@ -994,26 +994,38 @@
         <div class="panel" style="background: linear-gradient(135deg, #FEFCE8, #FEF9C3); border-color: rgba(234,179,8,0.18);">
           <div class="panel__head">
             <div class="panel__title" style="color:#A3A31A;"><span class="panel__title-icon">🏆</span> Top estudiantes</div>
-            <button class="panel__link">Ver todos</button>
+            <button class="panel__link">Ver ranking →</button>
           </div>
           <div class="ranking">
             <div class="ranking-item">
-              <div class="ranking-item__num ranking-item__num--1">1°</div>
+              <div class="ranking-item__num ranking-item__num--1">🥇</div>
               <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=LauraRamirez" alt="Laura" />
               <div class="ranking-item__name">Laura Ramírez</div>
               <div class="ranking-item__pts">1,240 pts</div>
             </div>
             <div class="ranking-item">
-              <div class="ranking-item__num ranking-item__num--2">2°</div>
+              <div class="ranking-item__num ranking-item__num--2">🥈</div>
               <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=JuanPerez" alt="Juan" />
               <div class="ranking-item__name">Juan Pérez</div>
               <div class="ranking-item__pts">1,180 pts</div>
             </div>
             <div class="ranking-item">
-              <div class="ranking-item__num ranking-item__num--3">3°</div>
+              <div class="ranking-item__num ranking-item__num--3">🥉</div>
               <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=MariaGarcia" alt="María" />
               <div class="ranking-item__name">María García</div>
               <div class="ranking-item__pts">1,050 pts</div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-item__num">4°</div>
+              <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=CarlosSanchez" alt="Carlos" />
+              <div class="ranking-item__name">Carlos Sánchez</div>
+              <div class="ranking-item__pts">980 pts</div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-item__num">5°</div>
+              <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=AnaRodriguez" alt="Ana" />
+              <div class="ranking-item__name">Ana Rodríguez</div>
+              <div class="ranking-item__pts">920 pts</div>
             </div>
           </div>
         </div>
