@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogicKids - Mockup Dashboard Tutor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --lk-brand: #5B2D8E;
+      --lk-brand-dark: #3A1A62;
+      --lk-purple: #5B2D8E;
+      --lk-purple-dark: #3A1A62;
+      --lk-purple-light: #7B4BB8;
+      --lk-accent: #F5A623;
+      --lk-bg: #D6EAFF;
+      --lk-surface: #FFFFFF;
+      --lk-surface-soft: #EBF5FF;
+      --lk-border: rgba(91, 45, 142, 0.12);
+      --lk-text: #1A1A2E;
+      --lk-text-soft: #6B6B8A;
+      --lk-text-muted: #9CA3AF;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--lk-bg);
+      color: var(--lk-text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: 220px;
+      background: var(--lk-surface);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 10;
+      border-right: 1px solid var(--lk-border);
+      box-shadow: 2px 0 12px rgba(91, 45, 142, 0.05);
+    }
+    .sidebar__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 2rem;
+      padding: 0 0.5rem;
+    }
+    .sidebar__logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--lk-brand), var(--lk-purple-light));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #fff;
+    }
+    .sidebar__brand-text {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--lk-text);
+    }
+    .sidebar__brand-text span { color: var(--lk-accent); }
+    .sidebar__nav { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; }
+    .sidebar__item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      color: var(--lk-text-soft);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .sidebar__item:hover { background: #F4F1FA; color: var(--lk-purple); }
+    .sidebar__item--active {
+      background: linear-gradient(135deg, var(--lk-brand), var(--lk-purple-light));
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(91,45,142,0.25);
+    }
+    .sidebar__item-icon { font-size: 1.15rem; width: 24px; text-align: center; }
+    .sidebar__logout {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--lk-brand), var(--lk-purple-light));
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 4px 12px rgba(91,45,142,0.25);
+      width: 100%;
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      margin-left: 220px;
+      flex: 1;
+      padding: 1.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: calc(100vw - 220px);
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header__greeting {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--lk-text);
+    }
+    .header__greeting span { color: var(--lk-accent); }
+    .header__subtitle {
+      font-size: 0.85rem;
+      color: var(--lk-text-soft);
+      margin-top: 0.2rem;
+    }
+    .header__right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .header__badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--lk-surface);
+      border: 1.5px solid var(--lk-border);
+      border-radius: 14px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .header__badge-star { font-size: 1.1rem; }
+    .header__badge-text { color: var(--lk-text-soft); font-size: 0.7rem; }
+    .header__badge-level { color: var(--lk-text); font-weight: 700; font-size: 0.82rem; }
+    .header__notif {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--lk-surface);
+      border: 1.5px solid var(--lk-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      font-size: 1.1rem;
+    }
+    .header__notif-dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 8px;
+      height: 8px;
+      background: #EF4444;
+      border-radius: 50%;
+    }
+    .header__user {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+    }
+    .header__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lk-brand), var(--lk-purple-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .header__username {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--lk-text);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, #7C3AED 0%, #5B2D8E 40%, #4A1D96 100%);
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+      box-shadow: 0 8px 32px rgba(91,45,142,0.25);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero__text { position: relative; z-index: 2; max-width: 50%; }
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+    .hero__title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+    .hero__activity {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+    }
+    .hero__activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .hero__activity-info { display: flex; flex-direction: column; }
+    .hero__activity-label { font-size: 0.65rem; color: rgba(255,255,255,0.7); }
+    .hero__activity-name { font-size: 0.82rem; color: #fff; font-weight: 600; }
+    .hero__pills {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero__pill {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 0.6rem 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero__pill-label { font-size: 0.65rem; color: rgba(255,255,255,0.7); }
+    .hero__pill-val { font-family: 'Fredoka', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
+    .hero__actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .hero__btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .hero__btn--primary {
+      background: linear-gradient(90deg, #f5a910 0%, #fdb813 48%, #ffc42e 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(253,184,19,0.35);
+    }
+    .hero__btn--primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(253,184,19,0.5); }
+    .hero__btn--secondary {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.3);
+    }
+    .hero__btn--secondary:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+    .hero__mascot {
+      position: relative;
+      z-index: 2;
+      width: 240px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero__mascot img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+    }
+
+    /* ─── GRID ─── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    /* ─── PANELS ─── */
+    .panel {
+      background: var(--lk-surface);
+      border: 1.5px solid var(--lk-border);
+      border-radius: 20px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    .panel__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel__title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--lk-text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel__title-icon { font-size: 1.1rem; }
+    .panel__link {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--lk-purple);
+      background: var(--lk-surface-soft);
+      border: 1.5px solid var(--lk-border);
+      border-radius: 10px;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .panel__link:hover { background: var(--lk-purple); color: #fff; border-color: var(--lk-purple); }
+
+    /* ─── ACTIVITY / NECESITAN ATENCIÓN ─── */
+    .student-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .student-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 12px;
+      background: var(--lk-surface-soft);
+      border: 1px solid var(--lk-border);
+    }
+    .student-item__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .student-item__avatar--1 { background: linear-gradient(135deg, #16A34A, #4ADE80); }
+    .student-item__avatar--2 { background: linear-gradient(135deg, #2563EB, #60A5FA); }
+    .student-item__avatar--3 { background: linear-gradient(135deg, #5B2D8E, #7C3AED); }
+    .student-item__avatar--4 { background: linear-gradient(135deg, #F5A623, #FFBA40); }
+    .student-item__info { flex: 1; min-width: 0; }
+    .student-item__name { font-size: 0.82rem; font-weight: 600; color: var(--lk-text); }
+    .student-item__desc { font-size: 0.7rem; color: var(--lk-text-muted); }
+    .student-item__btn {
+      padding: 0.3rem 0.65rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--lk-accent);
+      background: transparent;
+      color: var(--lk-accent);
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .student-item__btn:hover { background: var(--lk-accent); color: #fff; }
+
+    /* ─── RECOMENDACIÓN DEL DÍA ─── */
+    .rec-daily { display: flex; flex-direction: column; gap: 0.6rem; }
+    .rec-daily__header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rec-daily__ia {
+      font-size: 0.6rem;
+      font-weight: 700;
+      background: var(--lk-surface-soft);
+      border: 1px solid var(--lk-border);
+      border-radius: 6px;
+      padding: 0.15rem 0.4rem;
+      color: var(--lk-purple);
+    }
+    .rec-daily__text {
+      font-size: 0.82rem;
+      color: var(--lk-text-soft);
+      line-height: 1.5;
+    }
+    .rec-daily__tags {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .rec-daily__tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 8px;
+      background: var(--lk-surface-soft);
+      color: var(--lk-text-soft);
+      border: 1px solid var(--lk-border);
+    }
+    .rec-daily__cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #16A34A, #4ADE80);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(22,163,74,0.25);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .rec-daily__cta:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(22,163,74,0.35); }
+
+    /* ─── RANKING ─── */
+    .ranking { display: flex; flex-direction: column; gap: 0.45rem; }
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid var(--lk-border);
+      transition: background 0.12s;
+    }
+    .ranking-item:nth-child(1) { background: rgba(255,255,255,0.6); border-color: rgba(234,179,8,0.15); }
+    .ranking-item:nth-child(2) { background: rgba(255,255,255,0.5); border-color: rgba(234,179,8,0.1); }
+    .ranking-item:nth-child(3) { background: rgba(255,255,255,0.45); border-color: rgba(234,179,8,0.08); }
+    .ranking-item:hover { background: #F4F1FA; }
+    .ranking-item__num {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--lk-text-muted);
+      width: 22px;
+      text-align: center;
+    }
+    .ranking-item__num--1 { color: #CA8A04; }
+    .ranking-item__num--2 { color: #A3A31A; }
+    .ranking-item__num--3 { color: #84CC16; }
+    .ranking-item__avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid var(--lk-border);
+    }
+    .ranking-item__name { flex: 1; font-size: 0.78rem; font-weight: 600; color: #3A1A62; }
+    .ranking-item__pts {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #A3A31A;
+    }
+
+    /* ─── ALERTS ─── */
+    .alerts { display: flex; flex-direction: column; gap: 0.5rem; }
+    .alert-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 12px;
+      background: var(--lk-surface-soft);
+      border: 1px solid var(--lk-border);
+    }
+    .alert-item__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .alert-item__icon--orange { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
+    .alert-item__icon--blue { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); }
+    .alert-item__icon--green { background: linear-gradient(135deg, #DCFCE7, #BBF7D0); }
+    .alert-item__info { flex: 1; min-width: 0; }
+    .alert-item__title { font-size: 0.8rem; font-weight: 600; color: var(--lk-text); }
+    .alert-item__desc { font-size: 0.68rem; color: var(--lk-text-muted); }
+
+    /* ─── GAME CARDS ─── */
+    .game-cards { display: flex; flex-direction: column; gap: 0.6rem; }
+    .game-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem;
+      border-radius: 14px;
+      border: 1px solid var(--lk-border);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .game-card:hover { transform: translateY(-2px); border-color: var(--lk-purple); }
+    .game-card:nth-child(1) { background: linear-gradient(135deg, #EDE8F5, #F5F0FF); border-color: rgba(91,45,142,0.15); }
+    .game-card:nth-child(2) { background: linear-gradient(135deg, #E8F0FE, #F0F4FF); border-color: rgba(37,99,235,0.15); }
+    .game-card:nth-child(3) { background: linear-gradient(135deg, #FEF7E8, #FFFCF0); border-color: rgba(245,166,35,0.15); }
+    .game-card:nth-child(4) { background: linear-gradient(135deg, #ECFDF5, #F2FEF7); border-color: rgba(22,163,74,0.15); }
+    .game-card__thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .game-card__thumb--ar { background: linear-gradient(135deg, #7C3AED, #5B2D8E); }
+    .game-card__thumb--robot { background: linear-gradient(135deg, #3B6AE5, #2563EB); }
+    .game-card__thumb--code { background: linear-gradient(135deg, #F5A623, #E07A3A); }
+    .game-card__thumb--mercado { background: linear-gradient(135deg, #16A34A, #059669); }
+    .game-card__info { flex: 1; min-width: 0; }
+    .game-card__name { font-size: 0.82rem; font-weight: 600; color: var(--lk-text); }
+    .game-card__desc { font-size: 0.68rem; color: var(--lk-text-muted); }
+    .game-card__badge {
+      font-size: 0.58rem;
+      font-weight: 700;
+      padding: 0.18rem 0.5rem;
+      border-radius: 16px;
+      flex-shrink: 0;
+    }
+    .game-card__badge--live { background: #DCFCE7; color: #16A34A; }
+    .game-card__badge--off { background: #F3F4F6; color: #8E8BA3; }
+
+    /* ─── GROUPS SECTION ─── */
+    .groups-section { display: none; }
+    .groups-section__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .groups-section__title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--lk-text);
+    }
+    .groups-section__subtitle {
+      font-size: 0.82rem;
+      color: var(--lk-text-muted);
+      margin-top: 0.15rem;
+    }
+    .groups-section__btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(90deg, #f5a910 0%, #fdb813 48%, #ffc42e 100%);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 12px rgba(253, 184, 19, 0.35);
+      transition: transform 0.15s;
+    }
+    .groups-section__btn:hover { transform: translateY(-2px); }
+    .groups-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .group-card {
+      background: var(--lk-surface);
+      border: 1.5px solid var(--lk-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .group-card:hover { transform: translateY(-4px); border-color: var(--lk-purple); box-shadow: 0 12px 32px rgba(91,45,142,0.12); }
+    .group-card--selected { border-color: var(--lk-purple); box-shadow: 0 8px 24px rgba(91,45,142,0.2); background: linear-gradient(135deg, #F9F7FC, #EDE9FE); }
+    .group-card__header { display: flex; align-items: center; gap: 0.75rem; }
+    .group-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .group-card__icon--purple { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
+    .group-card__icon--blue { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); }
+    .group-card__icon--orange { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
+    .group-card__name { font-family: 'Fredoka', sans-serif; font-size: 1rem; font-weight: 700; color: var(--lk-text); }
+    .group-card__grade { font-size: 0.75rem; color: var(--lk-text-muted); }
+    .group-card__stats { display: flex; gap: 1rem; }
+    .group-card__stat { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: var(--lk-text-soft); }
+    .group-card__status { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 16px; width: fit-content; }
+    .group-card__status--active { background: #DCFCE7; color: #16A34A; }
+    .group-card__status--closed { background: #F3F4F6; color: #8E8BA3; }
+    .group-card__footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; }
+    .group-card__avatars { display: flex; }
+    .group-card__avatars img { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; margin-left: -7px; }
+    .group-card__avatars img:first-child { margin-left: 0; }
+    .group-card__select {
+      padding: 0.35rem 0.9rem;
+      border-radius: 10px;
+      border: 1.5px solid var(--lk-border);
+      background: var(--lk-surface);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--lk-purple);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .group-card__select:hover { background: var(--lk-purple); color: #fff; border-color: var(--lk-purple); }
+    .group-card--selected .group-card__select { background: var(--lk-purple); color: #fff; border-color: var(--lk-purple); }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo">LK</div>
+      <div class="sidebar__brand-text">Logic<span>Kids</span></div>
+    </div>
+    <div class="sidebar__nav">
+      <a class="sidebar__item sidebar__item--active"><span class="sidebar__item-icon">🏠</span> Inicio</a>
+      <a class="sidebar__item"><span class="sidebar__item-icon">📚</span> Grupos</a>
+      <a class="sidebar__item"><span class="sidebar__item-icon">👥</span> Estudiantes</a>
+      <a class="sidebar__item"><span class="sidebar__item-icon">📊</span> Reportes</a>
+      <a class="sidebar__item"><span class="sidebar__item-icon">💡</span> Recomendaciones IA</a>
+      <a class="sidebar__item"><span class="sidebar__item-icon">🏆</span> Logros</a>
+      <a class="sidebar__item"><span class="sidebar__item-icon">🎮</span> Sesiones</a>
+    </div>
+    <button class="sidebar__logout"><span>🚪</span> Cerrar sesión</button>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <div class="header__greeting">Hola, <span>Cristian</span> 👋</div>
+        <div class="header__subtitle">Aquí tienes un resumen de lo que está pasando hoy.</div>
+      </div>
+      <div class="header__right">
+        <div class="header__badge">
+          <span class="header__badge-star">⭐</span>
+          <div>
+            <div class="header__badge-text">Nivel Tutor</div>
+            <div class="header__badge-level">Avanzado</div>
+          </div>
+        </div>
+        <div class="header__notif">
+          🔔
+          <div class="header__notif-dot"></div>
+        </div>
+        <div class="header__user">
+          <div class="header__avatar">CP</div>
+          <span class="header__username">Cristian ▾</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero__text">
+        <div class="hero__badge">🟢 Listo para comenzar</div>
+        <div class="hero__title">Grupo 3A - Primero</div>
+        <div class="hero__activity">
+          <div class="hero__activity-icon">🎮</div>
+          <div class="hero__activity-info">
+            <span class="hero__activity-label">Actividad actual</span>
+            <span class="hero__activity-name">Camino AR - Nivel Memoria</span>
+          </div>
+        </div>
+        <div class="hero__pills">
+          <div class="hero__pill">
+            <span class="hero__pill-label">Estudiantes conectados</span>
+            <span class="hero__pill-val">12 / 15</span>
+          </div>
+          <div class="hero__pill">
+            <span class="hero__pill-label">Grupos disponibles</span>
+            <span class="hero__pill-val">3</span>
+          </div>
+        </div>
+        <div class="hero__actions">
+          <button class="hero__btn hero__btn--primary">Abrir actividad ›</button>
+          <button class="hero__btn hero__btn--secondary">Gestionar grupos</button>
+        </div>
+      </div>
+      <div class="hero__mascot">
+        <img src="src/assets/imgs/logofondo transparente.png" alt="Mascota LogicKids" />
+      </div>
+    </div>
+
+    <!-- GROUPS SECTION -->
+    <div class="groups-section">
+      <div class="groups-section__head">
+        <div>
+          <div class="groups-section__title">Tus grupos asignados</div>
+          <div class="groups-section__subtitle">Selecciona un grupo para ver su dashboard</div>
+        </div>
+        <button class="groups-section__btn">+ Crear grupo</button>
+      </div>
+      <div class="groups-grid">
+        <div class="group-card group-card--selected">
+          <div class="group-card__header">
+            <div class="group-card__icon group-card__icon--purple">📘</div>
+            <div>
+              <div class="group-card__name">3A - Primero</div>
+              <div class="group-card__grade">Grado Primero</div>
+            </div>
+          </div>
+          <div class="group-card__stats">
+            <div class="group-card__stat">👥 15 estudiantes</div>
+            <div class="group-card__stat">🎮 8 sesiones</div>
+          </div>
+          <div class="group-card__status group-card__status--active">● Activa</div>
+          <div class="group-card__footer">
+            <div class="group-card__avatars">
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=LauraRamirez" alt="Laura" />
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=JuanPerez" alt="Juan" />
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=MariaGarcia" alt="María" />
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=PedroLopez" alt="Pedro" />
+            </div>
+            <button class="group-card__select">Seleccionar</button>
+          </div>
+        </div>
+        <div class="group-card">
+          <div class="group-card__header">
+            <div class="group-card__icon group-card__icon--blue">📗</div>
+            <div>
+              <div class="group-card__name">3B - Primero</div>
+              <div class="group-card__grade">Grado Primero</div>
+            </div>
+          </div>
+          <div class="group-card__stats">
+            <div class="group-card__stat">👥 12 estudiantes</div>
+            <div class="group-card__stat">🎮 6 sesiones</div>
+          </div>
+          <div class="group-card__status group-card__status--active">● Activa</div>
+          <div class="group-card__footer">
+            <div class="group-card__avatars">
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=CarlosSanchez" alt="Carlos" />
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=AnaRodriguez" alt="Ana" />
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=MiguelTorres" alt="Miguel" />
+            </div>
+            <button class="group-card__select">Seleccionar</button>
+          </div>
+        </div>
+        <div class="group-card">
+          <div class="group-card__header">
+            <div class="group-card__icon group-card__icon--orange">📙</div>
+            <div>
+              <div class="group-card__name">4A - Segundo</div>
+              <div class="group-card__grade">Grado Segundo</div>
+            </div>
+          </div>
+          <div class="group-card__stats">
+            <div class="group-card__stat">👥 18 estudiantes</div>
+            <div class="group-card__stat">🎮 0 sesiones</div>
+          </div>
+          <div class="group-card__status group-card__status--closed">⚪ Cerrada</div>
+          <div class="group-card__footer">
+            <div class="group-card__avatars">
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=SofiaMorales" alt="Sofía" />
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=DiegoRamos" alt="Diego" />
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ValentinaCruz" alt="Valentina" />
+            </div>
+            <button class="group-card__select">Seleccionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid">
+
+      <!-- COL 1: NECESITAN ATENCIÓN + JUEGOS -->
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="panel">
+          <div class="panel__head">
+            <div class="panel__title"><span class="panel__title-icon">⚠️</span> Necesitan atención</div>
+            <button class="panel__link">Ver todos</button>
+          </div>
+          <div class="student-list">
+            <div class="student-item">
+              <div class="student-item__avatar student-item__avatar--1">CE</div>
+              <div class="student-item__info">
+                <div class="student-item__name">Camila Estudiante4</div>
+                <div class="student-item__desc">Sin sesión activa</div>
+              </div>
+              <button class="student-item__btn">Revisar</button>
+            </div>
+            <div class="student-item">
+              <div class="student-item__avatar student-item__avatar--2">FE</div>
+              <div class="student-item__info">
+                <div class="student-item__name">Felipe Estudiante19</div>
+                <div class="student-item__desc">Sin sesión activa</div>
+              </div>
+              <button class="student-item__btn">Revisar</button>
+            </div>
+            <div class="student-item">
+              <div class="student-item__avatar student-item__avatar--3">PE</div>
+              <div class="student-item__info">
+                <div class="student-item__name">Paula Estudiante10</div>
+                <div class="student-item__desc">Camino AR · Nivel 1</div>
+              </div>
+              <button class="student-item__btn">Revisar</button>
+            </div>
+            <div class="student-item">
+              <div class="student-item__avatar student-item__avatar--4">AE</div>
+              <div class="student-item__info">
+                <div class="student-item__name">Andrés Estudiante7</div>
+                <div class="student-item__desc">Robot Lógico · Nivel 2</div>
+              </div>
+              <button class="student-item__btn">Revisar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            <div class="panel__title"><span class="panel__title-icon">🎮</span> Juegos activos</div>
+            <button class="panel__link">Ver todos</button>
+          </div>
+          <div class="game-cards">
+            <div class="game-card">
+              <div class="game-card__thumb game-card__thumb--ar">🏰</div>
+              <div class="game-card__info">
+                <div class="game-card__name">Camino AR</div>
+                <div class="game-card__desc">Realidad aumentada</div>
+              </div>
+              <div class="game-card__badge game-card__badge--live">● Activo</div>
+            </div>
+            <div class="game-card">
+              <div class="game-card__thumb game-card__thumb--robot">🤖</div>
+              <div class="game-card__info">
+                <div class="game-card__name">Robot Lógico</div>
+                <div class="game-card__desc">Pensamiento lógico</div>
+              </div>
+              <div class="game-card__badge game-card__badge--live">● Activo</div>
+            </div>
+            <div class="game-card">
+              <div class="game-card__thumb game-card__thumb--code">⭐</div>
+              <div class="game-card__info">
+                <div class="game-card__name">Código Estelar</div>
+                <div class="game-card__desc">Programación visual</div>
+              </div>
+              <div class="game-card__badge game-card__badge--off">Cerrado</div>
+            </div>
+            <div class="game-card">
+              <div class="game-card__thumb game-card__thumb--mercado">🛒</div>
+              <div class="game-card__info">
+                <div class="game-card__name">Mercado Inteligente</div>
+                <div class="game-card__desc">Matemáticas</div>
+              </div>
+              <div class="game-card__badge game-card__badge--off">Cerrado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 2: ESTADÍSTICAS + RECOMENDACIONES -->
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="panel" style="background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border-color: rgba(22,163,74,0.18);">
+          <div class="panel__head">
+            <div class="panel__title" style="color:#16A34A;"><span class="panel__title-icon">📊</span> Rendimiento semanal</div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+            <div style="width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#16A34A 0% 68%, #E8E4F0 68% 100%); display: flex; align-items: center; justify-content: center;">
+              <div style="width: 90px; height: 90px; border-radius: 50%; background: var(--lk-surface); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="font-family: 'Fredoka'; font-size: 1.6rem; font-weight: 700; color: var(--lk-brand);">76%</div>
+                <div style="font-size: 0.65rem; color: var(--lk-text-muted);">Precisión</div>
+              </div>
+            </div>
+            <div style="font-family: 'Fredoka'; font-size: 1.1rem; font-weight: 700; color: var(--lk-text);">Tiempo total: 12,340h</div>
+          </div>
+          <div style="display: flex; justify-content: space-around; padding: 0.5rem 0;">
+            <div style="text-align: center;">
+              <div style="font-family: 'Fredoka'; font-size: 1.05rem; font-weight: 700; color: var(--lk-text);">2,340h</div>
+              <div style="font-size: 0.62rem; color: var(--lk-text-muted);">Sesiones</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-family: 'Fredoka'; font-size: 1.05rem; font-weight: 700; color: var(--lk-text);">5,420h</div>
+              <div style="font-size: 0.62rem; color: var(--lk-text-muted);">Ejercicios</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-family: 'Fredoka'; font-size: 1.05rem; font-weight: 700; color: var(--lk-text);">4,580h</div>
+              <div style="font-size: 0.62rem; color: var(--lk-text-muted);">Logros</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; font-weight: 600; color: var(--lk-text-muted); margin-bottom: 0.3rem;">📊 Rendimiento semanal</div>
+            <div style="display: flex; align-items: flex-end; gap: 4px; height: 45px; padding: 0.3rem 0;">
+              <div style="flex:1; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #16A34A, #4ADE80); height: 45%;"></div>
+              <div style="flex:1; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #16A34A, #4ADE80); height: 60%;"></div>
+              <div style="flex:1; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #16A34A, #4ADE80); height: 55%;"></div>
+              <div style="flex:1; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #16A34A, #4ADE80); height: 70%;"></div>
+              <div style="flex:1; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #16A34A, #4ADE80); height: 85%;"></div>
+              <div style="flex:1; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #16A34A, #4ADE80); height: 75%;"></div>
+              <div style="flex:1; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #16A34A, #4ADE80); height: 90%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.55rem; color: var(--lk-text-muted);">
+              <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            <div class="panel__title"><span class="panel__title-icon">💡</span> Recomendación del día</div>
+            <span class="rec-daily__ia">IA</span>
+          </div>
+          <div class="rec-daily">
+            <div class="rec-daily__text">Se detectaron patrones de error recurrentes en secuencias. Reforzar ejercicios de memoria visual con imágenes y repetición espaciada.</div>
+            <div class="rec-daily__tags">
+              <span class="rec-daily__tag">Atención</span>
+              <span class="rec-daily__tag">Grupo 3A - Primero</span>
+            </div>
+            <button class="rec-daily__cta">⚡ Ver recomendación ›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 3: TOP ESTUDIANTES + ALERTAS -->
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="panel" style="background: linear-gradient(135deg, #FEFCE8, #FEF9C3); border-color: rgba(234,179,8,0.18);">
+          <div class="panel__head">
+            <div class="panel__title" style="color:#A3A31A;"><span class="panel__title-icon">🏆</span> Top estudiantes</div>
+            <button class="panel__link">Ver ranking →</button>
+          </div>
+          <div class="ranking">
+            <div class="ranking-item">
+              <div class="ranking-item__num ranking-item__num--1">🥇</div>
+              <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=LauraRamirez" alt="Laura" />
+              <div class="ranking-item__name">Laura Ramírez</div>
+              <div class="ranking-item__pts">1,240 pts</div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-item__num ranking-item__num--2">🥈</div>
+              <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=JuanPerez" alt="Juan" />
+              <div class="ranking-item__name">Juan Pérez</div>
+              <div class="ranking-item__pts">1,180 pts</div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-item__num ranking-item__num--3">🥉</div>
+              <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=MariaGarcia" alt="María" />
+              <div class="ranking-item__name">María García</div>
+              <div class="ranking-item__pts">1,050 pts</div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-item__num">4°</div>
+              <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=CarlosSanchez" alt="Carlos" />
+              <div class="ranking-item__name">Carlos Sánchez</div>
+              <div class="ranking-item__pts">980 pts</div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-item__num">5°</div>
+              <img class="ranking-item__avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=AnaRodriguez" alt="Ana" />
+              <div class="ranking-item__name">Ana Rodríguez</div>
+              <div class="ranking-item__pts">920 pts</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            <div class="panel__title"><span class="panel__title-icon">🔔</span> Alertas y notificaciones</div>
+          </div>
+          <div class="alerts">
+            <div class="alert-item">
+              <div class="alert-item__icon alert-item__icon--orange">⏰</div>
+              <div class="alert-item__info">
+                <div class="alert-item__title">2 grupos sin clase abierta</div>
+                <div class="alert-item__desc">Disponibles para iniciar una actividad</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-item__icon alert-item__icon--blue">💡</div>
+              <div class="alert-item__info">
+                <div class="alert-item__title">30 recomendaciones</div>
+                <div class="alert-item__desc">Generadas para tu grupo</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-item__icon alert-item__icon--green">✅</div>
+              <div class="alert-item__info">
+                <div class="alert-item__title">5 juegos activos</div>
+                <div class="alert-item__desc">Listos en el catálogo pedagógico</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const sidebarItems = document.querySelectorAll('.sidebar__item');
+    const groupsSection = document.querySelector('.groups-section');
+    const grid = document.querySelector('.grid');
+    const hero = document.querySelector('.hero');
+
+    sidebarItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        sidebarItems.forEach(i => i.classList.remove('sidebar__item--active'));
+        item.classList.add('sidebar__item--active');
+
+        if (item.textContent.includes('Grupos')) {
+          groupsSection.style.display = 'block';
+          hero.style.display = 'none';
+          grid.style.display = 'none';
+        } else {
+          groupsSection.style.display = 'none';
+          hero.style.display = 'flex';
+          grid.style.display = 'grid';
+        }
+      });
+    });
+
+    const groupCards = document.querySelectorAll('.group-card');
+    groupCards.forEach(card => {
+      card.addEventListener('click', () => {
+        groupCards.forEach(c => c.classList.remove('group-card--selected'));
+        card.classList.add('group-card--selected');
+      });
+    });
+  </script>
+
+</body>
+</html>
