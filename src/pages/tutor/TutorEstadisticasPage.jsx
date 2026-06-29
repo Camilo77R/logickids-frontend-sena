@@ -3,9 +3,7 @@ import { BarChart2, RefreshCw, Users, ChevronRight } from "lucide-react";
 import { useEstadisticasEstudiante, useEstadisticasGrupo } from "../../hooks/useEstadisticas";
 import estudianteService from "../../services/estudianteService";
 import tutorGroupsService from "../../services/tutorGroupsService";
-import tutorMascot from "../../assets/imgs/tutor-mascot-hero.png";
 import "../../styles/tutor-ov.css";
-import "../../styles/tutor-dashboard-dark.css";
 import "../../styles/tutor-estadisticas.css";
 
 const normalizeId = (value) => String(value ?? "");
@@ -32,8 +30,8 @@ const formatNumber = (value) => {
 };
 
 const panelStyle = {
-  background: "var(--lk-night-panel)",
-  border: "1px solid var(--lk-night-border)",
+  background: "var(--lk-brand-soft)",
+  border: "1px solid var(--lk-border)",
   borderRadius: "var(--lk-radius-xl)",
   padding: "1.5rem",
 };
@@ -170,7 +168,6 @@ export default function TutorEstadisticasPage() {
             <button className="tov-hero__secondary">Ver grupos</button>
           </div>
         </div>
-        <div className="tov-hero__mascot" aria-hidden="true" style={{ filter: "drop-shadow(0 24px 28px rgba(43, 23, 61, 0.5))" }}><img src={tutorMascot} alt="" style={{ transform: "scaleX(-1)" }} /></div>
       </section>
 
       <div style={panelStyle}>
@@ -220,26 +217,26 @@ export default function TutorEstadisticasPage() {
                   <h3 className="lk-stats-chart-card__title">{stat.habilidad}</h3>
                   <p className="lk-stats-chart-card__subtitle">{stat.juego || "Juego pedagógico"}</p>
                   {stat.sin_datos ? (
-                    <p style={{ color: "#918AAE", fontSize: "0.82rem", marginTop: "0.5rem" }}>Sin partidas registradas aún.</p>
+                    <p style={{ color: "var(--lk-text-muted)", fontSize: "0.82rem", marginTop: "0.5rem" }}>Sin partidas registradas aún.</p>
                   ) : (
                     <>
                       <div style={{ display: "flex", alignItems: "flex-end", gap: "0.75rem", margin: "0.75rem 0" }}>
                         <div style={{ flex: 1 }}>
                           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
-                            <span style={{ fontSize: "0.75rem", color: "#918AAE", fontWeight: 600 }}>Precisión</span>
+                            <span style={{ fontSize: "0.75rem", color: "var(--lk-text-muted)", fontWeight: 600 }}>Precisión</span>
                             <span style={{ fontSize: "1rem", fontWeight: 800, color }}>{pct}%</span>
                           </div>
-                          <div style={{ height: 8, background: "#191545", borderRadius: 99, overflow: "hidden" }}>
+                          <div style={{ height: 8, background: "var(--lk-surface-soft)", borderRadius: 99, overflow: "hidden" }}>
                             <div style={{ height: "100%", width: `${pct}%`, background: color, borderRadius: 99 }} />
                           </div>
                         </div>
                       </div>
                       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                        {stat.total_intentos != null && <span style={{ fontSize: "0.78rem", color: "#918AAE" }}>🎯 {stat.total_intentos} intentos</span>}
-                        {stat.aciertos != null && <span style={{ fontSize: "0.78rem", color: "#16A34A", fontWeight: 600 }}>✓ {stat.aciertos} aciertos</span>}
-                        {stat.promedio_reaccion_ms != null && <span style={{ fontSize: "0.78rem", color: "#918AAE" }}>⚡ {Math.round(stat.promedio_reaccion_ms)}ms</span>}
-                        {stat.reaccion_promedio != null && <span style={{ fontSize: "0.78rem", color: "#918AAE" }}>⚡ {Math.round(stat.reaccion_promedio)}ms</span>}
-                        {stat.estudiantes_evaluados != null && <span style={{ fontSize: "0.78rem", color: "#918AAE" }}>👤 {stat.estudiantes_evaluados} evaluados</span>}
+                        {stat.total_intentos != null && <span style={{ fontSize: "0.78rem", color: "var(--lk-text-muted)" }}>🎯 {stat.total_intentos} intentos</span>}
+                        {stat.aciertos != null && <span style={{ fontSize: "0.78rem", color: "var(--lk-green)", fontWeight: 600 }}>✓ {stat.aciertos} aciertos</span>}
+                        {stat.promedio_reaccion_ms != null && <span style={{ fontSize: "0.78rem", color: "var(--lk-text-muted)" }}>⚡ {Math.round(stat.promedio_reaccion_ms)}ms</span>}
+                        {stat.reaccion_promedio != null && <span style={{ fontSize: "0.78rem", color: "var(--lk-text-muted)" }}>⚡ {Math.round(stat.reaccion_promedio)}ms</span>}
+                        {stat.estudiantes_evaluados != null && <span style={{ fontSize: "0.78rem", color: "var(--lk-text-muted)" }}>👤 {stat.estudiantes_evaluados} evaluados</span>}
                       </div>
                     </>
                   )}

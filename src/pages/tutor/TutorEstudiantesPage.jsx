@@ -5,9 +5,7 @@ import StudentQrPreview from "../../components/account/StudentQrPreview";
 import StudentDeviceSessionModal from "../../components/students/StudentDeviceSessionModal";
 import estudianteService from "../../services/estudianteService";
 import tutorGroupsService from "../../services/tutorGroupsService";
-import tutorMascot from "../../assets/imgs/tutor-mascot-hero.png";
 import "../../styles/tutor-ov.css";
-import "../../styles/tutor-dashboard-dark.css";
 import "../../styles/tutorEstudiantes.css";
 
 const ESTUDIANTES_POR_PAGINA = 3;
@@ -16,8 +14,8 @@ const getEstado = (estudiante) => estudiante.estado || "activo";
 const getGroupId = (grupo) => String(grupo?.id_grupo ?? grupo?.id ?? "");
 
 const panelStyle = {
-  background: "var(--lk-night-panel)",
-  border: "1px solid var(--lk-night-border)",
+  background: "var(--lk-brand-soft)",
+  border: "1px solid var(--lk-border)",
   borderRadius: "var(--lk-radius-xl)",
   padding: "1.5rem",
 };
@@ -128,7 +126,6 @@ export default function TutorEstudiantesPage() {
             <button className="tov-hero__secondary">Gestionar grupos</button>
           </div>
         </div>
-        <div className="tov-hero__mascot" aria-hidden="true" style={{ filter: "drop-shadow(0 24px 28px rgba(43, 23, 61, 0.5))" }}><img src={tutorMascot} alt="" /></div>
       </section>
 
       <div style={panelStyle}>
@@ -197,7 +194,7 @@ export default function TutorEstudiantesPage() {
                               </div>
                             </td>
                             <td><strong>{est.nombre}</strong></td>
-                            <td style={{ color: "#C6C0DF" }}>{selectedGrupo?.nombre || "—"}</td>
+                            <td style={{ color: "var(--lk-text-soft)" }}>{selectedGrupo?.nombre || "—"}</td>
                             <td>
                               {estado === "activo"
                                 ? <span className="lk-est-badge-active">Activo</span>
@@ -205,7 +202,7 @@ export default function TutorEstudiantesPage() {
                             </td>
                             <td>{est.edad ? `${est.edad} años` : "—"}</td>
                             <td>
-                              <span style={{ fontSize: "0.75rem", color: est.sesion_activa ? "#16A34A" : "#918AAE" }}>
+                              <span style={{ fontSize: "0.75rem", color: est.sesion_activa ? "var(--lk-green)" : "var(--lk-text-muted)" }}>
                                 {est.sesion_activa ? "Clase abierta" : "Cerrada"}
                               </span>
                             </td>
@@ -228,7 +225,7 @@ export default function TutorEstudiantesPage() {
 
                 {totalPages > 1 && (
                   <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end", marginTop: "0.75rem", alignItems: "center" }}>
-                    <span style={{ fontSize: "0.8rem", color: "#918AAE" }}>Mostrando {fromStudent}–{toStudent} de {estudiantesFiltrados.length}</span>
+                    <span style={{ fontSize: "0.8rem", color: "var(--lk-text-muted)" }}>Mostrando {fromStudent}–{toStudent} de {estudiantesFiltrados.length}</span>
                     <button className="tg-btn-arrow" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>←</button>
                     <button className="tg-btn-arrow" disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>→</button>
                   </div>
