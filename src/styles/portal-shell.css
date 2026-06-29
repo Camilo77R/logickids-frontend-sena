@@ -1,0 +1,733 @@
+/**
+ * portal-shell.css — Shell mockup para admin y superadmin
+ * =======================================================
+ * Inspirado en el dashboard de referencia: rail púrpura, topbar blanca,
+ * superficies suaves y acentos amarillo/naranja.
+ */
+
+.lk-portal-shell {
+  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 1rem;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0.9rem;
+  background: var(--lk-bg);
+}
+
+.lk-portal-shell--admin {
+  background: #f4f4f5;
+}
+
+.lk-portal-sidebar {
+  height: 100%;
+  border-radius: 2.4rem;
+  background: var(--lk-purple);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lk-portal-sidebar__brand-block {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 1.2rem 0.7rem 0.9rem;
+  border-bottom: none;
+}
+
+.lk-portal-sidebar__brand {
+  width: 54px;
+  height: 54px;
+  border-radius: 1.25rem;
+  background: #F3EDF9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #7F3EBF;
+  box-shadow: none;
+}
+
+.lk-portal-sidebar__brand-badge {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.14));
+}
+
+.lk-portal-sidebar__brand-wordmark {
+  display: none;
+}
+
+.lk-portal-sidebar__brand-role {
+  display: none;
+}
+
+.lk-portal-sidebar__nav {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0;
+  padding: 1.1rem 0.4rem 1rem;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.lk-portal-sidebar__link {
+  width: 46px;
+  min-height: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.lk-portal-sidebar__link:hover {
+  transform: translateY(-1px);
+  background: #7F3EBF;
+  color: #ffffff;
+}
+
+.lk-portal-sidebar__link.active {
+  background: var(--lk-yellow);
+  color: var(--lk-purple);
+}
+
+.lk-portal-sidebar__link-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.lk-portal-sidebar__link.active .lk-portal-sidebar__link-icon {
+  background: transparent;
+}
+
+.lk-portal-sidebar__link-label {
+  display: none;
+}
+
+.lk-portal-sidebar__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.9rem 0.4rem 1.1rem;
+  border-top: 1px solid #7F3EBF;
+  margin-top: auto;
+}
+
+.lk-portal-sidebar__profile {
+  display: none;
+}
+
+.lk-portal-sidebar__avatar,
+.lk-portal-sidebar__power {
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #7F3EBF;
+}
+
+.lk-portal-sidebar__avatar {
+  width: 38px;
+  height: 38px;
+  background: #7F3EBF;
+  color: #ffffff;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+}
+
+.lk-portal-sidebar__profile-copy {
+  display: grid;
+  gap: 0.08rem;
+  line-height: 1.15;
+}
+
+.lk-portal-sidebar__profile-copy strong {
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.lk-portal-sidebar__profile-copy small {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.lk-portal-sidebar__power {
+  width: 46px;
+  min-height: 46px;
+  height: 46px;
+  gap: 0;
+  background: #7F3EBF;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.lk-portal-sidebar__power:hover {
+  color: #ffffff;
+  background: #A94BB5;
+  transform: translateY(-1px);
+}
+
+.lk-portal-sidebar__power span {
+  display: none;
+}
+
+.lk-portal-shell__main {
+  height: 100%;
+  min-height: 0;
+  border-radius: 2.15rem;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.lk-portal-topbar {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(97, 43, 136, 0.08);
+}
+
+/* Topbar sin toolbar: mas compacto */
+.lk-portal-topbar:not(.lk-portal-topbar--merged) {
+  padding: 0.35rem 1.2rem;
+  min-height: 48px;
+}
+
+/* Merged: topbar + toolbar in one bar */
+.lk-portal-topbar--merged {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0.4rem 1.2rem 0.3rem;
+  min-height: auto;
+}
+
+/* Hero: controles arriba, texto abajo full width */
+.lk-portal-topbar--hero {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0.4rem 1.2rem 0.6rem;
+}
+
+.lk-portal-topbar--hero .lk-portal-topbar__row {
+  justify-content: space-between;
+}
+
+.lk-portal-topbar--hero .lk-portal-topbar__copy {
+  width: 100%;
+  padding-top: 0.15rem;
+}
+
+.lk-portal-topbar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.lk-portal-topbar__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 0.35rem 0 0;
+}
+
+.lk-portal-topbar__left,
+.lk-portal-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.lk-portal-topbar__left {
+  min-width: 0;
+}
+
+.lk-portal-topbar__right {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lk-portal-topbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.05rem;
+  margin-right: 0.2rem;
+  font-family: "Fredoka", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 1.62rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.lk-portal-topbar__brand-logic {
+  color: var(--lk-purple);
+}
+
+.lk-portal-topbar__brand-kids {
+  color: var(--lk-yellow);
+}
+
+.lk-portal-topbar__copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.lk-portal-topbar__title {
+  margin: 0;
+  font-family: "Fredoka", "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--lk-text);
+}
+
+.lk-portal-topbar__subtitle {
+  margin: 0;
+  color: var(--lk-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.48;
+  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+}
+
+.lk-portal-topbar__tertiary {
+  margin: 0;
+  color: var(--lk-text-soft);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-family: "Plus Jakarta Sans", var(--lk-font), system-ui, sans-serif;
+}
+
+.lk-portal-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.lk-portal-topbar__icon-btn {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--lk-text-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.lk-portal-topbar__icon-btn:hover {
+  color: var(--lk-purple);
+  background: var(--lk-surface-soft);
+  transform: translateY(-1px);
+}
+
+.lk-portal-topbar__badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 0.22rem;
+  border-radius: 999px;
+  background: #A94BB5;
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+.lk-portal-topbar__profile {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0.62rem 0.25rem 0.25rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.lk-portal-topbar__profile:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.lk-portal-topbar__profile-avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  background: var(--lk-yellow);
+  color: var(--lk-purple);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.lk-portal-topbar__profile-copy {
+  display: grid;
+  text-align: left;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.lk-portal-topbar__profile-copy strong {
+  color: var(--lk-text);
+  font-size: 0.84rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.lk-portal-topbar__profile-copy small {
+  color: var(--lk-purple);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.lk-portal-mobile-nav {
+  display: none;
+}
+
+.lk-portal-shell__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 1.2rem 1rem;
+}
+
+@media (max-width: 992px) {
+  .lk-portal-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .lk-portal-sidebar {
+    display: none;
+  }
+
+  .lk-portal-shell__main {
+    border-radius: 0;
+    overflow: hidden;
+    backdrop-filter: none;
+    background: transparent;
+  }
+
+  .lk-portal-topbar {
+    padding: 0.4rem 0.6rem;
+    align-items: flex-start;
+    flex-direction: column;
+    min-height: auto;
+    gap: 0.3rem;
+    position: static;
+  }
+
+  .lk-portal-topbar--merged {
+    padding: 0.2rem 0.5rem;
+    gap: 0.15rem;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__brand {
+    font-size: 1rem;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__title {
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__right {
+    gap: 8px;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__profile-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__toolbar {
+    padding: 0;
+    gap: 4px;
+  }
+
+  .lk-portal-topbar__subtitle {
+    display: none;
+  }
+
+  .lk-portal-topbar__left {
+    min-width: 0;
+  }
+
+  .lk-portal-topbar__copy {
+    overflow: hidden;
+  }
+
+  .lk-portal-topbar__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .lk-portal-topbar__profile {
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .lk-portal-topbar__actions {
+    order: 3;
+    justify-content: flex-start;
+  }
+
+  .lk-portal-topbar__profile-copy small {
+    display: none;
+  }
+
+  .lk-portal-mobile-nav {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    padding: 0 1rem 0.95rem;
+    background: rgba(255, 255, 255, 0.88);
+    border-top: 1px solid rgba(97, 43, 136, 0.08);
+  }
+
+  .lk-portal-mobile-nav__track {
+    display: flex;
+    gap: 0.45rem;
+    overflow-x: auto;
+    padding-bottom: 0.15rem;
+    scrollbar-width: none;
+  }
+
+  .lk-portal-mobile-nav__link,
+  .lk-portal-mobile-nav__power {
+    display: grid;
+    justify-items: center;
+    gap: 0.3rem;
+    padding: 0.42rem 0.2rem;
+    border: none;
+    background: transparent;
+    color: var(--lk-text-soft);
+    text-decoration: none;
+    cursor: pointer;
+    flex: 0 0 84px;
+  }
+
+  .lk-portal-mobile-nav__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lk-portal-mobile-nav__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(97, 43, 136, 0.1);
+    transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+
+  .lk-portal-mobile-nav__label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .lk-portal-mobile-nav__link.active,
+  .lk-portal-mobile-nav__power:hover {
+    color: var(--lk-purple-deep);
+  }
+
+  .lk-portal-mobile-nav__link.active .lk-portal-mobile-nav__icon {
+    background: var(--lk-yellow);
+    border-color: transparent;
+    color: var(--lk-purple);
+  }
+
+  .lk-portal-mobile-nav__link:hover .lk-portal-mobile-nav__icon,
+  .lk-portal-mobile-nav__power:hover .lk-portal-mobile-nav__icon {
+    transform: translateY(-1px);
+    border-color: rgba(97, 43, 136, 0.18);
+    color: var(--lk-purple);
+  }
+
+  .lk-portal-shell__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 0.5rem 5.5rem;
+  }
+
+}
+
+@media (max-width: 576px) {
+  .lk-portal-topbar__brand {
+    font-size: 1.2rem;
+  }
+
+  .lk-portal-topbar__title {
+    font-size: 1rem;
+  }
+
+  .lk-portal-topbar__subtitle {
+    font-size: 0.78rem;
+  }
+
+  .lk-portal-topbar__tertiary {
+    font-size: 0.7rem;
+    display: none;
+  }
+
+  .lk-portal-topbar__profile-copy {
+    display: none;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__brand {
+    font-size: 0.9rem;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__title {
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .lk-portal-topbar--merged .lk-portal-topbar__profile-avatar {
+    width: 22px;
+    height: 22px;
+  }
+
+  .lk-portal-topbar__profile-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.78rem;
+  }
+
+  .lk-portal-topbar__profile {
+    padding-right: 0.45rem;
+  }
+
+  .lk-portal-topbar__profile-copy strong {
+    font-size: 0.78rem;
+  }
+
+  .lk-portal-mobile-nav__label {
+    font-size: 0.64rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .lk-portal-topbar {
+    padding: 0.4rem 0.6rem;
+    gap: 0.3rem;
+  }
+
+  .lk-portal-topbar__brand {
+    font-size: 1.2rem;
+  }
+
+  .lk-portal-topbar__title {
+    font-size: 1.1rem;
+  }
+
+  .lk-portal-topbar__subtitle {
+    display: none;
+  }
+
+  .lk-portal-topbar__right {
+    gap: 0.3rem;
+  }
+
+  .lk-portal-topbar__profile {
+    padding-right: 0.25rem;
+  }
+
+  .lk-portal-mobile-nav__link,
+  .lk-portal-mobile-nav__power {
+    flex: 0 0 72px;
+  }
+
+  .lk-portal-mobile-nav__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .lk-portal-mobile-nav__label {
+    font-size: 0.6rem;
+  }
+
+  .lk-portal-shell__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.35rem 0.35rem 5rem;
+  }
+}

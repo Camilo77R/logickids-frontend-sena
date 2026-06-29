@@ -1,0 +1,110 @@
+/**
+ * tokens.css — Sistema de diseño LogicKids
+ * =========================================
+ * Fuente única de verdad: colores, tipografía, radios, sombras.
+ * Importar UNA VEZ en main.jsx antes de cualquier otro CSS.
+ * Prefijo --lk-* para variables propias. --bs-* para sobreescribir Bootstrap 5.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* ── Tipografía ─────────────────────────────────── */
+  --lk-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --lk-display-font: 'Fredoka', 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* ── Paleta Brand LogicKids ─────────────────────── */
+  --lk-brand:          #5B2D8E;   /* morado principal del login */
+  --lk-brand-dark:     #3A1A62;   /* hover / estados oscuros   */
+  --lk-brand-soft:     #EDE8F5;   /* fondo suave morado        */
+  --lk-accent:         #F5A623;   /* amarillo/naranja dorado   */
+  --lk-accent-dark:    #D4880A;   /* hover del acento          */
+  --lk-purple:         #5B2D8E;
+  --lk-purple-dark:    #3A1A62;
+  --lk-purple-deep:    #2B1050;
+  --lk-purple-light:   #7B4BB8;
+  --lk-purple-soft:    #F0EEF5;   /* campos / fondos muy suaves */
+  --lk-purple-glow:    rgba(91, 45, 142, 0.20);
+
+  --lk-yellow:         #F5A623;
+  --lk-yellow-bright:  #FFBA40;
+  --lk-yellow-dark:    #D4880A;
+  --lk-yellow-soft:    rgba(245, 166, 35, 0.14);
+  --lk-orange:         #F07020;
+  --lk-orange-soft:    rgba(240, 112, 32, 0.14);
+  --lk-green:          #16A34A;
+  --lk-green-soft:     rgba(22, 163, 74, 0.12);
+  --lk-blue:           #2563EB;
+  --lk-blue-soft:      rgba(37, 99, 235, 0.12);
+
+  /* ── Semánticos ─────────────────────────────────── */
+  --lk-success: #16A34A;
+  --lk-success-soft: rgba(22, 163, 74, 0.12);
+  --lk-danger: #DC2626;
+  --lk-danger-soft: rgba(220, 38, 38, 0.10);
+  --lk-warning: #D97706;
+  --lk-warning-soft: rgba(217, 119, 6, 0.12);
+  --lk-info: #0EA5E9;
+  --lk-info-soft: rgba(14, 165, 233, 0.12);
+
+  /* ── Superficies ────────────────────────────────── */
+  --lk-bg:             #EDE8F5;   /* fondo global lavanda      */
+  --lk-surface:        #FFFFFF;
+  --lk-surface-soft:   #F0EEF5;
+  --lk-border:         rgba(91, 45, 142, 0.12);
+  --lk-border-strong:  rgba(91, 45, 142, 0.28);
+
+  /* ── Sombras ────────────────────────────────────── */
+  --lk-shadow-sm:    0 2px 8px  rgba(91, 45, 142, 0.07);
+  --lk-shadow-md:    0 8px 24px rgba(91, 45, 142, 0.11);
+  --lk-shadow-lg:    0 16px 48px rgba(91, 45, 142, 0.15);
+  --lk-shadow-card:  0 4px 16px rgba(0, 0, 0, 0.06);
+  --lk-shadow-panel: 0 20px 52px rgba(91, 45, 142, 0.14);
+
+  /* ── Texto ──────────────────────────────────────── */
+  --lk-text:        #1A1A2E;   /* casi negro azulado        */
+  --lk-text-soft:   #6B6B8A;   /* secundario del login      */
+  --lk-text-muted:  #9CA3AF;   /* placeholders, hints       */
+
+  /* ── Radios ─────────────────────────────────────── */
+  --lk-radius-xs: 0.5rem;
+  --lk-radius-sm: 0.75rem;
+  --lk-radius-md: 1rem;
+  --lk-radius-lg: 1.25rem;
+  --lk-radius-xl: 1.75rem;
+  --lk-radius-2xl: 2.5rem;
+
+  /* ── Layout: Sidebar ────────────────────────────── */
+  --lk-sidebar-width:  256px;
+  --lk-sidebar-bg:     #5B2D8E;   /* morado sólido del login   */
+  --lk-sidebar-border: rgba(255, 255, 255, 0.08);
+  --lk-sidebar-text:   rgba(255, 255, 255, 0.80);
+
+  /* ── Layout: Topbar ─────────────────────────────── */
+  --lk-topbar-height: 70px;
+  --lk-topbar-bg: rgba(255, 255, 255, 0.92);
+
+  /* ── Breakpoints Responsive ──────────────────────────── */
+  --lk-bp-xs: 400px;
+  --lk-bp-sm: 576px;
+  --lk-bp-md: 768px;
+  --lk-bp-lg: 992px;
+  --lk-bp-xl: 1200px;
+
+  /* ── Bootstrap 5 overrides ──────────────────────── */
+  --bs-primary:           var(--lk-brand);
+  --bs-primary-rgb:       91, 45, 142;
+  --bs-body-font-family:  var(--lk-font);
+  --bs-body-bg:           var(--lk-bg);
+  --bs-body-color:        var(--lk-text);
+  --bs-border-color:      var(--lk-border);
+  --bs-border-radius:     var(--lk-radius-md);
+  --bs-border-radius-sm:  var(--lk-radius-sm);
+  --bs-border-radius-lg:  var(--lk-radius-lg);
+  --bs-card-border-color:  var(--lk-border);
+  --bs-card-border-radius: var(--lk-radius-lg);
+  --bs-card-box-shadow:    var(--lk-shadow-card);
+  --bs-success-rgb: 22, 163, 74;
+  --bs-danger-rgb:  220, 38, 38;
+  --bs-warning-rgb: 217, 119, 6;
+}
