@@ -1,4 +1,4 @@
-﻿.lk-achievements-page {
+.lk-achievements-page {
   --ach-purple: var(--lk-tutor-primary);
   --ach-ink: var(--lk-brand-dark);
   --ach-soft: #F3E8FA;
@@ -545,42 +545,3 @@
     display: none;
   }
 }
-
-/* DISEÃ‘O LOGROS â€” Mockup aprobado */
-.lk-ach-page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:1.5rem; gap:1rem; }
-.lk-ach-page-header h1 { font-size:1.75rem; font-weight:800; color:#1A1A2E; margin:0; font-family:'Fredoka',sans-serif; }
-.lk-ach-filter-select { padding:0.5rem 1rem; border:1.5px solid #E2DCF0; border-radius:0.75rem; background:#fff; font-size:0.85rem; color:#1A1A2E; cursor:pointer; font-family:inherit; }
-.lk-ach-podium-card { background:#fff; border:1px solid #E2DCF0; border-radius:1.25rem; padding:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.04); margin-bottom:1.5rem; }
-.lk-ach-top3-label { font-size:0.75rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:#6B6B8A; margin-bottom:1.25rem; }
-.lk-ach-podium { display:flex; justify-content:center; align-items:flex-end; gap:1.25rem; }
-.lk-ach-podium-slot { display:flex; flex-direction:column; align-items:center; gap:0.3rem; }
-.lk-ach-podium-slot--1 { order:2; }
-.lk-ach-podium-slot--2 { order:1; }
-.lk-ach-podium-slot--3 { order:3; }
-.lk-ach-medal { font-size:1.75rem; line-height:1; }
-.lk-ach-avatar { width:52px; height:52px; border-radius:50%; background:#5B2D8E; color:#fff; font-size:0.9rem; font-weight:800; display:flex; align-items:center; justify-content:center; border:3px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,0.12); }
-.lk-ach-podium-slot--1 .lk-ach-avatar { width:62px; height:62px; background:#F5A623; }
-.lk-ach-podium-name { font-size:0.78rem; font-weight:700; color:#1A1A2E; text-align:center; max-width:80px; }
-.lk-ach-podium-pts { font-size:0.7rem; color:#6B6B8A; }
-.lk-ach-platform { display:flex; align-items:center; justify-content:center; border-radius:0.5rem 0.5rem 0 0; }
-.lk-ach-platform--1 { background:#F5A623; color:#fff; font-size:1.5rem; font-weight:900; width:60px; height:50px; }
-.lk-ach-platform--2 { background:#D1D5DB; color:#fff; font-size:1.3rem; font-weight:900; width:50px; height:36px; }
-.lk-ach-platform--3 { background:#CD7C2F; color:#fff; font-size:1.2rem; font-weight:900; width:50px; height:28px; }
-.lk-ach-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
-/* Card horizontal: icono a la izquierda, texto a la derecha — igual al mockup */
-.lk-ach-item { background:#fff; border:1px solid #E2DCF0; border-radius:1.1rem; padding:1rem 1.25rem; display:flex; flex-direction:row; align-items:flex-start; gap:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); border-left:4px solid transparent; transition:box-shadow 0.15s; position:relative; }
-.lk-ach-item:hover { box-shadow:0 6px 20px rgba(91,45,142,0.1); }
-.lk-ach-item--green  { border-left-color:#16A34A; }
-.lk-ach-item--blue   { border-left-color:#2563EB; }
-.lk-ach-item--orange { border-left-color:#F07020; }
-.lk-ach-item--cyan   { border-left-color:#06B6D4; }
-.lk-ach-item--locked { opacity:0.6; filter:grayscale(0.3); border-left-color:#D1D5DB; }
-.lk-ach-item__icon { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; }
-.lk-ach-item__body { display:flex; flex-direction:column; gap:0.35rem; flex:1; min-width:0; }
-.lk-ach-item__name { font-size:0.9rem; font-weight:800; color:#1A1A2E; margin:0; }
-.lk-ach-item__desc { font-size:0.78rem; color:#6B6B8A; margin:0; line-height:1.4; }
-.lk-ach-item__count { display:flex; align-items:center; gap:0.35rem; font-size:0.75rem; color:#6B6B8A; font-weight:600; margin-top:0.2rem; }
-.lk-ach-item__lock { position:absolute; top:0.75rem; right:0.75rem; color:#9CA3AF; }
-@media (max-width:640px) { .lk-ach-grid { grid-template-columns:1fr; } }
-.lk-ach-lock-icon { margin-left:auto; color:#9CA3AF; }
-
