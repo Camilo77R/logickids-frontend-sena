@@ -3,7 +3,7 @@ import { BookOpen, Eye, Gamepad2, Play, Route, Search, Sparkles, Square, UserChe
 import SessionClassModal from "../../components/tutor/SessionClassModal";
 import RoleModal from "../../components/common/RoleModal";
 import tutorGroupsService from "../../services/tutorGroupsService";
-import groupsMascot from "../../assets/imgs/tutor-groups-mascot.png";
+import groupsMascot from "../../assets/imgs/tutor-groups-team-mascot.png";
 import {
   getSessionOpenSuccessMessage,
   getSessionModeLabel,
