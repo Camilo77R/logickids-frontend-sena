@@ -267,6 +267,7 @@ export default function TutorDashboardOverview() {
   const [toggling, setToggling] = useState(null);
   const [toast, setToast] = useState(null);
   const loadOverviewRef = useRef(null);
+  const loadRequestIdRef = useRef(0);
   const [sessionModal, setSessionModal] = useState({
     open: false,
     group: null,
@@ -293,44 +294,46 @@ export default function TutorDashboardOverview() {
   };
 
   const loadOverview = async () => {
-    try {
-      setLoading(true);
+    const requestId = loadRequestIdRef.current + 1;
+    loadRequestIdRef.current = requestId;
+    const isLatestRequest = () => loadRequestIdRef.current === requestId;
 
-      const [loadedGroupsRaw, loadedGames, loadedRoutes] = await Promise.all([
-        tutorGroupsService.getGroups(),
-        tutorGroupsService.listarMinijuegosActivos(),
-        tutorGroupsService.listarRutasPedagogicas(),
-      ]);
+    try {
+      if (!groups.length) setLoading(true);
+
+      const gamesPromise = tutorGroupsService.listarMinijuegosActivos().catch(() => []);
+      const routesPromise = tutorGroupsService.listarRutasPedagogicas().catch(() => []);
+      const loadedGroupsRaw = await tutorGroupsService.getGroups();
 
       const loadedGroups = (loadedGroupsRaw ?? []).map(normalizeGroup);
-      const loadedStudents = await loadStudentsForTutorGroups(loadedGroups);
-
+      if (!isLatestRequest()) return;
       setGroups(loadedGroups);
-      setStudents(loadedStudents);
-      setGames(loadedGames);
-      setRoutes(loadedRoutes);
+      setLoading(false);
 
       const focusGroup = selectLatestOpenedGroup(loadedGroups);
-      if (!focusGroup?.id) {
-        setSkills([]);
-        setRecs([]);
-        setRanking(null);
-        return;
-      }
-
-      const [skillsResult, recsResult] = await Promise.allSettled([
-        estadisticasService.porGrupo(focusGroup.id),
-        recomendacionesService.porGrupo(focusGroup.id),
+      const [studentsResult, gamesResult, routesResult, skillsResult, recsResult, rankingResult] = await Promise.allSettled([
+        loadStudentsForTutorGroups(loadedGroups),
+        gamesPromise,
+        routesPromise,
+        focusGroup?.id ? estadisticasService.porGrupo(focusGroup.id) : Promise.resolve([]),
+        focusGroup?.id ? recomendacionesService.porGrupo(focusGroup.id) : Promise.resolve([]),
+        focusGroup?.id ? rankingService.obtenerRankingGrupo(focusGroup.id) : Promise.resolve(null),
       ]);
 
+      if (!isLatestRequest()) return;
+      setStudents(studentsResult.status === "fulfilled" ? studentsResult.value ?? [] : []);
+      setGames(gamesResult.status === "fulfilled" ? gamesResult.value ?? [] : []);
+      setRoutes(routesResult.status === "fulfilled" ? routesResult.value ?? [] : []);
       setSkills(skillsResult.status === "fulfilled" ? skillsResult.value ?? [] : []);
       setRecs(recsResult.status === "fulfilled" ? recsResult.value ?? [] : []);
-      setRankingGroupId(focusGroup.id);
-      await fetchRankingForGroup(focusGroup.id);
+      setRanking(rankingResult.status === "fulfilled" ? rankingResult.value ?? null : null);
+      setRankingGroupId(focusGroup?.id ?? null);
     } catch (error) {
-      flash("err", error?.message ?? "No fue posible cargar el panel del tutor.");
+      if (isLatestRequest()) {
+        flash("err", error?.message ?? "No fue posible cargar el panel del tutor.");
+      }
     } finally {
-      setLoading(false);
+      if (isLatestRequest()) setLoading(false);
     }
   };
 
@@ -345,18 +348,25 @@ export default function TutorDashboardOverview() {
       return undefined;
     }
 
-    return realtimeService.subscribe({
+    let refreshTimer = null;
+    const scheduleRefresh = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => {
+        void loadOverviewRef.current?.();
+      }, 150);
+    };
+
+    const unsubscribe = realtimeService.subscribe({
       token,
-      onClassSessionChanged: () => {
-        void loadOverviewRef.current?.();
-      },
-      onRankingUpdated: () => {
-        void loadOverviewRef.current?.();
-      },
-      onStudentAccessChanged: () => {
-        void loadOverviewRef.current?.();
-      },
+      onClassSessionChanged: scheduleRefresh,
+      onRankingUpdated: scheduleRefresh,
+      onStudentAccessChanged: scheduleRefresh,
     });
+
+    return () => {
+      window.clearTimeout(refreshTimer);
+      unsubscribe?.();
+    };
   }, [token, user?.id]);
 
   const totalGroups = groups.length;

@@ -11,6 +11,7 @@ import {
   getSesionesPorGrupo,
 } from "../../services/sesiones.service";
 import tutorGroupsService from "../../services/tutorGroupsService";
+import "../../styles/tutor-sesiones.css";
 
 const normalizeId = (value) => String(value ?? "");
 const resolveActivityKey = (session) => session?.actividad_clave || `sesion-${session?.id ?? "sin-clave"}`;
@@ -253,7 +254,7 @@ export default function SesionesPage() {
 
   /* ─────────────── RENDER ─────────────── */
   return (
-    <div className="tutor-page-container">
+    <div className="tutor-page-container lk-sessions-page">
 
       {/* Header */}
       <div className="tutor-page-header">

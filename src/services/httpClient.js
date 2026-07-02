@@ -31,6 +31,18 @@ class HttpError extends Error {
   }
 }
 
+const SESSION_EXPIRATION_CODES = new Set(["TOKEN_EXPIRED", "TOKEN_INVALID"]);
+const SESSION_EXPIRATION_MESSAGE = /(sesi[oó]n expirada|token (?:de acceso )?(?:requerido|inv[aá]lido)|usuario autenticado no encontrado)/i;
+
+const isSessionExpirationPayload = (payload) =>
+  SESSION_EXPIRATION_CODES.has(payload?.code) ||
+  SESSION_EXPIRATION_MESSAGE.test(payload?.message ?? "");
+
+export const isSessionExpirationError = (error) =>
+  error instanceof HttpError &&
+  error.status === 401 &&
+  (SESSION_EXPIRATION_CODES.has(error.meta?.code) || SESSION_EXPIRATION_MESSAGE.test(error.message));
+
 const formatErrorDetails = (details = []) => {
   if (!Array.isArray(details) || details.length === 0) {
     return "";
@@ -98,7 +110,7 @@ export const request = async (path, { method = "GET", body, auth = true } = {}) 
   const payload = await parsePayload(response);
 
   if (!response.ok) {
-    if (response.status === 401 && auth) {
+    if (response.status === 401 && auth && isSessionExpirationPayload(payload)) {
       emitSessionExpired();
     }
 

@@ -21,7 +21,7 @@ import StudentQrPreview from "../../components/account/StudentQrPreview";
 import StudentDeviceSessionModal from "../../components/students/StudentDeviceSessionModal";
 import estudianteService from "../../services/estudianteService";
 import tutorGroupsService from "../../services/tutorGroupsService";
-import profesorImage from "../../assets/imgs/imagen profe.png";
+import studentsMascot from "../../assets/imgs/tutor-groups-mascot.png";
 import "../../styles/tutorEstudiantes.css";
 
 const ESTUDIANTES_POR_PAGINA = 3;
@@ -151,10 +151,6 @@ export default function TutorEstudiantesPage() {
 
   return (
     <Container fluid className="lk-students-page">
-      <div className="lk-students-page-head">
-        <h1>Estudiantes</h1>
-      </div>
-
       {feedback.message ? (
         <Alert variant={feedback.type === "success" ? "success" : "danger"} className="lk-students-alert">
           {feedback.message}
@@ -163,8 +159,8 @@ export default function TutorEstudiantesPage() {
 
       <section className="lk-students-hero">
         <div>
-          <span className="lk-students-kicker">Modulo Estudiantes</span>
-          <h1>Consulta tu grupo</h1>
+          <span className="lk-students-kicker">Gestión del grupo</span>
+          <h1>Estudiantes</h1>
           <p>Revisa el estado de la clase y comparte el QR cuando un estudiante lo necesite.</p>
           <div className="lk-students-hero-actions">
             <Button
@@ -179,7 +175,7 @@ export default function TutorEstudiantesPage() {
         </div>
         <div className="lk-students-hero-image">
           <div className="lk-tutor-profile-placeholder">
-            <img src={profesorImage} alt="Tutor" />
+            <img src={studentsMascot} alt="" aria-hidden="true" />
           </div>
         </div>
         <div className="lk-students-hero-card">
