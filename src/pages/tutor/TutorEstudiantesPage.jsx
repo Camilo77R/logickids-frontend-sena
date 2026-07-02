@@ -1,24 +1,42 @@
 import { useEffect, useMemo, useState } from "react";
-import { Image, Alert } from "react-bootstrap";
-import { MonitorSmartphone, QrCode, Search, Users, ChevronRight, UserPlus } from "lucide-react";
+import { MonitorSmartphone, QrCode, RefreshCw, Search, Users } from "lucide-react";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Image,
+  InputGroup,
+  Modal,
+  Pagination,
+  ProgressBar,
+  Row,
+  Spinner,
+  Table,
+} from "react-bootstrap";
 import StudentQrPreview from "../../components/account/StudentQrPreview";
 import StudentDeviceSessionModal from "../../components/students/StudentDeviceSessionModal";
 import estudianteService from "../../services/estudianteService";
 import tutorGroupsService from "../../services/tutorGroupsService";
-import "../../styles/tutor-ov.css";
+import profesorImage from "../../assets/imgs/imagen profe.png";
 import "../../styles/tutorEstudiantes.css";
 
 const ESTUDIANTES_POR_PAGINA = 3;
 
 const getEstado = (estudiante) => estudiante.estado || "activo";
+
+const getEstadoLabel = (estado) => {
+  if (estado === "activo") return "Activo";
+  if (estado === "inactivo") return "Inactivo";
+  return "En progreso";
+};
+
 const getGroupId = (grupo) => String(grupo?.id_grupo ?? grupo?.id ?? "");
 
-const panelStyle = {
-  background: "var(--lk-brand-soft)",
-  border: "1px solid var(--lk-border)",
-  borderRadius: "var(--lk-radius-xl)",
-  padding: "1.5rem",
-};
+const getProgress = (estudiante) => Number(estudiante.progreso ?? estudiante.progress ?? 0);
 
 export default function TutorEstudiantesPage() {
   const [grupos, setGrupos] = useState([]);
@@ -44,8 +62,12 @@ export default function TutorEstudiantesPage() {
     try {
       const groups = await tutorGroupsService.getGroups();
       setGrupos(groups);
-      if (!selectedGrupoId && groups.length > 0) setSelectedGrupoId(getGroupId(groups[0]));
-      else if (groups.length === 0) setIsLoading(false);
+
+      if (!selectedGrupoId && groups.length > 0) {
+        setSelectedGrupoId(getGroupId(groups[0]));
+      } else if (groups.length === 0) {
+        setIsLoading(false);
+      }
     } catch (error) {
       showFeedback("error", error.message || "No fue posible cargar tus grupos.");
       setIsLoading(false);
@@ -53,205 +75,319 @@ export default function TutorEstudiantesPage() {
   };
 
   const loadEstudiantes = async (grupoId, incluirInactivos = false) => {
-    if (!grupoId) { setEstudiantes([]); setIsLoading(false); return; }
+    if (!grupoId) {
+      setEstudiantes([]);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
+
     try {
       const data = incluirInactivos
         ? await estudianteService.listAllEstudiantes(Number(grupoId))
         : await estudianteService.listEstudiantes(Number(grupoId));
+
       setEstudiantes(data);
     } catch (error) {
       showFeedback("error", error.message || "No fue posible cargar los estudiantes.");
       setEstudiantes([]);
-    } finally { setIsLoading(false); }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  useEffect(() => { loadGrupos(); }, []);
-  useEffect(() => { loadEstudiantes(selectedGrupoId, estadoFilter !== "activo"); }, [selectedGrupoId, estadoFilter]);
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, estadoFilter, selectedGrupoId]);
+  useEffect(() => {
+    loadGrupos();
+  }, []);
+
+  useEffect(() => {
+    loadEstudiantes(selectedGrupoId, estadoFilter !== "activo");
+  }, [selectedGrupoId, estadoFilter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, estadoFilter, selectedGrupoId]);
 
   const handleObtenerQr = async (estudiante) => {
     setLoadingQr(true);
     setQrData(null);
     setSelectedQrStudentName(estudiante.nombre || "estudiante");
     setShowQrModal(true);
+
     try {
       const data = await estudianteService.obtenerQr(estudiante.id);
       setQrData(data);
     } catch (error) {
       showFeedback("error", "No fue posible obtener el codigo QR.");
-    } finally { setLoadingQr(false); }
+    } finally {
+      setLoadingQr(false);
+    }
   };
 
   const estudiantesFiltrados = useMemo(() => {
     const search = searchTerm.trim().toLowerCase();
+
     return estudiantes.filter((estudiante) => {
       const estado = getEstado(estudiante);
       const matchesEstado = estadoFilter === "todos" || estado === estadoFilter;
-      const matchesSearch = !search || estudiante.nombre?.toLowerCase().includes(search) || String(estudiante.edad || "").includes(search);
+      const matchesSearch =
+        !search ||
+        estudiante.nombre?.toLowerCase().includes(search) ||
+        String(estudiante.edad || "").includes(search);
+
       return matchesEstado && matchesSearch;
     });
   }, [estudiantes, searchTerm, estadoFilter]);
 
   const totalPages = Math.max(1, Math.ceil(estudiantesFiltrados.length / ESTUDIANTES_POR_PAGINA));
-  const estudiantesPaginados = estudiantesFiltrados.slice((currentPage - 1) * ESTUDIANTES_POR_PAGINA, currentPage * ESTUDIANTES_POR_PAGINA);
+  const estudiantesPaginados = estudiantesFiltrados.slice(
+    (currentPage - 1) * ESTUDIANTES_POR_PAGINA,
+    currentPage * ESTUDIANTES_POR_PAGINA
+  );
   const selectedGrupo = grupos.find((grupo) => getGroupId(grupo) === String(selectedGrupoId));
   const fromStudent = estudiantesFiltrados.length === 0 ? 0 : (currentPage - 1) * ESTUDIANTES_POR_PAGINA + 1;
   const toStudent = Math.min(currentPage * ESTUDIANTES_POR_PAGINA, estudiantesFiltrados.length);
-  const activeStudents = estudiantes.filter((e) => getEstado(e) === "activo").length;
-  const totalStudents = estudiantes.length;
 
   return (
-    <div className="tov">
-      {feedback.message && (
-        <Alert variant={feedback.type === "success" ? "success" : "danger"} style={{ marginBottom: "1rem" }}>
+    <Container fluid className="lk-students-page">
+      <div className="lk-students-page-head">
+        <h1>Estudiantes</h1>
+      </div>
+
+      {feedback.message ? (
+        <Alert variant={feedback.type === "success" ? "success" : "danger"} className="lk-students-alert">
           {feedback.message}
         </Alert>
-      )}
+      ) : null}
 
-      <section className="tov-hero">
-        <div className="tov-hero__text">
-          <span className="tov-hero__status">
-            <span className="tov-hero__status-dot" />
-            {selectedGrupoId ? `Grupo: ${selectedGrupo?.nombre || "Seleccionado"}` : "Gestión de estudiantes"}
-          </span>
-          <h1 className="tov-hero__h1">Estudiantes</h1>
-          <div className="tov-hero__summary">
-            <div><span>Total estudiantes</span><strong>{totalStudents}</strong></div>
-            <div><span>Activos</span><strong>{activeStudents}</strong></div>
-            <div><span>Grupos</span><strong>{grupos.length}</strong></div>
+      <section className="lk-students-hero">
+        <div>
+          <span className="lk-students-kicker">Modulo Estudiantes</span>
+          <h1>Consulta tu grupo</h1>
+          <p>Revisa el estado de la clase y comparte el QR cuando un estudiante lo necesite.</p>
+          <div className="lk-students-hero-actions">
+            <Button
+              className="lk-btn-light"
+              onClick={() => loadEstudiantes(selectedGrupoId, estadoFilter !== "activo")}
+              disabled={!selectedGrupoId || isLoading}
+            >
+              <RefreshCw size={17} />
+              Recargar
+            </Button>
           </div>
-          <div className="tov-hero__actions">
-            <button className="tov-hero__primary" onClick={() => {}}><UserPlus size={16} /> Agregar estudiante <ChevronRight size={17} /></button>
-            <button className="tov-hero__secondary">Gestionar grupos</button>
+        </div>
+        <div className="lk-students-hero-image">
+          <div className="lk-tutor-profile-placeholder">
+            <img src={profesorImage} alt="Tutor" />
           </div>
+        </div>
+        <div className="lk-students-hero-card">
+          <Users size={32} />
+          <strong>{estudiantesFiltrados.length}</strong>
+          <span>estudiantes visibles</span>
         </div>
       </section>
 
-      <div style={panelStyle}>
-        <div className="tov-board-head">
-          <h2><Users size={18} /> Listado de estudiantes</h2>
-        </div>
-
-        {!selectedGrupoId ? (
-          <div className="tov-board-empty">
-            <Users size={32} />
-            <strong>Selecciona un grupo</strong>
-            <span>Elige un grupo para ver sus estudiantes.</span>
-          </div>
-        ) : isLoading ? (
-          <div className="tov-loading">
-            <div className="tov-loading__ring" />
-            <span>Cargando estudiantes...</span>
-          </div>
-        ) : (
-          <>
-            <div className="lk-est-controls" style={{ marginBottom: "1rem" }}>
-              <div className="lk-est-search">
-                <Search size={16} style={{ color: "#6B6B8A", flexShrink: 0 }} />
-                <input type="text" placeholder="Buscar estudiante..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-              </div>
-              <select className="lk-est-filter-select" value={selectedGrupoId} onChange={(e) => { setSelectedGrupoId(e.target.value); setCurrentPage(1); }}>
-                {grupos.map((g) => <option key={getGroupId(g)} value={getGroupId(g)}>{g.nombre}</option>)}
-              </select>
-              <select className="lk-est-filter-select" value={estadoFilter} onChange={(e) => setEstadoFilter(e.target.value)}>
-                <option value="activo">Activos</option>
-                <option value="todos">Todos</option>
-                <option value="inactivo">Inactivos</option>
-              </select>
-            </div>
-
-            {estudiantesFiltrados.length === 0 ? (
-              <div className="tov-board-empty">
-                <Users size={32} />
-                <strong>No se encontraron estudiantes</strong>
-                <span>Busca otro estudiante o ajusta los filtros.</span>
-              </div>
-            ) : (
-              <>
-                <div className="lk-est-table-wrap">
-                  <table className="lk-est-table">
-                    <thead>
-                      <tr>
-                        <th>Avatar</th>
-                        <th>Nombre</th>
-                        <th>Grupo</th>
-                        <th>Estado</th>
-                        <th>Edad</th>
-                        <th>Sesión</th>
-                        <th>Acción</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {estudiantesPaginados.map((est) => {
-                        const estado = getEstado(est);
-                        return (
-                          <tr key={est.id}>
-                            <td>
-                              <div className="lk-est-avatar">
-                                <Image src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${est.nombre || est.id}`} roundedCircle className="lk-student-avatar-img" alt={est.nombre} width={40} height={40} />
-                                <span className="lk-est-avatar-dot" />
-                              </div>
-                            </td>
-                            <td><strong>{est.nombre}</strong></td>
-                            <td style={{ color: "var(--lk-text-soft)" }}>{selectedGrupo?.nombre || "—"}</td>
-                            <td>
-                              {estado === "activo"
-                                ? <span className="lk-est-badge-active">Activo</span>
-                                : <span className="lk-est-badge-inactive">Inactivo</span>}
-                            </td>
-                            <td>{est.edad ? `${est.edad} años` : "—"}</td>
-                            <td>
-                              <span style={{ fontSize: "0.75rem", color: est.sesion_activa ? "var(--lk-green)" : "var(--lk-text-muted)" }}>
-                                {est.sesion_activa ? "Clase abierta" : "Cerrada"}
-                              </span>
-                            </td>
-                            <td>
-                              <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
-                                <button className="lk-est-btn-detail" onClick={() => handleObtenerQr(est)} title="Ver QR">
-                                  <QrCode size={13} />
-                                </button>
-                                <button className="lk-est-btn-detail" style={{ background: "#5B2D8E" }} onClick={() => setDeviceSessionStudent(est)} title="Ver sesión">
-                                  <MonitorSmartphone size={13} />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+      <Row className="g-2">
+        <Col xl={12}>
+          <Card className="lk-students-card lk-students-table-card">
+            <Card.Body>
+              <div className="lk-table-toolbar">
+                <div className="lk-section-heading mb-0">
+                  <div>
+                    <span>{selectedGrupo?.nombre || "Grupo seleccionado"}</span>
+                    <h2>Lista de estudiantes</h2>
+                  </div>
                 </div>
 
-                {totalPages > 1 && (
-                  <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end", marginTop: "0.75rem", alignItems: "center" }}>
-                    <span style={{ fontSize: "0.8rem", color: "var(--lk-text-muted)" }}>Mostrando {fromStudent}–{toStudent} de {estudiantesFiltrados.length}</span>
-                    <button className="tg-btn-arrow" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>←</button>
-                    <button className="tg-btn-arrow" disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>→</button>
-                  </div>
-                )}
-              </>
-            )}
-          </>
-        )}
-      </div>
+                <InputGroup className="lk-search-control">
+                  <InputGroup.Text>
+                    <Search size={16} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Buscar estudiante..."
+                  />
+                </InputGroup>
 
-      {showQrModal && (
-        <StudentQrPreview
-          show={showQrModal}
-          estudiante={{ nombre: selectedQrStudentName }}
-          qrUrl={qrData}
-          isLoading={loadingQr}
-          onClose={() => { setShowQrModal(false); setQrData(null); }}
-        />
-      )}
-      {deviceSessionStudent && (
-        <StudentDeviceSessionModal
-          show={Boolean(deviceSessionStudent)}
-          estudiante={deviceSessionStudent}
-          onClose={() => setDeviceSessionStudent(null)}
-        />
-      )}
-    </div>
+                <div className="lk-table-filters">
+                  <Form.Select
+                    value={selectedGrupoId}
+                    onChange={(event) => setSelectedGrupoId(event.target.value)}
+                    className="lk-filter-select"
+                  >
+                    <option value="">Selecciona un grupo</option>
+                    {grupos.map((grupo) => (
+                      <option key={getGroupId(grupo)} value={getGroupId(grupo)}>
+                        {grupo.nombre}
+                      </option>
+                    ))}
+                  </Form.Select>
+
+                  <Form.Select
+                    value={estadoFilter}
+                    onChange={(event) => setEstadoFilter(event.target.value)}
+                    className="lk-filter-select"
+                  >
+                    <option value="activo">Activos</option>
+                    <option value="todos">Todos</option>
+                    <option value="inactivo">Inactivos</option>
+                  </Form.Select>
+                </div>
+              </div>
+
+              {!selectedGrupoId ? (
+                <div className="lk-empty-state">
+                  <Users size={46} />
+                  <p>Selecciona un grupo para ver sus estudiantes.</p>
+                </div>
+              ) : isLoading ? (
+                <div className="lk-empty-state">
+                  <Spinner animation="border" variant="primary" />
+                  <p>Cargando estudiantes...</p>
+                </div>
+              ) : estudiantesFiltrados.length === 0 ? (
+                <div className="lk-empty-state">
+                  <Users size={46} />
+                  <p>No hay estudiantes que coincidan con los filtros.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="lk-table-responsive">
+                    <Table hover responsive className="lk-students-table">
+                      <thead>
+                        <tr>
+                          <th>Estudiante</th>
+                          <th>Edad</th>
+                          <th>Progreso</th>
+                          <th>Estado</th>
+                          <th>Sesion</th>
+                          <th>Acceso</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {estudiantesPaginados.map((estudiante) => {
+                          const estado = getEstado(estudiante);
+                          const progress = getProgress(estudiante);
+
+                          return (
+                            <tr key={estudiante.id}>
+                              <td>
+                                <div className="lk-student-cell">
+                                  <Image
+                                    src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${estudiante.nombre || estudiante.id}`}
+                                    roundedCircle
+                                    className="lk-student-avatar-img"
+                                    alt={estudiante.nombre}
+                                    width={40}
+                                    height={40}
+                                  />
+                                  <div>
+                                    <strong>{estudiante.nombre}</strong>
+                                    <span>ID #{estudiante.id}</span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>{estudiante.edad} anos</td>
+                              <td>
+                                <div className="lk-progress-cell">
+                                  <ProgressBar now={progress} />
+                                  <span>{progress}%</span>
+                                </div>
+                              </td>
+                              <td>
+                                <Badge className={`lk-status-badge lk-status-${estado}`}>
+                                  {getEstadoLabel(estado)}
+                                </Badge>
+                              </td>
+                              <td>
+                                <Badge className={estudiante.sesion_activa ? "lk-session-open" : "lk-session-closed"}>
+                                  {estudiante.sesion_activa ? "Clase abierta" : "Clase cerrada"}
+                                </Badge>
+                              </td>
+                              <td>
+                                <div className="lk-student-access-actions">
+                                  <Button
+                                    size="sm"
+                                    variant="outline-primary"
+                                    onClick={() => handleObtenerQr(estudiante)}
+                                    title="Ver QR"
+                                    aria-label={`Ver QR de ${estudiante.nombre}`}
+                                  >
+                                    <QrCode size={16} />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline-primary"
+                                    onClick={() => setDeviceSessionStudent(estudiante)}
+                                    title="Ver sesión de dispositivo"
+                                    aria-label={`Ver sesión de dispositivo de ${estudiante.nombre}`}
+                                  >
+                                    <MonitorSmartphone size={16} />
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                  </div>
+
+                  <div className="lk-table-footer">
+                    <span>
+                      Mostrando {fromStudent} a {toStudent} de {estudiantesFiltrados.length} estudiantes
+                    </span>
+                    <Pagination className="lk-pagination">
+                      <Pagination.Prev
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                      />
+                      {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                        <Pagination.Item
+                          key={page}
+                          active={page === currentPage}
+                          onClick={() => setCurrentPage(page)}
+                        >
+                          {page}
+                        </Pagination.Item>
+                      ))}
+                      <Pagination.Next
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                      />
+                    </Pagination>
+                  </div>
+                </>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      <Modal show={showQrModal} onHide={() => setShowQrModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Codigo QR</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center py-4">
+          {loadingQr ? (
+            <Spinner animation="border" variant="primary" />
+          ) : qrData ? (
+            <StudentQrPreview token={qrData.qr_token} studentName={selectedQrStudentName} />
+          ) : (
+            <p className="text-muted">No se pudo cargar el QR.</p>
+          )}
+        </Modal.Body>
+      </Modal>
+
+      <StudentDeviceSessionModal
+        open={Boolean(deviceSessionStudent)}
+        student={deviceSessionStudent}
+        onClose={() => setDeviceSessionStudent(null)}
+        onRecovered={() => loadEstudiantes(selectedGrupoId, estadoFilter !== "activo")}
+      />
+    </Container>
   );
 }
