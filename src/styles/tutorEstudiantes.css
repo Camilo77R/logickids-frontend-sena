@@ -1919,6 +1919,24 @@ body:has(.lk-students-page) .lk-tutor-content {
   background: rgba(142, 53, 213, 0.2) !important;
 }
 
+.lk-students-page .lk-students-table.table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: transparent !important;
+  --bs-table-hover-bg: transparent !important;
+  --bs-table-hover-color: var(--students-text) !important;
+  border-color: var(--students-border-strong) !important;
+  background-color: #211a4a !important;
+  color: var(--students-text-soft) !important;
+  box-shadow: none !important;
+}
+
+.lk-students-page .lk-students-table.table-hover > tbody > tr:hover .lk-student-cell strong {
+  color: #fff !important;
+}
+
+.lk-students-page .lk-students-table.table-hover > tbody > tr:hover .lk-student-cell span {
+  color: #c5bfdf !important;
+}
+
 .lk-student-cell {
   min-width: 185px;
 }
