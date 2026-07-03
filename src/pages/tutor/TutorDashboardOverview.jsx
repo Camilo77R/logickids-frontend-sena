@@ -514,7 +514,7 @@ export default function TutorDashboardOverview() {
         </section>
 
         <section className="tov-panel tov-board-card tov-board-card--attention">
-          <div className="tov-board-head"><h2><AlertTriangle size={18} /> Necesitan atención</h2><button onClick={() => navigate("/tutor/estudiantes")}>Ver todos</button></div>
+          <div className="tov-board-head"><h2><AlertTriangle size={18} /> Necesitan atención</h2><button onClick={() => navigate("/tutor/estadisticas")}>Ver todos</button></div>
           {attentionStudents.length === 0 ? <div className="tov-board-empty">No hay estudiantes pendientes por revisar.</div> : (
             <div className="tov-attention-list">{attentionStudents.map((student, index) => (
               <div className="tov-attention-row" key={resolveStudentId(student) ?? index}>
