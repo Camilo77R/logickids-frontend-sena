@@ -15,7 +15,7 @@
   padding: 1rem;
   border: 1px solid var(--lk-night-border);
   border-radius: var(--lk-radius-xl);
-  background: var(--lk-night-panel);
+  background: #fbf8f1;
   color: var(--lk-night-text);
   box-shadow: none;
 }
@@ -163,7 +163,7 @@
   padding: 0.4rem 0.65rem;
   border: 0;
   border-radius: var(--lk-radius-pill, 999px);
-  background: var(--lk-night-panel-soft);
+  background: #f3edf7;
   color: #C8A7FF;
   font-family: var(--lk-font);
   font-size: 0.66rem;
@@ -202,7 +202,7 @@
   padding: 0.5rem 0.65rem;
   border: 1px solid var(--lk-night-border);
   border-radius: var(--lk-radius-lg);
-  background: var(--lk-night-panel-soft);
+  background: #f3edf7;
 }
 
 .tov-board-card .tov-rank-row__num {
@@ -287,7 +287,7 @@
 .tov-recommendation-tags span {
   padding: 0.35rem 0.65rem;
   border-radius: 999px;
-  background: var(--lk-night-panel-soft);
+  background: #f3edf7;
   color: #C8A7FF;
   font-size: 0.62rem;
 }
@@ -350,7 +350,7 @@
   position: absolute;
   inset: 12px;
   border-radius: 50%;
-  background: var(--lk-night-panel);
+  background: #fbf8f1;
 }
 
 .tov-score-ring strong,
@@ -361,10 +361,10 @@
 .tov-performance-layout .tov-sbars { gap: 0.75rem; }
 .tov-performance-layout .tov-sbar__name,
 .tov-performance-layout .tov-sbar__pct { color: var(--lk-night-text-soft); }
-.tov-performance-layout .tov-sbar__track { background: var(--lk-night-panel-soft); }
+.tov-performance-layout .tov-sbar__track { background: #ebe1f1; }
 
 .tov-loading { color: var(--lk-night-text-muted); }
-.tov-loading__ring { border-color: var(--lk-night-panel-soft); border-top-color: var(--lk-accent); }
+.tov-loading__ring { border-color: #ebe1f1; border-top-color: var(--lk-accent); }
 
 @media (max-width: 1180px) {
   .tov-reference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -571,7 +571,7 @@
   width: min(760px, calc(100vw - 2rem)) !important;
   border: 1px solid var(--lk-night-border-strong) !important;
   border-radius: 28px !important;
-  background: var(--lk-night-panel) !important;
+  background: #fbf8f1 !important;
   color: var(--lk-night-text) !important;
   box-shadow: 0 24px 70px rgba(3, 2, 22, 0.5) !important;
 }
@@ -626,7 +626,7 @@
   padding: 0.8rem;
   border: 1px solid var(--lk-night-border);
   border-radius: 18px;
-  background: var(--lk-night-panel-soft);
+  background: #f3edf7;
 }
 
 .lk-role-modal:has(.tov-ranking) .tov-ranking-group-select__label {
@@ -669,7 +669,7 @@
   padding: 1rem;
   border: 1px solid var(--lk-night-border);
   border-radius: 22px !important;
-  background: linear-gradient(155deg, #1d194b, #121033) !important;
+  background: linear-gradient(155deg, #fffaf2, #f3edf7) !important;
   box-shadow: none;
 }
 
@@ -727,7 +727,7 @@
   padding: 0.75rem 0.9rem;
   border: 1px solid var(--lk-night-border) !important;
   border-radius: 16px !important;
-  background: var(--lk-night-panel-soft) !important;
+  background: #f3edf7 !important;
   color: #fff;
 }
 
@@ -823,4 +823,328 @@
     min-height: 170px;
     padding: 0.7rem 0.45rem;
   }
+}
+
+/* Variante clara del tutor: superficies mármol en contenedores internos */
+.tov {
+  color: #211a35;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-board-head h2,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-rank-row__name,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-attention-row strong,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-alert-row strong,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-recent-row strong,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-score-ring strong {
+  color: #211a35 !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-rank-row__pts,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-attention-row small,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-alert-row small,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-recent-row small,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-recommendation-copy,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-score-ring span,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-sbar__name,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-sbar__pct,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-board-empty {
+  color: #5f5474 !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-rank-row,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-attention-row,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-alert-row,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-recent-row,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-board-head button,
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-recommendation-tags span {
+  border-color: rgba(97, 43, 136, 0.12) !important;
+  background: #f3edf7 !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-recommendation-tags span {
+  border: 1px solid rgba(142, 53, 213, 0.2) !important;
+  background: rgba(142, 53, 213, 0.14) !important;
+  color: #6d279e !important;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-sbar__track {
+  background: #ebe1f1 !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-score-ring::before {
+  background: #fbf8f1 !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-sbar__fill {
+  min-width: 8px;
+  height: 100%;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-sbar__fill--high {
+  background: linear-gradient(90deg, #16a34a, #39d353) !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-sbar__fill--mid {
+  background: linear-gradient(90deg, #f9a825, #ffca62) !important;
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-sbar__fill--low {
+  background: linear-gradient(90deg, #ef4444, #ff7d8f) !important;
+}
+
+.lk-role-modal:has(.tov-ranking) {
+  border-color: rgba(97, 43, 136, 0.18) !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+  box-shadow: 0 24px 70px rgba(97, 43, 136, 0.22) !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .lk-role-modal__title,
+.lk-role-modal:has(.tov-ranking) .tov-ranking-group-select__label,
+.lk-role-modal:has(.tov-ranking) .tov-podium-spot__name,
+.lk-role-modal:has(.tov-ranking) .tov-podium-spot__pts,
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle,
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle__left,
+.lk-role-modal:has(.tov-ranking) .tov-rank-row__name,
+.lk-role-modal:has(.tov-ranking) .tov-rank-row__pts {
+  color: #211a35 !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .lk-role-modal__eyebrow,
+.lk-role-modal:has(.tov-ranking) .tov-podium-spot__label,
+.lk-role-modal:has(.tov-ranking) .tov-rank-row__num,
+.lk-role-modal:has(.tov-ranking) .tov-rank-row__badge,
+.lk-role-modal:has(.tov-ranking) .tov-rank-footer {
+  color: #5f5474 !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .lk-role-modal__actions,
+.lk-role-modal:has(.tov-ranking) .tov-ranking-group-select,
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle,
+.lk-role-modal:has(.tov-ranking) .tov-rank-row,
+.lk-role-modal:has(.tov-ranking) .tov-podium-spot {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #f3edf7 !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-ranking-group-select__select {
+  border-color: rgba(97, 43, 136, 0.18) !important;
+  background-color: #fffaf2 !important;
+  color: #211a35 !important;
+  color-scheme: light;
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-ranking-group-select__select option {
+  background: #fffaf2;
+  color: #211a35;
+}
+
+/* Ajustes finales de modales y acciones del inicio tutor */
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-board-head button {
+  border: 1px solid rgba(142, 53, 213, 0.2) !important;
+  background: #8e35d5 !important;
+  color: #fff !important;
+  box-shadow: 0 10px 22px rgba(142, 53, 213, 0.18);
+}
+
+.tov-reference-grid .tov-panel:not(.tov-hero) .tov-board-head button:hover {
+  background: #9f3ee7 !important;
+  box-shadow: 0 12px 26px rgba(142, 53, 213, 0.24);
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle,
+.lk-role-modal:has(.tov-ranking) .tov-rank-row {
+  border-color: rgba(142, 53, 213, 0.18) !important;
+  background: #ede3f3 !important;
+  color: #211a35 !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle:hover,
+.lk-role-modal:has(.tov-ranking) .tov-rank-row:hover {
+  border-color: rgba(142, 53, 213, 0.3) !important;
+  background: #e3d3ef !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle__badge {
+  background: #8e35d5 !important;
+  color: #fff !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle__left svg,
+.lk-role-modal:has(.tov-ranking) .tov-rank-toggle__chevron {
+  color: #8e35d5 !important;
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-modal-action,
+.lk-role-modal:has(.tov-ranking) .tov-modal-close,
+.lk-role-modal:has(.tov-sbars) .tov-modal-action,
+.lk-role-modal:has(.tov-sbars) .tov-modal-close,
+.lk-role-modal:has(.tov-recs) .tov-modal-action,
+.lk-role-modal:has(.tov-recs) .tov-modal-close {
+  border: 1px solid #8e35d5 !important;
+  background: #8e35d5 !important;
+  color: #fff !important;
+  box-shadow: 0 10px 22px rgba(142, 53, 213, 0.18);
+}
+
+.lk-role-modal:has(.tov-ranking) .tov-modal-action:hover,
+.lk-role-modal:has(.tov-ranking) .tov-modal-close:hover,
+.lk-role-modal:has(.tov-sbars) .tov-modal-action:hover,
+.lk-role-modal:has(.tov-sbars) .tov-modal-close:hover,
+.lk-role-modal:has(.tov-recs) .tov-modal-action:hover,
+.lk-role-modal:has(.tov-recs) .tov-modal-close:hover {
+  background: #9f3ee7 !important;
+  border-color: #9f3ee7 !important;
+}
+
+.lk-role-modal:has(.tov-sbars) {
+  width: min(760px, calc(100vw - 2rem)) !important;
+  border: 1px solid rgba(97, 43, 136, 0.18) !important;
+  border-radius: 28px !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+  box-shadow: 0 24px 70px rgba(97, 43, 136, 0.22) !important;
+}
+
+.lk-role-modal:has(.tov-sbars) .lk-role-modal__header {
+  padding: 1.5rem 1.6rem 0.4rem;
+}
+
+.lk-role-modal:has(.tov-sbars) .lk-role-modal__eyebrow {
+  color: #8e35d5 !important;
+}
+
+.lk-role-modal:has(.tov-sbars) .lk-role-modal__title {
+  color: #211a35 !important;
+  font-size: 1.55rem;
+}
+
+.lk-role-modal:has(.tov-sbars) .lk-role-modal__content {
+  padding: 1rem 1.6rem 1.35rem;
+  scrollbar-color: rgba(142, 53, 213, 0.65) transparent;
+  scrollbar-width: thin;
+}
+
+.lk-role-modal:has(.tov-sbars) .lk-role-modal__actions {
+  padding: 1rem 1.6rem 1.35rem;
+  border-top: 1px solid rgba(97, 43, 136, 0.14) !important;
+  background: #f3edf7 !important;
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbars {
+  display: grid;
+  gap: 1rem;
+  padding: 0.25rem 0 0.5rem;
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbar {
+  gap: 0.75rem;
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbar__name,
+.lk-role-modal:has(.tov-sbars) .tov-sbar__pct,
+.lk-role-modal:has(.tov-sbars) .tov-snote {
+  color: #211a35 !important;
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-snote strong {
+  color: #211a35 !important;
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbar__track {
+  height: 14px;
+  border-radius: 999px;
+  background: #ebe1f1 !important;
+  box-shadow: inset 0 0 0 1px rgba(97, 43, 136, 0.08);
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbar__fill {
+  min-width: 8px;
+  height: 100%;
+  border-radius: 999px;
+  box-shadow: 0 8px 18px rgba(142, 53, 213, 0.16);
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbar__fill--high {
+  background: linear-gradient(90deg, #16a34a, #39d353) !important;
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbar__fill--mid {
+  background: linear-gradient(90deg, #f9a825, #ffca62) !important;
+}
+
+.lk-role-modal:has(.tov-sbars) .tov-sbar__fill--low {
+  background: linear-gradient(90deg, #ef4444, #ff7d8f) !important;
+}
+
+.lk-role-modal:has(.tov-recs) {
+  width: min(760px, calc(100vw - 2rem)) !important;
+  border: 1px solid rgba(97, 43, 136, 0.18) !important;
+  border-radius: 28px !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+  box-shadow: 0 24px 70px rgba(97, 43, 136, 0.22) !important;
+}
+
+.lk-role-modal:has(.tov-recs) .lk-role-modal__header {
+  padding: 1.5rem 1.6rem 0.4rem;
+}
+
+.lk-role-modal:has(.tov-recs) .lk-role-modal__eyebrow {
+  color: #8e35d5 !important;
+}
+
+.lk-role-modal:has(.tov-recs) .lk-role-modal__title {
+  color: #211a35 !important;
+  font-size: 1.55rem;
+}
+
+.lk-role-modal:has(.tov-recs) .lk-role-modal__content {
+  padding: 1rem 1.6rem 1.35rem;
+  scrollbar-color: rgba(142, 53, 213, 0.65) transparent;
+  scrollbar-width: thin;
+}
+
+.lk-role-modal:has(.tov-recs) .lk-role-modal__actions {
+  padding: 1rem 1.6rem 1.35rem;
+  border-top: 1px solid rgba(97, 43, 136, 0.14) !important;
+  background: #f3edf7 !important;
+}
+
+.lk-role-modal:has(.tov-recs) .tov-recs {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.lk-role-modal:has(.tov-recs) .tov-rec {
+  border: 1px solid rgba(97, 43, 136, 0.14) !important;
+  border-radius: 18px !important;
+  background: #f3edf7 !important;
+  color: #211a35 !important;
+  box-shadow: none !important;
+}
+
+.lk-role-modal:has(.tov-recs) .tov-rec__tag {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 0.4rem;
+  padding: 0.28rem 0.62rem;
+  border-radius: 999px;
+  background: rgba(142, 53, 213, 0.12) !important;
+  color: #6d279e !important;
+  font-weight: 800;
+}
+
+.lk-role-modal:has(.tov-recs) .tov-rec__msg {
+  color: #4f455f !important;
+  font-weight: 600;
+  line-height: 1.55;
 }

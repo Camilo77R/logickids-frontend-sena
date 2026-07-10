@@ -554,17 +554,17 @@ body:has(.lk-achievements-page) .lk-tutor-content {
 }
 
 .lk-achievements-page {
-  --ach-bg: #0d0b2b;
-  --ach-panel: #121033;
-  --ach-panel-soft: #1a1747;
-  --ach-panel-raised: #211a58;
-  --ach-border: rgba(164, 118, 255, 0.2);
-  --ach-text: #ffffff;
-  --ach-muted: #aaa5cc;
+  --ach-bg: #f6f1e7;
+  --ach-panel: #fbf8f1;
+  --ach-panel-soft: #f3edf7;
+  --ach-panel-raised: #ede3f3;
+  --ach-border: rgba(97, 43, 136, 0.14);
+  --ach-text: #211a35;
+  --ach-muted: #5f5474;
   --ach-purple: #8e35d5;
   --ach-purple-light: #b75cff;
   --ach-yellow: #ffb321;
-  --ach-ink: #ffffff;
+  --ach-ink: #211a35;
   min-height: 100%;
   padding: 1.15rem 0 1.5rem;
   color: var(--ach-text);
@@ -856,6 +856,95 @@ body:has(.lk-achievements-page) .lk-tutor-content {
   .lk-achievements-rocket {
     display: none;
   }
+}
+
+/* Ajuste claro: catálogo, actividad y filtros de logros */
+.lk-achievements-page .lk-achievements-topbar,
+.lk-achievements-page .lk-achievements-layout > main,
+.lk-achievements-page .lk-achievements-activity {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+  box-shadow: 0 18px 42px rgba(97, 43, 136, 0.12) !important;
+}
+
+.lk-achievements-page .lk-achievements-search,
+.lk-achievements-page .lk-achievements-toolbar select,
+.lk-achievements-page .lk-achievements-user,
+.lk-achievements-page .lk-achievement-card,
+.lk-achievements-page .lk-achievements-timeline article,
+.lk-achievements-page .lk-achievements-empty {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #f3edf7 !important;
+  color: #211a35 !important;
+}
+
+.lk-achievements-page .lk-achievements-toolbar select {
+  color-scheme: light !important;
+}
+
+.lk-achievements-page .lk-achievements-search,
+.lk-achievements-page .lk-achievements-search input,
+.lk-achievements-page .lk-achievements-toolbar select,
+.lk-achievements-page .lk-achievements-user span,
+.lk-achievements-page .lk-achievements-section-head h1,
+.lk-achievements-page .lk-achievements-activity h2,
+.lk-achievements-page .lk-achievement-card h2,
+.lk-achievements-page .lk-achievement-card footer strong,
+.lk-achievements-page .lk-achievements-timeline strong,
+.lk-achievements-page .lk-achievements-empty strong {
+  color: #211a35 !important;
+}
+
+.lk-achievements-page .lk-achievements-search input::placeholder,
+.lk-achievements-page .lk-achievements-user small,
+.lk-achievements-page .lk-achievements-section-head p,
+.lk-achievements-page .lk-achievement-card p,
+.lk-achievements-page .lk-achievement-card footer small,
+.lk-achievements-page .lk-achievements-timeline span,
+.lk-achievements-page .lk-achievements-timeline p,
+.lk-achievements-page .lk-achievements-activity__empty,
+.lk-achievements-page .lk-achievements-empty,
+.lk-achievements-page .lk-achievements-loading {
+  color: #5f5474 !important;
+}
+
+.lk-achievements-page .lk-achievements-kpi:not(.lk-achievements-kpi--highlight) {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+  box-shadow: 0 15px 34px rgba(97, 43, 136, 0.12) !important;
+}
+
+.lk-achievements-page .lk-achievements-kpi:not(.lk-achievements-kpi--highlight) strong {
+  color: #211a35 !important;
+}
+
+.lk-achievements-page .lk-achievements-kpi:not(.lk-achievements-kpi--highlight) span {
+  color: #5f5474 !important;
+}
+
+.lk-achievements-page .lk-achievements-tabs {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #ede3f3 !important;
+}
+
+.lk-achievements-page .lk-achievements-tabs button {
+  color: #5f5474 !important;
+}
+
+.lk-achievements-page .lk-achievements-tabs button.active {
+  color: #fff !important;
+}
+
+.lk-achievements-page .lk-achievement-card.is-locked {
+  background: #f3edf7 !important;
+  opacity: 0.82;
+}
+
+.lk-achievements-page .lk-achievement-card.is-unlocked {
+  background: #fbf8f1 !important;
+  box-shadow: 0 12px 28px rgba(97, 43, 136, 0.12) !important;
 }
 
 @media (max-width: 768px) {

@@ -530,7 +530,7 @@ export default function TutorDashboardOverview() {
           <div className="tov-board-head"><h2><Lightbulb size={18} /> Recomendación del día</h2><span className="tov-ai-badge">IA</span></div>
           <p className="tov-recommendation-copy">{recs[0]?.mensaje ?? recs[0]?.message ?? recs[0]?.recomendacion ?? "Abre una actividad para recibir recomendaciones basadas en el desempeño real del grupo."}</p>
           <div className="tov-recommendation-tags"><span>{recs[0]?.habilidad ?? recs[0]?.skill ?? "Seguimiento"}</span><span>{focusGroup?.nombre ?? "Tu grupo"}</span></div>
-          <button className="tov-apply-button" onClick={() => setActiveModule("recs")}><Zap size={15} /> Ver recomendación <ChevronRight size={15} /></button>
+          <button className="tov-apply-button" onClick={() => navigate("/tutor/recomendaciones")}><Zap size={15} /> Ver recomendación <ChevronRight size={15} /></button>
         </section>
 
         <section className="tov-panel tov-board-card tov-board-card--alerts">
