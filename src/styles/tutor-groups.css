@@ -1181,18 +1181,18 @@
   --tg-y: var(--lk-accent);
   --tg-yd: var(--lk-accent-dark);
   --tg-ybg: rgba(249, 168, 37, 0.18);
-  --tg-surface: var(--lk-night-panel);
-  --tg-surface-2: var(--lk-night-panel-soft);
-  --tg-border: var(--lk-night-border);
-  --tg-border-strong: var(--lk-night-border-strong);
-  --tg-text: var(--lk-night-text);
-  --tg-soft: var(--lk-night-text-soft);
-  --tg-muted: var(--lk-night-text-muted);
+  --tg-surface: #fbf8f1;
+  --tg-surface-2: #f3edf7;
+  --tg-border: rgba(97, 43, 136, 0.14);
+  --tg-border-strong: rgba(97, 43, 136, 0.24);
+  --tg-text: #211a35;
+  --tg-soft: #5f5474;
+  --tg-muted: #837890;
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.8fr);
   grid-auto-flow: row dense;
   gap: 1rem;
-  color: var(--lk-night-text);
+  color: var(--tg-text);
 }
 
 .tutor-page-container > .tutor-page-header,
@@ -1208,13 +1208,13 @@
 .tg-detail-metric__value,
 .tg-selected-panel__copy,
 .tg-student-row__identity strong {
-  color: var(--lk-night-text);
+  color: var(--tg-text);
 }
 
 .tutor-page-container .tutor-page-title {
   font-size: clamp(2rem, 3.5vw, 2.75rem);
   line-height: 0.96;
-  color: var(--lk-night-text) !important;
+  color: var(--tg-text) !important;
 }
 
 .tutor-page-container .tutor-page-subtitle,
@@ -1226,7 +1226,7 @@
 .tg-empty-copy,
 .tutor-page-container .tutor-loading,
 .tutor-page-container .tutor-empty p {
-  color: var(--lk-night-text-soft);
+  color: var(--tg-soft);
 }
 
 .tutor-page-container .tutor-card,
@@ -1235,7 +1235,7 @@
   padding: 1.25rem;
   border: 1px solid var(--tg-border);
   border-radius: 28px !important;
-  background: var(--lk-night-panel);
+  background: var(--tg-surface);
   box-shadow: none;
 }
 
@@ -1264,7 +1264,7 @@
   display: flex;
   align-items: stretch;
   padding: 1.15rem 1.25rem;
-  border: 1px solid var(--lk-night-border-strong);
+  border: 1px solid var(--tg-border-strong);
   border-radius: 28px;
   background:
     radial-gradient(circle at 75% 28%, rgba(255, 255, 255, 0.12), transparent 18%),
@@ -1440,7 +1440,7 @@
 .tg-student-row {
   border: 1px solid var(--tg-border) !important;
   border-radius: 18px !important;
-  background: var(--lk-night-panel-soft) !important;
+  background: var(--tg-surface-2) !important;
   box-shadow: none !important;
 }
 
@@ -1451,7 +1451,10 @@
 
 .tg-group-item.is-selected {
   border-color: rgba(249, 168, 37, 0.62) !important;
-  background: linear-gradient(135deg, rgba(142, 53, 213, 0.34), rgba(25, 21, 69, 0.98)) !important;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.82), transparent 28%),
+    linear-gradient(135deg, #f7ecff 0%, #ead6f8 48%, #d7c0ec 100%) !important;
+  box-shadow: 0 14px 34px rgba(142, 53, 213, 0.14) !important;
 }
 
 .tg-group-item__body {
@@ -1465,6 +1468,16 @@
 .tg-group-item__title {
   font-family: var(--lk-display-font);
   font-size: 1.04rem;
+}
+
+.tg-group-item.is-selected .tg-group-item__title {
+  color: #211a35 !important;
+}
+
+.tg-group-item.is-selected .tg-group-item__description,
+.tg-group-item.is-selected .tg-group-item__summary {
+  color: #5b4e68 !important;
+  font-weight: 600;
 }
 
 .tg-group-item__status,
@@ -1486,6 +1499,13 @@
   color: #c8a7ff;
 }
 
+.tg-group-item.is-selected .tg-group-item__status,
+.tg-group-item.is-selected .tg-status-chip.is-waiting,
+.tg-group-item.is-selected .tg-status-chip.is-closed {
+  background: rgba(142, 53, 213, 0.18) !important;
+  color: #6d279e !important;
+}
+
 .tg-group-item__status.is-open,
 .tg-status-chip.is-active {
   background: rgba(57, 211, 83, 0.14);
@@ -1495,14 +1515,29 @@
 .tg-pill {
   border-color: var(--tg-border);
   background: rgba(7, 7, 27, 0.28);
-  color: var(--lk-night-text-soft);
+  color: var(--tg-soft);
+}
+
+.tg-group-item.is-selected .tg-pill {
+  border-color: rgba(142, 53, 213, 0.18) !important;
+  background: rgba(142, 53, 213, 0.12) !important;
+  color: #5c4b6d !important;
+  font-weight: 700;
 }
 
 .tg-link-btn,
 .tg-primary-btn--ghost {
   border-color: var(--tg-border);
   background: rgba(255, 255, 255, 0.03);
-  color: var(--lk-night-text-soft);
+  color: var(--tg-soft);
+}
+
+.tg-group-item.is-selected .tg-link-btn,
+.tg-group-item.is-selected .tg-primary-btn--ghost {
+  border-color: rgba(142, 53, 213, 0.22) !important;
+  background: rgba(255, 250, 242, 0.7) !important;
+  color: #5a3175 !important;
+  font-weight: 750;
 }
 
 .tg-link-btn:hover,
@@ -1545,8 +1580,8 @@
 .tg-search__input,
 .tg-filter-pill {
   border-color: var(--tg-border);
-  background: var(--lk-night-panel-soft);
-  color: var(--lk-night-text);
+  background: var(--tg-surface-2);
+  color: var(--tg-text);
 }
 
 .tg-filter-pill:hover {
@@ -1630,14 +1665,14 @@
 }
 
 .lk-role-modal {
-  border-color: var(--lk-night-border-strong);
-  background: var(--lk-night-panel);
-  color: var(--lk-night-text);
+  border-color: var(--tg-border-strong);
+  background: var(--tg-surface);
+  color: var(--tg-text);
 }
 
 .lk-role-modal__title,
 .lk-role-modal__eyebrow {
-  color: var(--lk-night-text);
+  color: var(--tg-text);
 }
 
 .lk-role-modal__eyebrow {
@@ -1645,7 +1680,7 @@
 }
 
 .lk-role-modal__actions {
-  border-top-color: var(--lk-night-border);
+  border-top-color: var(--tg-border);
   background: rgba(7, 7, 27, 0.22);
 }
 
@@ -1653,18 +1688,18 @@
 .tg-session-modal__header,
 .tg-session-modal__body,
 .tg-session-modal__footer {
-  background: var(--lk-night-panel) !important;
-  color: var(--lk-night-text);
+  background: var(--tg-surface) !important;
+  color: var(--tg-text);
 }
 
 .tg-session-modal .modal-content {
-  border-color: var(--lk-night-border-strong);
+  border-color: var(--tg-border-strong);
   border-radius: 28px;
 }
 
 .tg-session-modal__header,
 .tg-session-modal__footer {
-  border-color: var(--lk-night-border);
+  border-color: var(--tg-border);
 }
 
 .tg-session-modal__title,
@@ -1674,7 +1709,7 @@
 .tg-session-modal__route-block-title,
 .tg-session-modal__summary-title,
 .tg-session-modal__mode-card .form-check-label {
-  color: var(--lk-night-text);
+  color: var(--tg-text);
 }
 
 .tg-session-modal__mode-card,
@@ -1685,9 +1720,9 @@
 .tg-session-modal__step,
 .tg-session-modal__select,
 .tg-session-modal__number {
-  border-color: var(--lk-night-border);
-  background: var(--lk-night-panel-soft);
-  color: var(--lk-night-text);
+  border-color: var(--tg-border);
+  background: var(--tg-surface-2);
+  color: var(--tg-text);
 }
 
 .tg-session-modal__mode-card.is-selected,

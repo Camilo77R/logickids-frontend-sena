@@ -1607,13 +1607,13 @@ body:has(.lk-students-page) .lk-tutor-content {
 }
 
 .lk-students-page {
-  --students-panel: var(--lk-night-panel, #121033);
-  --students-panel-soft: var(--lk-night-panel-soft, #191545);
-  --students-border: var(--lk-night-border, rgba(174, 129, 255, 0.18));
-  --students-border-strong: var(--lk-night-border-strong, rgba(174, 129, 255, 0.3));
-  --students-text: var(--lk-night-text, #fff);
-  --students-text-soft: var(--lk-night-text-soft, #cbc6e8);
-  --students-text-muted: var(--lk-night-text-muted, #918aae);
+  --students-panel: #fbf8f1;
+  --students-panel-soft: #f3edf7;
+  --students-border: rgba(97, 43, 136, 0.14);
+  --students-border-strong: rgba(97, 43, 136, 0.24);
+  --students-text: #211a35;
+  --students-text-soft: #5f5474;
+  --students-text-muted: #837890;
   padding: 0 0 2rem !important;
   color: var(--students-text);
 }

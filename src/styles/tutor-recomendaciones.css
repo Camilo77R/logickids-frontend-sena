@@ -500,13 +500,13 @@
 
 /* ─── Rediseño oscuro Tutor / Recomendaciones IA ─── */
 .lk-rec-page {
-  --rec-panel: var(--lk-night-panel, #11102f);
-  --rec-panel-soft: var(--lk-night-panel-soft, #191742);
-  --rec-border: var(--lk-night-border, rgba(174, 129, 255, 0.18));
-  --rec-border-strong: var(--lk-night-border-strong, rgba(174, 129, 255, 0.3));
-  --rec-text: var(--lk-night-text, #ffffff);
-  --rec-text-soft: var(--lk-night-text-soft, #cbc6e8);
-  --rec-text-muted: var(--lk-night-text-muted, #9089b5);
+  --rec-panel: #fbf8f1;
+  --rec-panel-soft: #f3edf7;
+  --rec-border: rgba(97, 43, 136, 0.14);
+  --rec-border-strong: rgba(97, 43, 136, 0.24);
+  --rec-text: #211a35;
+  --rec-text-soft: #5f5474;
+  --rec-text-muted: #837890;
   gap: 2.25rem;
   padding: 0 0 2rem;
   color: var(--rec-text);
@@ -837,6 +837,49 @@
     right: -3.5rem;
     width: min(42%, 430px);
   }
+}
+
+/* Ajuste claro: seguimiento e historial de recomendaciones */
+.lk-rec-page .lk-rec-panel:not(.lk-rec-panel--builder),
+.lk-rec-page .lk-rec-panel--history,
+.lk-rec-page .lk-rec-card,
+.lk-rec-page .lk-rec-empty-wrap :where(.lk-dashboard-empty, .lk-empty-state, .empty-state) {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+}
+
+.lk-rec-page .lk-rec-card {
+  background: #f3edf7 !important;
+}
+
+.lk-rec-page .lk-rec-panel:not(.lk-rec-panel--builder) .lk-rec-panel__title,
+.lk-rec-page .lk-rec-card__title {
+  color: #211a35 !important;
+}
+
+.lk-rec-page .lk-rec-panel:not(.lk-rec-panel--builder) .lk-rec-panel__subtitle,
+.lk-rec-page .lk-rec-card__student,
+.lk-rec-page .lk-rec-card__date,
+.lk-rec-page .lk-rec-section__content,
+.lk-rec-page .lk-rec-copy {
+  color: #5f5474 !important;
+}
+
+.lk-rec-page .lk-rec-section {
+  border-color: rgba(97, 43, 136, 0.12) !important;
+  background: rgba(255, 250, 242, 0.82) !important;
+}
+
+.lk-rec-page .lk-rec-chip {
+  border-color: rgba(142, 53, 213, 0.16) !important;
+  background: rgba(142, 53, 213, 0.1) !important;
+  color: #6d279e !important;
+}
+
+.lk-rec-page .lk-rec-panel__eyebrow,
+.lk-rec-page .lk-rec-section__title {
+  color: #a85b00 !important;
 }
 
 @media (max-width: 900px) {

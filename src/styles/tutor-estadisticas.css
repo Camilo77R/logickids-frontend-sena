@@ -356,13 +356,13 @@ body:has(.lk-stats-page) .lk-tutor-content {
 }
 
 .lk-stats-page {
-  --stats-panel: var(--lk-night-panel, #121033);
-  --stats-panel-soft: var(--lk-night-panel-soft, #191545);
-  --stats-border: var(--lk-night-border, rgba(174, 129, 255, 0.18));
-  --stats-border-strong: var(--lk-night-border-strong, rgba(174, 129, 255, 0.3));
-  --stats-text: var(--lk-night-text, #fff);
-  --stats-text-soft: var(--lk-night-text-soft, #cbc6e8);
-  --stats-text-muted: var(--lk-night-text-muted, #918aae);
+  --stats-panel: #fbf8f1;
+  --stats-panel-soft: #f3edf7;
+  --stats-border: rgba(97, 43, 136, 0.14);
+  --stats-border-strong: rgba(97, 43, 136, 0.24);
+  --stats-text: #211a35;
+  --stats-text-soft: #5f5474;
+  --stats-text-muted: #837890;
   gap: 1rem;
   padding: 0 0 2rem;
   color: var(--stats-text);

@@ -8,14 +8,14 @@ body:has(.lk-sessions-page) .lk-tutor-content {
 }
 
 .lk-sessions-page {
-  --ses-bg: #0d0b2b;
-  --ses-panel: #121033;
-  --ses-panel-soft: #1a1747;
-  --ses-panel-raised: #211a58;
-  --ses-border: rgba(164, 118, 255, 0.2);
-  --ses-border-strong: rgba(183, 92, 255, 0.42);
-  --ses-text: #ffffff;
-  --ses-muted: #aaa5cc;
+  --ses-bg: #f6f1e7;
+  --ses-panel: #fbf8f1;
+  --ses-panel-soft: #f3edf7;
+  --ses-panel-raised: #ede3f3;
+  --ses-border: rgba(97, 43, 136, 0.14);
+  --ses-border-strong: rgba(97, 43, 136, 0.24);
+  --ses-text: #211a35;
+  --ses-muted: #5f5474;
   --ses-purple: #8e35d5;
   --ses-purple-light: #b75cff;
   --ses-yellow: #ffb321;
@@ -53,7 +53,7 @@ body:has(.lk-sessions-page) .lk-tutor-content {
 .lk-sessions-page .tutor-page-title {
   gap: 0.75rem;
   margin: 0;
-  color: #fff;
+  color: #fff !important;
   font-size: clamp(2rem, 3.4vw, 3rem);
   font-weight: 800;
 }
@@ -633,4 +633,162 @@ body:has(.lk-sessions-page) .ses-adaptation-metrics span {
   border-color: rgba(164, 118, 255, 0.2);
   background: #17143d;
   color: #d4d0e7;
+}
+
+/* Ajuste claro: filtros, métricas, historial y detalle de sesiones */
+.lk-sessions-page .ses-metrics-section,
+.lk-sessions-page .tutor-card,
+.lk-sessions-page .tutor-empty,
+.lk-sessions-page .ses-table-wrapper {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+  box-shadow: 0 18px 42px rgba(97, 43, 136, 0.12) !important;
+}
+
+.lk-sessions-page .ses-metrics-section summary,
+.lk-sessions-page .ses-charts-card,
+.lk-sessions-page .ses-select,
+.lk-sessions-page .ses-search__input,
+.lk-sessions-page .ses-date-filter,
+.lk-sessions-page .ses-filters,
+.lk-sessions-page .ses-page-btn {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #f3edf7 !important;
+  color: #211a35 !important;
+}
+
+.lk-sessions-page .ses-metrics-section[open] summary {
+  background: #ede3f3 !important;
+}
+
+.lk-sessions-page .ses-select,
+.lk-sessions-page .ses-date-input {
+  color-scheme: light !important;
+}
+
+.lk-sessions-page .ses-select:disabled {
+  background: #ede3f3 !important;
+  color: #837890 !important;
+}
+
+.lk-sessions-page .ses-filter-pill,
+.lk-sessions-page .ses-date-sep,
+.lk-sessions-page .ses-search__input::placeholder,
+.lk-sessions-page .ses-history-note,
+.lk-sessions-page .tutor-empty p,
+.lk-sessions-page .tutor-loading,
+.lk-sessions-page .ses-cell-secondary,
+.lk-sessions-page .ses-empty-row,
+.lk-sessions-page .ses-donut-center,
+.lk-sessions-page .ses-chart-legend,
+.lk-sessions-page .ses-legend-item {
+  color: #5f5474 !important;
+}
+
+.lk-sessions-page .ses-section-title,
+.lk-sessions-page .ses-cell-primary,
+.lk-sessions-page .ses-donut-pct,
+.lk-sessions-page .ses-legend-item strong,
+.lk-sessions-page .ses-table-row td {
+  color: #211a35 !important;
+}
+
+.lk-sessions-page .ses-table thead th,
+.lk-sessions-page .ses-table thead th:first-child {
+  background: #ede3f3 !important;
+  color: #5f5474 !important;
+}
+
+.lk-sessions-page .ses-table tbody td:first-child,
+.lk-sessions-page .ses-table-row:hover td:first-child,
+.lk-sessions-page .ses-table-row--selected td:first-child,
+.lk-sessions-page .ses-table tbody tr,
+.lk-sessions-page .ses-table-row td {
+  background: transparent !important;
+}
+
+.lk-sessions-page .ses-table-row:hover td {
+  background: rgba(142, 53, 213, 0.08) !important;
+}
+
+.lk-sessions-page .ses-table-row--selected td {
+  background: rgba(142, 53, 213, 0.12) !important;
+}
+
+.lk-sessions-page .ses-tag,
+.lk-sessions-page .ses-level-pill,
+.lk-sessions-page .ses-adapt-badge {
+  border-color: rgba(142, 53, 213, 0.16) !important;
+  background: rgba(142, 53, 213, 0.1) !important;
+  color: #6d279e !important;
+}
+
+.lk-sessions-page .ses-level-pill strong {
+  color: #211a35 !important;
+}
+
+.lk-sessions-page .ses-toolbar .ses-date-input {
+  border-color: rgba(97, 43, 136, 0.18) !important;
+  background: #fffaf2 !important;
+  color: #211a35 !important;
+}
+
+.lk-sessions-page .ses-date-input::-webkit-calendar-picker-indicator {
+  filter: none !important;
+}
+
+.lk-sessions-page .ses-filter-pill:hover {
+  background: rgba(142, 53, 213, 0.1) !important;
+  color: #211a35 !important;
+}
+
+.lk-sessions-page .ses-filter-pill.is-active,
+.lk-sessions-page .ses-page-btn:hover:not(:disabled),
+.lk-sessions-page .ses-page-btn.is-active {
+  color: #fff !important;
+}
+
+body:has(.lk-sessions-page) .lk-role-modal,
+body:has(.lk-sessions-page) .lk-role-modal__actions {
+  border-color: rgba(97, 43, 136, 0.16) !important;
+  background: #fbf8f1 !important;
+  color: #211a35 !important;
+}
+
+body:has(.lk-sessions-page) .lk-role-modal__content,
+body:has(.lk-sessions-page) .lk-role-modal__title,
+body:has(.lk-sessions-page) .ses-evento-header strong,
+body:has(.lk-sessions-page) .ses-adaptation-head strong,
+body:has(.lk-sessions-page) .ses-activity-summary .ses-cell-primary,
+body:has(.lk-sessions-page) .ses-adaptation-progress strong {
+  color: #211a35 !important;
+}
+
+body:has(.lk-sessions-page) .lk-role-modal__eyebrow,
+body:has(.lk-sessions-page) .ses-evento-meta,
+body:has(.lk-sessions-page) .ses-evento-header small,
+body:has(.lk-sessions-page) .ses-adaptation-summary p,
+body:has(.lk-sessions-page) .ses-activity-summary .ses-cell-secondary {
+  color: #5f5474 !important;
+}
+
+body:has(.lk-sessions-page) .ses-activity-summary,
+body:has(.lk-sessions-page) .ses-adaptation-summary,
+body:has(.lk-sessions-page) .ses-evento-item,
+body:has(.lk-sessions-page) .ses-adaptation-progress,
+body:has(.lk-sessions-page) .ses-adaptation-metrics span {
+  border-color: rgba(97, 43, 136, 0.14) !important;
+  background: #f3edf7 !important;
+  color: #211a35 !important;
+}
+
+body:has(.lk-sessions-page) .ses-adaptation-summary .ses-adapt-badge,
+body:has(.lk-sessions-page) .ses-adaptation-summary .ses-adapt-badge--reglas,
+body:has(.lk-sessions-page) .ses-adaptation-summary .ses-adapt-badge--ia,
+body:has(.lk-sessions-page) .ses-adaptation-summary .ses-adapt-badge--base,
+body:has(.lk-sessions-page) .ses-adaptation-summary .ses-adapt-badge--unknown {
+  border-color: rgba(142, 53, 213, 0.16) !important;
+  background: rgba(142, 53, 213, 0.1) !important;
+  color: #6d279e !important;
 }
